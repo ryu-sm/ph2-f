@@ -1,0 +1,11 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.autoSave": "onFocusChange",
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 120,
+  "files.associations": {
+    "*.svg": "html"
+  }
+}
