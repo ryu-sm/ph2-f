@@ -1,19 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter } from 'react-router-dom';
-
-import App from './App';
-import SpContextProvider from './context/sp-context';
+import { ScrollToTop } from './containers';
+import { Router } from './router';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.Suspense>
-    <BrowserRouter>
-      <RecoilRoot>
-        <SpContextProvider>
-          <App />
-        </SpContextProvider>
-      </RecoilRoot>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <ScrollToTop>
+          <Router />
+        </ScrollToTop>
+      </BrowserRouter>
+    </RecoilRoot>
   </React.Suspense>
 );

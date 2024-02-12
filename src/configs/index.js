@@ -1,3 +1,10 @@
-export const configs = {
-  MCJ_CODE: '0039',
-};
+export const APP_MODE = 'dev'; // dev || stg || prd
+export const APP_SERVER_URL = 'http://54.178.88.84/api';
+
+// スタティック資源
+export const TERM_OF_SERVICE = '/pdfs/利用規約.pdf';
+export const CONFIRMATION_URL = '/pdfs/銀行代理業にかかる確認書.pdf';
+export const CONSENT_URL = '/pdfs/個人情報の取扱いに関する同意書兼表明および確約書.pdf';
+
+// 業務関連
+export const MCJ_CODE = '0039';

@@ -1,0 +1,14 @@
+export { ApStartPage } from './start';
+export { ApRegisterVerifyEmailPage } from './register-verify-email';
+export { ApRegisterPage } from './register';
+export { ApLoginPage } from './login';
+export { ApResetPasswordVerifyEmailPage } from './reset-pwd-verify-email';
+export { ApResetPasswordPage } from './reset-pwd';
+export { ApAgreementPage } from './agreement';
+export { ApTopPage } from './top';
+export { ApConsentConfirmationPage } from './consent-confirmation';
+export { ApAccountInformationPage } from './account-info';
+export { ApUnsubcribedPage } from './unsubcribed';
+export { ApUpdatePasswordPage } from './update-password';
+export { ApChangeEmailVerifyEmailPage } from './change-email-verify-email';
+export { ApChangeEmailPage } from './change-email';

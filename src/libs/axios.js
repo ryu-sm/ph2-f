@@ -1,18 +1,19 @@
 import axios from 'axios';
+import { APP_MODE, APP_SERVER_URL } from '../configs';
 
-const BASE_URL = 'http://54.178.88.84/api';
+const BASE_URL = APP_SERVER_URL;
 const service = axios.create({ baseURL: BASE_URL, timeout: 1000 * 3 });
 
 service.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('accessToken') || null;
+    const token = localStorage.getItem('accessToken') || null;
     if (token) {
       config.headers['Authorization'] = token;
     }
     return config;
   },
   (error) => {
-    console.log(error);
+    if (APP_MODE === 'dev') console.log(error);
     return Promise.reject(error);
   }
 );
@@ -20,9 +21,9 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log(error);
-    return Promise.reject(error);
+    if (APP_MODE === 'dev') console.log(error);
+    return Promise.reject(error.response);
   }
 );
 
-export default service;
+export { service };

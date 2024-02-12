@@ -1,3 +1,5 @@
-import spBackground from './sp-background.svg';
+import apBackground from './ap-background.png';
+export { apBackground };
 
-export { spBackground };
+import apSmileChat from './ap-smile-chat.png';
+export { apSmileChat };
