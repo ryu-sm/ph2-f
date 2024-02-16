@@ -12,3 +12,8 @@ export { ApUnsubcribedPage } from './unsubcribed';
 export { ApUpdatePasswordPage } from './update-password';
 export { ApChangeEmailVerifyEmailPage } from './change-email-verify-email';
 export { ApChangeEmailPage } from './change-email';
+export { ApStep01Page } from './step-01';
+export { ApStep02Page } from './step-02';
+export { ApStep03Page } from './step-03';
+export { ApStep04Page } from './step-04';
+export { ApStep05Page } from './step-05';

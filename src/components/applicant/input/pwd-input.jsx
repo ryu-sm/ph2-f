@@ -22,18 +22,18 @@ export const ApPwdInputField = ({ placeholder, showPwdPower, ...props }) => {
   );
 
   const handleFocus = useCallback(
-    (e) => {
+    async (e) => {
       props.onFocus && props.onFocus(e);
-      setTouched(false);
+      await setTouched(false);
     },
     [props, setTouched]
   );
 
   const handleChange = useCallback(
-    (e) => {
+    async (e) => {
       field.onChange(e);
       props.onChange && props.onChange(e);
-      setValue(e.target.value);
+      await setValue(e.target.value);
     },
     [field, props]
   );

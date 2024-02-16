@@ -1,8 +1,6 @@
-import { lazy } from 'react';
 import { routeNames } from '../settings';
 import {
   ApAccountInformationPage,
-  ApAgreementPage,
   ApChangeEmailPage,
   ApChangeEmailVerifyEmailPage,
   ApConsentConfirmationPage,
@@ -12,12 +10,9 @@ import {
   ApResetPasswordPage,
   ApResetPasswordVerifyEmailPage,
   ApStartPage,
-  ApTopPage,
   ApUnsubcribedPage,
   ApUpdatePasswordPage,
 } from '@/pages/applicant';
-
-// const ApTopPage = lazy(() => import('@/pages/applicant/top'));
 
 export const publicRoutes = [
   {
@@ -43,14 +38,6 @@ export const publicRoutes = [
   {
     ...routeNames.apResetPasswordPage,
     element: <ApResetPasswordPage />,
-  },
-  {
-    ...routeNames.apAgreementPage,
-    element: <ApAgreementPage />,
-  },
-  {
-    ...routeNames.apTopPage,
-    element: <ApTopPage />,
   },
   {
     ...routeNames.apConsentConfirmationPage,

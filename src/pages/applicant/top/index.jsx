@@ -21,6 +21,8 @@ import {
   DISCLOSURE_RESULTS_TO_PARTNER_COMPANIES,
 } from '@/constant/pre-examination-status';
 import { MCJ_CODE } from '@/configs';
+import { routeNames } from '@/router/settings';
+import { useNavigate } from 'react-router-dom';
 
 export const ApTopPage = () => {
   const applyNo = useRecoilValue(applyNoSelector);
@@ -38,7 +40,7 @@ export const ApTopPage = () => {
         id: 1,
         stepTitle: 'お借入のご希望',
         stepIcon: <Icons.ApTopStepIdIcon01 />,
-        stepPath: '',
+        stepPath: routeNames.apStep01Page.path,
         buttonLabel: apCurrStepId === 1 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -239,7 +241,8 @@ export const ApTopPage = () => {
   );
 };
 
-const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, topItems }) => {
+const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, stepPath, topItems }) => {
+  const navigate = useNavigate();
   const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
   const apCurrStepId = useRecoilValue(apCurrStepIdSelector);
   const agentSended = useRecoilValue(agentSendedSelector);
@@ -248,7 +251,7 @@ const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, to
     switch (id) {
       case 14:
         return (
-          <ApPrimaryButton height={40} width={114} disabled={!agentSended}>
+          <ApPrimaryButton height={40} width={114} disabled={!agentSended} onClick={() => navigate(stepPath)}>
             {buttonLabel}
           </ApPrimaryButton>
         );
@@ -258,6 +261,7 @@ const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, to
             height={40}
             width={114}
             disabled={!(preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS)}
+            onClick={() => navigate(stepPath)}
           >
             {buttonLabel}
           </ApPrimaryButton>
@@ -268,6 +272,7 @@ const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, to
             height={40}
             width={114}
             disabled={!(preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS)}
+            onClick={() => navigate(stepPath)}
           >
             {buttonLabel}
           </ApPrimaryButton>
@@ -275,19 +280,19 @@ const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, to
       default:
         if (id === apCurrStepId)
           return (
-            <ApPrimaryButton height={40} width={114}>
+            <ApPrimaryButton height={40} width={114} onClick={() => navigate(stepPath)}>
               {buttonLabel}
             </ApPrimaryButton>
           );
         if (id > apCurrStepId)
           return (
-            <ApPrimaryButton height={40} width={114} disabled={true}>
+            <ApPrimaryButton height={40} width={114} disabled={true} onClick={() => navigate(stepPath)}>
               {buttonLabel}
             </ApPrimaryButton>
           );
         if (id < apCurrStepId)
           return (
-            <ApLighterButton height={40} width={114}>
+            <ApLighterButton height={40} width={114} onClick={() => navigate(stepPath)}>
               {buttonLabel}
             </ApLighterButton>
           );

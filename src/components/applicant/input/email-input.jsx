@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useField } from 'formik';
 import { Stack, TextField, Typography } from '@mui/material';
 
@@ -7,10 +7,7 @@ export const ApEmailInputField = ({ placeholder, ...props }) => {
   const { setValue, setTouched } = helpers;
 
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
-  const isSuccess = useMemo(
-    () => meta.touched && !meta.error && !!meta.value && meta.value !== '',
-    [meta.touched, meta.error, meta.value]
-  );
+  const isSuccess = useMemo(() => !isError && !!meta.value && meta.value !== '', [isError, meta.value]);
 
   const handelBlue = useCallback(
     (e) => {
@@ -21,18 +18,18 @@ export const ApEmailInputField = ({ placeholder, ...props }) => {
   );
 
   const handleFocus = useCallback(
-    (e) => {
+    async (e) => {
       props.onFocus && props.onFocus(e);
-      setTouched(false);
+      await setTouched(false);
     },
     [props, setTouched]
   );
 
   const handleChange = useCallback(
-    (e) => {
+    async (e) => {
       field.onChange(e);
       props.onChange && props.onChange(e);
-      setValue(e.target.value);
+      await setValue(e.target.value);
     },
     [field, props, setValue]
   );

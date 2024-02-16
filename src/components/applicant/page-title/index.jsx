@@ -1,9 +1,9 @@
 import { Icons } from '@/assets';
 import { Box, Stack, Typography } from '@mui/material';
 
-export const ApPageTitle = ({ children, error }) => {
+export const ApPageTitle = ({ children, error, py }) => {
   return (
-    <Stack spacing={6} alignItems={'center'} sx={{ py: 6 }}>
+    <Stack spacing={6} alignItems={'center'} sx={{ py: py || 6 }}>
       <Typography variant="page_title" sx={{ color: (theme) => theme.palette.primary.main }}>
         {children}
       </Typography>

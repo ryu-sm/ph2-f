@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormikProvider, useFormik } from 'formik';
-import { ApItemGroup, ApModalWrapper, ApPageTitle, ApPrimaryButton } from '@/components';
+import { ApItemGroup, ApModalWrapper, ApPageTitle, ApPrimaryButton, ApPwdInputField } from '@/components';
 import { ApLayout } from '@/containers';
 import { validationSchema } from './validatior';
 import { Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 import { routeNames } from '@/router/settings';
 import { useBoolean } from '@/hooks';
-import { ApPwdInputField } from '@/components/applicant/input/pwd-input';
 import { apUpdatePassword } from '@/services';
 
 export const ApUpdatePasswordPage = () => {

@@ -1,5 +1,5 @@
 export const APP_MODE = 'dev'; // dev || stg || prd
-export const APP_SERVER_URL = 'http://54.178.88.84/api';
+export const APP_SERVER_URL = 'http://0.0.0.0:8000';
 
 // スタティック資源
 export const TERM_OF_SERVICE = '/pdfs/利用規約.pdf';
@@ -8,3 +8,5 @@ export const CONSENT_URL = '/pdfs/個人情報の取扱いに関する同意書�
 
 // 業務関連
 export const MCJ_CODE = '0039';
+
+export const BANK_NOT_VALID_DAYS = ['01/01', '01/02', '01/03', '12/31'];

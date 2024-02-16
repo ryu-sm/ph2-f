@@ -8,3 +8,7 @@ export * from './applicant/input';
 export * from './applicant/notify-title';
 export * from './applicant/modal-wrapper';
 export * from './applicant/chat';
+export * from './applicant/select';
+export * from './applicant/static-modal';
+export * from './applicant/star-help';
+export * from './applicant/error-scroll';

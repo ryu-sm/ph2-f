@@ -2,8 +2,15 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ApWrapper } from '../ap-wrapper';
 import { ApFooter } from '../ap-footer';
-import { useRecoilValue } from 'recoil';
-import { appliedBanksSelector, applyNoSelector, displayPdfSelector, preExaminationStatusSelector } from '@/store';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
+import {
+  applicationAtom,
+  appliedBanksSelector,
+  applyNoSelector,
+  authAtom,
+  displayPdfSelector,
+  preExaminationStatusSelector,
+} from '@/store';
 import { useBoolean } from '@/hooks';
 import { useMemo } from 'react';
 import { Icons } from '@/assets';
@@ -19,6 +26,8 @@ export const ApMenu = ({ menu }) => {
   const applyNo = useRecoilValue(applyNoSelector);
   const appliedBanks = useRecoilValue(appliedBanksSelector);
   const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
+  const resetAuth = useResetRecoilState(authAtom);
+  const resetApplication = useResetRecoilState(applicationAtom);
   const displayPdf = useRecoilValue(displayPdfSelector);
   const modal = useBoolean();
 
@@ -77,6 +86,8 @@ export const ApMenu = ({ menu }) => {
   );
 
   const handelLogout = () => {
+    resetAuth();
+    resetApplication();
     clearStorage();
     navigate(routeNames.apStartPage.path);
   };
@@ -92,7 +103,7 @@ export const ApMenu = ({ menu }) => {
           style={{
             position: 'fixed',
             top: 0,
-            zIndex: 3,
+            zIndex: 9,
             width: '100%',
             maxWidth: 480,
             boxShadow:

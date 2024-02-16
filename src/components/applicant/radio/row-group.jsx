@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useField } from 'formik';
 import { FormControlLabel, Radio, RadioGroup, Stack, Typography } from '@mui/material';
 
 export const ApRadioRowGroup = ({ options, disabled, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
-  const isError = useMemo(() => !!meta.error, [meta.error]);
+  const { setValue, setTouched } = helpers;
+  const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
 
   const handleChange = useCallback(
-    (e) => {
+    async (e) => {
       field.onChange(e);
       props.onChange && props.onChange(e);
-      setValue(e.target.value);
+      await setValue(e.target.value);
+      await setTouched(true);
     },
     [field, props, setValue]
   );
@@ -30,6 +31,7 @@ export const ApRadioRowGroup = ({ options, disabled, ...props }) => {
                   disabled={disabled}
                   icon={<MockIcon>{option.label}</MockIcon>}
                   checkedIcon={<MockIcon>{option.label}</MockIcon>}
+                  checked={meta.value == option.value}
                   sx={{
                     flex: 1,
                     minHeight: 48,

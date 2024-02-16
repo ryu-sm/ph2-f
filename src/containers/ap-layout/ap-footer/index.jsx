@@ -30,7 +30,7 @@ export const ApFooter = ({ hasContact, mb }) => {
             {`営業時間：10:00~19:00\n休業日　：火曜・水曜日及び年末年始`}
           </Typography>
         )}
-        <Typography variant="note" color={'#0B1F65'}>
+        <Typography variant="note" color={'#0B1F65'} sx={{ opacity: 0.6 }}>
           © 2023 みらいバンク Inc.
         </Typography>
       </Stack>

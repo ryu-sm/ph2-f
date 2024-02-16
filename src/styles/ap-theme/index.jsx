@@ -26,6 +26,15 @@ export const ApThemeProvider = ({ children }) => {
           body: {
             overscrollBehaviorY: 'none',
             backgroundColor: theme.palette.background.wrapper,
+            '.day-of-week-0, .day-of-week-6': {
+              backgroundColor: '#E7E7E7',
+            },
+            '.is-public-holiday, .is-public-holiday:hover': {
+              backgroundColor: '#FF8F8F',
+            },
+            '.is-public-holiday-desired, .is-public-holiday-desired:hover': {
+              backgroundColor: '#E7E7E7',
+            },
           },
           '@font-face': [
             {

@@ -34,7 +34,7 @@ export const componentOverrides = (theme) => {
           '.MuiInputBase-input': {
             minHeight: 16,
             fontFamily: 'Hiragino Sans',
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: 300,
             lineHeight: '150%',
             fontStyle: 'normal',
@@ -72,6 +72,7 @@ export const componentOverrides = (theme) => {
         },
       },
     },
+
     MuiCheckbox: {
       styleOverrides: {
         root: {

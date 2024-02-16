@@ -1,20 +1,49 @@
 import { Box, Stack, Typography } from '@mui/material';
 
-export const ApItemGroup = ({ children, optional, label, note, helps = [], helpsType, ...props }) => {
+export const ApItemGroup = ({
+  children,
+  optional,
+  label,
+  note,
+  helps = [],
+  helpsType,
+  pb,
+  px,
+  borderTopRightRadius,
+  borderTopLeftRadius,
+}) => {
   return (
-    <Stack>
-      <Label optional={optional} label={label} helps={helps} note={note} helpsType={helpsType} />
-      <Stack sx={{ pt: 3, pb: 8, px: 4 }}>{children}</Stack>
+    <Stack
+      sx={{ width: 1, borderTopRightRadius: borderTopRightRadius || 0, borderTopLeftRadius: borderTopLeftRadius || 0 }}
+    >
+      <Label
+        optional={optional}
+        label={label}
+        helps={helps}
+        note={note}
+        helpsType={helpsType}
+        borderTopRightRadius={borderTopRightRadius}
+        borderTopLeftRadius={borderTopLeftRadius}
+      />
+      <Stack sx={{ pt: 3, pb: pb || 8, px: px || 4 }}>{children}</Stack>
     </Stack>
   );
 };
 
-const Label = ({ optional, label, note, helpsType, helps }) => {
+const Label = ({ optional, label, note, helpsType, helps, borderTopRightRadius, borderTopLeftRadius }) => {
   return (
     <Stack
       alignItems={'center'}
       spacing={2}
-      sx={{ pt: '5px', pb: '6px', px: 4, bgcolor: (theme) => theme.palette.primary[40] }}
+      sx={{
+        pt: '5px',
+        pb: '6px',
+        px: 4,
+        bgcolor: (theme) => theme.palette.primary[40],
+        width: 1,
+        borderTopRightRadius: borderTopRightRadius || 0,
+        borderTopLeftRadius: borderTopLeftRadius || 0,
+      }}
     >
       <Stack spacing={2} direction={'row'} alignItems={'center'} sx={{ width: 1 }}>
         {!!optional && (
@@ -33,13 +62,17 @@ const Label = ({ optional, label, note, helpsType, helps }) => {
             </Typography>
           </Box>
         )}
-        <Stack>
-          <Stack spacing={2} direction={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ width: 1 }}>
-            <Typography variant="form_item_label" sx={{ color: (theme) => theme.palette.text.main }}>
+        <Stack sx={{ width: 1 }}>
+          <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ width: '100%' }}>
+            <Typography
+              variant="form_item_label"
+              sx={{ color: (theme) => theme.palette.text.main, whiteSpace: helpsType || 'break-spaces' }}
+            >
               {label}
             </Typography>
+
             {helpsType === 'nowrap' && helps.length > 0 && (
-              <Stack direction={'row'}>
+              <Stack spacing={2} direction={'row'} alignItems={'center'}>
                 {helps.map((help, index) => (
                   <Box key={index}>{help}</Box>
                 ))}

@@ -1,18 +1,16 @@
 import { atom, selector } from 'recoil';
-import { recoilPersist } from 'recoil-persist';
 
 const authInitialValues = {
   isLogined: false,
+  loginType: 1,
+  applayType: 1,
   user: {
     id: null,
     email: null,
-    agentSended: false,
     isFirstLogin: true,
     salesCompanyOrgId: null,
-    apCurrStepId: 1,
-    hasJoinGuarantor: false,
-    hasIncomeTotalizer: false,
     preExaminationStatus: null,
+    agentSended: false,
     displayPdf: true,
     applyNo: null,
     hasDraftData: false,
@@ -25,12 +23,13 @@ const authInitialValues = {
     id: null,
     email: null,
   },
+  isMCJ: false,
+  apCurrStepId: 1,
+  apNextStepId: 2,
+  apPreStepId: 1,
+  hasJoinGuarantor: false,
+  hasIncomeTotalizer: false,
 };
-
-const { persistAtom } = recoilPersist({
-  key: 'auth-persist',
-  storage: typeof window === 'undefined' ? undefined : sessionStorage,
-});
 
 const localStorageEffect =
   (key) =>
@@ -75,6 +74,46 @@ export const isLoginedSelector = selector({
   },
 });
 
+export const apPreStepIdSelector = selector({
+  key: 'apPreStepId',
+  get: ({ get }) => {
+    const auth = get(authAtom);
+    return auth?.apPreStepId;
+  },
+});
+
+export const apNextStepIdSelector = selector({
+  key: 'apNextStepId',
+  get: ({ get }) => {
+    const auth = get(authAtom);
+    return auth?.apNextStepId;
+  },
+});
+
+export const isMcjSelector = selector({
+  key: 'isMCJ',
+  get: ({ get }) => {
+    const auth = get(authAtom);
+    return auth?.isMCJ;
+  },
+});
+
+export const loginTypeSelector = selector({
+  key: 'loginType',
+  get: ({ get }) => {
+    const auth = get(authAtom);
+    return auth?.loginType;
+  },
+});
+
+export const applayTypeSelector = selector({
+  key: 'applayType',
+  get: ({ get }) => {
+    const auth = get(authAtom);
+    return auth?.applayType;
+  },
+});
+
 export const isFirstLoginSelector = selector({
   key: 'isFirstLogin',
   get: ({ get }) => {
@@ -87,7 +126,7 @@ export const apCurrStepIdSelector = selector({
   key: 'apCurrStepId',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.user?.apCurrStepId;
+    return auth?.apCurrStepId;
   },
 });
 
@@ -95,7 +134,7 @@ export const hasJoinGuarantorSelector = selector({
   key: 'hasJoinGuarantor',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.user?.hasJoinGuarantor;
+    return auth?.hasJoinGuarantor;
   },
 });
 
@@ -103,7 +142,7 @@ export const hasIncomeTotalizerSelector = selector({
   key: 'hasIncomeTotalizer',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.user?.hasIncomeTotalizer;
+    return auth?.hasIncomeTotalizer;
   },
 });
 
@@ -119,7 +158,7 @@ export const displayPdfSelector = selector({
   key: 'displayPdf',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.displayPdf;
+    return auth?.user.displayPdf;
   },
 });
 
@@ -127,7 +166,7 @@ export const hasDraftDataSelector = selector({
   key: 'hasDraftData',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.hasDraftData;
+    return auth?.user.hasDraftData;
   },
 });
 

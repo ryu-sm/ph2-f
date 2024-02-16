@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormikProvider, useFormik } from 'formik';
-import { ApItemGroup, ApModalWrapper, ApNotifyTitle, ApPageTitle, ApPrimaryButton } from '@/components';
+import {
+  ApItemGroup,
+  ApModalWrapper,
+  ApNotifyTitle,
+  ApPageTitle,
+  ApPrimaryButton,
+  ApPwdInputField,
+} from '@/components';
 import { ApLayout } from '@/containers';
 import { validationSchema } from './validatior';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 import { routeNames } from '@/router/settings';
 import { useBoolean, useCurrSearchParams } from '@/hooks';
-import { ApPwdInputField } from '@/components/applicant/input/pwd-input';
 import { apRegister } from '@/services';
 import { setToken } from '@/libs';
 import { jwtDecode } from 'jwt-decode';

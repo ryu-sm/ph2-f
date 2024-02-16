@@ -1,5 +1,5 @@
-import { ApFileViewer, ApItemGroup, ApPageTitle, ApPrimaryButton, ApRadioRowGroup } from '@/components';
-import { ApLayout } from '@/containers';
+import { ApFileViewer, ApItemGroup, ApPageTitle, ApRadioRowGroup } from '@/components';
+import { ApLayout, ApStepFooter } from '@/containers';
 import { yup } from '@/libs';
 import { routeNames } from '@/router/settings';
 import { Link, Stack, Typography } from '@mui/material';
@@ -9,28 +9,39 @@ import { agreeOptions } from './options';
 import { CONFIRMATION_URL, CONSENT_URL } from '@/configs';
 import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { applicationAtom } from '@/store';
 
 export const ApAgreementPage = () => {
   const navigate = useNavigate();
   const [warningText, setWarningText] = useState('');
   const [isReadedConsent, setIsReadedConsent] = useState(false);
   const [isReadedConfirmation, setIsReadedConfirmation] = useState(false);
+
+  const setApplicationInfo = useSetRecoilState(applicationAtom);
+
   const formik = useFormik({
     initialValues: {
       consent: '',
       confirmation: '',
     },
     validationSchema: yup.object({
-      consent: yup.string().oneOf(['1'], 'ご確認ください'),
-      confirmation: yup.string().oneOf(['1'], 'ご確認ください'),
+      consent: yup.string().required().oneOf(['1'], 'ご確認ください'),
+      confirmation: yup.string().required().oneOf(['1'], 'ご確認ください'),
     }),
     onSubmit: () => {
+      setApplicationInfo((pre) => {
+        return {
+          ...pre,
+          p_applicant_persons_a_agreement: true,
+        };
+      });
       navigate(routeNames.apTopPage.path);
     },
   });
 
   useEffect(() => {
-    if (formik.errors.consent || formik.errors.confirmation)
+    if ((isReadedConsent && formik.errors.consent) || (isReadedConfirmation && formik.errors.confirmation))
       return setWarningText('同意いただけない場合、本サービスをご利用いただけません。');
     setWarningText('');
   }, [formik.errors.consent, formik.errors.confirmation]);
@@ -85,35 +96,11 @@ export const ApAgreementPage = () => {
             <ApRadioRowGroup name="confirmation" options={agreeOptions} disabled={!isReadedConfirmation} />
           </Stack>
         </ApItemGroup>
-        <Stack
-          justifyContent={'center'}
-          alignItems={'center'}
-          spacing={4}
-          sx={{
-            position: 'fixed',
-            py: 4,
-            bottom: 0,
-            width: 1,
-            maxWidth: 480,
-            bgcolor: 'white',
-            boxShadow: '0px -4px 10px rgba(0, 0, 0, 0.05)',
-          }}
-        >
-          <ApPrimaryButton
-            endIcon={<Icons.ApForwardRightWhiteIcon />}
-            width={260}
-            height={40}
-            onClick={formik.handleSubmit}
-            disabled={
-              formik.isSubmitting ||
-              !(formik.isValid && formik.dirty) ||
-              !(formik.values.consent === '1' && formik.values.confirmation === '1')
-            }
-          >
-            次へ
-          </ApPrimaryButton>
-        </Stack>
       </FormikProvider>
+      <ApStepFooter
+        right={formik.handleSubmit}
+        rightDisable={formik.isSubmitting || !(formik.isValid && formik.dirty)}
+      />
     </ApLayout>
   );
 };

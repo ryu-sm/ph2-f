@@ -1,14 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormikProvider, useFormik } from 'formik';
-import { ApEmailInputField, ApItemGroup, ApPageTitle, ApPrimaryButton, ApSecondaryButton } from '@/components';
+import {
+  ApEmailInputField,
+  ApItemGroup,
+  ApPageTitle,
+  ApPrimaryButton,
+  ApPwdInputField,
+  ApSecondaryButton,
+} from '@/components';
 import { ApLayout } from '@/containers';
 import { validationSchema } from './validatior';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 
 import { routeNames } from '@/router/settings';
-import { ApPwdInputField } from '@/components/applicant/input/pwd-input';
 import { apLogin } from '@/services';
 import { useSetRecoilState } from 'recoil';
 import { authAtom } from '@/store';
@@ -39,6 +45,8 @@ export const ApLoginPage = () => {
           return {
             ...pre,
             isLogined: true,
+            loginType: 1,
+            applayType: 1,
             user: {
               ...pre.user,
               id: payload?.id,

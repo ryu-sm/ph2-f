@@ -35,3 +35,11 @@ export const apUpdatePassword = async (data) => {
 export const apChangeEmail = async (data) => {
   return await service.put('/user/email', data);
 };
+
+export const apGetBanks = async () => {
+  return await service.get('/banks');
+};
+
+export const apGetPublicHolidays = async (year) => {
+  return await service.get(`https://date.nager.at/api/v2/publicholidays/${year}/jp`);
+};
