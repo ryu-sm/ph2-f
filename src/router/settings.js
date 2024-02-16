@@ -1,7 +1,7 @@
 export const routeNames = {
   apStartPage: {
     name: 'apStartPage',
-    path: '/',
+    path: '/root',
   },
   apRegisterVerifyEmailPage: {
     name: 'apRegisterVerifyEmailPage',
