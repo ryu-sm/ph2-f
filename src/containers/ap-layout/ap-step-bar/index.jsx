@@ -129,7 +129,7 @@ export const ApStepBar = () => {
         ...pre,
         apNextStepId: stepIndex === apSteps.length - 1 ? 14 : apSteps[stepIndex + 1]?.id,
         apPreStepId: stepIndex === 0 ? 1 : apSteps[stepIndex - 1]?.id,
-        apCurrStepId: apSteps[stepIndex]?.id,
+        apCurrStepId: apSteps[stepIndex]?.id > pre.apCurrStepId ? apSteps[stepIndex]?.id : pre.apCurrStepId,
       };
     });
   }, [apSteps, stepIndex]);
