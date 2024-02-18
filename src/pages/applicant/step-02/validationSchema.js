@@ -34,7 +34,6 @@ export const validationSchema = yup.object({
   p_applicant_persons__0__mobile_phone: yup
     .string()
     .test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
-      console.log(parent.p_applicant_persons__0__home_phone, field_value);
       return !!field_value || !!parent.p_applicant_persons__0__home_phone;
     }),
   p_applicant_persons__0__home_phone: yup

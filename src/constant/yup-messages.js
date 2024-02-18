@@ -24,8 +24,9 @@ export const YUP_MESSAGES = {
   SP_KANJI_FULL_WIDTH_HAVE_NUMBER: '漢字・ひらがな・カタカナ・英数字が入力可能です。',
   SP_KANA_FULL_WIDTH: '全角カタカナ・英文字が入力可能です。',
   ADDRESS_KANJI: '漢字・ひらがな・カタカナ・英数字が入力可能です。',
-  // 未
   NAME_KANA: '全角カタカナが入力可能です。',
+  URL_INVALID: 'URLの形式が正しくありません。',
+  // 未
 
   KANJI_FULL_WIDTH: 'この項目は漢字、全角のひらがな・カタカナ・英文字が入力可能です。',
   KANJI_FULL_WIDTH_HAVE_NUMBER: 'この項目は漢字、全角のひらがな・カタカナ・英文字が入力可能です。',
@@ -81,7 +82,7 @@ export const YUP_MESSAGES = {
     'カード有効期限年月は当初カード契約年月以降の年月を指定してください。',
 
   NOT_PASS_CURRENT: '入社年月は過去の年月を指定してください。',
-  URL_INVALID: 'URLの形式が正しくありません。',
+
   DATE_INVALID: '日付の形式が正しくありません。',
   GREATER_THAN_ZERO: '0より大きい数値でご入力ください。',
   OTHER_TYPE_TAX_RETURN_LIMIT: '確定申告の理由 その他に40字以内で入力してください。',

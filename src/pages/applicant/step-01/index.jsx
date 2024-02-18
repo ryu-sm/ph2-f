@@ -19,12 +19,13 @@ import {
   ApSelectField,
   ApSelectFieldYm,
   ApSelectFieldYmd,
+  ApStarHelp,
   ApTextInputField,
 } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, authAtom, isMcjSelector } from '@/store';
+import { apNextStepIdSelector, applicationAtom, authAtom, isMcjSelector } from '@/store';
 import {
   bonusRepaymentMonthOptions,
   hasJoinGuarantorOptions,
@@ -49,7 +50,6 @@ import { routeNames } from '@/router/settings';
 export const ApStep01Page = () => {
   const navigate = useNavigate();
   const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const pairLoanModal = useBoolean(false);
   const setAuthInfo = useSetRecoilState(authAtom);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
@@ -123,22 +123,27 @@ export const ApStep01Page = () => {
   }, [bankMaster.length]);
 
   useEffect(() => {
-    if (
-      !formik.values.p_application_banks__s_bank_ids.includes(bankMaster.find((item) => item.code === MCJ_CODE)?.value)
-    ) {
+    if (p_application_banks__s_bank_ids.includes(String(bankMaster.find((item) => item.code === MCJ_CODE)?.value))) {
+      setAuthInfo((pre) => ({ ...pre, isMCJ: true }));
+    } else {
       setAuthInfo((pre) => ({ ...pre, isMCJ: false }));
     }
-    if (['3', '4'].includes(formik.values.p_application_headers__loan_type)) {
+    if (['3', '4'].includes(p_application_headers__loan_type)) {
       setAuthInfo((pre) => ({ ...pre, hasIncomeTotalizer: true }));
     } else {
       setAuthInfo((pre) => ({ ...pre, hasIncomeTotalizer: false }));
     }
-    if (formik.values.p_application_headers__join_guarantor_umu === '1') {
+    if (p_application_headers__join_guarantor_umu === '1') {
       setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
     } else {
       setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
     }
-  }, []);
+  }, [
+    p_application_banks__s_bank_ids,
+    p_application_headers__loan_type,
+    p_application_headers__join_guarantor_umu,
+    bankMaster,
+  ]);
 
   return (
     <FormikProvider value={formik}>
@@ -154,7 +159,6 @@ export const ApStep01Page = () => {
               name={'p_application_banks__s_bank_ids'}
               options={bankMaster}
               onChange={(e) => {
-                console.log(e.target.value, e.target.checked);
                 if (bankMaster.find((item) => item.code === MCJ_CODE)?.value == e.target.value) {
                   setAuthInfo((pre) => {
                     return { ...pre, isMCJ: e.target.checked };
@@ -181,7 +185,13 @@ export const ApStep01Page = () => {
                   formik.setFieldTouched('p_application_headers__loan_target', false);
                   break;
                 case '7':
-                  // TODO: お借り換え时候 重置住宅取得理由（要确认）
+                  setApplicationInfo((pre) => {
+                    return {
+                      ...pre,
+                      p_application_headers__new_house_acquire_reason: '',
+                      p_application_headers__new_house_acquire_reason_other: '',
+                    };
+                  });
                   formik.setFieldValue('p_application_headers__loan_target', '7');
                   break;
                 case '8':
@@ -207,6 +217,28 @@ export const ApStep01Page = () => {
               name={'p_application_headers__loan_target'}
               options={loanTargetOptions}
               onChange={(e) => {
+                setApplicationInfo((pre) => {
+                  return {
+                    ...pre,
+                    p_application_headers__required_funds_land_amount: '',
+                    p_application_headers__required_funds_house_amount: '',
+                    p_application_headers__required_funds_accessory_amount: '',
+                    p_application_headers__required_funds_additional_amount: '',
+                    p_application_headers__required_funds_refinance_loan_balance: '',
+                    p_application_headers__required_funds_upgrade_amount: '',
+                    p_application_headers__required_funds_loan_plus_amount: '',
+                    p_application_headers__required_funds_total_amount: '',
+                    p_application_headers__funding_saving_amount: '',
+                    p_application_headers__funding_estate_sale_amount: '',
+                    p_application_headers__funding_other_saving_amount: '',
+                    p_application_headers__funding_relative_donation_amount: '',
+                    p_application_headers__funding_loan_amount: '',
+                    p_application_headers__funding_pair_loan_amount: '',
+                    p_application_headers__funding_other_amount: '',
+                    p_application_headers__funding_other_amount_detail: '',
+                    p_application_headers__funding_total_amount: '',
+                  };
+                });
                 if (e.target.value !== '6') {
                   formik.setFieldValue('p_application_headers__land_advance_plan', '');
                   formik.setFieldTouched('p_application_headers__land_advance_plan', false);
@@ -413,9 +445,11 @@ export const ApStep01Page = () => {
                       maxLength={6}
                     />
                     {formik.values.p_application_headers__loan_type === '2' && (
-                      <Typography variant="note" color={'text.main'}>
-                        {`※ あなたの分の金額をご入力ください。ペアローン相手との合計金額ではございませんのでご注意ください。`}
-                      </Typography>
+                      <ApStarHelp
+                        label={
+                          'あなたの分の金額をご入力ください。ペアローン相手との合計金額ではございませんのでご注意ください。'
+                        }
+                      />
                     )}
                   </Stack>
                   <ApNumberInputField
@@ -433,6 +467,15 @@ export const ApStep01Page = () => {
                     align="right"
                     width={140}
                     maxLength={6}
+                    onBlur={(e) => {
+                      if (!!e.target.value && formik.values.p_borrowing_details__0__bonus_repayment_month === '1') {
+                        formik.setFieldValue('p_borrowing_details__0__bonus_repayment_month', '2');
+                      }
+                      if (e.target.value === '' || e.target.value === '0') {
+                        formik.setFieldTouched('p_borrowing_details__0__bonus_repayment_amount', false);
+                        formik.setFieldValue('p_borrowing_details__0__bonus_repayment_month', '1');
+                      }
+                    }}
                   />
                   <Box sx={{ display: 'flex' }}>
                     <ApBonusRepaymentModal />
@@ -446,7 +489,7 @@ export const ApStep01Page = () => {
                       placeholder="選択してください"
                       name={'p_borrowing_details__0__bonus_repayment_month'}
                       options={bonusRepaymentMonthOptions}
-                      width={190}
+                      width={200}
                     />
                   </Stack>
                 </Stack>
@@ -516,11 +559,6 @@ export const ApStep01Page = () => {
                         width={140}
                         maxLength={6}
                       />
-                      {formik.values.p_application_headers__loan_type === '2' && (
-                        <Typography variant="note" color={'text.main'}>
-                          {`※ あなたの分の金額をご入力ください。ペアローン相手との合計金額ではございませんのでご注意ください。`}
-                        </Typography>
-                      )}
                     </Stack>
                     <ApNumberInputField
                       name={'p_borrowing_details__1__bonus_repayment_amount'}
@@ -549,7 +587,17 @@ export const ApStep01Page = () => {
           helps={[<ApJoinGuarantorModal />]}
           helpsType={'break'}
         >
-          <ApCheckboxButton name={'p_application_headers__join_guarantor_umu'} options={hasJoinGuarantorOptions} />
+          <ApCheckboxButton
+            name={'p_application_headers__join_guarantor_umu'}
+            options={hasJoinGuarantorOptions}
+            onChange={(e) => {
+              if (e.target.checked) {
+                setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
+              } else {
+                setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
+              }
+            }}
+          />
         </ApItemGroup>
 
         <ApItemGroup

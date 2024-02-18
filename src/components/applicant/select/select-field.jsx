@@ -5,6 +5,7 @@ import { Icons } from '@/assets';
 
 export const ApSelectField = ({
   options,
+  disableOptions = [],
   placeholder,
   unit,
   width,
@@ -171,7 +172,12 @@ export const ApSelectField = ({
             renderValue={props?.renderValue || renderValue}
           >
             {options.map((option) => (
-              <MenuItem key={option.value} value={option.value} className={option.className}>
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                className={option.className}
+                disabled={!!disableOptions.find((item) => item.value === option.value)}
+              >
                 <Typography
                   sx={{
                     fontFamily: 'Hiragino Sans',

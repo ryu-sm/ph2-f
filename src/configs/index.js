@@ -1,4 +1,5 @@
 export const APP_MODE = 'dev'; // dev || stg || prd
+// export const APP_SERVER_URL = 'http://0.0.0.0:8000';
 export const APP_SERVER_URL = 'http://54.178.88.84/api';
 
 // スタティック資源

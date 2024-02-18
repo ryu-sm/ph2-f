@@ -105,32 +105,6 @@ export const ApStep04Page = () => {
     }
   }, [formik.values.consent, formik.values.confirmation]);
 
-  useEffect(() => {
-    if (
-      formik.values.p_applicant_persons__1__postal_code.length === 8 &&
-      !formik.errors.p_applicant_persons__1__postal_code
-    ) {
-      axios
-        .get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${formik.values.p_applicant_persons__1__postal_code}`)
-        .then((res) => {
-          formik.setFieldValue('p_applicant_persons__1__prefecture_kanji', res.data.results[0].address1);
-          formik.setFieldValue('p_applicant_persons__1__city_kanji', res.data.results[0].address2);
-          formik.setFieldValue('p_applicant_persons__1__district_kanji', res.data.results[0].address3);
-        })
-        .catch(() => {
-          console.log(999);
-          formik.setFieldError(
-            'p_applicant_persons__1__postal_code',
-            '住所が取得できませんでした。再度入力してください。'
-          );
-        });
-    }
-  }, [formik.values.p_applicant_persons__1__postal_code, formik.errors.p_applicant_persons__1__postal_code]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -205,20 +179,31 @@ export const ApStep04Page = () => {
           <Stack>
             <ApItemGroup label={'お名前'}>
               <Stack spacing={3}>
-                <ApTextInputField name="p_applicant_persons__1__last_name_kanji" placeholder={'姓'} />
-                <ApTextInputField name="p_applicant_persons__1__first_name_kanji" placeholder={'名'} />
+                <ApTextInputField name="p_applicant_persons__1__last_name_kanji" placeholder={'姓'} convertFullWidth />
+                <ApTextInputField name="p_applicant_persons__1__first_name_kanji" placeholder={'名'} convertFullWidth />
                 <ApStarHelp label={'外国籍のかたは、在留カード通りに入力ください。'} />
                 <ApStarHelp label={'お名前の漢字が外字等で変換できない場合は常用漢字でご入力ください。'} />
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={'お名前（フリガナ）'}>
               <Stack spacing={3}>
-                <ApTextInputField name="p_applicant_persons__1__last_name_kana" placeholder={'セイ'} />
-                <ApTextInputField name="p_applicant_persons__1__first_name_kana" placeholder={'メイ'} />
+                <ApTextInputField name="p_applicant_persons__1__last_name_kana" placeholder={'セイ'} convertFullWidth />
+                <ApTextInputField
+                  name="p_applicant_persons__1__first_name_kana"
+                  placeholder={'メイ'}
+                  convertFullWidth
+                />
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={'性別'}>
               <ApRadioRowGroup name="p_applicant_persons__1__gender" options={ganderOptions} />
+            </ApItemGroup>
+            <ApItemGroup label={'続柄'} pb={3} px={2}>
+              <ApTextInputField
+                name="p_applicant_persons__1__rel_to_applicant_a_name"
+                placeholder={'例：父'}
+                convertFullWidth
+              />
             </ApItemGroup>
             <ApItemGroup label={'生年月日'}>
               <Stack spacing={3}>
@@ -228,17 +213,38 @@ export const ApStep04Page = () => {
             </ApItemGroup>
             <ApItemGroup label={'現在の国籍'}>
               <ApRadioRowGroup name="p_applicant_persons__1__nationality" options={nationalityOptions} />
+              {/* TODO: IMG */}
             </ApItemGroup>
             <ApItemGroup label={'電話番号'}>
               <Stack spacing={3}>
-                <ApPhoneInputField name="p_applicant_persons__1__mobile_phone" label={'携帯'} />
-                <ApPhoneInputField name="p_applicant_persons__1__home_phone" label={'自宅'} />
+                <ApPhoneInputField
+                  name="p_applicant_persons__1__mobile_phone"
+                  label={'携帯'}
+                  onFocus={() => formik.setFieldTouched('p_applicant_persons__1__home_phone', false)}
+                />
+                <ApPhoneInputField
+                  name="p_applicant_persons__1__home_phone"
+                  label={'自宅'}
+                  onFocus={() => formik.setFieldTouched('p_applicant_persons__1__mobile_phone', false)}
+                />
                 <ApStarHelp label={'半角数字でご入力ください。'} />
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={'現住所'}>
               <Stack spacing={4}>
-                <ApZipCodeInputField name="p_applicant_persons__1__postal_code" />
+                <ApZipCodeInputField
+                  name="p_applicant_persons__1__postal_code"
+                  callback={(addr) => {
+                    formik.setFieldValue('p_applicant_persons__1__prefecture_kanji', addr.prefecture_kanji);
+                    formik.setFieldValue('p_applicant_persons__1__city_kanji', addr.city_kanji);
+                    formik.setFieldValue('p_applicant_persons__1__district_kanji', addr.district_kanji);
+                  }}
+                  errorCallback={() => {
+                    formik.setFieldValue('p_applicant_persons__1__prefecture_kanji', '');
+                    formik.setFieldValue('p_applicant_persons__1__city_kanji', '');
+                    formik.setFieldValue('p_applicant_persons__1__district_kanji', '');
+                  }}
+                />
                 <ApSelectField
                   name="p_applicant_persons__1__prefecture_kanji"
                   options={PREFECTURES}

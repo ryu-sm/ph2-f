@@ -10,6 +10,7 @@ service.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = token;
     }
+    config.headers['Access-Control-Allow-Origin'] = '*';
     return config;
   },
   (error) => {

@@ -1,45 +1,20 @@
 import { yup } from '@/libs';
 import { convertToHalfWidth } from '@/utils';
 import { Stack, TextField, Typography } from '@mui/material';
-import axios from 'axios';
-import { FormikProvider, useField, useFormik } from 'formik';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
+import { FormikProvider, useField, useFormik } from 'formik';
+import { useCallback, useMemo, useRef } from 'react';
+import { NumericFormat } from 'react-number-format';
+
+export const ApAreaInputField = ({ label, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
 
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const isSuccess = useMemo(() => !isError && !!meta.value && meta.value !== '', [isError, meta.value]);
-  const [addrError, setAddrError] = useState(false);
-
-  useEffect(() => {
-    if (!meta.error && !!meta.value && meta.value.length === 8) {
-      axios
-        .get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${meta.value}`)
-        .then((res) => {
-          console.log(res);
-          console.log(!!res.data.results);
-          if (!!res.data.results) {
-            callback({
-              prefecture_kanji: res.data.results[0].address1,
-              city_kanji: res.data.results[0].address2,
-              district_kanji: res.data.results[0].address3,
-            });
-          } else {
-            setAddrError(true);
-            errorCallback();
-          }
-        })
-        .catch(() => {
-          setAddrError(true);
-          errorCallback();
-        });
-    }
-  }, [meta.value, meta.error, meta.touched]);
 
   const initialValues = useMemo(() => {
-    const [firstCode = '', secondCode = ''] = meta.value ? meta.value.split('-') : ['', ''];
+    const [firstCode = '', secondCode = ''] = meta.value ? meta.value.split('.') : ['', ''];
     return { firstCode, secondCode };
   }, [meta.value]);
 
@@ -57,58 +32,55 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
     onSubmit() {},
   });
 
-  const zipCodeInputs = useMemo(
+  const areaInputs = useMemo(
     () => [
       {
         name: 'firstCode',
         ref: refOne,
-        maxLength: 3,
+        maxLength: 9,
         value: formik.values.firstCode,
       },
       {
         name: 'secondCode',
         ref: refTwo,
-        maxLength: 4,
+        maxLength: 2,
         value: formik.values.secondCode,
       },
     ],
     [formik.values.firstCode, formik.values.secondCode]
   );
 
-  console.log(currentIndex);
-
   const handleBackInput = useCallback(() => {
     const prevIndex = currentIndex.current - 1;
 
     if (prevIndex !== -1) {
-      const prevInput = zipCodeInputs?.[prevIndex]?.ref.current;
+      const prevInput = areaInputs?.[prevIndex]?.ref.current;
       prevInput?.focus();
 
       currentIndex.current = prevIndex;
     }
-  }, [zipCodeInputs]);
+  }, [areaInputs]);
 
   const handleNextInput = useCallback(() => {
     const nextIndex = currentIndex.current + 1;
 
-    if (nextIndex === zipCodeInputs.length) {
-      return zipCodeInputs?.[currentIndex.current]?.ref.current?.blur();
+    if (nextIndex === areaInputs.length) {
+      return areaInputs?.[currentIndex.current]?.ref.current?.blur();
     }
-    const nextInput = zipCodeInputs?.[nextIndex]?.ref.current;
+    const nextInput = areaInputs?.[nextIndex]?.ref.current;
     nextInput?.focus();
 
     currentIndex.current = nextIndex;
-  }, [zipCodeInputs]);
+  }, [areaInputs]);
 
   const handleKeyPress = useCallback(
     async (e) => {
-      if ((e.target.value.length === 3 && e.target.name === 'firstCode') || e.target.value.length === 4)
+      if ((e.target.value.length === 9 && e.target.name === 'firstCode') || e.target.value.length === 9)
         handleNextInput();
       if (e.target.value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value) {
-        await setValue(`${refOne.current?.value}-${refTwo.current?.value}`);
-        return;
+        return await setValue(`${refOne.current?.value}.${refTwo.current?.value}`);
       }
 
       return await setValue('');
@@ -119,18 +91,21 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
   const handleBlur = useCallback(async () => {
     if (!!refOne.current && !!refTwo.current) {
       if (!!refOne.current.value || !!refTwo.current.value)
-        await setValue(`${convertToHalfWidth(refOne.current.value)}-${convertToHalfWidth(refTwo.current.value)}`);
+        await setValue(
+          `${convertToHalfWidth(refOne.current.value).replaceAll(',', '')}.${convertToHalfWidth(
+            refTwo.current.value
+          ).replaceAll(',', '')}`
+        );
     }
     setTouched(true);
   }, [setTouched, setValue]);
 
   const handleFocusInput = useCallback(
     (e, name) => {
-      if (e.key !== 'Backspace' && name === 'firstCode' && refOne.current?.value.length === 3) {
+      if (e.key !== 'Backspace' && name === 'firstCode' && refOne.current?.value.length === 9) {
         handleNextInput();
       }
       if (e.key === 'Backspace' && refTwo.current?.value === '') handleBackInput();
-      setAddrError(false);
       setTouched(false);
     },
     [handleBackInput, handleNextInput]
@@ -140,24 +115,28 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
     <FormikProvider value={formik}>
       <input name={field.name} type="hidden" />
       <Stack spacing={1}>
-        <Typography variant="label" color={'text.main'} lineHeight={'100%'}>
-          郵便番号
-        </Typography>
+        {label && (
+          <Typography variant="label" color={'text.main'} lineHeight={'100%'}>
+            {label}
+          </Typography>
+        )}
         <Stack spacing={'2px'}>
           <Stack spacing={1} direction={'row'} alignItems={'center'}>
-            {zipCodeInputs.map((input, index) => (
+            {areaInputs.map((input, index) => (
               <Stack key={index} spacing={1} direction={'row'} alignItems={'center'}>
-                <TextField
-                  placeholder={'0'.repeat(input.maxLength).toString()}
+                <NumericFormat
+                  customInput={TextField}
+                  thousandSeparator
+                  autoComplete="off"
+                  placeholder={index ? '--' : '---'}
                   inputRef={input.ref}
                   name={input.name}
                   value={input.value}
                   sx={{
-                    '& .MuiInputBase-input': { textAlign: 'center', width: 50 },
+                    '& .MuiInputBase-input': { textAlign: 'center', width: index ? 22 : 93 },
                     '&&&& fieldset': { border: '1px solid', borderColor: 'primary.40' },
 
                     ...(isSuccess &&
-                      !addrError &&
                       !!input.ref.current?.value && {
                         '.MuiInputBase-input': {
                           backgroundColor: (theme) => theme.palette.gray[100],
@@ -168,23 +147,28 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
                   }}
                   onInput={(e) => {
                     e.target.value = convertToHalfWidth(e.target.value);
-                    e.target.value = e.target.value.substring(0, input.maxLength);
-                    e.target.value = e.target.value.replace(/[^\d]+/g, '');
-                    return e;
+                    console.log(input.maxLength);
+                    if (e.target.value.length > input.maxLength)
+                      e.target.value = e.target.value.substring(0, input.maxLength === 2 ? 2 : 10);
+                    return (e.target.value = e.target.value.replace(/[^\d]+/g, ''));
                   }}
                   onChange={handleKeyPress}
                   onKeyDown={(e) => handleFocusInput(e, input.name)}
                   onFocus={() => {
-                    setTouched(false);
-                    setAddrError(false);
+                    setTouched(true);
                     currentIndex.current = index;
                   }}
                   onBlur={handleBlur}
-                  error={isError || addrError}
+                  error={isError}
                 />
-                {index !== zipCodeInputs.length - 1 && (
+                {index !== areaInputs.length - 1 && (
                   <Typography variant="note" color={'text.main'}>
-                    -
+                    .
+                  </Typography>
+                )}
+                {!!index && (
+                  <Typography variant="unit" fontFamily={'Noto Sans JP'} color={'gray.200'}>
+                    ㎡
                   </Typography>
                 )}
               </Stack>
@@ -195,19 +179,6 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
               ※{meta.error}
             </Typography>
           )}
-          {addrError && (
-            <Typography variant="note" sx={{ fontWeight: 500, color: (theme) => theme.palette.secondary.main }}>
-              ※住所が取得できませんでした。再度入力してください。
-            </Typography>
-          )}
-        </Stack>
-        <Stack direction="row" spacing={1}>
-          <Typography variant="note" color={'text.main'}>
-            ※
-          </Typography>
-          <Typography variant="note" color={'text.main'}>
-            入力すると自動的に住所が表示されます。
-          </Typography>
         </Stack>
       </Stack>
     </FormikProvider>

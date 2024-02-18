@@ -1,7 +1,7 @@
 export const routeNames = {
   apStartPage: {
     name: 'apStartPage',
-    path: '/root',
+    path: '/',
   },
   apRegisterVerifyEmailPage: {
     name: 'apRegisterVerifyEmailPage',
@@ -77,5 +77,25 @@ export const routeNames = {
   apStep05Page: {
     name: 'apStep05Page',
     path: '/step-id-5',
+  },
+  apStep06Page: {
+    name: 'apStep06Page',
+    path: '/step-id-6',
+  },
+  apStep07Page: {
+    name: 'apStep07Page',
+    path: '/step-id-7',
+  },
+  apStep07Page: {
+    name: 'apStep07Page',
+    path: '/step-id-7',
+  },
+  apStep08Page: {
+    name: 'apStep08Page',
+    path: '/step-id-8',
+  },
+  apStep09Page: {
+    name: 'apStep09Page',
+    path: '/step-id-9',
   },
 };

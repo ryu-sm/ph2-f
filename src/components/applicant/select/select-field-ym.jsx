@@ -36,12 +36,12 @@ export const ApSelectFieldYm = ({ yearOptions, unit, ...props }) => {
     <FormikProvider value={formik}>
       <input name={field.name} type="hidden" />
       <Stack spacing={'2px'}>
-        <Stack spacing={'5px'} direction={'row'} alignItems={'center'}>
+        <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
           <ApSelectField
             name={'year'}
             unit={'年'}
             sx={{
-              width: 160,
+              width: 163,
               '@media (max-width:385px)': {
                 width: 117,
               },

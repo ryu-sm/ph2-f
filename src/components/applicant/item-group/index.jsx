@@ -4,6 +4,7 @@ export const ApItemGroup = ({
   children,
   optional,
   label,
+  labelFontSize,
   note,
   helps = [],
   helpsType,
@@ -19,6 +20,7 @@ export const ApItemGroup = ({
       <Label
         optional={optional}
         label={label}
+        labelFontSize={labelFontSize}
         helps={helps}
         note={note}
         helpsType={helpsType}
@@ -30,7 +32,16 @@ export const ApItemGroup = ({
   );
 };
 
-const Label = ({ optional, label, note, helpsType, helps, borderTopRightRadius, borderTopLeftRadius }) => {
+const Label = ({
+  optional,
+  label,
+  labelFontSize,
+  note,
+  helpsType,
+  helps,
+  borderTopRightRadius,
+  borderTopLeftRadius,
+}) => {
   return (
     <Stack
       alignItems={'center'}
@@ -66,7 +77,11 @@ const Label = ({ optional, label, note, helpsType, helps, borderTopRightRadius, 
           <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ width: '100%' }}>
             <Typography
               variant="form_item_label"
-              sx={{ color: (theme) => theme.palette.text.main, whiteSpace: helpsType || 'break-spaces' }}
+              sx={{
+                color: (theme) => theme.palette.text.main,
+                whiteSpace: helpsType || 'break-spaces',
+                fontSize: labelFontSize ? labelFontSize : 16,
+              }}
             >
               {label}
             </Typography>

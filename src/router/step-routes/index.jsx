@@ -6,6 +6,10 @@ import {
   ApStep03Page,
   ApStep04Page,
   ApStep05Page,
+  ApStep06Page,
+  ApStep07Page,
+  ApStep08Page,
+  ApStep09Page,
   ApTopPage,
 } from '@/pages/applicant';
 
@@ -38,5 +42,21 @@ export const stepRoutes = [
   {
     ...routeNames.apStep05Page,
     element: <ApStep05Page />,
+  },
+  {
+    ...routeNames.apStep06Page,
+    element: <ApStep06Page />,
+  },
+  {
+    ...routeNames.apStep07Page,
+    element: <ApStep07Page />,
+  },
+  {
+    ...routeNames.apStep08Page,
+    element: <ApStep08Page />,
+  },
+  {
+    ...routeNames.apStep09Page,
+    element: <ApStep09Page />,
   },
 ];

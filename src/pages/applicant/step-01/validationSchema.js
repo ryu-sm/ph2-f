@@ -37,16 +37,20 @@ export const validationSchema = yup.object({
     .test('not-available-days', YUP_MESSAGES.PLEASE_SELECT_BANK_BUSINESS_DAY, async (field_value) => {
       if (!field_value) return true;
       const [year, month, day] = field_value.split('/');
+
+      if (isWeekend(field_value) || BANK_NOT_VALID_DAYS.includes(`${month}/${day}`)) {
+        return false;
+      }
       try {
         const publicHolidays = JSON.parse(localStorage.getItem('publicHolidays'))[year];
-        console.log(publicHolidays);
         if (publicHolidays.find((o) => o.date === `${year}-${month}-${day}`)) {
           return false;
+        } else {
+          return true;
         }
       } catch (error) {
         return true;
       }
-      return !isWeekend(field_value) && !BANK_NOT_VALID_DAYS.includes(`${month}/${day}`);
     })
     .matches(REGEX.YMD, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
     .label('お借入希望日'),

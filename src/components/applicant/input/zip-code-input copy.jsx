@@ -75,8 +75,6 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
     [formik.values.firstCode, formik.values.secondCode]
   );
 
-  console.log(currentIndex);
-
   const handleBackInput = useCallback(() => {
     const prevIndex = currentIndex.current - 1;
 
@@ -148,6 +146,7 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
             {zipCodeInputs.map((input, index) => (
               <Stack key={index} spacing={1} direction={'row'} alignItems={'center'}>
                 <TextField
+                  autoComplete="off"
                   placeholder={'0'.repeat(input.maxLength).toString()}
                   inputRef={input.ref}
                   name={input.name}
@@ -176,7 +175,6 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
                   onKeyDown={(e) => handleFocusInput(e, input.name)}
                   onFocus={() => {
                     setTouched(false);
-                    setAddrError(false);
                     currentIndex.current = index;
                   }}
                   onBlur={handleBlur}

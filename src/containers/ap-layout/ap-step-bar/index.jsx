@@ -3,7 +3,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authAtom, hasIncomeTotalizerSelector, hasJoinGuarantorSelector } from '@/store';
 import { Icons } from '@/assets';
 import { useLocation } from 'react-router-dom';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 
 export const ApStepBar = () => {
@@ -12,7 +12,6 @@ export const ApStepBar = () => {
   const setAuthInfo = useSetRecoilState(authAtom);
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
-  const [stepIndex, setStepIndex] = useState(1);
 
   const apSteps = useMemo(
     () => [
@@ -116,12 +115,10 @@ export const ApStepBar = () => {
     [hasIncomeTotalizer, hasJoinGuarantor]
   );
 
-  useEffect(() => {
+  const stepIndex = useMemo(() => {
     const pageStepID = parseInt(pathname.replace('/step-id-', ''));
-    const tempIndex = apSteps.findIndex((item) => item.id === pageStepID);
-
-    setStepIndex(tempIndex);
-  }, [apSteps, pathname, stepIndex, setStepIndex]);
+    return apSteps.findIndex((item) => item.id === pageStepID);
+  }, [apSteps, pathname]);
 
   useEffect(() => {
     setAuthInfo((pre) => {
@@ -204,6 +201,7 @@ export const ApStepBar = () => {
         '&::-webkit-scrollbar': {
           display: 'none',
         },
+        border: (theme) => `0.5px solid ${theme.palette.primary[40]}`,
       }}
     >
       {apSteps.map((step, index) => (

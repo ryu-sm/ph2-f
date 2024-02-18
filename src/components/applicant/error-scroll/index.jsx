@@ -1,16 +1,35 @@
 import { useFormikContext, getIn } from 'formik';
+import { object } from 'prop-types';
+
 import { useEffect } from 'react';
 
 export const ApErrorScroll = () => {
   const { isSubmitting, isValidating, errors, touched } = useFormikContext();
   useEffect(() => {
     if (isSubmitting && !isValidating) {
-      const errorNames = Object.keys(errors).reduce((prev, key) => {
-        if (getIn(errors, key)) {
-          prev.push(key);
-        }
-        return prev;
-      }, []);
+      const errorNames = [];
+      const parseErrors = (basePre, errors) => {
+        let pre = basePre;
+        Object.entries(errors).forEach(([key, value]) => {
+          if (typeof value === 'string') {
+            if (!!pre) {
+              errorNames.push(`${pre}.${key}`);
+            } else {
+              errorNames.push(key);
+            }
+          } else {
+            if (isNaN(parseInt(key))) {
+              parseErrors(`${pre}${key}`, value);
+            } else {
+              parseErrors(`${pre}[${key}]`, value);
+            }
+          }
+        });
+      };
+
+      parseErrors('', errors);
+
+      console.log(errorNames);
 
       if (errorNames.length && typeof document !== 'undefined') {
         let errorElement;

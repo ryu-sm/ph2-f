@@ -84,3 +84,6 @@ export { ApRadioCheckedIcon } from './ap-radio-checked';
 export { ApHelpIcon } from './ap-help';
 export { ApWarningMainIcon } from './ap-warning-main';
 export { ApCalculatorIcon } from './ap-calculator';
+
+export { ApAddIcon } from './ap-add';
+export { ApDeleteIcon } from './ap-delete';

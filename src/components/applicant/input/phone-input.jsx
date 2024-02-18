@@ -164,6 +164,7 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
                     onKeyDown={(e) => handleFocusInput(e, input.name)}
                     onFocus={() => {
                       currentIndex.current = index;
+                      props.onFocus && props.onFocus();
                     }}
                     onBlur={handleBlur}
                     error={isError}

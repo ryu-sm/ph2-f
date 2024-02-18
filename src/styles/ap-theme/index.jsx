@@ -26,6 +26,7 @@ export const ApThemeProvider = ({ children }) => {
           body: {
             overscrollBehaviorY: 'none',
             backgroundColor: theme.palette.background.wrapper,
+
             '.day-of-week-0, .day-of-week-6': {
               backgroundColor: '#E7E7E7',
             },
@@ -36,6 +37,7 @@ export const ApThemeProvider = ({ children }) => {
               backgroundColor: '#E7E7E7',
             },
           },
+
           '@font-face': [
             {
               fontFamily: futura,

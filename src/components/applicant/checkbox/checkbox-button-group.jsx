@@ -24,6 +24,7 @@ export const ApCheckboxButtonGroup = ({ options, ...props }) => {
     if (meta.touched && !!meta.error) return 'secondary.main';
     return 'primary.40';
   }, [meta.touched, meta.error, meta.value.length]);
+
   return (
     <Stack spacing={'2px'}>
       <Stack

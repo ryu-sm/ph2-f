@@ -42,9 +42,8 @@ export const ApNumberInputField = ({
 
   const handleChange = useCallback(
     async (e) => {
-      field.onChange(e);
+      e.target.value = e.target.value.replaceAll(',', '');
       props.onChange && props.onChange(e);
-      await setValue(e.target.value);
     },
     [field, props, setValue]
   );
@@ -57,10 +56,10 @@ export const ApNumberInputField = ({
       )}
       <Stack spacing={2} direction={'row'} alignItems={'center'}>
         <NumericFormat
-          customInput={TextField}
-          thousandSeparator
           {...field}
           {...props}
+          customInput={TextField}
+          thousandSeparator
           autoComplete="off"
           placeholder={placeholder}
           value={meta.value}
@@ -77,17 +76,16 @@ export const ApNumberInputField = ({
           }}
           onInput={(e) => {
             e.target.value = convertToHalfWidth(e.target.value);
-            const numberLength = e.target.value.replaceAll(',', '').length;
-            if (numberLength > maxLength)
-              e.target.value = e.target.value.substring(0, numberLength + parseInt(maxLength / 3) - 2);
-            return (e.target.value = e.target.value.replace(/^(0+)|[^\d]+/g, ''));
+            e.target.value = e.target.value.substring(0, maxLength);
+            e.target.value = e.target.value.replace(/^(0+)|[^\d ,]+/g, '');
+            return e;
           }}
           onBlur={handelBlue}
           onFocus={handleFocus}
           onChange={handleChange}
         />
         {typeof unit === 'string' ? (
-          <Typography variant="unit" color={'text.main'}>
+          <Typography variant="unit" color={'text.main'} whiteSpace={'nowrap'}>
             {unit}
           </Typography>
         ) : (

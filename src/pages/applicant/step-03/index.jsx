@@ -27,6 +27,8 @@ import { Stack, Typography } from '@mui/material';
 import {
   incomeOptions,
   industryOptions,
+  leaveStatusDownYearOptions,
+  leaveStatusUpYearOptions,
   maternityPaternityLeaveOptions,
   nursingLeaveOptions,
   occupationDetailOptions,
@@ -136,71 +138,6 @@ export const ApStep03Page = () => {
     navigate(`/step-id-${apPreStepId}`);
   };
 
-  useEffect(() => {
-    if (
-      formik.values.p_applicant_persons__0__office_postal_code.length === 8 &&
-      !formik.errors.p_applicant_persons__0__office_postal_code
-    ) {
-      axios
-        .get(
-          `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${formik.values.p_applicant_persons__0__office_postal_code}`
-        )
-        .then((res) => {
-          formik.setFieldValue('p_applicant_persons__0__office_prefecture_kanji', res.data.results[0].address1);
-          formik.setFieldValue('p_applicant_persons__0__office_city_kanji', res.data.results[0].address2);
-          formik.setFieldValue('p_applicant_persons__0__office_district_kanji', res.data.results[0].address3);
-        })
-        .catch(() => {
-          console.log(999);
-          formik.setFieldError(
-            'p_applicant_persons__0__office_postal_code',
-            '住所が取得できませんでした。再度入力してください。'
-          );
-        });
-    }
-  }, [
-    formik.values.p_applicant_persons__0__office_postal_code,
-    formik.errors.p_applicant_persons__0__office_postal_code,
-  ]);
-
-  useEffect(() => {
-    if (
-      formik.values.p_applicant_persons__0__transfer_office_postal_code.length === 8 &&
-      !formik.errors.p_applicant_persons__0__transfer_office_postal_code
-    ) {
-      axios
-        .get(
-          `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${formik.values.p_applicant_persons__0__transfer_office_postal_code}`
-        )
-        .then((res) => {
-          formik.setFieldValue(
-            'p_applicant_persons__0__transfer_office_prefecture_kanji',
-            res.data.results[0].address1
-          );
-          formik.setFieldValue('p_applicant_persons__0__transfer_office_city_kanji', res.data.results[0].address2);
-          formik.setFieldValue('p_applicant_persons__0__transfer_office_district_kanji', res.data.results[0].address3);
-        })
-        .catch(() => {
-          console.log(999);
-          formik.setFieldError(
-            'p_applicant_persons__0__transfer_office_postal_code',
-            '住所が取得できませんでした。再度入力してください。'
-          );
-        });
-    }
-  }, [
-    formik.values.p_applicant_persons__0__transfer_office_postal_code,
-    formik.errors.p_applicant_persons__0__transfer_office_postal_code,
-  ]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -214,6 +151,15 @@ export const ApStep03Page = () => {
               width={1}
               justifyContent={'start'}
               options={occupationOptions}
+              onChange={(e) => {
+                // TODO: 1
+                if (e.target.value === '12') {
+                  formik.setFieldValue('p_applicant_persons__0__office_phone', '');
+                }
+                if (e.target.value === '99') {
+                  formik.setFieldValue('p_applicant_persons__0__office_occupation_other', '');
+                }
+              }}
             />
             {formik.values.p_applicant_persons__0__office_occupation === '99' && (
               <Stack spacing={'6px'}>
@@ -237,6 +183,11 @@ export const ApStep03Page = () => {
               width={1}
               justifyContent={'start'}
               options={industryOptions}
+              onChange={(e) => {
+                if (e.target.value === '99') {
+                  formik.setFieldValue('p_applicant_persons__0__office_industry_other', '');
+                }
+              }}
             />
             {formik.values.p_applicant_persons__0__office_industry === '99' && (
               <Stack spacing={'6px'}>
@@ -260,6 +211,11 @@ export const ApStep03Page = () => {
               width={1}
               justifyContent={'start'}
               options={occupationDetailOptions}
+              onChange={(e) => {
+                if (e.target.value === '99') {
+                  formik.setFieldValue('p_applicant_persons__0__office_occupation_detail_other', '');
+                }
+              }}
             />
             {formik.values.p_applicant_persons__0__office_occupation_detail === '99' && (
               <Stack spacing={'6px'}>
@@ -306,7 +262,19 @@ export const ApStep03Page = () => {
 
         <ApItemGroup label={'勤務先の住所'} note={'※実際に勤務している事業所の住所をご入力ください'}>
           <Stack spacing={4}>
-            <ApZipCodeInputField name="p_applicant_persons__0__office_postal_code" />
+            <ApZipCodeInputField
+              name="p_applicant_persons__0__office_postal_code"
+              callback={(addr) => {
+                formik.setFieldValue('p_applicant_persons__0__office_prefecture_kanji', addr.prefecture_kanji);
+                formik.setFieldValue('p_applicant_persons__0__office_city_kanji', addr.city_kanji);
+                formik.setFieldValue('p_applicant_persons__0__office_district_kanji', addr.district_kanji);
+              }}
+              errorCallback={() => {
+                formik.setFieldValue('p_applicant_persons__0__office_prefecture_kanji', '');
+                formik.setFieldValue('p_applicant_persons__0__office_city_kanji', '');
+                formik.setFieldValue('p_applicant_persons__0__office_district_kanji', '');
+              }}
+            />
             <ApSelectField
               name="p_applicant_persons__0__office_prefecture_kanji"
               options={PREFECTURES}
@@ -438,9 +406,6 @@ export const ApStep03Page = () => {
                     <ApCheckboxButtonGroup
                       name="p_applicant_persons__0__tax_return_reasons"
                       options={taxReturnReasonsOptions}
-                      onChange={(e) => {
-                        console.log(e);
-                      }}
                     />
                     {formik.values.p_applicant_persons__0__tax_return_reasons.includes('99') && (
                       <Stack spacing={'6px'}>
@@ -520,7 +485,25 @@ export const ApStep03Page = () => {
                   </ApItemGroup>
                   <ApItemGroup label={'出向（派遣）先　住所'}>
                     <Stack spacing={4}>
-                      <ApZipCodeInputField name="p_applicant_persons__0__transfer_office_postal_code" />
+                      <ApZipCodeInputField
+                        name="p_applicant_persons__0__transfer_office_postal_code"
+                        callback={(addr) => {
+                          formik.setFieldValue(
+                            'p_applicant_persons__0__transfer_office_prefecture_kanji',
+                            addr.prefecture_kanji
+                          );
+                          formik.setFieldValue('p_applicant_persons__0__transfer_office_city_kanji', addr.city_kanji);
+                          formik.setFieldValue(
+                            'p_applicant_persons__0__transfer_office_district_kanji',
+                            addr.district_kanji
+                          );
+                        }}
+                        errorCallback={() => {
+                          formik.setFieldValue('p_applicant_persons__0__transfer_office_prefecture_kanji', '');
+                          formik.setFieldValue('p_applicant_persons__0__transfer_office_city_kanji', '');
+                          formik.setFieldValue('p_applicant_persons__0__transfer_office_district_kanji', '');
+                        }}
+                      />
                       <ApSelectField
                         name="p_applicant_persons__0__transfer_office_prefecture_kanji"
                         options={PREFECTURES}
@@ -562,7 +545,7 @@ export const ApStep03Page = () => {
               onChange={() => {
                 formik.setFieldValue('p_applicant_persons__0__maternity_paternity_leave_start_date', '');
                 formik.setFieldValue('p_applicant_persons__0__maternity_paternity_leave_end_date', '');
-                // TODO:
+
                 formik.setFieldTouched('p_applicant_persons__0__maternity_paternity_leave_start_date', false);
                 formik.setFieldTouched('p_applicant_persons__0__maternity_paternity_leave_end_date', false);
               }}
@@ -593,12 +576,23 @@ export const ApStep03Page = () => {
                     <ApSelectFieldYm
                       name="p_applicant_persons__0__maternity_paternity_leave_start_date"
                       unit={'月から'}
+                      yearOptions={
+                        formik.values.p_applicant_persons__0__maternity_paternity_leave === '1'
+                          ? leaveStatusUpYearOptions
+                          : leaveStatusDownYearOptions
+                      }
                     />
                   </ApItemGroup>
                   <ApItemGroup label={'取得終了時期'} pb={3} px={2}>
                     <ApSelectFieldYm
                       name="p_applicant_persons__0__maternity_paternity_leave_end_date"
                       unit={'月まで'}
+                      yearOptions={
+                        formik.values.p_applicant_persons__0__maternity_paternity_leave === '1' ||
+                        formik.values.p_applicant_persons__0__maternity_paternity_leave === '2'
+                          ? leaveStatusUpYearOptions
+                          : leaveStatusDownYearOptions
+                      }
                     />
                   </ApItemGroup>
                 </Stack>
