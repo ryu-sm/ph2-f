@@ -18,7 +18,7 @@ import {
   ApTextInputField,
   ApZipCodeInputField,
 } from '@/components';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { ganderOptions, nationalityOptions, yearOptions } from './options';
 import { PREFECTURES } from '@/constant';
 import axios from 'axios';
@@ -109,8 +109,33 @@ export const ApStep02Page = () => {
           </Stack>
         </ApItemGroup>
         <ApItemGroup label={'現在の国籍'}>
-          <ApRadioRowGroup name="p_applicant_persons__0__nationality" options={nationalityOptions} />
-          {/* TODO: IMG */}
+          <Stack spacing={3}>
+            <ApRadioRowGroup name="p_applicant_persons__0__nationality" options={nationalityOptions} />
+            {/* TODO: IMG */}
+            <Stack
+              sx={{
+                borderRadius: 2,
+                border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                bgcolor: 'primary.main',
+                boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
+              }}
+            >
+              <Stack
+                sx={{
+                  bgcolor: 'white',
+                  borderRadius: '7px',
+                }}
+              >
+                <ApItemGroup
+                  label={<Typography variant="notify">在留カードまたは特別永住者証明書を添付してください。</Typography>}
+                  pb={3}
+                  px={2}
+                  borderTopRightRadius={'7px'}
+                  borderTopLeftRadius={'7px'}
+                ></ApItemGroup>
+              </Stack>
+            </Stack>
+          </Stack>
         </ApItemGroup>
         <ApItemGroup label={'電話番号'}>
           <Stack spacing={3}>
