@@ -86,10 +86,6 @@ export const routeNames = {
     name: 'apStep07Page',
     path: '/step-id-7',
   },
-  apStep07Page: {
-    name: 'apStep07Page',
-    path: '/step-id-7',
-  },
   apStep08Page: {
     name: 'apStep08Page',
     path: '/step-id-8',

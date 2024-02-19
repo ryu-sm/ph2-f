@@ -1,5 +1,4 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useCallback, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, userEmailSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
@@ -10,7 +9,6 @@ import {
   ApItemGroup,
   ApPageTitle,
   ApPhoneInputField,
-  ApPrimaryButton,
   ApRadioRowGroup,
   ApSelectField,
   ApSelectFieldYmd,
@@ -21,8 +19,8 @@ import {
 import { Stack, Typography } from '@mui/material';
 import { ganderOptions, nationalityOptions, yearOptions } from './options';
 import { PREFECTURES } from '@/constant';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ImageUpload } from '@/components/applicant/image-upload';
 
 export const ApStep02Page = () => {
   const navigate = useNavigate();
@@ -46,6 +44,8 @@ export const ApStep02Page = () => {
     p_applicant_persons__0__district_kanji,
     p_applicant_persons__0__other_address_kanji,
     p_applicant_persons__0__email,
+    p_applicant_persons__0__h__surface,
+    p_applicant_persons__0__h__backside,
   } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
@@ -65,6 +65,8 @@ export const ApStep02Page = () => {
       p_applicant_persons__0__district_kanji,
       p_applicant_persons__0__other_address_kanji,
       p_applicant_persons__0__email: p_applicant_persons__0__email || userEmail,
+      p_applicant_persons__0__h__surface,
+      p_applicant_persons__0__h__backside,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -111,7 +113,6 @@ export const ApStep02Page = () => {
         <ApItemGroup label={'現在の国籍'}>
           <Stack spacing={3}>
             <ApRadioRowGroup name="p_applicant_persons__0__nationality" options={nationalityOptions} />
-            {/* TODO: IMG */}
             <Stack
               sx={{
                 borderRadius: 2,
@@ -122,17 +123,28 @@ export const ApStep02Page = () => {
             >
               <Stack
                 sx={{
-                  bgcolor: 'white',
+                  bgcolor: 'background.neutral',
                   borderRadius: '7px',
                 }}
               >
                 <ApItemGroup
                   label={<Typography variant="notify">在留カードまたは特別永住者証明書を添付してください。</Typography>}
+                  px={3}
                   pb={3}
-                  px={2}
                   borderTopRightRadius={'7px'}
                   borderTopLeftRadius={'7px'}
-                ></ApItemGroup>
+                >
+                  <Stack direction={'row'} spacing={3}>
+                    <Stack direction={'column'} spacing={2}>
+                      <Typography>〈表面〉</Typography>
+                      <ImageUpload isSingleFile={true} name="p_applicant_persons__0__h__surface" />
+                    </Stack>
+                    <Stack direction={'column'} spacing={2}>
+                      <Typography>〈裏面〉</Typography>
+                      <ImageUpload isSingleFile={true} name="p_applicant_persons__0__h__backside" />
+                    </Stack>
+                  </Stack>
+                </ApItemGroup>
               </Stack>
             </Stack>
           </Stack>

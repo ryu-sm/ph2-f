@@ -1,11 +1,12 @@
 import { Box, Modal, Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 
-export const ApModalWrapper = ({ open, children, icon, label }) => {
+export const ApModalWrapper = ({ open, children, icon, label, styles }) => {
   return (
     <Modal open={open}>
       <Stack alignItems={'center'} justifyContent={'center'} sx={{ width: 1, height: 1, maxHeight: '100dvh' }}>
         <Box px={4} sx={{ width: 1, maxWidth: 480 }}>
-          <Box sx={{ py: 8, borderRadius: 2, bgcolor: 'white' }}>
+          <Box sx={{ py: 8, borderRadius: 2, bgcolor: 'white', ...styles }}>
             <Stack spacing={6} alignItems={'center'}>
               <Stack spacing={4} alignItems={'center'}>
                 {icon}
@@ -20,4 +21,12 @@ export const ApModalWrapper = ({ open, children, icon, label }) => {
       </Stack>
     </Modal>
   );
+};
+
+ApModalWrapper.propTypes = {
+  open: PropTypes.bool,
+  children: PropTypes.node,
+  icon: PropTypes.node,
+  label: PropTypes.string,
+  styles: PropTypes.object,
 };
