@@ -1,8 +1,10 @@
+import React from 'react';
 import { Button } from '@mui/material';
 
-export const ApPrimaryButton = ({ children, width, height, ...props }) => {
+export const ApPrimaryButton = React.forwardRef(({ children, width, height, ...props }, ref) => {
   return (
     <Button
+      ref={ref}
       sx={{
         px: 0,
         color: 'white',
@@ -24,4 +26,6 @@ export const ApPrimaryButton = ({ children, width, height, ...props }) => {
       {children}
     </Button>
   );
-};
+});
+
+ApPrimaryButton.displayName = 'ApPrimaryButton';

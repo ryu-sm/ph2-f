@@ -12,3 +12,4 @@ export * from './applicant/select';
 export * from './applicant/static-modal';
 export * from './applicant/star-help';
 export * from './applicant/error-scroll';
+export * from './applicant/route-guard';

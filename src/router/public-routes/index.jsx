@@ -1,3 +1,4 @@
+import { RouteGuard } from '@/components';
 import { routeNames } from '../settings';
 import {
   ApAccountInformationPage,
@@ -17,7 +18,11 @@ import {
 export const publicRoutes = [
   {
     ...routeNames.apStartPage,
-    element: <ApStartPage />,
+    element: (
+      <RouteGuard>
+        <ApStartPage />
+      </RouteGuard>
+    ),
   },
   {
     ...routeNames.apRegisterVerifyEmailPage,

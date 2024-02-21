@@ -1,11 +1,13 @@
-import { Icons, apSmileChat } from '@/assets';
+import { apSmileChat } from '@/assets';
+import { ApChatBubbleIcon } from '@/assets/icons/ap-chat-bubble';
 import { useBoolean } from '@/hooks';
 import { Avatar, Button, Stack, Typography } from '@mui/material';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
+import { ApChatModal } from './chat-modal';
 
 export const ApChat = () => {
-  const modal = useBoolean(false);
-
+  const { value: isChatOpen, onTrue: setChatOpen, onFalse: setChatClose } = useBoolean(false);
+  const [hasUnread] = useState(false);
   return (
     <Fragment>
       <Button
@@ -23,6 +25,7 @@ export const ApChat = () => {
           borderRight: '6px solid #F1F6FD',
           borderRadius: '20px 20px 0px 0px',
         }}
+        onClick={setChatOpen}
       >
         <Stack spacing={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>
           <Avatar
@@ -41,6 +44,39 @@ export const ApChat = () => {
           </Typography>
         </Stack>
       </Button>
+      {hasUnread && (
+        <>
+          <Stack
+            sx={{
+              position: 'fixed',
+              bottom: 48,
+              left: '50%',
+              transform: 'translate(-50%, 0)',
+              zIndex: 1,
+              bgcolor: 'secondary.main',
+              py: 1,
+              borderRadius: '6px',
+              width: 200,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="chat_new_message" color={'white'}>
+              新着メッセージが届いています！
+            </Typography>
+          </Stack>
+          <Stack
+            sx={{
+              position: 'fixed',
+              bottom: 40,
+              left: '50%',
+              transform: 'translate(-50%, 0)',
+            }}
+          >
+            <ApChatBubbleIcon />
+          </Stack>
+        </>
+      )}
+      <ApChatModal open={isChatOpen} onClose={setChatClose} />
     </Fragment>
   );
 };
