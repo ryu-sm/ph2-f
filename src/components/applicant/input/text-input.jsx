@@ -1,9 +1,10 @@
-import { useCallback, useMemo } from 'react';
-import { useField } from 'formik';
 import { Stack, TextField, Typography } from '@mui/material';
+import { useField } from 'formik';
+import { useCallback, useMemo } from 'react';
 
-import { toKatakana } from 'wanakana';
 import { convertToFullWidth } from '@/utils';
+import PropTypes from 'prop-types';
+import { toKatakana } from 'wanakana';
 
 export const ApTextInputField = ({
   placeholder,
@@ -13,6 +14,8 @@ export const ApTextInputField = ({
   label,
   autoTrim = true,
   sx,
+  multiline = false,
+  maxRows = 5,
   ...props
 }) => {
   const [field, meta, helpers] = useField(props);
@@ -33,7 +36,6 @@ export const ApTextInputField = ({
       if (convertFullWidth) {
         value = convertToFullWidth(value);
       }
-
       await setValue(value);
     },
     [field, props]
@@ -56,6 +58,15 @@ export const ApTextInputField = ({
     [field, props, setValue]
   );
 
+  const handleKeydown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (meta.value.trim()) {
+        props.onKeyDown(meta.value);
+      }
+    }
+  };
+
   return (
     <Stack spacing={1}>
       {label && (
@@ -70,6 +81,8 @@ export const ApTextInputField = ({
           placeholder={placeholder}
           value={meta.value}
           error={isError}
+          multiline={multiline}
+          maxRows={maxRows}
           sx={{
             '& .MuiInputBase-input': { textAlign: align || 'left' },
             '&&&& fieldset': { border: '1px solid', borderColor: 'primary.40' },
@@ -82,6 +95,7 @@ export const ApTextInputField = ({
           onBlur={handelBlue}
           onFocus={handleFocus}
           onChange={handleChange}
+          onKeyDown={handleKeydown}
         />
         {isError && (
           <Typography variant="note" sx={{ fontWeight: 500, color: (theme) => theme.palette.secondary.main }}>
@@ -91,4 +105,20 @@ export const ApTextInputField = ({
       </Stack>
     </Stack>
   );
+};
+
+ApTextInputField.propTypes = {
+  placeholder: PropTypes.string,
+  align: PropTypes.string,
+  convertFullWidth: PropTypes.bool,
+  convertKatakana: PropTypes.bool,
+  label: PropTypes.string,
+  autoTrim: PropTypes.bool,
+  sx: PropTypes.object,
+  multiline: PropTypes.bool,
+  maxRows: PropTypes.number,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
+  onChange: PropTypes.func,
+  onKeyDown: PropTypes.func,
 };

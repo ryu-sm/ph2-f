@@ -1,4 +1,4 @@
-import { LOGIN_TYPE } from '@/constant';
+import { ROLE } from '@/constant';
 import { authAtom } from '@/store';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -10,15 +10,15 @@ export const RouteGuard = ({ children }) => {
   const { isLogined, loginType } = authInfo;
 
   if (!isLogined) {
-    if (loginType === LOGIN_TYPE.USER) {
+    if (loginType === ROLE.USER) {
       return children;
-    } else if (loginType === LOGIN_TYPE.AGENT) {
+    } else if (loginType === ROLE.AGENT) {
       return <Navigate to="/dashboard" state={{ from: location }} replace />;
     }
   } else {
-    if (loginType === LOGIN_TYPE.USER) {
+    if (loginType === ROLE.USER) {
       return <Navigate to="/top" state={{ from: location }} replace />;
-    } else if (LOGIN_TYPE.AGENT) {
+    } else if (ROLE.AGENT) {
       return <Navigate to="/agreement" state={{ from: location }} replace />;
     }
   }
