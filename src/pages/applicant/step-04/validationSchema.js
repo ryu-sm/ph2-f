@@ -30,6 +30,24 @@ export const validationSchema = yup.object({
     .matches(REGEX.YMD)
     .label('生年月日'),
   p_applicant_persons__1__nationality: yup.string(),
+  p_applicant_persons__1__H__a: yup
+    .array()
+    .test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.p_applicant_persons__1__nationality === '2') {
+        return field_value.length === 1;
+      } else {
+        return true;
+      }
+    }),
+  p_applicant_persons__1__H__b: yup
+    .array()
+    .test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.p_applicant_persons__1___nationality === '2') {
+        return field_value.length === 1;
+      } else {
+        return true;
+      }
+    }),
   p_applicant_persons__1__mobile_phone: yup
     .string()
     .test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {

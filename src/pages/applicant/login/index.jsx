@@ -4,6 +4,7 @@ import { FormikProvider, useFormik } from 'formik';
 import {
   ApEmailInputField,
   ApItemGroup,
+  ApModalWrapper,
   ApPageTitle,
   ApPrimaryButton,
   ApPwdInputField,
@@ -16,8 +17,8 @@ import { Icons } from '@/assets';
 
 import { routeNames } from '@/router/settings';
 import { apLogin } from '@/services';
-import { useSetRecoilState } from 'recoil';
-import { authAtom } from '@/store';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { apCurrStepIdSelector, applicationAtom, authAtom } from '@/store';
 import { useBoolean } from '@/hooks';
 import { setToken } from '@/libs';
 import { jwtDecode } from 'jwt-decode';
@@ -25,7 +26,8 @@ import { jwtDecode } from 'jwt-decode';
 export const ApLoginPage = () => {
   const navigate = useNavigate();
   const setAuthInfo = useSetRecoilState(authAtom);
-
+  const setApplicationInfo = useSetRecoilState(applicationAtom);
+  const apCurrStepId = useRecoilValue(apCurrStepIdSelector);
   const modal = useBoolean(false);
   const [warningText, setWarningText] = useState('');
 
@@ -57,14 +59,24 @@ export const ApLoginPage = () => {
               preExaminationStatus: payload?.pre_examination_status,
               displayPdf: Boolean(payload?.display_pdf),
               applyNo: payload?.apply_no,
-              hasDraftData: Boolean(payload.data),
+              hasDraftData: Boolean(payload.draft),
             },
           };
         });
-        if (!payload.data || !payload?.agent_sended) navigate(routeNames.apAgreementPage.path);
+        if (Boolean(payload.draft)) {
+          setApplicationInfo((pre) => {
+            return {
+              ...pre,
+              ...payload.draft,
+            };
+          });
+
+          modal.onTrue();
+        }
+
+        if (!payload.draft && !payload?.agent_sended) navigate(routeNames.apAgreementPage.path);
         // TODO:
       } catch (error) {
-        console.log(error);
         switch (error?.status) {
           case 400:
             setWarningText('メールアドレスまたはパスワードが正しくありません。');
@@ -125,6 +137,26 @@ export const ApLoginPage = () => {
             </ApSecondaryButton>
           </Stack>
         </Stack>
+        <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'おかえりなさい'}>
+          <Stack justifyContent={'center'} alignItems={'center'} spacing={6}>
+            <ApPrimaryButton
+              width={260}
+              height={40}
+              endIcon={<Icons.ApForwardRightWhiteIcon />}
+              onClick={() => navigate(`/step-id-${apCurrStepId}`)}
+            >
+              前回の続きから入力する
+            </ApPrimaryButton>
+            <ApSecondaryButton
+              width={260}
+              height={40}
+              endIcon={<Icons.ApForwardRightMainIcon />}
+              onClick={() => navigate(routeNames.apTopPage.path)}
+            >
+              TOPへ
+            </ApSecondaryButton>
+          </Stack>
+        </ApModalWrapper>
       </ApLayout>
     </FormikProvider>
   );

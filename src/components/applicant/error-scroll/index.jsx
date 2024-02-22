@@ -29,8 +29,6 @@ export const ApErrorScroll = () => {
 
       parseErrors('', errors);
 
-      console.log(errorNames);
-
       if (errorNames.length && typeof document !== 'undefined') {
         let errorElement;
         errorNames.forEach((errorKey) => {

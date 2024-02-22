@@ -98,4 +98,20 @@ export const routeNames = {
     name: 'apStep09Page',
     path: '/step-id-9',
   },
+  apStep10Page: {
+    name: 'apStep10Page',
+    path: '/step-id-10',
+  },
+  apStep11Page: {
+    name: 'apStep11Page',
+    path: '/step-id-11',
+  },
+  apStep12Page: {
+    name: 'apStep12Page',
+    path: '/step-id-12',
+  },
+  apStep13Page: {
+    name: 'apStep13Page',
+    path: '/step-id-13',
+  },
 };

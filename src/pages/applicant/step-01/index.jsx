@@ -16,6 +16,7 @@ import {
   ApPairLoanModal,
   ApRadioColumnGroup,
   ApRepaymentMethodModal,
+  ApSaveDraftButton,
   ApSelectField,
   ApSelectFieldYm,
   ApSelectFieldYmd,
@@ -23,7 +24,7 @@ import {
   ApTextInputField,
 } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { apNextStepIdSelector, applicationAtom, authAtom, isMcjSelector } from '@/store';
 import {
@@ -51,7 +52,6 @@ export const ApStep01Page = () => {
   const navigate = useNavigate();
   const apNextStepId = useRecoilValue(apNextStepIdSelector);
   const pairLoanModal = useBoolean(false);
-  const setAuthInfo = useSetRecoilState(authAtom);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
 
   const isMCJ = useRecoilValue(isMcjSelector);
@@ -75,7 +75,6 @@ export const ApStep01Page = () => {
     p_borrowing_details__1__bonus_repayment_amount,
     p_application_headers__join_guarantor_umu,
     p_application_headers__loan_plus,
-    p_application_headers__loan_target_,
   } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
@@ -99,17 +98,61 @@ export const ApStep01Page = () => {
       p_borrowing_details__1__bonus_repayment_amount,
       p_application_headers__join_guarantor_umu,
       p_application_headers__loan_plus,
-      p_application_headers__loan_target_,
+      p_application_headers__loan_target_: '0',
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       setApplicationInfo((pre) => {
-        return { ...pre, ...values };
+        return {
+          ...pre,
+          p_application_headers__move_scheduled_date: formik.values.p_application_headers__move_scheduled_date,
+          p_application_banks__s_bank_ids: formik.values.p_application_banks__s_bank_ids,
+          p_application_headers__loan_target: formik.values.p_application_headers__loan_target,
+          p_application_headers__land_advance_plan: formik.values.p_application_headers__land_advance_plan,
+          p_application_headers__loan_type: formik.values.p_application_headers__loan_type,
+          p_application_headers__pair_loan_last_name: formik.values.p_application_headers__pair_loan_last_name,
+          p_application_headers__pair_loan_first_name: formik.values.p_application_headers__pair_loan_first_name,
+          p_application_headers__pair_loan_rel_name: formik.values.p_application_headers__pair_loan_rel_name,
+          p_borrowing_details__0__desired_borrowing_date: formik.values.p_borrowing_details__0__desired_borrowing_date,
+          p_borrowing_details__0__desired_loan_amount: formik.values.p_borrowing_details__0__desired_loan_amount,
+          p_borrowing_details__0__bonus_repayment_amount: formik.values.p_borrowing_details__0__bonus_repayment_amount,
+          p_borrowing_details__0__bonus_repayment_month: formik.values.p_borrowing_details__0__bonus_repayment_month,
+          p_borrowing_details__0__loan_term_year: formik.values.p_borrowing_details__0__loan_term_year,
+          p_borrowing_details__0__repayment_method: formik.values.p_borrowing_details__0__repayment_method,
+          p_borrowing_details__1__desired_borrowing_date: formik.values.p_borrowing_details__1__desired_borrowing_date,
+          p_borrowing_details__1__desired_loan_amount: formik.values.p_borrowing_details__1__desired_loan_amount,
+          p_borrowing_details__1__bonus_repayment_amount: formik.values.p_borrowing_details__1__bonus_repayment_amount,
+          p_application_headers__join_guarantor_umu: formik.values.p_application_headers__join_guarantor_umu,
+          p_application_headers__loan_plus: formik.values.p_application_headers__loan_plus,
+        };
       });
       navigate(`/step-id-${apNextStepId}`);
     },
   });
+
+  const parseVaildData = useMemo(() => {
+    return {
+      p_application_headers__move_scheduled_date: formik.values.p_application_headers__move_scheduled_date,
+      p_application_banks__s_bank_ids: formik.values.p_application_banks__s_bank_ids,
+      p_application_headers__loan_target: formik.values.p_application_headers__loan_target,
+      p_application_headers__land_advance_plan: formik.values.p_application_headers__land_advance_plan,
+      p_application_headers__loan_type: formik.values.p_application_headers__loan_type,
+      p_application_headers__pair_loan_last_name: formik.values.p_application_headers__pair_loan_last_name,
+      p_application_headers__pair_loan_first_name: formik.values.p_application_headers__pair_loan_first_name,
+      p_application_headers__pair_loan_rel_name: formik.values.p_application_headers__pair_loan_rel_name,
+      p_borrowing_details__0__desired_borrowing_date: formik.values.p_borrowing_details__0__desired_borrowing_date,
+      p_borrowing_details__0__desired_loan_amount: formik.values.p_borrowing_details__0__desired_loan_amount,
+      p_borrowing_details__0__bonus_repayment_amount: formik.values.p_borrowing_details__0__bonus_repayment_amount,
+      p_borrowing_details__0__bonus_repayment_month: formik.values.p_borrowing_details__0__bonus_repayment_month,
+      p_borrowing_details__0__loan_term_year: formik.values.p_borrowing_details__0__loan_term_year,
+      p_borrowing_details__0__repayment_method: formik.values.p_borrowing_details__0__repayment_method,
+      p_borrowing_details__1__desired_borrowing_date: formik.values.p_borrowing_details__1__desired_borrowing_date,
+      p_borrowing_details__1__desired_loan_amount: formik.values.p_borrowing_details__1__desired_loan_amount,
+      p_borrowing_details__1__bonus_repayment_amount: formik.values.p_borrowing_details__1__bonus_repayment_amount,
+      p_application_headers__join_guarantor_umu: formik.values.p_application_headers__join_guarantor_umu,
+      p_application_headers__loan_plus: formik.values.p_application_headers__loan_plus,
+    };
+  }, [formik.values]);
   const handelLeft = () => {
     navigate(routeNames.apTopPage.path);
   };
@@ -124,19 +167,24 @@ export const ApStep01Page = () => {
 
   useEffect(() => {
     if (p_application_banks__s_bank_ids.includes(String(bankMaster.find((item) => item.code === MCJ_CODE)?.value))) {
-      setAuthInfo((pre) => ({ ...pre, isMCJ: true }));
+      setApplicationInfo((pre) => ({ ...pre, isMCJ: true }));
     } else {
-      setAuthInfo((pre) => ({ ...pre, isMCJ: false }));
+      setApplicationInfo((pre) => ({ ...pre, isMCJ: false }));
     }
     if (['3', '4'].includes(p_application_headers__loan_type)) {
-      setAuthInfo((pre) => ({ ...pre, hasIncomeTotalizer: true }));
+      setApplicationInfo((pre) => ({ ...pre, hasIncomeTotalizer: true }));
     } else {
-      setAuthInfo((pre) => ({ ...pre, hasIncomeTotalizer: false }));
+      setApplicationInfo((pre) => ({ ...pre, hasIncomeTotalizer: false }));
     }
     if (p_application_headers__join_guarantor_umu === '1') {
-      setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
+      setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
     } else {
-      setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
+      setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
+    }
+    if (['1', '2', '3', '4', '5', '6', ''].includes(p_application_headers__loan_target)) {
+      formik.setFieldValue('p_application_headers__loan_target_', '0');
+    } else {
+      formik.setFieldValue('p_application_headers__loan_target_', p_application_headers__loan_target);
     }
   }, [
     p_application_banks__s_bank_ids,
@@ -148,7 +196,7 @@ export const ApStep01Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={38}>
+      <ApLayout hasMenu hasStepBar pb={18}>
         <ApPageTitle py={8}>{`まずは、お借入のご希望を\nお聞かせください。`}</ApPageTitle>
         <ApItemGroup label={'入居予定年月'}>
           <ApSelectFieldYm name={'p_application_headers__move_scheduled_date'} yearOptions={yearOptions} />
@@ -160,7 +208,7 @@ export const ApStep01Page = () => {
               options={bankMaster}
               onChange={(e) => {
                 if (bankMaster.find((item) => item.code === MCJ_CODE)?.value == e.target.value) {
-                  setAuthInfo((pre) => {
+                  setApplicationInfo((pre) => {
                     return { ...pre, isMCJ: e.target.checked };
                   });
                 }
@@ -287,11 +335,11 @@ export const ApStep01Page = () => {
             onChange={(e) => {
               if (e.target.value === '2') pairLoanModal.onTrue();
               if (e.target.value === '3' || e.target.value === '4') {
-                setAuthInfo((pre) => {
+                setApplicationInfo((pre) => {
                   return { ...pre, hasIncomeTotalizer: true };
                 });
               } else {
-                setAuthInfo((pre) => {
+                setApplicationInfo((pre) => {
                   return { ...pre, hasIncomeTotalizer: false };
                 });
               }
@@ -592,9 +640,9 @@ export const ApStep01Page = () => {
             options={hasJoinGuarantorOptions}
             onChange={(e) => {
               if (e.target.checked) {
-                setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
+                setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
               } else {
-                setAuthInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
+                setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
               }
             }}
           />
@@ -608,7 +656,7 @@ export const ApStep01Page = () => {
         >
           <ApCheckboxButton name={'p_application_headers__loan_plus'} options={loanPlusOptions} />
         </ApItemGroup>
-
+        <ApSaveDraftButton pageInfo={parseVaildData} />
         <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
       </ApLayout>
     </FormikProvider>

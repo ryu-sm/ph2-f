@@ -23,12 +23,6 @@ const authInitialValues = {
     id: null,
     email: null,
   },
-  isMCJ: false,
-  apCurrStepId: 1,
-  apNextStepId: 2,
-  apPreStepId: 1,
-  hasJoinGuarantor: false,
-  hasIncomeTotalizer: false,
 };
 
 const localStorageEffect =
@@ -74,30 +68,6 @@ export const isLoginedSelector = selector({
   },
 });
 
-export const apPreStepIdSelector = selector({
-  key: 'apPreStepId',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.apPreStepId;
-  },
-});
-
-export const apNextStepIdSelector = selector({
-  key: 'apNextStepId',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.apNextStepId;
-  },
-});
-
-export const isMcjSelector = selector({
-  key: 'isMCJ',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.isMCJ;
-  },
-});
-
 export const loginTypeSelector = selector({
   key: 'loginType',
   get: ({ get }) => {
@@ -119,30 +89,6 @@ export const isFirstLoginSelector = selector({
   get: ({ get }) => {
     const auth = get(authAtom);
     return auth?.user?.isFirstLogin;
-  },
-});
-
-export const apCurrStepIdSelector = selector({
-  key: 'apCurrStepId',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.apCurrStepId;
-  },
-});
-
-export const hasJoinGuarantorSelector = selector({
-  key: 'hasJoinGuarantor',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.hasJoinGuarantor;
-  },
-});
-
-export const hasIncomeTotalizerSelector = selector({
-  key: 'hasIncomeTotalizer',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.hasIncomeTotalizer;
   },
 });
 

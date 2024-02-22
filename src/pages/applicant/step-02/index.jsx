@@ -1,5 +1,5 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, userEmailSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
@@ -7,11 +7,12 @@ import { validationSchema } from './validationSchema';
 import {
   ApEmailInputField,
   ApErrorScroll,
+  ApImgUpload,
   ApItemGroup,
   ApPageTitle,
   ApPhoneInputField,
-  ApPrimaryButton,
   ApRadioRowGroup,
+  ApSaveDraftButton,
   ApSelectField,
   ApSelectFieldYmd,
   ApStarHelp,
@@ -19,9 +20,9 @@ import {
   ApZipCodeInputField,
 } from '@/components';
 import { Stack, Typography } from '@mui/material';
-import { ganderOptions, nationalityOptions, yearOptions } from './options';
+import { genderOptions, nationalityOptions, yearOptions } from './options';
 import { PREFECTURES } from '@/constant';
-import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
 
 export const ApStep02Page = () => {
@@ -38,6 +39,8 @@ export const ApStep02Page = () => {
     p_applicant_persons__0__gender,
     p_applicant_persons__0__birthday,
     p_applicant_persons__0__nationality,
+    p_applicant_persons__0__H__a,
+    p_applicant_persons__0__H__b,
     p_applicant_persons__0__mobile_phone,
     p_applicant_persons__0__home_phone,
     p_applicant_persons__0__postal_code,
@@ -57,6 +60,8 @@ export const ApStep02Page = () => {
       p_applicant_persons__0__gender,
       p_applicant_persons__0__birthday,
       p_applicant_persons__0__nationality,
+      p_applicant_persons__0__H__a,
+      p_applicant_persons__0__H__b,
       p_applicant_persons__0__mobile_phone,
       p_applicant_persons__0__home_phone,
       p_applicant_persons__0__postal_code,
@@ -68,14 +73,37 @@ export const ApStep02Page = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       setApplicationInfo((pre) => {
-        return { ...pre, ...values };
+        return {
+          ...pre,
+          ...values,
+        };
       });
       navigate(`/step-id-${apNextStepId}`);
     },
   });
 
+  const parseVaildData = useMemo(() => {
+    return {
+      p_applicant_persons__0__last_name_kanji: formik.values.p_applicant_persons__0__last_name_kanji,
+      p_applicant_persons__0__first_name_kanji: formik.values.p_applicant_persons__0__first_name_kanji,
+      p_applicant_persons__0__last_name_kana: formik.values.p_applicant_persons__0__last_name_kana,
+      p_applicant_persons__0__first_name_kana: formik.values.p_applicant_persons__0__first_name_kana,
+      p_applicant_persons__0__gender: formik.values.p_applicant_persons__0__gender,
+      p_applicant_persons__0__birthday: formik.values.p_applicant_persons__0__birthday,
+      p_applicant_persons__0__nationality: formik.values.p_applicant_persons__0__nationality,
+      p_applicant_persons__0__H__a: formik.values.p_applicant_persons__0__H__a,
+      p_applicant_persons__0__H__b: formik.values.p_applicant_persons__0__H__b,
+      p_applicant_persons__0__mobile_phone: formik.values.p_applicant_persons__0__mobile_phone,
+      p_applicant_persons__0__home_phone: formik.values.p_applicant_persons__0__home_phone,
+      p_applicant_persons__0__postal_code: formik.values.p_applicant_persons__0__postal_code,
+      p_applicant_persons__0__prefecture_kanji: formik.values.p_applicant_persons__0__prefecture_kanji,
+      p_applicant_persons__0__city_kanji: formik.values.p_applicant_persons__0__city_kanji,
+      p_applicant_persons__0__district_kanji: formik.values.p_applicant_persons__0__district_kanji,
+      p_applicant_persons__0__other_address_kanji: formik.values.p_applicant_persons__0__other_address_kanji,
+      p_applicant_persons__0__email: formik.values.p_applicant_persons__0__email,
+    };
+  }, [formik.values]);
   const handelLeft = () => {
     navigate(`/step-id-${apPreStepId}`);
   };
@@ -83,7 +111,7 @@ export const ApStep02Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={38}>
+      <ApLayout hasMenu hasStepBar pb={18}>
         <ApPageTitle py={8}>{`あなたについて\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'お名前'}>
           <Stack spacing={3}>
@@ -100,7 +128,7 @@ export const ApStep02Page = () => {
           </Stack>
         </ApItemGroup>
         <ApItemGroup label={'性別'}>
-          <ApRadioRowGroup name="p_applicant_persons__0__gender" options={ganderOptions} />
+          <ApRadioRowGroup name="p_applicant_persons__0__gender" options={genderOptions} />
         </ApItemGroup>
         <ApItemGroup label={'生年月日'}>
           <Stack spacing={3}>
@@ -110,31 +138,68 @@ export const ApStep02Page = () => {
         </ApItemGroup>
         <ApItemGroup label={'現在の国籍'}>
           <Stack spacing={3}>
-            <ApRadioRowGroup name="p_applicant_persons__0__nationality" options={nationalityOptions} />
-            {/* TODO: IMG */}
-            <Stack
-              sx={{
-                borderRadius: 2,
-                border: (theme) => `1px solid ${theme.palette.primary.main}`,
-                bgcolor: 'primary.main',
-                boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
+            <ApRadioRowGroup
+              name="p_applicant_persons__0__nationality"
+              options={nationalityOptions}
+              onChange={(e) => {
+                if (e.target.value === '1') {
+                  formik.setFieldValue('p_applicant_persons__0__H__a', []);
+                  formik.setFieldValue('p_applicant_persons__0__H__b', []);
+                }
               }}
-            >
+            />
+
+            {formik.values.p_applicant_persons__0__nationality === '2' && (
               <Stack
                 sx={{
-                  bgcolor: 'white',
-                  borderRadius: '7px',
+                  borderRadius: 2,
+                  border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                  bgcolor: 'primary.main',
+                  boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
                 }}
               >
-                <ApItemGroup
-                  label={<Typography variant="notify">在留カードまたは特別永住者証明書を添付してください。</Typography>}
-                  pb={3}
-                  px={2}
-                  borderTopRightRadius={'7px'}
-                  borderTopLeftRadius={'7px'}
-                ></ApItemGroup>
+                <Stack
+                  sx={{
+                    bgcolor: 'white',
+                    borderRadius: '7px',
+                  }}
+                >
+                  <ApItemGroup
+                    label={
+                      <Typography variant="notify">在留カードまたは特別永住者証明書を添付してください。</Typography>
+                    }
+                    pb={3}
+                    px={2}
+                    borderTopRightRadius={'7px'}
+                    borderTopLeftRadius={'7px'}
+                  >
+                    <Stack spacing={'6px'}>
+                      {((formik.touched.p_applicant_persons__0__H__a && formik.errors.p_applicant_persons__0__H__a) ||
+                        (formik.touched.p_applicant_persons__0__H__b &&
+                          formik.errors.p_applicant_persons__0__H__b)) && (
+                        <Typography variant="waring" color={'secondary.main'}>
+                          {'※外国籍の場合、在留カードまたは特別永住者証明書を添付することは必須です'}
+                        </Typography>
+                      )}
+                      <Stack spacing={3} direction={'row'} alignItems={'start'}>
+                        <Stack spacing={'6px'}>
+                          <Typography variant="label" color={'text.main'}>
+                            〈表面〉
+                          </Typography>
+                          <ApImgUpload name="p_applicant_persons__0__H__a" singleFile />
+                        </Stack>
+                        <Stack spacing={'6px'}>
+                          <Typography variant="label" color={'text.main'}>
+                            〈裏面〉
+                          </Typography>
+                          <ApImgUpload name="p_applicant_persons__0__H__b" singleFile />
+                        </Stack>
+                      </Stack>
+                    </Stack>
+                  </ApItemGroup>
+                </Stack>
               </Stack>
-            </Stack>
+            )}
           </Stack>
         </ApItemGroup>
         <ApItemGroup label={'電話番号'}>
@@ -202,6 +267,7 @@ export const ApStep02Page = () => {
             />
           </Stack>
         </ApItemGroup>
+        <ApSaveDraftButton pageInfo={parseVaildData} />
         <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
       </ApLayout>
     </FormikProvider>

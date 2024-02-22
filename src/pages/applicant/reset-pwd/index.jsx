@@ -31,7 +31,6 @@ export const ApResetPasswordPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       try {
         await apResetPassword({ password: values.password, token: token });
         modal.onTrue();

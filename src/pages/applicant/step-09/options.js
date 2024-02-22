@@ -1,7 +1,7 @@
 import { format } from 'kanjidate';
 import { dayjs } from '@/libs';
 
-export const ganderOptions = [
+export const genderOptions = [
   { value: '1', label: '男性' },
   { value: '2', label: '女性' },
 ];

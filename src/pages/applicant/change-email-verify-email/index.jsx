@@ -25,7 +25,6 @@ export const ApChangeEmailVerifyEmailPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       try {
         await apChangeEmailVerifyEmail({ email: values.email, new_email: values.new_email });
         setSended(true);

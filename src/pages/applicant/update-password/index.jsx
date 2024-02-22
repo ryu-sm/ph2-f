@@ -23,7 +23,6 @@ export const ApUpdatePasswordPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       try {
         await apUpdatePassword({ password: values.password, new_password: values.new_password });
         modal.onTrue();

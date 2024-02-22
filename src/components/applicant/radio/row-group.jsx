@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useField } from 'formik';
 import { FormControlLabel, Radio, RadioGroup, Stack, Typography } from '@mui/material';
 
-export const ApRadioRowGroup = ({ options, disabled, ...props }) => {
+export const ApRadioRowGroup = ({ options, disabled, height, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
@@ -15,6 +15,18 @@ export const ApRadioRowGroup = ({ options, disabled, ...props }) => {
       await setTouched(true);
     },
     [field, props, setValue]
+  );
+  const MockIcon = ({ children }) => (
+    <Stack sx={{ height: height }} alignItems={'center'} justifyContent={'center'}>
+      <Typography
+        variant="radio_checkbox_button"
+        whiteSpace={'break-spaces'}
+        textAlign={'center'}
+        sx={{ color: (theme) => theme.palette.primary.main }}
+      >
+        {children}
+      </Typography>
+    </Stack>
   );
   return (
     <Stack spacing={'6px'}>
@@ -69,9 +81,3 @@ export const ApRadioRowGroup = ({ options, disabled, ...props }) => {
     </Stack>
   );
 };
-
-const MockIcon = ({ children }) => (
-  <Typography variant="radio_checkbox_button" sx={{ color: (theme) => theme.palette.primary.main }}>
-    {children}
-  </Typography>
-);

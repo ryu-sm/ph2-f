@@ -147,7 +147,6 @@ export const ApAreaInputField = ({ label, ...props }) => {
                   }}
                   onInput={(e) => {
                     e.target.value = convertToHalfWidth(e.target.value);
-                    console.log(input.maxLength);
                     if (e.target.value.length > input.maxLength)
                       e.target.value = e.target.value.substring(0, input.maxLength === 2 ? 2 : 10);
                     return (e.target.value = e.target.value.replace(/[^\d]+/g, ''));

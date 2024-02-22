@@ -1,4 +1,5 @@
 import { dayjs } from '@/libs';
+import { format } from 'kanjidate';
 
 export function getClassDate(year, month) {
   const date = [];
@@ -40,3 +41,16 @@ export function isWeekend(dateString) {
   const dayOfWeek = date.getDay();
   return dayOfWeek === 6 || dayOfWeek === 0;
 }
+
+export const formatJapanDate = (date, showEpoch = false) => {
+  const [year, month, day] = date.split('/');
+  let formatDate = '';
+  let epoch = '';
+  const kanjiDateG2 = format('{G:2}', +year, 1, 1);
+  const kanjiDateN = format('{N}', +year, 1, 1);
+  if (showEpoch) epoch += ` (${kanjiDateG2}${kanjiDateN})`;
+  if (year) formatDate = `${year}${epoch}年`;
+  if (month) formatDate += `${parseInt(month, 10)}月`;
+  if (day) formatDate += `${parseInt(day, 10)}日`;
+  return formatDate;
+};

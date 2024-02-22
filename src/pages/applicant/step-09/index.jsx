@@ -1,5 +1,5 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, userEmailSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
@@ -9,6 +9,7 @@ import {
   ApItemGroup,
   ApNumberInputField,
   ApPageTitle,
+  ApSaveDraftButton,
   ApStarHelp,
   ApTextInputField,
 } from '@/components';
@@ -67,13 +68,46 @@ export const ApStep09Page = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       setApplicationInfo((pre) => {
         return { ...pre, ...values };
       });
       navigate(`/step-id-${apNextStepId}`);
     },
   });
+
+  const parseVaildData = useMemo(() => {
+    return {
+      p_application_headers__required_funds_land_amount:
+        formik.values.p_application_headers__required_funds_land_amount,
+      p_application_headers__required_funds_house_amount:
+        formik.values.p_application_headers__required_funds_house_amount,
+      p_application_headers__required_funds_accessory_amount:
+        formik.values.p_application_headers__required_funds_accessory_amount,
+      p_application_headers__required_funds_additional_amount:
+        formik.values.p_application_headers__required_funds_additional_amount,
+      p_application_headers__required_funds_refinance_loan_balance:
+        formik.values.p_application_headers__required_funds_refinance_loan_balance,
+      p_application_headers__required_funds_upgrade_amount:
+        formik.values.p_application_headers__required_funds_upgrade_amount,
+      p_application_headers__required_funds_loan_plus_amount:
+        formik.values.p_application_headers__required_funds_loan_plus_amount,
+      p_application_headers__required_funds_total_amount:
+        formik.values.p_application_headers__required_funds_total_amount,
+      p_application_headers__funding_saving_amount: formik.values.p_application_headers__funding_saving_amount,
+      p_application_headers__funding_estate_sale_amount:
+        formik.values.p_application_headers__funding_estate_sale_amount,
+      p_application_headers__funding_other_saving_amount:
+        formik.values.p_application_headers__funding_other_saving_amount,
+      p_application_headers__funding_relative_donation_amount:
+        formik.values.p_application_headers__funding_relative_donation_amount,
+      p_application_headers__funding_loan_amount: formik.values.p_application_headers__funding_loan_amount,
+      p_application_headers__funding_pair_loan_amount: formik.values.p_application_headers__funding_pair_loan_amount,
+      p_application_headers__funding_other_amount: formik.values.p_application_headers__funding_other_amount,
+      p_application_headers__funding_other_amount_detail:
+        formik.values.p_application_headers__funding_other_amount_detail,
+      p_application_headers__funding_total_amount: formik.values.p_application_headers__funding_total_amount,
+    };
+  }, [formik.values]);
 
   const handelLeft = () => {
     navigate(`/step-id-${apPreStepId}`);
@@ -105,7 +139,7 @@ export const ApStep09Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={38}>
+      <ApLayout hasMenu hasStepBar pb={18}>
         <ApPageTitle py={8}>{`資金計画について\n教えてください。`}</ApPageTitle>
         <Stack sx={{ px: 4, pb: 4 }}>
           <ApStarHelp
@@ -158,7 +192,7 @@ export const ApStep09Page = () => {
                       variant="form_item_label"
                       sx={{ fontWeight: 13, color: 'text.main', whiteSpace: 'nowrap' }}
                     >
-                      {'住宅ローンプラス利用'}
+                      {'土地'}
                     </Typography>
                   }
                   pb={3}
@@ -428,7 +462,7 @@ export const ApStep09Page = () => {
             </Stack>
           </Stack>
         </Stack>
-        <Stack spacing={'1px'} direction={'row'} justifyContent={'space-between'} sx={{ bgcolor: 'primary.60' }}>
+        <Stack spacing={'1px'} direction={'row'} justifyContent={'space-between'} sx={{ bgcolor: 'primary.60', mb: 6 }}>
           <Stack sx={{ width: '50%' }}>
             <Stack sx={{ px: 4, py: 1, bgcolor: 'primary.60' }}>
               <Typography variant="form_item_label" color="white">
@@ -506,7 +540,7 @@ export const ApStep09Page = () => {
             </Stack>
           </Stack>
         </Stack>
-
+        <ApSaveDraftButton pageInfo={parseVaildData} />
         <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
       </ApLayout>
     </FormikProvider>

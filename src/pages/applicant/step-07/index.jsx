@@ -9,12 +9,14 @@ import {
   ApCheckboxButtonGroup,
   ApCheckox,
   ApErrorScroll,
+  ApImgUpload,
   ApItemGroup,
   ApNumberInputField,
   ApPageTitle,
   ApPhoneInputField,
   ApRadioColumnGroup,
   ApRadioRowGroup,
+  ApSaveDraftButton,
   ApSelectField,
   ApSelectFieldYm,
   ApSelectFieldYmd,
@@ -69,6 +71,7 @@ export const ApStep07Page = () => {
     p_application_headers__curr_house_shell_scheduled_price,
     p_application_headers__curr_house_loan_balance_type,
     p_application_headers__property_publish_url,
+    p_application_headers__property_G,
     p_application_headers__new_house_acquire_reason,
     p_application_headers__new_house_acquire_reason_other,
     p_application_headers__new_house_self_resident,
@@ -119,6 +122,7 @@ export const ApStep07Page = () => {
       p_application_headers__curr_house_shell_scheduled_price,
       p_application_headers__curr_house_loan_balance_type,
       p_application_headers__property_publish_url,
+      p_application_headers__property_G,
       p_application_headers__new_house_acquire_reason,
       p_application_headers__new_house_acquire_reason_other,
       p_application_headers__new_house_self_resident,
@@ -149,13 +153,67 @@ export const ApStep07Page = () => {
     },
     validationSchema: isMCJ ? validationSchemaMcj : validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       setApplicationInfo((pre) => {
         return { ...pre, ...values };
       });
       navigate(`/step-id-${apNextStepId}`);
     },
   });
+
+  const parseVaildData = useMemo(() => {
+    return {
+      p_application_headers__curr_house_lived_year: formik.values.p_application_headers__curr_house_lived_year,
+      p_application_headers__curr_house_lived_month: formik.values.p_application_headers__curr_house_lived_month,
+      p_application_headers__curr_house_residence_type: formik.values.p_application_headers__curr_house_residence_type,
+      p_application_headers__curr_house_floor_area: formik.values.p_application_headers__curr_house_floor_area,
+      p_application_headers__curr_house_owner_name: formik.values.p_application_headers__curr_house_owner_name,
+      p_application_headers__curr_house_owner_rel: formik.values.p_application_headers__curr_house_owner_rel,
+      p_application_headers__curr_house_schedule_disposal_type:
+        formik.values.p_application_headers__curr_house_schedule_disposal_type,
+      p_application_headers__curr_house_schedule_disposal_type_other:
+        formik.values.p_application_headers__curr_house_schedule_disposal_type_other,
+      p_application_headers__curr_house_shell_scheduled_date:
+        formik.values.p_application_headers__curr_house_shell_scheduled_date,
+      p_application_headers__curr_house_shell_scheduled_price:
+        formik.values.p_application_headers__curr_house_shell_scheduled_price,
+      p_application_headers__curr_house_loan_balance_type:
+        formik.values.p_application_headers__curr_house_loan_balance_type,
+      p_application_headers__property_publish_url: formik.values.p_application_headers__property_publish_url,
+      p_application_headers__property_G: formik.values.p_application_headers__property_G,
+      p_application_headers__new_house_acquire_reason: formik.values.p_application_headers__new_house_acquire_reason,
+      p_application_headers__new_house_acquire_reason_other:
+        formik.values.p_application_headers__new_house_acquire_reason_other,
+      p_application_headers__new_house_self_resident: formik.values.p_application_headers__new_house_self_resident,
+      p_application_headers__new_house_self_not_resident_reason:
+        formik.values.p_application_headers__new_house_self_not_resident_reason,
+      p_application_headers__new_house_planned_resident_overview:
+        formik.values.p_application_headers__new_house_planned_resident_overview,
+      p_residents: formik.values.p_residents,
+      p_application_headers__property_business_type: formik.values.p_application_headers__property_business_type,
+      p_application_headers__property_prefecture: formik.values.p_application_headers__property_prefecture,
+      p_application_headers__property_city: formik.values.p_application_headers__property_city,
+      p_application_headers__property_district: formik.values.p_application_headers__property_district,
+      p_application_headers__property_apartment_and_room_no:
+        formik.values.p_application_headers__property_apartment_and_room_no,
+      p_application_headers__property_private_area: formik.values.p_application_headers__property_private_area,
+      p_application_headers__property_total_floor_area: formik.values.p_application_headers__property_total_floor_area,
+      p_application_headers__property_land_area: formik.values.p_application_headers__property_land_area,
+      p_application_headers__property_floor_area: formik.values.p_application_headers__property_floor_area,
+      p_application_headers__property_land_type: formik.values.p_application_headers__property_land_type,
+      p_application_headers__property_purchase_type: formik.values.p_application_headers__property_purchase_type,
+      p_application_headers__property_planning_area: formik.values.p_application_headers__property_planning_area,
+      p_application_headers__property_planning_area_other:
+        formik.values.p_application_headers__property_planning_area_other,
+      p_application_headers__property_rebuilding_reason:
+        formik.values.p_application_headers__property_rebuilding_reason,
+      p_application_headers__property_rebuilding_reason_other:
+        formik.values.p_application_headers__property_rebuilding_reason_other,
+      p_application_headers__property_flat_35_plan: formik.values.p_application_headers__property_flat_35_plan,
+      p_application_headers__property_maintenance_type: formik.values.p_application_headers__property_maintenance_type,
+      p_application_headers__property_flat_35_tech: formik.values.p_application_headers__property_flat_35_tech,
+      p_application_headers__property_region_type: formik.values.p_application_headers__property_region_type,
+    };
+  }, [formik.values]);
 
   const handelLeft = () => {
     navigate(`/step-id-${apPreStepId}`);
@@ -211,14 +269,10 @@ export const ApStep07Page = () => {
     [birthdayMonth]
   );
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={38}>
+      <ApLayout hasMenu hasStepBar pb={18}>
         <ApPageTitle py={8}>{`現在のお住まいと\nご購入物件について\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'現在のお住まいの居住年数'}>
           <Stack spacing={'6px'} direction={'row'}>
@@ -249,6 +303,28 @@ export const ApStep07Page = () => {
               disableOptions={
                 ['7', '8'].includes(p_application_headers__loan_target) ? currHouseResidenceTypeOptions.slice(0, 4) : []
               }
+              onChange={(e) => {
+                if (e.target.value !== '4') {
+                  formik.setFieldValue('p_application_headers__curr_house_owner_name', '');
+                  formik.setFieldValue('p_application_headers__curr_house_owner_rel', '');
+
+                  formik.setFieldTouched('p_application_headers__curr_house_owner_name', false);
+                  formik.setFieldTouched('p_application_headers__curr_house_owner_rel', false);
+                }
+                if (e.target.value !== '5') {
+                  formik.setFieldValue('p_application_headers__curr_house_schedule_disposal_type', '');
+                  formik.setFieldValue('p_application_headers__curr_house_schedule_disposal_type_other', '');
+                  formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_date', '');
+                  formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_price', '');
+                  formik.setFieldValue('p_application_headers__curr_house_loan_balance_type', '');
+
+                  formik.setFieldTouched('p_application_headers__curr_house_schedule_disposal_type', false);
+                  formik.setFieldTouched('p_application_headers__curr_house_schedule_disposal_type_other', false);
+                  formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_date', false);
+                  formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_price', false);
+                  formik.setFieldTouched('p_application_headers__curr_house_loan_balance_type', false);
+                }
+              }}
             />
             {formik.values.p_application_headers__curr_house_residence_type === '4' && (
               <Stack
@@ -314,6 +390,23 @@ export const ApStep07Page = () => {
                       <ApRadioColumnGroup
                         name="p_application_headers__curr_house_schedule_disposal_type"
                         options={currHouseScheduleDisposalTypeOptions}
+                        onChange={(e) => {
+                          if (e.target.value !== '1') {
+                            formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_date', '');
+                            formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_price', '');
+
+                            formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_date', false);
+                            formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_price', false);
+                          }
+                          if (e.target.value !== '99') {
+                            formik.setFieldValue('p_application_headers__curr_house_schedule_disposal_type_other', '');
+
+                            formik.setFieldTouched(
+                              'p_application_headers__curr_house_schedule_disposal_type_other',
+                              false
+                            );
+                          }
+                        }}
                       />
                       {formik.values.p_application_headers__curr_house_schedule_disposal_type === '99' && (
                         <Stack spacing={1}>
@@ -414,7 +507,7 @@ export const ApStep07Page = () => {
                       'ご購入される土地・建物の 所在地・面積・価格などが\n記載されたチラシやパンフレット等があればアップ\nロードしてください。'
                     }
                   />
-                  {/* TODO: IMG */}
+                  <ApImgUpload name="p_application_headers__property_G" />
                 </Stack>
               </ApItemGroup>
 
@@ -448,6 +541,12 @@ export const ApStep07Page = () => {
               options={newHouseAcquireReasonOptions}
               justifyContent={'start'}
               width={1}
+              onChange={(e) => {
+                if (e.target.value !== '99') {
+                  formik.setFieldValue('p_application_headers__new_house_acquire_reason_other', '');
+                  formik.setFieldTouched('p_application_headers__new_house_acquire_reason_other', false);
+                }
+              }}
             />
             {formik.values.p_application_headers__new_house_acquire_reason === '99' && (
               <Stack spacing={'2px'}>
@@ -467,12 +566,35 @@ export const ApStep07Page = () => {
             <ApRadioRowGroup
               name="p_application_headers__new_house_self_resident"
               options={newHouseSelfResidentOptions}
+              onChange={(e) => {
+                if (e.target.value !== '0') {
+                  formik.setFieldValue('p_application_headers__new_house_self_not_resident_reason', '');
+                  formik.setFieldTouched('p_application_headers__new_house_self_not_resident_reason', false);
+                  formik.setFieldValue('p_residents', {
+                    id: '',
+                    last_name_kanji: '',
+                    first_name_kanji: '',
+                    last_name_kana: '',
+                    first_name_kana: '',
+                    rel_to_applicant_a_name: '',
+                    nationality: '',
+                    birthday: '',
+                    loan_from_japan_house_finance_agency: '',
+                    contact_phone: '',
+                    postal_code: '',
+                    prefecture_kanji: '',
+                    city_kanji: '',
+                    district_kanji: '',
+                    other_address_kanji: '',
+                  });
+                }
+              }}
             />
             {formik.values.p_application_headers__new_house_self_resident === '0' && (
               <Stack spacing={'2px'}>
                 <ApStarHelp label={'「いいえ」の方は理由を入力ください。'} />
                 <ApTextInputField
-                  name="p_application_headers__new_house_acquire_reason_other"
+                  name="p_application_headers__new_house_self_not_resident_reason"
                   placeholder={'入力してください'}
                   convertFullWidth
                 />
@@ -618,6 +740,16 @@ export const ApStep07Page = () => {
                   options={newHousePlannedResidentOptions}
                 />
               </Stack>
+              {formik.values.p_application_headers__new_house_planned_resident_overview.others_umu && (
+                <Stack spacing={'6px'} sx={{ pb: 3 }}>
+                  <ApStarHelp label={'その他の方は続柄をご入力ください。'} />
+                  <ApTextInputField
+                    name="values.p_application_headers__new_house_planned_resident_overview.others_rel"
+                    placeholder={'続柄を入力ください'}
+                    convertFullWidth
+                  />
+                </Stack>
+              )}
               <Box sx={{ borderTop: (theme) => `3px double ${theme.palette.primary[60]}` }} />
               <Stack
                 spacing={2}
@@ -660,7 +792,7 @@ export const ApStep07Page = () => {
                 </Stack>
               </Stack>
             </Stack>
-            {isMCJ && (
+            {isMCJ && formik.values.p_application_headers__new_house_self_resident === '0' && (
               <Stack
                 sx={{
                   mt: 3,
@@ -915,28 +1047,30 @@ export const ApStep07Page = () => {
                 )}
               </Stack>
             </ApItemGroup>
-            <ApItemGroup
-              optional
-              label={'上記に該当する場合の「再建築理由」を教えてください。'}
-              note={'※該当する方のみお答えください。(MCJ固有項目)'}
-            >
-              <Stack spacing={2}>
-                <ApRadioColumnGroup
-                  name="p_application_headers__property_rebuilding_reason"
-                  options={propertyRebuildingReasonOptions}
-                />
-                {formik.values.p_application_headers__property_rebuilding_reason === '99' && (
-                  <Stack spacing={'6px'}>
-                    <ApStarHelp label={'その他の方は詳細を入力ください。'} />
-                    <ApTextInputField
-                      name="p_application_headers__property_rebuilding_reason_other"
-                      placeholder={'入力してください'}
-                      convertFullWidth
-                    />
-                  </Stack>
-                )}
-              </Stack>
-            </ApItemGroup>
+            {['1', '2'].includes(formik.values.p_application_headers__property_planning_area) && (
+              <ApItemGroup
+                optional
+                label={'上記に該当する場合の「再建築理由」を教えてください。'}
+                note={'※該当する方のみお答えください。(MCJ固有項目)'}
+              >
+                <Stack spacing={2}>
+                  <ApRadioColumnGroup
+                    name="p_application_headers__property_rebuilding_reason"
+                    options={propertyRebuildingReasonOptions}
+                  />
+                  {formik.values.p_application_headers__property_rebuilding_reason === '99' && (
+                    <Stack spacing={'6px'}>
+                      <ApStarHelp label={'その他の方は詳細を入力ください。'} />
+                      <ApTextInputField
+                        name="p_application_headers__property_rebuilding_reason_other"
+                        placeholder={'入力してください'}
+                        convertFullWidth
+                      />
+                    </Stack>
+                  )}
+                </Stack>
+              </ApItemGroup>
+            )}
             <ApItemGroup
               optional
               label={'フラット35S（優良住宅取得支援制度）対象項目'}
@@ -945,6 +1079,11 @@ export const ApStep07Page = () => {
               <ApRadioColumnGroup
                 name="p_application_headers__property_flat_35_plan"
                 options={propertyFlat35PlanOptions}
+                onChange={(e) => {
+                  if (!e.target.value === '2') {
+                    formik.setFieldValue('p_application_headers__property_flat_35_tech', '');
+                  }
+                }}
               />
             </ApItemGroup>
             <ApItemGroup optional label={'維持保全型'} note={'※該当する方のみお答えください。(MCJ固有項目)'}>
@@ -953,7 +1092,7 @@ export const ApStep07Page = () => {
                 options={propertyMaintenanceTypeOptions}
               />
             </ApItemGroup>
-            {['2', '3'].includes(formik.values.p_application_headers__property_flat_35_plan) && (
+            {formik.values.p_application_headers__property_flat_35_plan === '2' && (
               <ApItemGroup
                 optional
                 label={'フラット35S（優良住宅取得支援制度）対象項目②'}
@@ -977,7 +1116,7 @@ export const ApStep07Page = () => {
             </ApItemGroup>
           </Stack>
         )}
-
+        <ApSaveDraftButton pageInfo={parseVaildData} />
         <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
       </ApLayout>
     </FormikProvider>

@@ -15,7 +15,6 @@ export const ApCheckox = ({ label, disabled, ...props }) => {
     },
     [field, meta, props, setValue]
   );
-  console.log();
   return (
     <Box>
       <FormControlLabel

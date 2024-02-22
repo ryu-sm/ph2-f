@@ -18,8 +18,6 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
       axios
         .get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${meta.value}`)
         .then((res) => {
-          console.log(res);
-          console.log(!!res.data.results);
           if (!!res.data.results) {
             callback({
               prefecture_kanji: res.data.results[0].address1,
@@ -74,8 +72,6 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
     ],
     [formik.values.firstCode, formik.values.secondCode]
   );
-
-  console.log(currentIndex);
 
   const handleBackInput = useCallback(() => {
     const prevIndex = currentIndex.current - 1;

@@ -1,5 +1,5 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, isMcjSelector, userEmailSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
@@ -16,6 +16,7 @@ import {
   ApPrimaryButton,
   ApRadioColumnGroup,
   ApRadioRowGroup,
+  ApSaveDraftButton,
   ApSelectField,
   ApSelectFieldYm,
   ApSelectFieldYmd,
@@ -126,7 +127,6 @@ export const ApStep03Page = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       setApplicationInfo((pre) => {
         return { ...pre, ...values };
       });
@@ -134,6 +134,57 @@ export const ApStep03Page = () => {
     },
   });
 
+  const parseVaildData = useMemo(() => {
+    return {
+      p_applicant_persons__0__office_occupation: formik.values.p_applicant_persons__0__office_occupation,
+      p_applicant_persons__0__office_occupation_other: formik.values.p_applicant_persons__0__office_occupation_other,
+      p_applicant_persons__0__office_industry: formik.values.p_applicant_persons__0__office_industry,
+      p_applicant_persons__0__office_industry_other: formik.values.p_applicant_persons__0__office_industry_other,
+      p_applicant_persons__0__office_occupation_detail: formik.values.p_applicant_persons__0__office_occupation_detail,
+      p_applicant_persons__0__office_occupation_detail_other:
+        formik.values.p_applicant_persons__0__office_occupation_detail_other,
+      p_applicant_persons__0__office_name_kanji: formik.values.p_applicant_persons__0__office_name_kanji,
+      p_applicant_persons__0__office_department: formik.values.p_applicant_persons__0__office_department,
+      p_applicant_persons__0__office_phone: formik.values.p_applicant_persons__0__office_phone,
+      p_applicant_persons__0__office_postal_code: formik.values.p_applicant_persons__0__office_postal_code,
+      p_applicant_persons__0__office_prefecture_kanji: formik.values.p_applicant_persons__0__office_prefecture_kanji,
+      p_applicant_persons__0__office_city_kanji: formik.values.p_applicant_persons__0__office_city_kanji,
+      p_applicant_persons__0__office_district_kanji: formik.values.p_applicant_persons__0__office_district_kanji,
+      p_applicant_persons__0__office_other_address_kanji:
+        formik.values.p_applicant_persons__0__office_other_address_kanji,
+      p_applicant_persons__0__office_employee_num: formik.values.p_applicant_persons__0__office_employee_num,
+      p_applicant_persons__0__office_joining_date: formik.values.p_applicant_persons__0__office_joining_date,
+      p_applicant_persons__0__last_year_income: formik.values.p_applicant_persons__0__last_year_income,
+      p_applicant_persons__0__last_year_bonus_income: formik.values.p_applicant_persons__0__last_year_bonus_income,
+      p_applicant_persons__0__income_sources: formik.values.p_applicant_persons__0__income_sources,
+      p_applicant_persons__0__tax_return: formik.values.p_applicant_persons__0__tax_return,
+      p_applicant_persons__0__tax_return_reasons: formik.values.p_applicant_persons__0__tax_return_reasons,
+      p_applicant_persons__0__tax_return_reason_other: formik.values.p_applicant_persons__0__tax_return_reason_other,
+      p_applicant_persons__0__transfer_office: formik.values.p_applicant_persons__0__transfer_office,
+      p_applicant_persons__0__transfer_office_name_kanji:
+        formik.values.p_applicant_persons__0__transfer_office_name_kanji,
+      p_applicant_persons__0__transfer_office_name_kana:
+        formik.values.p_applicant_persons__0__transfer_office_name_kana,
+      p_applicant_persons__0__transfer_office_phone: formik.values.p_applicant_persons__0__transfer_office_phone,
+      p_applicant_persons__0__transfer_office_postal_code:
+        formik.values.p_applicant_persons__0__transfer_office_postal_code,
+      p_applicant_persons__0__transfer_office_prefecture_kanji:
+        formik.values.p_applicant_persons__0__transfer_office_prefecture_kanji,
+      p_applicant_persons__0__transfer_office_city_kanji:
+        formik.values.p_applicant_persons__0__transfer_office_city_kanji,
+      p_applicant_persons__0__transfer_office_district_kanji:
+        formik.values.p_applicant_persons__0__transfer_office_district_kanji,
+      p_applicant_persons__0__transfer_office_other_address_kanji:
+        formik.values.p_applicant_persons__0__transfer_office_other_address_kanji,
+      p_applicant_persons__0__maternity_paternity_leave:
+        formik.values.p_applicant_persons__0__maternity_paternity_leave,
+      p_applicant_persons__0__maternity_paternity_leave_start_date:
+        formik.values.p_applicant_persons__0__maternity_paternity_leave_start_date,
+      p_applicant_persons__0__maternity_paternity_leave_end_date:
+        formik.values.p_applicant_persons__0__maternity_paternity_leave_end_date,
+      p_applicant_persons__0__nursing_leave: formik.values.p_applicant_persons__0__nursing_leave,
+    };
+  }, [formik.values]);
   const handelLeft = () => {
     navigate(`/step-id-${apPreStepId}`);
   };
@@ -141,7 +192,7 @@ export const ApStep03Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={38}>
+      <ApLayout hasMenu hasStepBar pb={18}>
         <ApPageTitle py={8}>{`あなたのご職業について\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'ご職業'}>
           <Stack spacing={3}>
@@ -619,6 +670,7 @@ export const ApStep03Page = () => {
             <ApRadioColumnGroup name="p_applicant_persons__0__nursing_leave" options={nursingLeaveOptions} />
           </ApItemGroup>
         )}
+        <ApSaveDraftButton pageInfo={parseVaildData} />
         <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
       </ApLayout>
     </FormikProvider>

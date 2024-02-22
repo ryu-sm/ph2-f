@@ -32,8 +32,6 @@ export const ApRegisterVerifyEmailPage = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const s_sales_company_org_id = getSalesCompanyOrgId();
-      console.log(getSalesCompanyOrgId());
-      console.log(typeof getSalesCompanyOrgId());
       try {
         await apRegisterVerifyEmail({ email: values.email, ...(s_sales_company_org_id && { s_sales_company_org_id }) });
         setSended(true);

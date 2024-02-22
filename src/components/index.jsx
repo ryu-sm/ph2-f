@@ -12,3 +12,7 @@ export * from './applicant/select';
 export * from './applicant/static-modal';
 export * from './applicant/star-help';
 export * from './applicant/error-scroll';
+export * from './applicant/confirm-group';
+export * from './applicant/confirm-item-group';
+export * from './applicant/img-upload';
+export * from './applicant/img-item';

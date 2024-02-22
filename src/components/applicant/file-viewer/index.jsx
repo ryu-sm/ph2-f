@@ -28,7 +28,6 @@ export const ApFileViewer = ({ url, onScrollBottom }) => {
       ref={containerRef}
       onScroll={handleScroll}
       sx={{
-        width: 1,
         height: 272,
         maxHeight: 272,
         border: '1px solid',

@@ -12,3 +12,6 @@ export { apRepaymentMethod01 };
 
 import apRepaymentMethod02 from './repayment-method-02.png';
 export { apRepaymentMethod02 };
+
+import apPdf from './pdf.png';
+export { apPdf };

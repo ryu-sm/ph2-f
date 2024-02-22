@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { apGetPublicHolidays } from '@/services';
+import axios from 'axios';
 
 export const usePublicHolidays = (year, month, day) => {
   const [publicHolidays, setPublicHolidays] = useState([]);
@@ -7,7 +7,7 @@ export const usePublicHolidays = (year, month, day) => {
   const getPublicHolidays = useCallback(async () => {
     try {
       if (!!year) {
-        const res = await apGetPublicHolidays(year);
+        const res = await axios.get(`https://date.nager.at/api/v2/publicholidays/${year}/jp`);
 
         const temp = localStorage.getItem('publicHolidays');
         if (!!temp) {

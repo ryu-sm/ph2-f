@@ -40,6 +40,10 @@ export const apGetBanks = async () => {
   return await service.get('/banks');
 };
 
-export const apGetPublicHolidays = async (year) => {
-  return await service.get(`https://date.nager.at/api/v2/publicholidays/${year}/jp`);
+export const apGetSalesCompanyOrgs = async (s_sales_company_org_id) => {
+  return await service.get(`/orgs?s_sales_company_org_id=${s_sales_company_org_id}`);
+};
+
+export const apSaveDraft = async (data) => {
+  return await service.post('/user/draft', data);
 };

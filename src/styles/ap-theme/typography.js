@@ -65,6 +65,7 @@ export const typography = {
     whiteSpace: 'break-spaces',
     textAlign: 'center',
   },
+
   chip_label: {
     fontFamily: 'Hiragino Sans',
     fontSize: 10,
@@ -96,6 +97,7 @@ export const typography = {
     lineHeight: '100%',
     fontStyle: 'normal',
     letterSpacing: 0.6,
+    whiteSpace: 'break-spaces',
   },
   notify: {
     fontFamily: 'Hiragino Sans',

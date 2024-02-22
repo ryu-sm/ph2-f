@@ -6,7 +6,7 @@ export const agreeOptions = [
   { value: '0', label: '同意しない' },
 ];
 
-export const ganderOptions = [
+export const genderOptions = [
   { value: '1', label: '男性' },
   { value: '2', label: '女性' },
 ];

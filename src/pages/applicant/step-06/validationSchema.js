@@ -28,10 +28,10 @@ export const validationSchema = yup.object({
       rel_to_applicant_a_name: yup.string().max(48).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
       birthday: yup.string().required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED).matches(REGEX.YMD).label('生年月日'),
       mobile_phone: yup.string().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
-        return !!field_value || !!parent.p_applicant_persons__0__home_phone;
+        return !!field_value || !!parent.home_phone;
       }),
       home_phone: yup.string().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
-        return !!field_value || !!parent.p_applicant_persons__0__mobile_phone;
+        return !!field_value || !!parent.mobile_phone;
       }),
       postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ENTER_ZIPCODE_SEVEN_DIGITS),
       prefecture_kanji: yup

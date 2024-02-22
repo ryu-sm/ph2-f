@@ -11,6 +11,7 @@ import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { applicationAtom } from '@/store';
+import { dayjs } from '@/libs';
 
 export const ApAgreementPage = () => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export const ApAgreementPage = () => {
         return {
           ...pre,
           p_applicant_persons_a_agreement: true,
+          p_application_headers__apply_date: dayjs().format('YYYY/MM/DD'),
         };
       });
       navigate(routeNames.apTopPage.path);

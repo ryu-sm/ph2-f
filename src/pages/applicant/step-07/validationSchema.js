@@ -221,12 +221,18 @@ export const validationSchemaMcj = yup.object({
     last_name_kana: yup
       .string()
       .max(48)
-      .required()
+      .test('option-requied', YUP_MESSAGES.REQUIRED, (field_value, { options: { context } }) => {
+        if (context.p_application_headers__new_house_self_resident === '0') return !!field_value;
+        return true;
+      })
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
     first_name_kana: yup
       .string()
       .max(48)
-      .required()
+      .test('option-requied', YUP_MESSAGES.REQUIRED, (field_value, { options: { context } }) => {
+        if (context.p_application_headers__new_house_self_resident === '0') return !!field_value;
+        return true;
+      })
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
     rel_to_applicant_a_name: yup.string().max(48).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
     nationality: yup.string(),
@@ -238,5 +244,16 @@ export const validationSchemaMcj = yup.object({
     city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
     district_kanji: yup.string().max(40).matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI),
     other_address_kanji: yup.string().max(99).matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI),
+
+    p_application_headers__new_house_planned_resident_overview: yup.object({
+      others: yup.string(),
+      others_rel: yup.string().when('others', ([others], field) => {
+        if (others) {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    }),
   }),
 });

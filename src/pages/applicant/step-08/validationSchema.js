@@ -140,7 +140,7 @@ export const validationSchema = yup.object({
         }
       }),
       loan_purpose_other: yup.string().when('loan_purpose', ([loan_purpose], field) => {
-        if (!!loan_purpose) {
+        if (loan_purpose === '99') {
           return field.required(YUP_MESSAGES.REQUIRED);
         } else {
           return field;
@@ -185,7 +185,7 @@ export const validationSchema = yup.object({
       }),
     })
   ),
-  p_application_headers__refund_source_type: yup.string().test(
+  p_application_headers__refund_source_type: yup.array().test(
     'option-required',
     YUP_MESSAGES.RADIO_REQUIRED,
     (
@@ -198,10 +198,9 @@ export const validationSchema = yup.object({
     ) => {
       if (isMCJ) {
         if (p_borrowings?.some((item) => item.scheduled_loan_payoff === '1')) {
-          return false;
-        } else {
-          true;
+          return !!field_vale.length.length;
         }
+        return true;
       } else {
         return true;
       }
@@ -210,7 +209,7 @@ export const validationSchema = yup.object({
   p_application_headers__refund_source_type_other: yup
     .string()
     .when('p_application_headers__refund_source_type', ([p_application_headers__refund_source_type], field) => {
-      if (!!p_application_headers__refund_source_type) {
+      if (p_application_headers__refund_source_type.includes('99')) {
         return field.required(YUP_MESSAGES.REQUIRED);
       } else {
         return field;

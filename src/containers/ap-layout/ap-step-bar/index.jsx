@@ -1,6 +1,6 @@
 import Scroll from 'react-scroll';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { authAtom, hasIncomeTotalizerSelector, hasJoinGuarantorSelector } from '@/store';
+import { applicationAtom, hasIncomeTotalizerSelector, hasJoinGuarantorSelector } from '@/store';
 import { Icons } from '@/assets';
 import { useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -9,7 +9,7 @@ import { Box, Stack, Typography, useTheme } from '@mui/material';
 export const ApStepBar = () => {
   const theme = useTheme();
   const { pathname } = useLocation();
-  const setAuthInfo = useSetRecoilState(authAtom);
+  const setApplication = useSetRecoilState(applicationAtom);
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
 
@@ -121,7 +121,7 @@ export const ApStepBar = () => {
   }, [apSteps, pathname]);
 
   useEffect(() => {
-    setAuthInfo((pre) => {
+    setApplication((pre) => {
       return {
         ...pre,
         apNextStepId: stepIndex === apSteps.length - 1 ? 14 : apSteps[stepIndex + 1]?.id,

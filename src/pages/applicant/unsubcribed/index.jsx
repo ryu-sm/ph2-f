@@ -20,7 +20,6 @@ export const ApUnsubcribedPage = () => {
       clearStorage();
       modal.onTrue();
     } catch (error) {
-      console.log(error);
       switch (error?.status) {
         default:
           setWarningText(`サーバー内部でエラーが発生しました。 再度お試し下さい。`);

@@ -1,5 +1,5 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, isMcjSelector, userEmailSelector } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
@@ -12,6 +12,7 @@ import {
   ApPhoneInputField,
   ApPrimaryButton,
   ApRadioRowGroup,
+  ApSaveDraftButton,
   ApSelectField,
   ApSelectFieldYmd,
   ApStarHelp,
@@ -19,7 +20,7 @@ import {
   ApZipCodeInputField,
 } from '@/components';
 import { Stack, Typography } from '@mui/material';
-import { ganderOptions, yearOptions } from './options';
+import { genderOptions, yearOptions } from './options';
 import { PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
@@ -36,26 +37,25 @@ export const ApStep06Page = () => {
     initialValues: { p_join_guarantors },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       setApplicationInfo((pre) => {
         return { ...pre, ...values };
       });
       navigate(`/step-id-${apNextStepId}`);
     },
   });
-
+  const parseVaildData = useMemo(() => {
+    return {
+      p_join_guarantors: formik.values.p_join_guarantors,
+    };
+  }, [formik.values]);
   const handelLeft = () => {
     navigate(`/step-id-${apPreStepId}`);
   };
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={38}>
+      <ApLayout hasMenu hasStepBar pb={18}>
         <ApPageTitle py={8}>{`担保提供者について\n教えてください。`}</ApPageTitle>
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
           <ApJoinGuarantorModal />
@@ -140,7 +140,7 @@ export const ApStep06Page = () => {
                         </Stack>
                       </ApItemGroup>
                       <ApItemGroup label={'性別'} pb={3} px={2}>
-                        <ApRadioRowGroup name={`p_join_guarantors[${index}].gender`} options={ganderOptions} />
+                        <ApRadioRowGroup name={`p_join_guarantors[${index}].gender`} options={genderOptions} />
                       </ApItemGroup>
                       <ApItemGroup label={'続柄'} pb={3} px={2}>
                         <ApTextInputField
@@ -252,6 +252,7 @@ export const ApStep06Page = () => {
             </Fragment>
           )}
         />
+        <ApSaveDraftButton pageInfo={parseVaildData} />
         <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
       </ApLayout>
     </FormikProvider>

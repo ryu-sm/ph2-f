@@ -23,7 +23,6 @@ export const ApSelectFieldYm = ({ yearOptions, unit, ...props }) => {
     }),
     enableReinitialize: true,
     onSubmit: async (values, actions) => {
-      console.log(11);
       if (!values.month && !values.year) {
         return await setValue('');
       }

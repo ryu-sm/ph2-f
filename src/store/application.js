@@ -2,7 +2,15 @@ import { atom, selector } from 'recoil';
 
 const applicationInitialValues = {
   //
+  isMCJ: false,
+  apCurrStepId: 1,
+  apNextStepId: 2,
+  apPreStepId: 1,
+  hasJoinGuarantor: false,
+  hasIncomeTotalizer: false,
+  //
   p_applicant_persons_a_agreement: false,
+  p_application_headers__apply_date: '',
   p_applicant_persons_b_agreement: false,
 
   // STEP01
@@ -25,7 +33,6 @@ const applicationInitialValues = {
   p_borrowing_details__1__bonus_repayment_amount: '',
   p_application_headers__join_guarantor_umu: '',
   p_application_headers__loan_plus: '',
-  p_application_headers__loan_target_: '0',
   // STEP02
   p_applicant_persons__0__last_name_kanji: '',
   p_applicant_persons__0__first_name_kanji: '',
@@ -33,8 +40,8 @@ const applicationInitialValues = {
   p_applicant_persons__0__first_name_kana: '',
   p_applicant_persons__0__gender: '',
   p_applicant_persons__0__birthday: '',
-  p_applicant_persons__0__h__surface: '',
-  p_applicant_persons__0__h__backside: '',
+  p_applicant_persons__0__H__a: [],
+  p_applicant_persons__0__H__b: [],
   p_applicant_persons__0__nationality: '1',
   p_applicant_persons__0__mobile_phone: '',
   p_applicant_persons__0__home_phone: '',
@@ -89,6 +96,8 @@ const applicationInitialValues = {
   p_applicant_persons__1__rel_to_applicant_a_name: '',
   p_applicant_persons__1__birthday: '',
   p_applicant_persons__1__nationality: '1',
+  p_applicant_persons__1__H__a: [],
+  p_applicant_persons__1__H__b: [],
   p_applicant_persons__1__mobile_phone: '',
   p_applicant_persons__1__home_phone: '',
   p_applicant_persons__1__postal_code: '',
@@ -165,6 +174,7 @@ const applicationInitialValues = {
   p_application_headers__curr_house_shell_scheduled_price: '',
   p_application_headers__curr_house_loan_balance_type: '',
   p_application_headers__property_publish_url: '',
+  p_application_headers__property_G: [],
   p_application_headers__new_house_acquire_reason: '',
   p_application_headers__new_house_acquire_reason_other: '',
   p_application_headers__new_house_self_resident: '',
@@ -177,6 +187,7 @@ const applicationInitialValues = {
     brothers_sisters: '',
     fiance: '',
     others: '',
+    others_rel: '',
     spouse_umu: false,
     children_umu: false,
     father_umu: false,
@@ -226,6 +237,7 @@ const applicationInitialValues = {
   p_borrowings: [
     {
       id: '',
+      p_borrowing_I: [],
       self_input: false,
       borrower: '',
       type: '',
@@ -249,7 +261,7 @@ const applicationInitialValues = {
       estate_setting: '',
     },
   ],
-  p_application_headers__refund_source_type: '',
+  p_application_headers__refund_source_type: [],
   p_application_headers__refund_source_type_other: '',
   p_application_headers__refund_source_content: '',
   p_application_headers__refund_source_amount: '',
@@ -275,6 +287,57 @@ const applicationInitialValues = {
   p_application_headers__funding_other_amount: '',
   p_application_headers__funding_other_amount_detail: '',
   p_application_headers__funding_total_amount: '',
+  // STEP10
+  p_applicant_persons__0__identity_verification_type: '',
+  p_applicant_persons__0__A__01__a: [],
+  p_applicant_persons__0__A__01__b: [],
+  p_applicant_persons__0__A__02: [],
+  p_applicant_persons__0__A__03__a: [],
+  p_applicant_persons__0__A__03__b: [],
+  p_applicant_persons__0__B__a: [],
+  p_applicant_persons__0__B__b: [],
+  p_applicant_persons__0__C__01: [],
+  p_applicant_persons__0__C__02: [],
+  p_applicant_persons__0__C__03: [],
+  p_applicant_persons__0__C__04: [],
+  p_applicant_persons__0__C__05: [],
+  p_applicant_persons__0__D__01: [],
+  p_applicant_persons__0__D__02: [],
+  p_applicant_persons__0__D__03: [],
+  p_applicant_persons__0__E: [],
+  p_applicant_persons__0__F__01: [],
+  p_applicant_persons__0__F__02: [],
+  p_applicant_persons__0__F__03: [],
+  p_applicant_persons__0__K: [],
+  // STEP11
+  p_applicant_persons__1__identity_verification_type: '',
+  p_applicant_persons__1__A__01__a: [],
+  p_applicant_persons__1__A__01__b: [],
+  p_applicant_persons__1__A__02: [],
+  p_applicant_persons__1__A__03__a: [],
+  p_applicant_persons__1__A__03__b: [],
+  p_applicant_persons__1__B__a: [],
+  p_applicant_persons__1__B__b: [],
+  p_applicant_persons__1__C__01: [],
+  p_applicant_persons__1__C__02: [],
+  p_applicant_persons__1__C__03: [],
+  p_applicant_persons__1__C__04: [],
+  p_applicant_persons__1__C__05: [],
+  p_applicant_persons__1__D__01: [],
+  p_applicant_persons__1__D__02: [],
+  p_applicant_persons__1__D__03: [],
+  p_applicant_persons__1__E: [],
+  p_applicant_persons__1__F__01: [],
+  p_applicant_persons__1__F__02: [],
+  p_applicant_persons__1__F__03: [],
+  p_applicant_persons__1__K: [],
+  // STEP12
+  p_application_headers__J: [],
+  p_application_headers__sales_company_id: '',
+  p_application_headers__sales_area_id: '',
+  p_application_headers__sales_exhibition_hall_id: '',
+  p_application_headers__vendor_name: '',
+  p_application_headers__vendor_phone: '',
 };
 
 const localStorageEffect =
@@ -284,8 +347,71 @@ const localStorageEffect =
     if (savedValue != null) {
       setSelf(JSON.parse(savedValue));
     }
+
     onSet((newValue, _, isReset) => {
-      isReset ? localStorage.removeItem(key) : localStorage.setItem(key, JSON.stringify(newValue));
+      isReset
+        ? localStorage.removeItem(key)
+        : localStorage.setItem(
+            key,
+            JSON.stringify({
+              ...newValue,
+              // STEP02
+              p_applicant_persons__0__H__a: [],
+              p_applicant_persons__0__H__b: [],
+              // STEP04
+              p_applicant_persons__1__H__a: [],
+              p_applicant_persons__1__H__b: [],
+              // STEP07
+              p_application_headers__property_G: [],
+              //STEP08
+              p_borrowings:
+                newValue.p_borrowings.length && newValue.p_borrowings.map((item) => ({ ...item, p_borrowing_I: [] })),
+              // STEP10
+              p_applicant_persons__0__A__01__a: [],
+              p_applicant_persons__0__A__01__b: [],
+              p_applicant_persons__0__A__02: [],
+              p_applicant_persons__0__A__03__a: [],
+              p_applicant_persons__0__A__03__b: [],
+              p_applicant_persons__0__B__a: [],
+              p_applicant_persons__0__B__b: [],
+              p_applicant_persons__0__C__01: [],
+              p_applicant_persons__0__C__02: [],
+              p_applicant_persons__0__C__03: [],
+              p_applicant_persons__0__C__04: [],
+              p_applicant_persons__0__C__05: [],
+              p_applicant_persons__0__D__01: [],
+              p_applicant_persons__0__D__02: [],
+              p_applicant_persons__0__D__03: [],
+              p_applicant_persons__0__E: [],
+              p_applicant_persons__0__F__01: [],
+              p_applicant_persons__0__F__02: [],
+              p_applicant_persons__0__F__03: [],
+              p_applicant_persons__0__K: [],
+              // STEP11
+              p_applicant_persons__1__A__01__a: [],
+              p_applicant_persons__1__A__01__b: [],
+              p_applicant_persons__1__A__02: [],
+              p_applicant_persons__1__A__03__a: [],
+              p_applicant_persons__1__A__03__b: [],
+              p_applicant_persons__1__B__a: [],
+              p_applicant_persons__1__B__b: [],
+              p_applicant_persons__1__C__01: [],
+              p_applicant_persons__1__C__02: [],
+              p_applicant_persons__1__C__03: [],
+              p_applicant_persons__1__C__04: [],
+              p_applicant_persons__1__C__05: [],
+              p_applicant_persons__1__D__01: [],
+              p_applicant_persons__1__D__02: [],
+              p_applicant_persons__1__D__03: [],
+              p_applicant_persons__1__E: [],
+              p_applicant_persons__1__F__01: [],
+              p_applicant_persons__1__F__02: [],
+              p_applicant_persons__1__F__03: [],
+              p_applicant_persons__1__K: [],
+              // STEP12
+              p_application_headers__J: [],
+            })
+          );
     });
   };
 
@@ -300,5 +426,53 @@ export const appliedBanksSelector = selector({
   get: ({ get }) => {
     const application = get(applicationAtom);
     return application?.p_application_banks__s_bank_ids || [];
+  },
+});
+
+export const isMcjSelector = selector({
+  key: 'isMCJ',
+  get: ({ get }) => {
+    const application = get(applicationAtom);
+    return application?.isMCJ;
+  },
+});
+
+export const apCurrStepIdSelector = selector({
+  key: 'apCurrStepId',
+  get: ({ get }) => {
+    const application = get(applicationAtom);
+    return application?.apCurrStepId;
+  },
+});
+
+export const apNextStepIdSelector = selector({
+  key: 'apNextStepId',
+  get: ({ get }) => {
+    const application = get(applicationAtom);
+    return application?.apNextStepId;
+  },
+});
+
+export const apPreStepIdSelector = selector({
+  key: 'apPreStepId',
+  get: ({ get }) => {
+    const application = get(applicationAtom);
+    return application?.apPreStepId;
+  },
+});
+
+export const hasJoinGuarantorSelector = selector({
+  key: 'hasJoinGuarantor',
+  get: ({ get }) => {
+    const application = get(applicationAtom);
+    return application?.hasJoinGuarantor;
+  },
+});
+
+export const hasIncomeTotalizerSelector = selector({
+  key: 'hasIncomeTotalizer',
+  get: ({ get }) => {
+    const application = get(applicationAtom);
+    return application?.hasIncomeTotalizer;
   },
 });

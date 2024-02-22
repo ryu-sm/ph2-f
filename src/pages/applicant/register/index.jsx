@@ -36,7 +36,6 @@ export const ApRegisterPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       try {
         const res = await apRegister({ password: values.password, token: token });
         const { access_token } = res.data;

@@ -10,3 +10,12 @@ export const CONSENT_URL = '/pdfs/個人情報の取扱いに関する同意書�
 export const MCJ_CODE = '0039';
 
 export const BANK_NOT_VALID_DAYS = ['01/01', '01/02', '01/03', '12/31'];
+
+export const ALLOWED_IMAGE_TYPES = {
+  'image/jpeg': ['.jpeg'],
+  'image/jpg': ['.jpg'],
+  'image/png': ['.png'],
+  'application/pdf': ['.pdf'],
+};
+
+export const MAX_SIZE_FILE = 35 * 1000 * 1000;

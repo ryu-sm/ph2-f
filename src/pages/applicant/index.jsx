@@ -21,3 +21,7 @@ export { ApStep06Page } from './step-06';
 export { ApStep07Page } from './step-07';
 export { ApStep08Page } from './step-08';
 export { ApStep09Page } from './step-09';
+export { ApStep10Page } from './step-10';
+export { ApStep11Page } from './step-11';
+export { ApStep12Page } from './step-12';
+export { ApStep13Page } from './step-13';
