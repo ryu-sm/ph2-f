@@ -1,7 +1,15 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { Fragment, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, isMcjSelector, userEmailSelector } from '@/store';
+import {
+  agentSendedSelector,
+  apNextStepIdSelector,
+  apPreStepIdSelector,
+  applicationAtom,
+  applyNoSelector,
+  isMcjSelector,
+  userEmailSelector,
+} from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -17,6 +25,7 @@ import {
   ApSelectFieldYmd,
   ApStarHelp,
   ApTextInputField,
+  ApUpdateApply,
   ApZipCodeInputField,
 } from '@/components';
 import { Stack, Typography } from '@mui/material';
@@ -24,38 +33,50 @@ import { genderOptions, yearOptions } from './options';
 import { PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
+import { cloneDeep } from 'lodash';
+import { useBoolean } from '@/hooks';
+import { routeNames } from '@/router/settings';
 
 export const ApStep06Page = () => {
   const navigate = useNavigate();
-  const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const isMCJ = useRecoilValue(isMcjSelector);
-  const { p_join_guarantors, p_application_headers__loan_type } = useRecoilValue(applicationAtom);
+  const applyNo = useRecoilValue(applyNoSelector);
+  const agentSended = useRecoilValue(agentSendedSelector);
+  const updateModal = useBoolean(false);
+  const { apNextStepId, apPreStepId, p_join_guarantors } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
     initialValues: { p_join_guarantors },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      setApplicationInfo((pre) => {
-        return { ...pre, ...values };
-      });
-      navigate(`/step-id-${apNextStepId}`);
+      if (agentSended) {
+        updateModal.onTrue();
+      } else {
+        setApplicationInfo((pre) => {
+          return { ...pre, ...values };
+        });
+        navigate(`/step-id-${apNextStepId}`);
+      }
     },
   });
   const parseVaildData = useMemo(() => {
-    return {
-      p_join_guarantors: formik.values.p_join_guarantors,
-    };
+    const dataCopy = cloneDeep(formik.values);
+    return dataCopy;
   }, [formik.values]);
+
   const handelLeft = () => {
-    navigate(`/step-id-${apPreStepId}`);
+    if (agentSended) {
+      navigate(routeNames.apTopPage.path);
+    } else {
+      navigate(`/step-id-${apPreStepId}`);
+    }
   };
 
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
       <ApLayout hasMenu hasStepBar pb={18}>
+        <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`担保提供者について\n教えてください。`}</ApPageTitle>
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
           <ApJoinGuarantorModal />
@@ -224,7 +245,7 @@ export const ApStep06Page = () => {
                     height={40}
                     onClick={() => {
                       arrayHelpers.push({
-                        id: null,
+                        id: '',
                         last_name_kanji: '',
                         first_name_kanji: '',
                         last_name_kana: '',
@@ -253,7 +274,7 @@ export const ApStep06Page = () => {
           )}
         />
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
+        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

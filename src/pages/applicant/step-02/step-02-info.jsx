@@ -1,8 +1,7 @@
-import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
-import { useBankMaster } from '@/hooks/use-bank-master';
+import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
 import { agentSendedSelector, applicationAtom } from '@/store';
 import { formatJapanDate } from '@/utils';
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
 import { Icons } from '@/assets';
@@ -12,71 +11,89 @@ import { genderOptions, nationalityOptions } from './options';
 
 export const ApStep02Info = ({ stepIndex }) => {
   const navigate = useNavigate();
-  const {
-    p_applicant_persons__0__last_name_kanji,
-    p_applicant_persons__0__first_name_kanji,
-    p_applicant_persons__0__last_name_kana,
-    p_applicant_persons__0__first_name_kana,
-    p_applicant_persons__0__gender,
-    p_applicant_persons__0__birthday,
-    p_applicant_persons__0__nationality,
-    p_applicant_persons__0__mobile_phone,
-    p_applicant_persons__0__home_phone,
-    p_applicant_persons__0__postal_code,
-    p_applicant_persons__0__prefecture_kanji,
-    p_applicant_persons__0__city_kanji,
-    p_applicant_persons__0__district_kanji,
-    p_applicant_persons__0__other_address_kanji,
-    p_applicant_persons__0__email,
-  } = useRecoilValue(applicationAtom);
+  const { p_applicant_persons__0, p_uploaded_files } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
 
   return (
-    <ApConfirmGroup label={`STEP${stepIndex}：あなたの情報`}>
+    <ApConfirmGroup stepIndex={stepIndex} label={'：あなたの情報'}>
       <ApConfirmItemGroup label={'お名前'}>
         <Stack spacing={1} alignItems={'start'}>
           <Typography variant="modal_label" color={'text.main'}>
-            {`${p_applicant_persons__0__last_name_kanji} ${p_applicant_persons__0__first_name_kanji} 様`}
+            {`${p_applicant_persons__0.last_name_kanji} ${p_applicant_persons__0.first_name_kanji} 様`}
           </Typography>
           <Typography variant="modal_label" color={'text.main'}>
-            {`${p_applicant_persons__0__last_name_kana} ${p_applicant_persons__0__first_name_kana} 様`}
+            {`${p_applicant_persons__0.last_name_kana} ${p_applicant_persons__0.first_name_kana} 様`}
           </Typography>
         </Stack>
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'性別'}>
-        {p_applicant_persons__0__gender
-          ? genderOptions.find((item) => item.value === p_applicant_persons__0__gender)?.label
+        {p_applicant_persons__0.gender
+          ? genderOptions.find((item) => item.value === p_applicant_persons__0.gender)?.label
           : 'ー'}
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'生年月日'}>
-        {p_applicant_persons__0__birthday ? formatJapanDate(p_applicant_persons__0__birthday, true) : 'ー'}
+        {p_applicant_persons__0.birthday ? formatJapanDate(p_applicant_persons__0.birthday, true) : 'ー'}
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'現在の国籍'}>
-        {p_applicant_persons__0__nationality
-          ? nationalityOptions.find((item) => item.value === p_applicant_persons__0__nationality)?.label
-          : 'ー'}
+        <Stack spacing={3}>
+          {p_applicant_persons__0.nationality
+            ? nationalityOptions.find((item) => item.value === p_applicant_persons__0.nationality)?.label
+            : 'ー'}
+        </Stack>
+        {p_applicant_persons__0.nationality === '2' && (
+          <Stack spacing={3}>
+            <Typography variant="label" color={'text.main'}>
+              〈在留カードまたは特別永住者証明書〉
+            </Typography>
+            <Stack spacing={'6px'}>
+              <Typography variant="label" color={'text.main'}>
+                〈表面〉
+              </Typography>
+              {p_uploaded_files.p_applicant_persons__0__H__a.length ? (
+                <ApImgItem files={p_uploaded_files.p_applicant_persons__0__H__a} />
+              ) : (
+                <Typography variant="label" color={'gray.150'}>
+                  〈 書類はまだ添付されません。〉
+                </Typography>
+              )}
+            </Stack>
+            <Stack spacing={'6px'}>
+              <Typography variant="label" color={'text.main'}>
+                〈裏面〉
+              </Typography>
+              {p_uploaded_files.p_applicant_persons__0__H__b.length ? (
+                <ApImgItem files={p_uploaded_files.p_applicant_persons__0__H__b} />
+              ) : (
+                <Typography variant="label" color={'gray.150'}>
+                  〈 書類はまだ添付されません。〉
+                </Typography>
+              )}
+            </Stack>
+          </Stack>
+        )}
       </ApConfirmItemGroup>
+
       <ApConfirmItemGroup label={'電話番号'}>
         <Stack spacing={1} alignItems={'start'}>
           <Typography variant="modal_label" color={'text.main'}>
-            {p_applicant_persons__0__mobile_phone ? `〈携帯〉${p_applicant_persons__0__mobile_phone}` : 'ー'}
+            {p_applicant_persons__0.mobile_phone ? `〈携帯〉${p_applicant_persons__0.mobile_phone}` : 'ー'}
           </Typography>
           <Typography variant="modal_label" color={'text.main'}>
-            {p_applicant_persons__0__home_phone ? `〈自宅〉${p_applicant_persons__0__home_phone}` : 'ー'}
+            {p_applicant_persons__0.home_phone ? `〈自宅〉${p_applicant_persons__0.home_phone}` : 'ー'}
           </Typography>
         </Stack>
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'現住所'}>
-        {p_applicant_persons__0__postal_code ? (
+        {p_applicant_persons__0.postal_code ? (
           <Stack spacing={1} alignItems={'start'}>
             <Typography variant="modal_label" color={'text.main'}>
-              {`〒${p_applicant_persons__0__postal_code}`}
+              {`〒${p_applicant_persons__0.postal_code}`}
             </Typography>
             <Typography variant="modal_label" color={'text.main'}>
-              {`${p_applicant_persons__0__prefecture_kanji}${p_applicant_persons__0__city_kanji}${p_applicant_persons__0__district_kanji}`}
+              {`${p_applicant_persons__0.prefecture_kanji}${p_applicant_persons__0.city_kanji}${p_applicant_persons__0.district_kanji}`}
             </Typography>
             <Typography variant="modal_label" color={'text.main'}>
-              {p_applicant_persons__0__other_address_kanji}
+              {p_applicant_persons__0.other_address_kanji}
             </Typography>
           </Stack>
         ) : (
@@ -84,7 +101,7 @@ export const ApStep02Info = ({ stepIndex }) => {
         )}
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'ご連絡先用メールアドレス'}>
-        {p_applicant_persons__0__email ? p_applicant_persons__0__email : 'ー'}
+        {p_applicant_persons__0.email ? p_applicant_persons__0.email : 'ー'}
       </ApConfirmItemGroup>
       {!agentSended && (
         <Stack alignItems={'center'} sx={{ py: 3 }}>

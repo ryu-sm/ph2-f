@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom } from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -18,40 +18,34 @@ import {
   ApSelectFieldYmd,
   ApStarHelp,
   ApTextInputField,
+  ApUpdateApply,
   ApZipCodeInputField,
 } from '@/components';
 import { Box, Link, Stack, Typography } from '@mui/material';
 import { agreeOptions, genderOptions, nationalityOptions, yearOptions } from './options';
 import { PREFECTURES } from '@/constant';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
 import { CONFIRMATION_URL, CONSENT_URL } from '@/configs';
+import { cloneDeep } from 'lodash';
+import { useBoolean } from '@/hooks';
+import { apApplicationImg } from '@/services';
+import { routeNames } from '@/router/settings';
 
 export const ApStep04Page = () => {
   const navigate = useNavigate();
-  const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
+
+  const applyNo = useRecoilValue(applyNoSelector);
+  const agentSended = useRecoilValue(agentSendedSelector);
+  const updateModal = useBoolean(false);
   const {
+    apNextStepId,
+    apPreStepId,
+    //
     p_applicant_persons_b_agreement,
-    p_applicant_persons__1__last_name_kanji,
-    p_applicant_persons__1__first_name_kanji,
-    p_applicant_persons__1__last_name_kana,
-    p_applicant_persons__1__first_name_kana,
-    p_applicant_persons__1__gender,
-    p_applicant_persons__1__rel_to_applicant_a_name,
-    p_applicant_persons__1__birthday,
-    p_applicant_persons__1__nationality,
-    p_applicant_persons__1__H__a,
-    p_applicant_persons__1__H__b,
-    p_applicant_persons__1__mobile_phone,
-    p_applicant_persons__1__home_phone,
-    p_applicant_persons__1__postal_code,
-    p_applicant_persons__1__prefecture_kanji,
-    p_applicant_persons__1__city_kanji,
-    p_applicant_persons__1__district_kanji,
-    p_applicant_persons__1__other_address_kanji,
+    p_applicant_persons__1,
+    p_uploaded_files,
   } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
@@ -59,76 +53,55 @@ export const ApStep04Page = () => {
       consent: '',
       confirmation: '',
       p_applicant_persons_b_agreement,
-      p_applicant_persons__1__last_name_kanji,
-      p_applicant_persons__1__first_name_kanji,
-      p_applicant_persons__1__last_name_kana,
-      p_applicant_persons__1__first_name_kana,
-      p_applicant_persons__1__gender,
-      p_applicant_persons__1__rel_to_applicant_a_name,
-      p_applicant_persons__1__birthday,
-      p_applicant_persons__1__nationality,
-      p_applicant_persons__1__H__a,
-      p_applicant_persons__1__H__b,
-      p_applicant_persons__1__mobile_phone,
-      p_applicant_persons__1__home_phone,
-      p_applicant_persons__1__postal_code,
-      p_applicant_persons__1__prefecture_kanji,
-      p_applicant_persons__1__city_kanji,
-      p_applicant_persons__1__district_kanji,
-      p_applicant_persons__1__other_address_kanji,
+      p_applicant_persons__1,
+      p_uploaded_files,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      setApplicationInfo((pre) => {
-        return {
-          ...pre,
-          p_applicant_persons_b_agreement: formik.values.p_applicant_persons_b_agreement,
-          p_applicant_persons__1__last_name_kanji: formik.values.p_applicant_persons__1__last_name_kanji,
-          p_applicant_persons__1__first_name_kanji: formik.values.p_applicant_persons__1__first_name_kanji,
-          p_applicant_persons__1__last_name_kana: formik.values.p_applicant_persons__1__last_name_kana,
-          p_applicant_persons__1__first_name_kana: formik.values.p_applicant_persons__1__first_name_kana,
-          p_applicant_persons__1__gender: formik.values.p_applicant_persons__1__gender,
-          p_applicant_persons__1__birthday: formik.values.p_applicant_persons__1__birthday,
-          p_applicant_persons__1__nationality: formik.values.p_applicant_persons__1__nationality,
-          p_applicant_persons__1__H__a: formik.values.p_applicant_persons__1__H__a,
-          p_applicant_persons__1__H__b: formik.values.p_applicant_persons__1__H__b,
-          p_applicant_persons__1__mobile_phone: formik.values.p_applicant_persons__1__mobile_phone,
-          p_applicant_persons__1__home_phone: formik.values.p_applicant_persons__1__home_phone,
-          p_applicant_persons__1__postal_code: formik.values.p_applicant_persons__1__postal_code,
-          p_applicant_persons__1__prefecture_kanji: formik.values.p_applicant_persons__1__prefecture_kanji,
-          p_applicant_persons__1__city_kanji: formik.values.p_applicant_persons__1__city_kanji,
-          p_applicant_persons__1__district_kanji: formik.values.p_applicant_persons__1__district_kanji,
-          p_applicant_persons__1__other_address_kanji: formik.values.p_applicant_persons__1__other_address_kanji,
-        };
-      });
-      navigate(`/step-id-${apNextStepId}`);
+      const dataCopy = cloneDeep(values);
+      delete dataCopy.confirmation;
+      delete dataCopy.consent;
+
+      if (agentSended) {
+        updateModal.onTrue();
+      } else {
+        setApplicationInfo((pre) => {
+          return { ...pre, ...dataCopy };
+        });
+        navigate(`/step-id-${apNextStepId}`);
+      }
     },
   });
 
+  const sendedImg = useCallback(async () => {
+    if (agentSended) {
+      try {
+        const res = await apApplicationImg(applyNo);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__H__a', res.data.p_applicant_persons__1__H__a);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__H__b', res.data.p_applicant_persons__1__H__b);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  });
+
+  useEffect(() => {
+    sendedImg();
+  }, [agentSended, applyNo]);
+
   const parseVaildData = useMemo(() => {
-    return {
-      p_applicant_persons_b_agreement: formik.values.p_applicant_persons_b_agreement,
-      p_applicant_persons__1__last_name_kanji: formik.values.p_applicant_persons__1__last_name_kanji,
-      p_applicant_persons__1__first_name_kanji: formik.values.p_applicant_persons__1__first_name_kanji,
-      p_applicant_persons__1__last_name_kana: formik.values.p_applicant_persons__1__last_name_kana,
-      p_applicant_persons__1__first_name_kana: formik.values.p_applicant_persons__1__first_name_kana,
-      p_applicant_persons__1__gender: formik.values.p_applicant_persons__1__gender,
-      p_applicant_persons__1__birthday: formik.values.p_applicant_persons__1__birthday,
-      p_applicant_persons__1__nationality: formik.values.p_applicant_persons__1__nationality,
-      p_applicant_persons__1__H__a: formik.values.p_applicant_persons__1__H__a,
-      p_applicant_persons__1__H__b: formik.values.p_applicant_persons__1__H__b,
-      p_applicant_persons__1__mobile_phone: formik.values.p_applicant_persons__1__mobile_phone,
-      p_applicant_persons__1__home_phone: formik.values.p_applicant_persons__1__home_phone,
-      p_applicant_persons__1__postal_code: formik.values.p_applicant_persons__1__postal_code,
-      p_applicant_persons__1__prefecture_kanji: formik.values.p_applicant_persons__1__prefecture_kanji,
-      p_applicant_persons__1__city_kanji: formik.values.p_applicant_persons__1__city_kanji,
-      p_applicant_persons__1__district_kanji: formik.values.p_applicant_persons__1__district_kanji,
-      p_applicant_persons__1__other_address_kanji: formik.values.p_applicant_persons__1__other_address_kanji,
-    };
+    const dataCopy = cloneDeep(formik.values);
+    delete dataCopy.confirmation;
+    delete dataCopy.consent;
+    return dataCopy;
   }, [formik.values]);
 
   const handelLeft = () => {
-    navigate(`/step-id-${apPreStepId}`);
+    if (agentSended) {
+      navigate(routeNames.apTopPage.path);
+    } else {
+      navigate(`/step-id-${apPreStepId}`);
+    }
   };
   const [isReadedConsent, setIsReadedConsent] = useState(false);
   const [isReadedConfirmation, setIsReadedConfirmation] = useState(false);
@@ -155,6 +128,7 @@ export const ApStep04Page = () => {
     <FormikProvider value={formik}>
       <ApErrorScroll />
       <ApLayout hasMenu hasStepBar pb={18}>
+        <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`収入合算者について\n教えてください。`}</ApPageTitle>
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
           <ApIncomeTotalizerModal />
@@ -225,51 +199,47 @@ export const ApStep04Page = () => {
           <Stack>
             <ApItemGroup label={'お名前'}>
               <Stack spacing={3}>
-                <ApTextInputField name="p_applicant_persons__1__last_name_kanji" placeholder={'姓'} convertFullWidth />
-                <ApTextInputField name="p_applicant_persons__1__first_name_kanji" placeholder={'名'} convertFullWidth />
+                <ApTextInputField name="p_applicant_persons__1.last_name_kanji" placeholder={'姓'} convertFullWidth />
+                <ApTextInputField name="p_applicant_persons__1.first_name_kanji" placeholder={'名'} convertFullWidth />
                 <ApStarHelp label={'外国籍のかたは、在留カード通りに入力ください。'} />
                 <ApStarHelp label={'お名前の漢字が外字等で変換できない場合は常用漢字でご入力ください。'} />
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={'お名前（フリガナ）'}>
               <Stack spacing={3}>
-                <ApTextInputField name="p_applicant_persons__1__last_name_kana" placeholder={'セイ'} convertFullWidth />
-                <ApTextInputField
-                  name="p_applicant_persons__1__first_name_kana"
-                  placeholder={'メイ'}
-                  convertFullWidth
-                />
+                <ApTextInputField name="p_applicant_persons__1.last_name_kana" placeholder={'セイ'} convertFullWidth />
+                <ApTextInputField name="p_applicant_persons__1.first_name_kana" placeholder={'メイ'} convertFullWidth />
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={'性別'}>
-              <ApRadioRowGroup name="p_applicant_persons__1__gender" options={genderOptions} />
+              <ApRadioRowGroup name="p_applicant_persons__1.gender" options={genderOptions} />
             </ApItemGroup>
             <ApItemGroup label={'続柄'} pb={3} px={2}>
               <ApTextInputField
-                name="p_applicant_persons__1__rel_to_applicant_a_name"
+                name="p_applicant_persons__1.rel_to_applicant_a_name"
                 placeholder={'例：父'}
                 convertFullWidth
               />
             </ApItemGroup>
             <ApItemGroup label={'生年月日'}>
               <Stack spacing={3}>
-                <ApSelectFieldYmd name="p_applicant_persons__1__birthday" yearOptions={yearOptions} />
+                <ApSelectFieldYmd name="p_applicant_persons__1.birthday" yearOptions={yearOptions} />
                 <ApStarHelp label={'借入時満18歳以上満65歳以下・完済時満80歳未満の方がご利用いただけます。'} />
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={'現在の国籍'}>
               <Stack spacing={3}>
                 <ApRadioRowGroup
-                  name="p_applicant_persons__1__nationality"
+                  name="p_applicant_persons__1.nationality"
                   options={nationalityOptions}
                   onChange={(e) => {
                     if (e.target.value === '1') {
-                      formik.setFieldValue('p_applicant_persons__1___h__surface', []);
-                      formik.setFieldValue('p_applicant_persons__1___h__backside', []);
+                      formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__H__a', []);
+                      formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__H__b', []);
                     }
                   }}
                 />
-                {formik.values.p_applicant_persons__1__nationality === '2' && (
+                {formik.values.p_applicant_persons__1.nationality === '2' && (
                   <Stack
                     sx={{
                       borderRadius: 2,
@@ -294,10 +264,10 @@ export const ApStep04Page = () => {
                         borderTopLeftRadius={'7px'}
                       >
                         <Stack spacing={'6px'}>
-                          {((formik.touched.p_applicant_persons__1__H__a &&
-                            formik.errors.p_applicant_persons__1__H__a) ||
-                            (formik.touched.p_applicant_persons__1__H__b &&
-                              formik.errors.p_applicant_persons__1__H__b)) && (
+                          {((formik.touched.p_uploaded_files?.p_applicant_persons__1__H__a &&
+                            formik.errors.p_uploaded_files?.p_applicant_persons__1__H__a) ||
+                            (formik.touched.p_uploaded_files?.p_applicant_persons__1__H__b &&
+                              formik.errors.p_uploaded_files?.p_applicant_persons__1__H__b)) && (
                             <Typography variant="waring" color={'secondary.main'}>
                               {'※外国籍の場合、在留カードまたは特別永住者証明書を添付することは必須です'}
                             </Typography>
@@ -307,13 +277,13 @@ export const ApStep04Page = () => {
                               <Typography variant="label" color={'text.main'}>
                                 〈表面〉
                               </Typography>
-                              <ApImgUpload name="p_applicant_persons__1__H__a" singleFile />
+                              <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__H__a" singleFile />
                             </Stack>
                             <Stack spacing={'6px'}>
                               <Typography variant="label" color={'text.main'}>
                                 〈裏面〉
                               </Typography>
-                              <ApImgUpload name="p_applicant_persons__1__H__b" singleFile />
+                              <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__H__b" singleFile />
                             </Stack>
                           </Stack>
                         </Stack>
@@ -326,14 +296,14 @@ export const ApStep04Page = () => {
             <ApItemGroup label={'電話番号'}>
               <Stack spacing={3}>
                 <ApPhoneInputField
-                  name="p_applicant_persons__1__mobile_phone"
+                  name="p_applicant_persons__1.mobile_phone"
                   label={'携帯'}
-                  onFocus={() => formik.setFieldTouched('p_applicant_persons__1__home_phone', false)}
+                  onFocus={() => formik.setFieldTouched('p_applicant_persons__1.home_phone', false)}
                 />
                 <ApPhoneInputField
-                  name="p_applicant_persons__1__home_phone"
+                  name="p_applicant_persons__1.home_phone"
                   label={'自宅'}
-                  onFocus={() => formik.setFieldTouched('p_applicant_persons__1__mobile_phone', false)}
+                  onFocus={() => formik.setFieldTouched('p_applicant_persons__1.mobile_phone', false)}
                 />
                 <ApStarHelp label={'半角数字でご入力ください。'} />
               </Stack>
@@ -341,39 +311,39 @@ export const ApStep04Page = () => {
             <ApItemGroup label={'現住所'}>
               <Stack spacing={4}>
                 <ApZipCodeInputField
-                  name="p_applicant_persons__1__postal_code"
+                  name="p_applicant_persons__1.postal_code"
                   callback={(addr) => {
-                    formik.setFieldValue('p_applicant_persons__1__prefecture_kanji', addr.prefecture_kanji);
-                    formik.setFieldValue('p_applicant_persons__1__city_kanji', addr.city_kanji);
-                    formik.setFieldValue('p_applicant_persons__1__district_kanji', addr.district_kanji);
+                    formik.setFieldValue('p_applicant_persons__1.prefecture_kanji', addr.prefecture_kanji);
+                    formik.setFieldValue('p_applicant_persons__1.city_kanji', addr.city_kanji);
+                    formik.setFieldValue('p_applicant_persons__1.district_kanji', addr.district_kanji);
                   }}
                   errorCallback={() => {
-                    formik.setFieldValue('p_applicant_persons__1__prefecture_kanji', '');
-                    formik.setFieldValue('p_applicant_persons__1__city_kanji', '');
-                    formik.setFieldValue('p_applicant_persons__1__district_kanji', '');
+                    formik.setFieldValue('p_applicant_persons__1.prefecture_kanji', '');
+                    formik.setFieldValue('p_applicant_persons__1.city_kanji', '');
+                    formik.setFieldValue('p_applicant_persons__1.district_kanji', '');
                   }}
                 />
                 <ApSelectField
-                  name="p_applicant_persons__1__prefecture_kanji"
+                  name="p_applicant_persons__1.prefecture_kanji"
                   options={PREFECTURES}
                   placeholder={'----'}
                   width={110}
                   label={'都道府県'}
                 />
                 <ApTextInputField
-                  name="p_applicant_persons__1__city_kanji"
+                  name="p_applicant_persons__1.city_kanji"
                   placeholder={'例：港区'}
                   label={'市区郡　（例：港区）'}
                   convertFullWidth
                 />
                 <ApTextInputField
-                  name="p_applicant_persons__1__district_kanji"
+                  name="p_applicant_persons__1.district_kanji"
                   placeholder={'例：芝浦４丁目'}
                   label={'町村丁目（例：芝浦４丁目）'}
                   convertFullWidth
                 />
                 <ApTextInputField
-                  name="p_applicant_persons__1__other_address_kanji"
+                  name="p_applicant_persons__1.other_address_kanji"
                   placeholder={'例：12-38　キャナルゲート芝浦605号室'}
                   label={'丁目以下・建物名・部屋番号（例：12-38　キャナルゲート芝浦605号室）'}
                   convertFullWidth
@@ -383,7 +353,7 @@ export const ApStep04Page = () => {
           </Stack>
         )}
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
+        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

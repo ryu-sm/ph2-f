@@ -8,7 +8,7 @@ export const ApConfirmItemGroup = ({ children, label, sx, ...props }) => {
           {label}
         </Typography>
       </Stack>
-      <Stack sx={{ px: 6, py: 3, ...sx }} alignItems={'start'}>
+      <Stack sx={{ px: 6, py: 3, bgcolor: 'white', ...sx }} alignItems={'start'}>
         {typeof children === 'string' ? (
           <Typography variant="modal_label" color={'text.main'}>
             {children}

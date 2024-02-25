@@ -9,9 +9,9 @@ export const ApCheckox = ({ label, disabled, ...props }) => {
   const handleChange = useCallback(
     async (e) => {
       field.onChange(e);
-      props.onChange && props.onChange(e);
       await setValue(e.target.checked);
       await setTouched(true);
+      props.onChange && props.onChange(e);
     },
     [field, meta, props, setValue]
   );
@@ -25,7 +25,7 @@ export const ApCheckox = ({ label, disabled, ...props }) => {
             value={meta.value}
             icon={<Icons.ApCheckboxIcon />}
             checkedIcon={<Icons.ApCheckboxCheckedIcon />}
-            checked={!!meta.value}
+            checked={!!meta.value && meta.value !== '0'}
             onChange={handleChange}
             sx={{ mx: label ? '10px' : 0 }}
           />

@@ -74,7 +74,7 @@ export const ApSelectField = ({
             const selectedOption = options.find((option) => option.value === field.value);
             return (
               <Typography variant="unit" color="text.main">
-                {selectedOption.label}
+                {selectedOption?.label}
               </Typography>
             );
           }

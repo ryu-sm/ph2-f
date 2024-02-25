@@ -24,30 +24,17 @@ import {
 
 export const ApStep08Info = ({ stepIndex }) => {
   const navigate = useNavigate();
-  const {
-    p_application_headers__curr_borrowing_status,
-    p_borrowings,
-    p_application_headers__refund_source_type,
-    p_application_headers__refund_source_type_other,
-    p_application_headers__refund_source_content,
-    p_application_headers__refund_source_amount,
-    p_application_headers__rent_to_be_paid_land_borrower,
-    p_application_headers__rent_to_be_paid_land,
-    p_application_headers__rent_to_be_paid_house_borrower,
-    p_application_headers__rent_to_be_paid_house,
-  } = useRecoilValue(applicationAtom);
+  const { isMCJ, hasIncomeTotalizer, p_application_headers, p_borrowings } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
-  const isMCJ = useRecoilValue(isMcjSelector);
-  const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
 
   const bankMaster = useBankMaster();
   return (
-    <ApConfirmGroup label={`STEP${stepIndex}：現在の借入状況`}>
+    <ApConfirmGroup stepIndex={stepIndex} label={`：現在の借入状況`}>
       <ApConfirmItemGroup label={'あなたや連帯保証人予定者に、現在お借入はありますか？'}>
-        {p_application_headers__curr_borrowing_status ? (
+        {p_application_headers.curr_borrowing_status ? (
           <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
             {
-              CurrBorrowingStatusOptions.find((item) => item.value === p_application_headers__curr_borrowing_status)
+              CurrBorrowingStatusOptions.find((item) => item.value === p_application_headers.curr_borrowing_status)
                 .label
             }
           </Typography>
@@ -71,7 +58,7 @@ export const ApStep08Info = ({ stepIndex }) => {
               〈借入種類〉
               {p_borrowing.type ? typeOptions.find((item) => item.value === p_borrowing.type).label : 'ー'}
             </Typography>
-            {p_borrowing.p_borrowing_I.length && <ApImgItem files={p_borrowing.p_borrowing_I} />}
+            {p_borrowing.p_borrowings__I.length > 0 && <ApImgItem files={p_borrowing.p_borrowings__I} />}
 
             {p_borrowing.lender && (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
@@ -237,36 +224,36 @@ export const ApStep08Info = ({ stepIndex }) => {
         </ApConfirmItemGroup>
       ))}
       {isMCJ &&
-        p_application_headers__curr_borrowing_status === '1' &&
+        p_application_headers.curr_borrowing_status === '1' &&
         p_borrowings.some((item) => item.scheduled_loan_payoff === '1') && (
           <Stack>
             <ApConfirmItemGroup label={'完済原資'}>
               <Stack spacing={1} alignItems={'start'}>
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈完済原資の種類〉
-                  {p_application_headers__refund_source_type
-                    ? p_application_headers__refund_source_type
+                  {p_application_headers.refund_source_type
+                    ? p_application_headers.refund_source_type
                         .map((item) => refundSourceTypeOptions.find((i) => i.value === item).label)
                         .filter((item) => !!item)
                         .join(',')
                     : 'ー'}
                 </Typography>
-                {p_application_headers__refund_source_type.includes('99') && (
+                {p_application_headers.refund_source_type.includes('99') && (
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                     〈その他の方は詳細〉
-                    {p_application_headers__refund_source_type_other
-                      ? p_application_headers__refund_source_type_other
+                    {p_application_headers.refund_source_type_other
+                      ? p_application_headers.refund_source_type_other
                       : 'ー'}
                   </Typography>
                 )}
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈完済原資の内容〉
-                  {p_application_headers__refund_source_content ? p_application_headers__refund_source_content : 'ー'}
+                  {p_application_headers.refund_source_content ? p_application_headers.refund_source_content : 'ー'}
                 </Typography>
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈完済原資の金額〉
-                  {p_application_headers__refund_source_amount
-                    ? Number(p_application_headers__refund_source_amount).toLocaleString()
+                  {p_application_headers.refund_source_amount
+                    ? Number(p_application_headers.refund_source_amount).toLocaleString()
                     : 'ー'}
                 </Typography>
               </Stack>
@@ -278,17 +265,16 @@ export const ApStep08Info = ({ stepIndex }) => {
               {hasIncomeTotalizer && (
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈支払いをしている方〉
-                  {p_application_headers__rent_to_be_paid_land_borrower
-                    ? borrowerOptions.find(
-                        (item) => item.value === p_application_headers__rent_to_be_paid_land_borrower
-                      ).label
+                  {p_application_headers.rent_to_be_paid_land_borrower
+                    ? borrowerOptions.find((item) => item.value === p_application_headers.rent_to_be_paid_land_borrower)
+                        .label
                     : 'ー'}
                 </Typography>
               )}
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 〈月間の支払金額〉
-                {p_application_headers__rent_to_be_paid_land
-                  ? Number(p_application_headers__rent_to_be_paid_land).toLocaleString()
+                {p_application_headers.rent_to_be_paid_land
+                  ? Number(p_application_headers.rent_to_be_paid_land).toLocaleString()
                   : 'ー'}
                 円
               </Typography>
@@ -299,17 +285,17 @@ export const ApStep08Info = ({ stepIndex }) => {
               {hasIncomeTotalizer && (
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈支払いをしている方〉
-                  {p_application_headers__rent_to_be_paid_house_borrower
+                  {p_application_headers.rent_to_be_paid_house_borrower
                     ? borrowerOptions.find(
-                        (item) => item.value === p_application_headers__rent_to_be_paid_house_borrower
+                        (item) => item.value === p_application_headers.rent_to_be_paid_house_borrower
                       ).label
                     : 'ー'}
                 </Typography>
               )}
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 〈月間の支払金額〉
-                {p_application_headers__rent_to_be_paid_house
-                  ? Number(p_application_headers__rent_to_be_paid_house).toLocaleString()
+                {p_application_headers.rent_to_be_paid_house
+                  ? Number(p_application_headers.rent_to_be_paid_house).toLocaleString()
                   : 'ー'}
                 円
               </Typography>

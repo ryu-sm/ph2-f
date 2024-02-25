@@ -2,7 +2,7 @@ import { atom, selector } from 'recoil';
 
 const authInitialValues = {
   isLogined: false,
-  loginType: 1,
+  roleType: 1,
   applayType: 1,
   user: {
     id: null,
@@ -10,9 +10,7 @@ const authInitialValues = {
     isFirstLogin: true,
     salesCompanyOrgId: null,
     preExaminationStatus: null,
-    agentSended: false,
     displayPdf: true,
-    applyNo: null,
     hasDraftData: false,
   },
   salesPerson: {
@@ -23,6 +21,8 @@ const authInitialValues = {
     id: null,
     email: null,
   },
+  applyNo: null,
+  agentSended: false,
 };
 
 const localStorageEffect =
@@ -56,7 +56,7 @@ export const agentSendedSelector = selector({
   key: 'agentSended',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.user?.agentSended;
+    return auth?.agentSended;
   },
 });
 
@@ -68,11 +68,11 @@ export const isLoginedSelector = selector({
   },
 });
 
-export const loginTypeSelector = selector({
-  key: 'loginType',
+export const roleTypeSelector = selector({
+  key: 'roleType',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.loginType;
+    return auth?.roleType;
   },
 });
 
@@ -120,7 +120,7 @@ export const applyNoSelector = selector({
   key: 'applyNo',
   get: ({ get }) => {
     const auth = get(authAtom);
-    return auth?.user?.applyNo;
+    return auth?.applyNo;
   },
 });
 

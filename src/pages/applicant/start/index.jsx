@@ -7,7 +7,6 @@ import { routeNames } from '@/router/settings';
 import { useCurrSearchParams } from '@/hooks';
 import { useEffect } from 'react';
 import { setSalesCompanyOrgId } from '@/libs';
-import { RouteGuard } from '@/router/route-guard';
 
 export const ApStartPage = () => {
   const navigate = useNavigate();

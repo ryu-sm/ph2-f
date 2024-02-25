@@ -3,7 +3,7 @@ import { ApPrimaryButton } from '../button';
 import { Icons } from '@/assets';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
-import { Fragment, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
 
@@ -17,7 +17,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, setImages }) => {
           return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onloadend = () => {
-              resolve({ src: reader.result, name: file.name });
+              resolve({ src: reader.result, name: file.name.includes('pdf') ? file.name : crypto.randomUUID() });
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
@@ -48,7 +48,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, setImages }) => {
     maxSize: MAX_SIZE_FILE,
   });
   const handleTakePhoto = (data) => {
-    setImages([{ src: data, name: 'camera' }]);
+    setImages([{ src: data, name: crypto.randomUUID() }]);
     setShowCamera(false);
     onClose();
   };

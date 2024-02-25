@@ -47,3 +47,23 @@ export const apGetSalesCompanyOrgs = async (s_sales_company_org_id) => {
 export const apSaveDraft = async (data) => {
   return await service.post('/user/draft', data);
 };
+
+export const apGetDraft = async () => {
+  return await service.get('/user/draft');
+};
+
+export const apAgentSend = async (data) => {
+  return await service.post('/application', data);
+};
+
+export const apApplication = async (apply_no) => {
+  return await service.get(`/application?apply_no=${apply_no}`);
+};
+
+export const apApplicationImg = async (apply_no) => {
+  return await service.get(`/application/img?apply_no=${apply_no}`);
+};
+
+export const apPborrowings = async (apply_no) => {
+  return await service.get(`/p_borrowings?apply_no=${apply_no}`);
+};

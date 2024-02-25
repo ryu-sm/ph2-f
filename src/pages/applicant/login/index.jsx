@@ -16,7 +16,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 
 import { routeNames } from '@/router/settings';
-import { apLogin } from '@/services';
+import { apApplication, apGetDraft, apLogin } from '@/services';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { apCurrStepIdSelector, applicationAtom, authAtom } from '@/store';
 import { useBoolean } from '@/hooks';
@@ -40,43 +40,58 @@ export const ApLoginPage = () => {
     onSubmit: async (values) => {
       try {
         const res = await apLogin({ email: values.email, password: values.password });
+        console.log(res);
         const { access_token } = res.data;
         setToken(access_token);
         const payload = jwtDecode(access_token);
+        console.log(payload);
         setAuthInfo((pre) => {
           return {
             ...pre,
             isLogined: true,
-            loginType: 1,
+            roleType: payload?.role_type,
             applayType: 1,
             user: {
               ...pre.user,
               id: payload?.id,
               email: payload?.email,
               isFirstLogin: Boolean(payload?.first_login),
-              agentSended: Boolean(payload?.agent_sended),
               salesCompanyOrgId: payload?.s_sales_company_org_id,
               preExaminationStatus: payload?.pre_examination_status,
               displayPdf: Boolean(payload?.display_pdf),
-              applyNo: payload?.apply_no,
               hasDraftData: Boolean(payload.draft),
             },
+            applyNo: payload?.apply_no,
+            agentSended: Boolean(payload?.agent_sended),
           };
         });
-        if (Boolean(payload.draft)) {
+        if (payload.has_draft) {
+          const res = await apGetDraft();
           setApplicationInfo((pre) => {
             return {
               ...pre,
-              ...payload.draft,
+              ...res.data,
             };
           });
 
           modal.onTrue();
         }
+        if (payload?.agent_sended) {
+          const res = await apApplication(payload.apply_no);
+          setApplicationInfo((pre) => {
+            return {
+              ...pre,
+              ...res.data,
+              apCurrStepId: 14,
+            };
+          });
+          navigate(routeNames.apTopPage.path);
+        }
 
-        if (!payload.draft && !payload?.agent_sended) navigate(routeNames.apAgreementPage.path);
+        if (!payload.has_draft && !payload?.agent_sended) navigate(routeNames.apAgreementPage.path);
         // TODO:
       } catch (error) {
+        console.log(error);
         switch (error?.status) {
           case 400:
             setWarningText('メールアドレスまたはパスワードが正しくありません。');

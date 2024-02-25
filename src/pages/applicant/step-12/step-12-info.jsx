@@ -1,4 +1,4 @@
-import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
+import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
 import { agentSendedSelector, applicationAtom, authAtom } from '@/store';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
@@ -10,14 +10,7 @@ import { apGetSalesCompanyOrgs } from '@/services';
 
 export const ApStep12Info = ({ stepIndex }) => {
   const navigate = useNavigate();
-  const {
-    p_application_headers__J,
-    p_application_headers__sales_company_id,
-    p_application_headers__sales_area_id,
-    p_application_headers__sales_exhibition_hall_id,
-    p_application_headers__vendor_name,
-    p_application_headers__vendor_phone,
-  } = useRecoilValue(applicationAtom);
+  const { p_uploaded_files, p_application_headers } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
   const {
     user: { salesCompanyOrgId },
@@ -44,12 +37,11 @@ export const ApStep12Info = ({ stepIndex }) => {
   }, []);
 
   return (
-    <Stack sx={{ width: 1 }}>
-      <ApConfirmGroup label={`STEP${stepIndex}：担当者情報`}></ApConfirmGroup>
-      {p_application_headers__J.length > 0 ? (
+    <ApConfirmGroup stepIndex={stepIndex} label={`：担当者情報`}>
+      {p_uploaded_files.J?.length > 0 ? (
         <ApConfirmItemGroup label={'担当者の名刺'}>
-          {p_application_headers__J.length ? (
-            <ApImgItem files={p_application_headers__J} />
+          {p_uploaded_files.J.length ? (
+            <ApImgItem files={p_uploaded_files.J} />
           ) : (
             <Typography variant="label" color={'gray.150'}>
               〈 書類はまだ添付されません。〉
@@ -60,33 +52,33 @@ export const ApStep12Info = ({ stepIndex }) => {
         <Stack>
           <ApConfirmItemGroup label={`提携先企業 （不動産会社・住宅メーカー等）`}>
             <Typography variant="modal_label" color={'text.main'}>
-              {p_application_headers__sales_company_id
-                ? orgs.find((item) => item.value === p_application_headers__sales_company_id)?.label
+              {p_application_headers.sales_company_id
+                ? orgs.find((item) => item.value === p_application_headers.sales_company_id)?.label
                 : 'ー'}
             </Typography>
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={`エリア`}>
             <Typography variant="modal_label" color={'text.main'}>
-              {p_application_headers__sales_area_id
-                ? orgs.find((item) => item.value === p_application_headers__sales_area_id)?.label
+              {p_application_headers.sales_area_id
+                ? orgs.find((item) => item.value === p_application_headers.sales_area_id)?.label
                 : 'ー'}
             </Typography>
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={`展示場`}>
             <Typography variant="modal_label" color={'text.main'}>
-              {p_application_headers__sales_exhibition_hall_id
-                ? orgs.find((item) => item.value === p_application_headers__sales_exhibition_hall_id)?.label
+              {p_application_headers.sales_exhibition_hall_id
+                ? orgs.find((item) => item.value === p_application_headers.sales_exhibition_hall_id)?.label
                 : 'ー'}
             </Typography>
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={`担当者名`}>
             <Typography variant="modal_label" color={'text.main'}>
-              {p_application_headers__vendor_name ? p_application_headers__vendor_name : 'ー'}
+              {p_application_headers.vendor_name ? p_application_headers.vendor_name : 'ー'}
             </Typography>
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={`電話番号`}>
             <Typography variant="modal_label" color={'text.main'}>
-              {p_application_headers__vendor_phone ? p_application_headers__vendor_phone : 'ー'}
+              {p_application_headers.vendor_phone ? p_application_headers.vendor_phone : 'ー'}
             </Typography>
           </ApConfirmItemGroup>
         </Stack>
@@ -106,6 +98,6 @@ export const ApStep12Info = ({ stepIndex }) => {
           </ApLighterButton>
         </Stack>
       )}
-    </Stack>
+    </ApConfirmGroup>
   );
 };

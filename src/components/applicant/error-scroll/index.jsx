@@ -1,6 +1,4 @@
-import { useFormikContext, getIn } from 'formik';
-import { object } from 'prop-types';
-
+import { useFormikContext } from 'formik';
 import { useEffect } from 'react';
 
 export const ApErrorScroll = () => {
@@ -28,7 +26,6 @@ export const ApErrorScroll = () => {
       };
 
       parseErrors('', errors);
-
       if (errorNames.length && typeof document !== 'undefined') {
         let errorElement;
         errorNames.forEach((errorKey) => {

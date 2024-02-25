@@ -9,7 +9,6 @@ export const ApCheckboxButtonGroup = ({ options, ...props }) => {
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const handleChange = useCallback(
     async (e) => {
-      field.onChange(e);
       props.onChange && props.onChange(e);
       const target = e.target.value;
       await setValue(
@@ -44,9 +43,10 @@ export const ApCheckboxButtonGroup = ({ options, ...props }) => {
         {options.map((option) => (
           <Box key={option.value} sx={{ height: 34 }}>
             <FormControlLabel
-              {...field}
-              onChange={handleChange}
+              name={field.name}
+              onChange={!option?.default ? handleChange : () => {}}
               value={String(option.value)}
+              checked={option.default}
               control={
                 <Checkbox
                   checked={meta.value.includes(String(option.value))}

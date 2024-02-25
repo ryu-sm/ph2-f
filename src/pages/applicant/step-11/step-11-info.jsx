@@ -1,8 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
-import { useBankMaster } from '@/hooks/use-bank-master';
-import { agentSendedSelector, applicationAtom, isMcjSelector } from '@/store';
-import { formatJapanDate } from '@/utils';
-import { Box, Stack, Typography } from '@mui/material';
+import { agentSendedSelector, applicationAtom } from '@/store';
+import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
 import { Icons } from '@/assets';
@@ -12,57 +10,28 @@ import { useMemo } from 'react';
 
 export const ApStep11Info = ({ stepIndex }) => {
   const navigate = useNavigate();
-  const {
-    p_applicant_persons__1__A__01__a,
-    p_applicant_persons__1__A__01__b,
-    p_applicant_persons__1__A__02,
-    p_applicant_persons__1__A__03__a,
-    p_applicant_persons__1__A__03__b,
-    p_applicant_persons__1__B__a,
-    p_applicant_persons__1__B__b,
-    p_applicant_persons__1__C__01,
-    p_applicant_persons__1__C__02,
-    p_applicant_persons__1__C__03,
-    p_applicant_persons__1__C__04,
-    p_applicant_persons__1__C__05,
-    p_applicant_persons__1__D__01,
-    p_applicant_persons__1__D__02,
-    p_applicant_persons__1__D__03,
-    p_applicant_persons__1__E,
-    p_applicant_persons__1__F__01,
-    p_applicant_persons__1__F__02,
-    p_applicant_persons__1__F__03,
-    p_applicant_persons__1__K,
-    p_applicant_persons__1__identity_verification_type,
-    //
-    p_applicant_persons__1__tax_return,
-    p_applicant_persons__1__tax_return_reasons,
-    p_applicant_persons__1__office_occupation,
-    p_applicant_persons__1__income_sources,
-  } = useRecoilValue(applicationAtom);
+  const { p_applicant_persons__1, p_uploaded_files } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
-  const isMCJ = useRecoilValue(isMcjSelector);
 
   const plan = useMemo(() => {
     if (
-      p_applicant_persons__1__tax_return === '1' &&
-      (p_applicant_persons__1__tax_return_reasons.includes('1') ||
-        p_applicant_persons__1__tax_return_reasons.includes('2') ||
-        p_applicant_persons__1__tax_return_reasons.includes('3') ||
-        p_applicant_persons__1__tax_return_reasons.includes('6') ||
-        p_applicant_persons__1__tax_return_reasons.includes('99'))
+      p_applicant_persons__1.tax_return === '1' &&
+      (p_applicant_persons__1.tax_return_reasons.includes('1') ||
+        p_applicant_persons__1.tax_return_reasons.includes('2') ||
+        p_applicant_persons__1.tax_return_reasons.includes('3') ||
+        p_applicant_persons__1.tax_return_reasons.includes('6') ||
+        p_applicant_persons__1.tax_return_reasons.includes('99'))
     ) {
       return 'B';
     } else {
       return 'A';
     }
-  }, [p_applicant_persons__1__tax_return, p_applicant_persons__1__tax_return_reasons]);
+  }, [p_applicant_persons__1.tax_return, p_applicant_persons__1.tax_return_reasons]);
 
-  const bankMaster = useBankMaster();
   return (
-    <ApConfirmGroup label={`STEP${stepIndex}：収入合算者の書類`}>
+    <ApConfirmGroup stepIndex={stepIndex} label={`：収入合算者の書類`}>
       <ApConfirmItemGroup label={'本人確認書類'}>
-        {p_applicant_persons__1__identity_verification_type === '1' && (
+        {p_applicant_persons__1.identity_verification_type === '1' && (
           <Stack spacing={3}>
             <Stack>
               <Typography variant="label" color={'text.main'}>
@@ -75,8 +44,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈表面〉
                 </Typography>
-                {p_applicant_persons__1__A__01__a.length ? (
-                  <ApImgItem files={p_applicant_persons__1__A__01__a} />
+                {p_uploaded_files?.p_applicant_persons__1__A__01__a.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__A__01__a} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -87,8 +56,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈裏面〉
                 </Typography>
-                {p_applicant_persons__1__A__01__b.length ? (
-                  <ApImgItem files={p_applicant_persons__1__A__01__b} />
+                {p_uploaded_files?.p_applicant_persons__1__A__01__b.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__A__01__b} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -98,7 +67,7 @@ export const ApStep11Info = ({ stepIndex }) => {
             </Stack>
           </Stack>
         )}
-        {p_applicant_persons__1__identity_verification_type === '2' && (
+        {p_applicant_persons__1.identity_verification_type === '2' && (
           <Stack spacing={3}>
             <Stack>
               <Typography variant="label" color={'text.main'}>
@@ -110,8 +79,8 @@ export const ApStep11Info = ({ stepIndex }) => {
               <Typography variant="label" color={'text.main'}>
                 〈表面〉
               </Typography>
-              {p_applicant_persons__1__A__02.length ? (
-                <ApImgItem files={p_applicant_persons__1__A__02} />
+              {p_uploaded_files?.p_applicant_persons__1__A__02.length ? (
+                <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__A__02} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉
@@ -121,7 +90,7 @@ export const ApStep11Info = ({ stepIndex }) => {
           </Stack>
         )}
 
-        {p_applicant_persons__1__identity_verification_type === '3' && (
+        {p_applicant_persons__1.identity_verification_type === '3' && (
           <Stack spacing={3}>
             <Stack>
               <Typography variant="label" color={'text.main'}>
@@ -134,8 +103,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈表面〉
                 </Typography>
-                {p_applicant_persons__1__A__03__a.length ? (
-                  <ApImgItem files={p_applicant_persons__1__A__03__a} />
+                {p_uploaded_files?.p_applicant_persons__1__A__03__a.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__A__03__a} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -146,8 +115,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈裏面〉
                 </Typography>
-                {p_applicant_persons__1__A__03__b.length ? (
-                  <ApImgItem files={p_applicant_persons__1__A__03__b} />
+                {p_uploaded_files?.p_applicant_persons__1__A__03__b.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__A__03__b} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -165,8 +134,8 @@ export const ApStep11Info = ({ stepIndex }) => {
             <Typography variant="label" color={'text.main'}>
               〈表面〉
             </Typography>
-            {p_applicant_persons__1__B__a.length ? (
-              <ApImgItem files={p_applicant_persons__1__B__a} />
+            {p_uploaded_files?.p_applicant_persons__1__B__a.length ? (
+              <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__B__a} />
             ) : (
               <Typography variant="label" color={'gray.150'}>
                 〈 書類はまだ添付されません。〉
@@ -177,8 +146,8 @@ export const ApStep11Info = ({ stepIndex }) => {
             <Typography variant="label" color={'text.main'}>
               〈裏面〉
             </Typography>
-            {p_applicant_persons__1__B__b.length ? (
-              <ApImgItem files={p_applicant_persons__1__B__b} />
+            {p_uploaded_files?.p_applicant_persons__1__B__b.length ? (
+              <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__B__b} />
             ) : (
               <Typography variant="label" color={'gray.150'}>
                 〈 書類はまだ添付されません。〉
@@ -188,7 +157,7 @@ export const ApStep11Info = ({ stepIndex }) => {
         </Stack>
       </ApConfirmItemGroup>
 
-      {plan === 'A' && p_applicant_persons__1__office_occupation === '1' && (
+      {plan === 'A' && p_applicant_persons__1.office_occupation === '1' && (
         <Stack>
           <ApConfirmItemGroup label={'収入に関する書類'}>
             <Stack spacing={3}>
@@ -196,8 +165,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   源泉徴収票（前年度分）
                 </Typography>
-                {p_applicant_persons__1__C__01.length ? (
-                  <ApImgItem files={p_applicant_persons__1__C__01} />
+                {p_uploaded_files?.p_applicant_persons__1__C__01.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -208,8 +177,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   源泉徴収票（前々年度分）
                 </Typography>
-                {p_applicant_persons__1__C__02.length ? (
-                  <ApImgItem files={p_applicant_persons__1__C__02} />
+                {p_uploaded_files?.p_applicant_persons__1__C__02.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__02} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -224,8 +193,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   会社の決算報告書（1期前）
                 </Typography>
-                {p_applicant_persons__1__D__01.length ? (
-                  <ApImgItem files={p_applicant_persons__1__D__01} />
+                {p_uploaded_files?.p_applicant_persons__1__D__01.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__D__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -236,8 +205,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   会社の決算報告書（2期前）
                 </Typography>
-                {p_applicant_persons__1__D__02.length ? (
-                  <ApImgItem files={p_applicant_persons__1__D__02} />
+                {p_uploaded_files?.p_applicant_persons__1__D__02.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__D__02} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -248,8 +217,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   会社の決算報告書（3期前）
                 </Typography>
-                {p_applicant_persons__1__D__03.length ? (
-                  <ApImgItem files={p_applicant_persons__1__D__03} />
+                {p_uploaded_files?.p_applicant_persons__1__D__03.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__D__03} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -261,15 +230,15 @@ export const ApStep11Info = ({ stepIndex }) => {
         </Stack>
       )}
 
-      {plan === 'A' && ['6', '7', '8'].includes(p_applicant_persons__1__office_occupation) && (
+      {plan === 'A' && ['6', '7', '8'].includes(p_applicant_persons__1.office_occupation) && (
         <Stack>
           <ApConfirmItemGroup label={'収入に関する書類'}>
             <Stack spacing={'6px'}>
               <Typography variant="label" color={'text.main'}>
                 源泉徴収票（前年度分）
               </Typography>
-              {p_applicant_persons__1__C__01.length ? (
-                <ApImgItem files={p_applicant_persons__1__C__01} />
+              {p_uploaded_files?.p_applicant_persons__1__C__01.length ? (
+                <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__01} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉
@@ -282,8 +251,8 @@ export const ApStep11Info = ({ stepIndex }) => {
               <Typography variant="label" color={'text.main'}>
                 雇用契約書
               </Typography>
-              {p_applicant_persons__1__E.length ? (
-                <ApImgItem files={p_applicant_persons__1__E} />
+              {p_uploaded_files?.p_applicant_persons__1__E.length ? (
+                <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__E} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉
@@ -294,7 +263,7 @@ export const ApStep11Info = ({ stepIndex }) => {
         </Stack>
       )}
 
-      {plan === 'A' && !['1', '6', '7', '8'].includes(p_applicant_persons__1__office_occupation) && (
+      {plan === 'A' && !['1', '6', '7', '8'].includes(p_applicant_persons__1.office_occupation) && (
         <Stack>
           <ApConfirmItemGroup label={'収入に関する書類'}>
             <Stack spacing={3}>
@@ -302,22 +271,22 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   源泉徴収票（前年度分）
                 </Typography>
-                {p_applicant_persons__1__C__01.length ? (
-                  <ApImgItem files={p_applicant_persons__1__C__01} />
+                {p_uploaded_files?.p_applicant_persons__1__C__01.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
                   </Typography>
                 )}
               </Stack>
-              {(p_applicant_persons__1__income_sources.includes('2') ||
-                p_applicant_persons__1__income_sources.includes('3')) && (
+              {(p_applicant_persons__1.income_sources.includes('2') ||
+                p_applicant_persons__1.income_sources.includes('3')) && (
                 <Stack spacing={'6px'}>
                   <Typography variant="label" color={'text.main'}>
                     源泉徴収票（前々年度分）
                   </Typography>
-                  {p_applicant_persons__1__C__02.length ? (
-                    <ApImgItem files={p_applicant_persons__1__C__02} />
+                  {p_uploaded_files?.p_applicant_persons__1__C__02.length ? (
+                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__02} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -333,8 +302,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   {`会社の決算報告書\nまたは経営する親族の確定申告書（1期前）`}
                 </Typography>
-                {p_applicant_persons__1__F__01.length ? (
-                  <ApImgItem files={p_applicant_persons__1__F__01} />
+                {p_uploaded_files?.p_applicant_persons__1__F__01.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__F__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -345,8 +314,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   {`会社の決算報告書\nまたは経営する親族の確定申告書（2期前）`}
                 </Typography>
-                {p_applicant_persons__1__F__02.length ? (
-                  <ApImgItem files={p_applicant_persons__1__F__02} />
+                {p_uploaded_files?.p_applicant_persons__1__F__02.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__F__02} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -357,8 +326,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   {`会社の決算報告書\nまたは経営する親族の確定申告書（3期前）`}
                 </Typography>
-                {p_applicant_persons__1__F__03.length ? (
-                  <ApImgItem files={p_applicant_persons__1__F__03} />
+                {p_uploaded_files?.p_applicant_persons__1__F__03.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__F__03} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -378,8 +347,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   確定申告書（1期前）
                 </Typography>
-                {p_applicant_persons__1__C__03.length ? (
-                  <ApImgItem files={p_applicant_persons__1__C__03} />
+                {p_uploaded_files?.p_applicant_persons__1__C__03.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__03} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -390,8 +359,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   確定申告書（2期前）
                 </Typography>
-                {p_applicant_persons__1__C__04.length ? (
-                  <ApImgItem files={p_applicant_persons__1__C__04} />
+                {p_uploaded_files?.p_applicant_persons__1__C__04.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__04} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -402,8 +371,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   確定申告書（3期前）
                 </Typography>
-                {p_applicant_persons__1__C__05.length ? (
-                  <ApImgItem files={p_applicant_persons__1__C__05} />
+                {p_uploaded_files?.p_applicant_persons__1__C__05.length ? (
+                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__C__05} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -413,15 +382,15 @@ export const ApStep11Info = ({ stepIndex }) => {
             </Stack>
           </ApConfirmItemGroup>
 
-          {p_applicant_persons__1__office_occupation === '1' && (
+          {p_applicant_persons__1.office_occupation === '1' && (
             <ApConfirmItemGroup label={`非上場企業の役員の方の会社の決算報告書`}>
               <Stack spacing={3}>
                 <Stack spacing={'6px'}>
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（1期前）
                   </Typography>
-                  {p_applicant_persons__1__D__01.length ? (
-                    <ApImgItem files={p_applicant_persons__1__D__01} />
+                  {p_uploaded_files?.p_applicant_persons__1__D__01.length ? (
+                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__D__01} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -432,8 +401,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（2期前）
                   </Typography>
-                  {p_applicant_persons__1__D__02.length ? (
-                    <ApImgItem files={p_applicant_persons__1__D__02} />
+                  {p_uploaded_files?.p_applicant_persons__1__D__02.length ? (
+                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__D__02} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -444,8 +413,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（3期前）
                   </Typography>
-                  {p_applicant_persons__1__D__03.length ? (
-                    <ApImgItem files={p_applicant_persons__1__D__03} />
+                  {p_uploaded_files?.p_applicant_persons__1__D__03.length ? (
+                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__D__03} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -456,7 +425,7 @@ export const ApStep11Info = ({ stepIndex }) => {
             </ApConfirmItemGroup>
           )}
 
-          {!['1', '5', '10'].includes(p_applicant_persons__1__office_occupation) && (
+          {!['1', '5', '10'].includes(p_applicant_persons__1.office_occupation) && (
             <ApConfirmItemGroup
               label={`親族経営の会社等にご勤務の方の会社の決算報告書\nまたは経営する親族の確定申告書`}
             >
@@ -465,8 +434,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（1期前）`}
                   </Typography>
-                  {p_applicant_persons__1__F__01.length ? (
-                    <ApImgItem files={p_applicant_persons__1__F__01} />
+                  {p_uploaded_files?.p_applicant_persons__1__F__01.length ? (
+                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__F__01} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -477,8 +446,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（2期前）`}
                   </Typography>
-                  {p_applicant_persons__1__F__02.length ? (
-                    <ApImgItem files={p_applicant_persons__1__F__02} />
+                  {p_uploaded_files?.p_applicant_persons__1__F__02.length ? (
+                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__F__02} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -489,8 +458,8 @@ export const ApStep11Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（3期前）`}
                   </Typography>
-                  {p_applicant_persons__1__F__03.length ? (
-                    <ApImgItem files={p_applicant_persons__1__F__03} />
+                  {p_uploaded_files?.p_applicant_persons__1__F__03.length ? (
+                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__F__03} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -504,8 +473,8 @@ export const ApStep11Info = ({ stepIndex }) => {
       )}
 
       <ApConfirmItemGroup label={`その他の書類`}>
-        {p_applicant_persons__1__K.length ? (
-          <ApImgItem files={p_applicant_persons__1__K} />
+        {p_uploaded_files?.p_applicant_persons__1__K.length ? (
+          <ApImgItem files={p_uploaded_files?.p_applicant_persons__1__K} />
         ) : (
           <Typography variant="label" color={'gray.150'}>
             〈 書類はまだ添付されません。〉
@@ -519,7 +488,7 @@ export const ApStep11Info = ({ stepIndex }) => {
             height={40}
             width={200}
             sx={{ border: '1px solid', borderColor: (theme) => theme.palette.primary.main }}
-            onClick={() => navigate(routeNames.apStep11Page.path)}
+            onClick={() => navigate(routeNames.apStep10Page.path)}
           >
             <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
               <Icons.ApEditorIcon />

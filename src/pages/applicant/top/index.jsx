@@ -156,7 +156,7 @@ export const ApTopPage = () => {
         id: 14,
         stepTitle: '仮審査申込',
         stepIcon: <Icons.ApTopStepIdIcon14 />,
-        stepPath: routeNames.apStep13Page.path,
+        stepPath: routeNames.apConfirmPage.path,
         buttonLabel: apCurrStepId < 14 ? '---' : '申込内容確認',
         show: true,
       },

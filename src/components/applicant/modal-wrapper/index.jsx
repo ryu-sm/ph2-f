@@ -2,7 +2,7 @@ import { Box, Modal, Stack, Typography } from '@mui/material';
 
 export const ApModalWrapper = ({ open, children, icon, label }) => {
   return (
-    <Modal open={open}>
+    <Modal open={open} disableAutoFocus>
       <Stack alignItems={'center'} justifyContent={'center'} sx={{ width: 1, height: 1, maxHeight: '100dvh' }}>
         <Box px={4} sx={{ width: 1, maxWidth: 480 }}>
           <Box sx={{ py: 8, borderRadius: 2, bgcolor: 'white' }}>

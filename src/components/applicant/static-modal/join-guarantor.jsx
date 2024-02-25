@@ -11,12 +11,12 @@ export const ApJoinGuarantorModal = () => {
     <Fragment>
       <Stack spacing={'2px'} direction={'row'} alignItems={'center'} onClick={modal.onTrue}>
         <Icons.ApHelpIcon />
-        <Typography component={Link} variant="help" color={'primary.main'}>
+        <Typography component={Link} variant="help" color={'primary.main'} sx={{ cursor: 'pointer' }}>
           担保提供者とは？
         </Typography>
       </Stack>
       <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'担保提供者とは？'}>
-        <Stack sx={{ overflowY: 'scroll', maxHeight: '40vh', width: 1 }}>
+        <Stack sx={{ overflowY: 'auto', maxHeight: '40vh', width: 1 }}>
           <Stack flex={1} sx={{ width: 1 }}>
             <Box sx={{ px: 6 }}>
               <Typography variant="notify" color={'text.main'}>

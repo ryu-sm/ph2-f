@@ -26,7 +26,11 @@ export const validationSchema = yup.object({
         .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.NAME_KANA),
       gender: yup.string(),
       rel_to_applicant_a_name: yup.string().max(48).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
-      birthday: yup.string().required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED).matches(REGEX.YMD).label('生年月日'),
+      birthday: yup
+        .string()
+        .required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
+        .matches(REGEX.YMD, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
+        .label('生年月日'),
       mobile_phone: yup.string().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
         return !!field_value || !!parent.home_phone;
       }),

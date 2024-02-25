@@ -1,14 +1,13 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
-import { useBankMaster } from '@/hooks/use-bank-master';
 import { agentSendedSelector, applicationAtom } from '@/store';
 import { formatJapanDate } from '@/utils';
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
 import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
-import { genderOptions, nationalityOptions } from './options';
+import { genderOptions } from './options';
 
 export const ApStep06Info = ({ stepIndex }) => {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export const ApStep06Info = ({ stepIndex }) => {
 
   return (
     <Stack sx={{ width: 1 }}>
-      <ApConfirmGroup label={`STEP${stepIndex}担保提供者`}>
+      <ApConfirmGroup stepIndex={stepIndex} label={`：担保提供者`}>
         {p_join_guarantors.map((p_join_guarantor, index) => (
           <ApConfirmItemGroup key={index} label={`担保提供者 ${index + 1}人目`}>
             <Stack spacing={1} alignItems={'start'}>

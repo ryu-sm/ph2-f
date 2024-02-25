@@ -37,6 +37,7 @@ export const ApImageDeleteModal = ({ isOpen, onClose, clickedImage, handleRemove
           justifyContent: 'center',
           overflow: 'hidden',
         }}
+        disableAutoFocus
       >
         <Stack alignItems={'center'} sx={{ width: 1 }}>
           <Stack sx={{ p: 6, bgcolor: 'white', height: '35dvh', width: 1, maxWidth: 480 }}>

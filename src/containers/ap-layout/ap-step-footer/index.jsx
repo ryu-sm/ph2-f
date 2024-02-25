@@ -6,7 +6,7 @@ export const ApStepFooter = ({ left, right, rightDisable, rightLabel, ...props }
   return (
     <Stack
       direction={'row'}
-      justifyContent={left && right ? 'space-between' : 'center'}
+      justifyContent={left && right ? 'space-between' : right ? 'center' : 'start'}
       alignItems={'center'}
       spacing={4}
       zIndex={3}

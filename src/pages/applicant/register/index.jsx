@@ -50,12 +50,12 @@ export const ApRegisterPage = () => {
               id: payload?.id,
               email: payload?.email,
               isFirstLogin: Boolean(payload?.first_login),
-              agentSended: Boolean(payload?.agent_sended),
               salesCompanyOrgId: payload?.s_sales_company_org_id,
               preExaminationStatus: payload?.pre_examination_status,
               displayPdf: Boolean(payload?.display_pdf),
-              applyNo: payload?.apply_no,
             },
+            applyNo: payload?.apply_no,
+            agentSended: Boolean(payload?.agent_sended),
           };
         });
         modal.onTrue();

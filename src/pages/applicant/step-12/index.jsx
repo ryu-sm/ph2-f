@@ -1,23 +1,27 @@
 import { Icons } from '@/assets';
 import {
-  ApConfirmGroup,
-  ApConfirmItemGroup,
   ApImgUpload,
   ApItemGroup,
   ApPageTitle,
   ApPhoneInputField,
-  ApRadioColumnGroup,
   ApRadioRowGroup,
   ApSaveDraftButton,
   ApSelectField,
   ApStarHelp,
   ApTextInputField,
+  ApUpdateApply,
 } from '@/components';
 import { CONSENT_URL } from '@/configs';
 import { ApLayout, ApStepFooter } from '@/containers';
-import { apGetSalesCompanyOrgs } from '@/services';
-import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, authAtom } from '@/store';
-import { formatJapanDate } from '@/utils';
+import { apApplicationImg, apGetSalesCompanyOrgs } from '@/services';
+import {
+  agentSendedSelector,
+  apNextStepIdSelector,
+  apPreStepIdSelector,
+  applicationAtom,
+  applyNoSelector,
+  authAtom,
+} from '@/store';
 import { Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -25,6 +29,9 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { validationSchema } from './validationSchema';
 import { inputOptions } from './options';
 import { useNavigate } from 'react-router-dom';
+import { cloneDeep } from 'lodash';
+import { routeNames } from '@/router/settings';
+import { useBoolean } from '@/hooks';
 
 export const ApStep12Page = () => {
   const navigate = useNavigate();
@@ -35,56 +42,59 @@ export const ApStep12Page = () => {
     user: { salesCompanyOrgId },
   } = useRecoilValue(authAtom);
   const [orgs, setOrgs] = useState([]);
-
-  const {
-    p_application_headers__J,
-    p_application_headers__sales_company_id,
-    p_application_headers__sales_area_id,
-    p_application_headers__sales_exhibition_hall_id,
-    p_application_headers__vendor_name,
-    p_application_headers__vendor_phone,
-  } = useRecoilValue(applicationAtom);
+  const applyNo = useRecoilValue(applyNoSelector);
+  const agentSended = useRecoilValue(agentSendedSelector);
+  const updateModal = useBoolean(false);
+  const { p_uploaded_files, p_application_headers } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
     initialValues: {
       input_type: '',
-      p_application_headers__J,
-      p_application_headers__sales_company_id,
-      p_application_headers__sales_area_id,
-      p_application_headers__sales_exhibition_hall_id,
-      p_application_headers__vendor_name,
-      p_application_headers__vendor_phone,
+      p_uploaded_files,
+      p_application_headers,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      setApplicationInfo((pre) => {
-        return {
-          ...pre,
-          p_application_headers__J: formik.values.p_application_headers__J,
-          p_application_headers__sales_company_id: formik.values.p_application_headers__sales_company_id,
-          p_application_headers__sales_area_id: formik.values.p_application_headers__sales_area_id,
-          p_application_headers__sales_exhibition_hall_id:
-            formik.values.p_application_headers__sales_exhibition_hall_id,
-          p_application_headers__vendor_name: formik.values.p_application_headers__vendor_name,
-          p_application_headers__vendor_phone: formik.values.p_application_headers__vendor_phone,
-        };
-      });
-      navigate(`/step-id-${apNextStepId}`);
+      const dataCopy = cloneDeep(values);
+      delete dataCopy.input_type;
+      if (agentSended) {
+        updateModal.onTrue();
+      } else {
+        setApplicationInfo((pre) => {
+          return { ...pre, ...dataCopy };
+        });
+        navigate(`/step-id-${apNextStepId}`);
+      }
     },
   });
 
+  const sendedImg = useCallback(async () => {
+    if (agentSended) {
+      try {
+        const res = await apApplicationImg(applyNo);
+        formik.setFieldValue('p_uploaded_files.J', res.data.J);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  });
+
+  useEffect(() => {
+    sendedImg();
+  }, [agentSended, applyNo]);
+
   const parseVaildData = useMemo(() => {
-    return {
-      p_application_headers__J: formik.values.p_application_headers__J,
-      p_application_headers__sales_company_id: formik.values.p_application_headers__sales_company_id,
-      p_application_headers__sales_area_id: formik.values.p_application_headers__sales_area_id,
-      p_application_headers__sales_exhibition_hall_id: formik.values.p_application_headers__sales_exhibition_hall_id,
-      p_application_headers__vendor_name: formik.values.p_application_headers__vendor_name,
-      p_application_headers__vendor_phone: formik.values.p_application_headers__vendor_phone,
-    };
+    const dataCopy = cloneDeep(formik.values);
+    delete dataCopy.input_type;
+    return dataCopy;
   }, [formik.values]);
+
   const handelLeft = () => {
-    navigate(`/step-id-${apPreStepId}`);
+    if (agentSended) {
+      navigate(routeNames.apTopPage.path);
+    } else {
+      navigate(`/step-id-${apPreStepId}`);
+    }
   };
   const getOrgs = useCallback(async () => {
     try {
@@ -110,40 +120,41 @@ export const ApStep12Page = () => {
   }, [orgs]);
 
   const salesAreaOptions = useMemo(() => {
-    if (!formik.values.p_application_headers__sales_company_id) return [{ value: '', label: '' }];
+    if (!formik.values.p_application_headers.sales_company_id) return [{ value: '', label: '' }];
     return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === '3' && item.pid === formik.values.p_application_headers__sales_company_id)
+      orgs.filter((item) => item.category === '3' && item.pid === formik.values.p_application_headers.sales_company_id)
     );
-  }, [orgs, formik.values.p_application_headers__sales_company_id]);
+  }, [orgs, formik.values.p_application_headers.sales_company_id]);
 
   const exhibitionHallOptions = useMemo(() => {
-    if (!formik.values.p_application_headers__sales_area_id) return [{ value: '', label: '' }];
+    if (!formik.values.p_application_headers.sales_area_id) return [{ value: '', label: '' }];
     return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === '4' && item.pid === formik.values.p_application_headers__sales_area_id)
+      orgs.filter((item) => item.category === '4' && item.pid === formik.values.p_application_headers.sales_area_id)
     );
-  }, [orgs, formik.values.p_application_headers__sales_area_id]);
+  }, [orgs, formik.values.p_application_headers.sales_area_id]);
 
   useEffect(() => {
     if (
-      p_application_headers__sales_company_id ||
-      p_application_headers__sales_area_id ||
-      p_application_headers__sales_exhibition_hall_id ||
-      p_application_headers__vendor_name ||
-      p_application_headers__vendor_phone
+      p_application_headers.sales_company_id ||
+      p_application_headers.sales_area_id ||
+      p_application_headers.sales_exhibition_hall_id ||
+      p_application_headers.vendor_name ||
+      p_application_headers.vendor_phone
     ) {
       formik.setFieldValue('input_type', '2');
     }
   }, [
-    p_application_headers__sales_company_id,
-    p_application_headers__sales_area_id,
-    p_application_headers__sales_exhibition_hall_id,
-    p_application_headers__vendor_name,
-    p_application_headers__vendor_phone,
+    p_application_headers.sales_company_id,
+    p_application_headers.sales_area_id,
+    p_application_headers.sales_exhibition_hall_id,
+    p_application_headers.vendor_name,
+    p_application_headers.vendor_phone,
   ]);
 
   return (
     <FormikProvider value={formik}>
       <ApLayout hasMenu hasStepBar pb={18}>
+        <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <Stack flex={1}>
           <ApPageTitle py={8}>{`提携先企業（住宅メーカー・\n不動産会社等）の\n担当者を教えてください`}</ApPageTitle>
           {!formik.values.input_type && (
@@ -206,12 +217,12 @@ export const ApStep12Page = () => {
                       borderTopRightRadius={'7px'}
                       borderTopLeftRadius={'7px'}
                     >
-                      <ApImgUpload name="p_application_headers__J" singleFile />
+                      <ApImgUpload name="p_uploaded_files.J" singleFile />
                     </ApItemGroup>
                   </Stack>
                 </Stack>
               )}
-              {formik.values.input_type === '2' && orgs.length && (
+              {formik.values.input_type === '2' && orgs.length > 0 && (
                 <Stack
                   sx={{
                     mt: 3,
@@ -245,32 +256,32 @@ export const ApStep12Page = () => {
                       px={2}
                     >
                       <ApSelectField
-                        name="p_application_headers__sales_company_id"
+                        name="p_application_headers.sales_company_id"
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
                         options={salesCompanyOptions}
                         onChange={(e) => {
-                          formik.setFieldValue('p_application_headers__sales_area_id', '');
-                          formik.setFieldValue('p_application_headers__sales_exhibition_hall_id', '');
+                          formik.setFieldValue('p_application_headers.sales_area_id', '');
+                          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
                         }}
                       />
                     </ApItemGroup>
                     <ApItemGroup label={'エリア'} pb={3} px={2}>
                       <ApSelectField
-                        name="p_application_headers__sales_area_id"
+                        name="p_application_headers.sales_area_id"
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
                         options={salesAreaOptions}
                         onChange={(e) => {
-                          formik.setFieldValue('p_application_headers__sales_exhibition_hall_id', '');
+                          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
                         }}
                       />
                     </ApItemGroup>
                     <ApItemGroup label={'展示場'} pb={3} px={2}>
                       <ApSelectField
-                        name="p_application_headers__sales_exhibition_hall_id"
+                        name="p_application_headers.sales_exhibition_hall_id"
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
@@ -279,14 +290,14 @@ export const ApStep12Page = () => {
                     </ApItemGroup>
                     <ApItemGroup label={'担当者名'} pb={3} px={2}>
                       <ApTextInputField
-                        name="p_application_headers__vendor_name"
+                        name="p_application_headers.vendor_name"
                         placeholder={'例：○○さん'}
                         convertFullWidth
                       />
                     </ApItemGroup>
                     <ApItemGroup label={'携帯電話番号'} pb={3} px={2}>
                       <Stack spacing={'6px'}>
-                        <ApPhoneInputField name="p_application_headers__vendor_phone" />
+                        <ApPhoneInputField name="p_application_headers.vendor_phone" />
                         <ApStarHelp label={'半角数字でご入力ください。'} />
                       </Stack>
                     </ApItemGroup>
@@ -297,7 +308,7 @@ export const ApStep12Page = () => {
           </ApItemGroup>
         </Stack>
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
+        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

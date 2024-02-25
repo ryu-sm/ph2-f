@@ -16,3 +16,5 @@ export * from './applicant/confirm-group';
 export * from './applicant/confirm-item-group';
 export * from './applicant/img-upload';
 export * from './applicant/img-item';
+export * from './applicant/signature-board';
+export * from './applicant/update-apply';

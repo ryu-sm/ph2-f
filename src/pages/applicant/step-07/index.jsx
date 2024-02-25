@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, isMcjSelector, userEmailSelector } from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -22,6 +22,7 @@ import {
   ApSelectFieldYmd,
   ApStarHelp,
   ApTextInputField,
+  ApUpdateApply,
   ApZipCodeInputField,
 } from '@/components';
 import { dayjs } from '@/libs';
@@ -49,179 +50,90 @@ import {
   yearOptions,
 } from './options';
 import { PREFECTURES } from '@/constant';
-import { validationSchemaMcj } from './validationSchema';
+
+import { cloneDeep } from 'lodash';
+import { apApplicationImg } from '@/services';
+import { useBoolean } from '@/hooks';
+import { routeNames } from '@/router/settings';
 
 export const ApStep07Page = () => {
   const navigate = useNavigate();
-  const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const isMCJ = useRecoilValue(isMcjSelector);
-
+  const applyNo = useRecoilValue(applyNoSelector);
+  const agentSended = useRecoilValue(agentSendedSelector);
+  const updateModal = useBoolean(false);
   const {
-    p_application_headers__curr_house_lived_year,
-    p_application_headers__curr_house_lived_month,
-    p_application_headers__curr_house_residence_type,
-    p_application_headers__curr_house_floor_area,
-    p_application_headers__curr_house_owner_name,
-    p_application_headers__curr_house_owner_rel,
-    p_application_headers__curr_house_schedule_disposal_type,
-    p_application_headers__curr_house_schedule_disposal_type_other,
-    p_application_headers__curr_house_shell_scheduled_date,
-    p_application_headers__curr_house_shell_scheduled_price,
-    p_application_headers__curr_house_loan_balance_type,
-    p_application_headers__property_publish_url,
-    p_application_headers__property_G,
-    p_application_headers__new_house_acquire_reason,
-    p_application_headers__new_house_acquire_reason_other,
-    p_application_headers__new_house_self_resident,
-    p_application_headers__new_house_self_not_resident_reason,
-    p_application_headers__new_house_planned_resident_overview,
+    isMCJ,
+    apNextStepId,
+    apPreStepId,
+    //
+    p_application_headers,
     p_residents,
-    p_application_headers__property_business_type,
-    p_application_headers__property_prefecture,
-    p_application_headers__property_city,
-    p_application_headers__property_district,
-    p_application_headers__property_apartment_and_room_no,
-    p_application_headers__property_private_area,
-    p_application_headers__property_total_floor_area,
-    p_application_headers__property_land_area,
-    p_application_headers__property_floor_area,
-    p_application_headers__property_land_type,
-    p_application_headers__property_purchase_type,
-    p_application_headers__property_planning_area,
-    p_application_headers__property_planning_area_other,
-    p_application_headers__property_rebuilding_reason,
-    p_application_headers__property_rebuilding_reason_other,
-    p_application_headers__property_flat_35_plan,
-    p_application_headers__property_maintenance_type,
-    p_application_headers__property_flat_35_tech,
-    p_application_headers__property_region_type,
-    // STEP01
-    p_application_headers__loan_target,
-    // STEP02
-    p_applicant_persons__0__birthday,
-    p_applicant_persons__0__postal_code,
-    p_applicant_persons__0__prefecture_kanji,
-    p_applicant_persons__0__city_kanji,
-    p_applicant_persons__0__district_kanji,
-    p_applicant_persons__0__other_address_kanji,
+    p_applicant_persons__0,
+    p_uploaded_files,
   } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
     initialValues: {
-      p_application_headers__curr_house_lived_year,
-      p_application_headers__curr_house_lived_month,
-      p_application_headers__curr_house_residence_type,
-      p_application_headers__curr_house_floor_area,
-      p_application_headers__curr_house_owner_name,
-      p_application_headers__curr_house_owner_rel,
-      p_application_headers__curr_house_schedule_disposal_type,
-      p_application_headers__curr_house_schedule_disposal_type_other,
-      p_application_headers__curr_house_shell_scheduled_date,
-      p_application_headers__curr_house_shell_scheduled_price,
-      p_application_headers__curr_house_loan_balance_type,
-      p_application_headers__property_publish_url,
-      p_application_headers__property_G,
-      p_application_headers__new_house_acquire_reason,
-      p_application_headers__new_house_acquire_reason_other,
-      p_application_headers__new_house_self_resident,
-      p_application_headers__new_house_self_not_resident_reason,
-      p_application_headers__new_house_planned_resident_overview,
+      isMCJ,
+      p_application_headers,
       p_residents,
-      p_application_headers__property_business_type,
-      p_application_headers__property_prefecture,
-      p_application_headers__property_city,
-      p_application_headers__property_district,
-      p_application_headers__property_apartment_and_room_no,
-      p_application_headers__property_private_area,
-      p_application_headers__property_total_floor_area,
-      p_application_headers__property_land_area,
-      p_application_headers__property_floor_area,
-      p_application_headers__property_land_type,
-      p_application_headers__property_purchase_type,
-      p_application_headers__property_planning_area,
-      p_application_headers__property_planning_area_other,
-      p_application_headers__property_rebuilding_reason,
-      p_application_headers__property_rebuilding_reason_other,
-      p_application_headers__property_flat_35_plan,
-      p_application_headers__property_maintenance_type,
-      p_application_headers__property_flat_35_tech,
-      p_application_headers__property_region_type,
+      p_applicant_persons__0,
+      p_uploaded_files,
       //
       set_addr_with_application_a: false,
     },
-    validationSchema: isMCJ ? validationSchemaMcj : validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
-      setApplicationInfo((pre) => {
-        return { ...pre, ...values };
-      });
-      navigate(`/step-id-${apNextStepId}`);
+      const dataCopy = cloneDeep(values);
+      delete dataCopy.isMCJ;
+      delete dataCopy.set_addr_with_application_a;
+
+      if (agentSended) {
+        updateModal.onTrue();
+      } else {
+        setApplicationInfo((pre) => {
+          return { ...pre, ...dataCopy };
+        });
+        navigate(`/step-id-${apNextStepId}`);
+      }
     },
   });
 
+  const sendedImg = useCallback(async () => {
+    if (agentSended) {
+      try {
+        const res = await apApplicationImg(applyNo);
+        console.log(res);
+        formik.setFieldValue('p_uploaded_files.G', res.data.G);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  });
+
+  useEffect(() => {
+    sendedImg();
+  }, [agentSended, applyNo]);
+
   const parseVaildData = useMemo(() => {
-    return {
-      p_application_headers__curr_house_lived_year: formik.values.p_application_headers__curr_house_lived_year,
-      p_application_headers__curr_house_lived_month: formik.values.p_application_headers__curr_house_lived_month,
-      p_application_headers__curr_house_residence_type: formik.values.p_application_headers__curr_house_residence_type,
-      p_application_headers__curr_house_floor_area: formik.values.p_application_headers__curr_house_floor_area,
-      p_application_headers__curr_house_owner_name: formik.values.p_application_headers__curr_house_owner_name,
-      p_application_headers__curr_house_owner_rel: formik.values.p_application_headers__curr_house_owner_rel,
-      p_application_headers__curr_house_schedule_disposal_type:
-        formik.values.p_application_headers__curr_house_schedule_disposal_type,
-      p_application_headers__curr_house_schedule_disposal_type_other:
-        formik.values.p_application_headers__curr_house_schedule_disposal_type_other,
-      p_application_headers__curr_house_shell_scheduled_date:
-        formik.values.p_application_headers__curr_house_shell_scheduled_date,
-      p_application_headers__curr_house_shell_scheduled_price:
-        formik.values.p_application_headers__curr_house_shell_scheduled_price,
-      p_application_headers__curr_house_loan_balance_type:
-        formik.values.p_application_headers__curr_house_loan_balance_type,
-      p_application_headers__property_publish_url: formik.values.p_application_headers__property_publish_url,
-      p_application_headers__property_G: formik.values.p_application_headers__property_G,
-      p_application_headers__new_house_acquire_reason: formik.values.p_application_headers__new_house_acquire_reason,
-      p_application_headers__new_house_acquire_reason_other:
-        formik.values.p_application_headers__new_house_acquire_reason_other,
-      p_application_headers__new_house_self_resident: formik.values.p_application_headers__new_house_self_resident,
-      p_application_headers__new_house_self_not_resident_reason:
-        formik.values.p_application_headers__new_house_self_not_resident_reason,
-      p_application_headers__new_house_planned_resident_overview:
-        formik.values.p_application_headers__new_house_planned_resident_overview,
-      p_residents: formik.values.p_residents,
-      p_application_headers__property_business_type: formik.values.p_application_headers__property_business_type,
-      p_application_headers__property_prefecture: formik.values.p_application_headers__property_prefecture,
-      p_application_headers__property_city: formik.values.p_application_headers__property_city,
-      p_application_headers__property_district: formik.values.p_application_headers__property_district,
-      p_application_headers__property_apartment_and_room_no:
-        formik.values.p_application_headers__property_apartment_and_room_no,
-      p_application_headers__property_private_area: formik.values.p_application_headers__property_private_area,
-      p_application_headers__property_total_floor_area: formik.values.p_application_headers__property_total_floor_area,
-      p_application_headers__property_land_area: formik.values.p_application_headers__property_land_area,
-      p_application_headers__property_floor_area: formik.values.p_application_headers__property_floor_area,
-      p_application_headers__property_land_type: formik.values.p_application_headers__property_land_type,
-      p_application_headers__property_purchase_type: formik.values.p_application_headers__property_purchase_type,
-      p_application_headers__property_planning_area: formik.values.p_application_headers__property_planning_area,
-      p_application_headers__property_planning_area_other:
-        formik.values.p_application_headers__property_planning_area_other,
-      p_application_headers__property_rebuilding_reason:
-        formik.values.p_application_headers__property_rebuilding_reason,
-      p_application_headers__property_rebuilding_reason_other:
-        formik.values.p_application_headers__property_rebuilding_reason_other,
-      p_application_headers__property_flat_35_plan: formik.values.p_application_headers__property_flat_35_plan,
-      p_application_headers__property_maintenance_type: formik.values.p_application_headers__property_maintenance_type,
-      p_application_headers__property_flat_35_tech: formik.values.p_application_headers__property_flat_35_tech,
-      p_application_headers__property_region_type: formik.values.p_application_headers__property_region_type,
-    };
+    const dataCopy = cloneDeep(formik.values);
+    delete dataCopy.isMCJ;
+    delete dataCopy.set_addr_with_application_a;
+    return dataCopy;
   }, [formik.values]);
 
   const handelLeft = () => {
-    navigate(`/step-id-${apPreStepId}`);
+    if (agentSended) {
+      navigate(routeNames.apTopPage.path);
+    } else {
+      navigate(`/step-id-${apPreStepId}`);
+    }
   };
 
   //
   const age = useMemo(() => {
-    const date = new Date(p_applicant_persons__0__birthday);
+    const date = new Date(p_applicant_persons__0.birthday);
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
     if (dayjs().month() + 1 < month) {
@@ -229,12 +141,12 @@ export const ApStep07Page = () => {
     } else {
       return dayjs().year() - year;
     }
-  }, [p_applicant_persons__0__birthday]);
+  }, [p_applicant_persons__0.birthday]);
 
-  const yearNum = formik.values.p_application_headers__curr_house_lived_year;
+  const yearNum = formik.values.p_application_headers.curr_house_lived_year;
 
   const birthdayMonth = useMemo(() => {
-    const date = new Date(p_applicant_persons__0__birthday);
+    const date = new Date(p_applicant_persons__0.birthday);
     const month = date.getMonth() + 1;
     if (+yearNum === age && dayjs().month() + 1 >= month) {
       return Math.abs(dayjs().month() + 1 - +month) + 1;
@@ -243,14 +155,14 @@ export const ApStep07Page = () => {
       return Math.abs(12 - +month + dayjs().month() + 1) + 1;
     }
     return 12;
-  }, [age, p_applicant_persons__0__birthday, yearNum]);
+  }, [age, p_applicant_persons__0.birthday, yearNum]);
 
   const yearNumOptions = useMemo(
     () =>
       [{ value: '', label: '年' }].concat(
         Array.from(Array(age), (_, index) => {
           return {
-            value: String(index + 1).padStart(2, '0'),
+            value: String(index + 1),
             label: (index + 1).toString(),
           };
         })
@@ -262,29 +174,34 @@ export const ApStep07Page = () => {
     () =>
       [{ value: '', label: '月' }].concat(
         Array.from(Array(birthdayMonth), (_, index) => ({
-          value: String(index).padStart(2, '0'),
+          value: String(index),
           label: index.toString(),
         }))
       ),
     [birthdayMonth]
   );
 
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.errors]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
       <ApLayout hasMenu hasStepBar pb={18}>
+        <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`現在のお住まいと\nご購入物件について\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'現在のお住まいの居住年数'}>
           <Stack spacing={'6px'} direction={'row'}>
             <ApSelectField
-              name="p_application_headers__curr_house_lived_year"
+              name="p_application_headers.curr_house_lived_year"
               unit={'年'}
               placeholder={'--'}
               options={yearNumOptions}
               width={52}
             />
             <ApSelectField
-              name="p_application_headers__curr_house_lived_month"
+              name="p_application_headers.curr_house_lived_month"
               unit={'ヶ月'}
               placeholder={'--'}
               options={monthOptions}
@@ -295,38 +212,38 @@ export const ApStep07Page = () => {
         <ApItemGroup label={'現在のお住まいの種類'}>
           <Stack spacing={3}>
             <ApSelectField
-              name="p_application_headers__curr_house_residence_type"
+              name="p_application_headers.curr_house_residence_type"
               placeholder={'選択してください'}
               width={1}
               justifyContent={'start'}
               options={currHouseResidenceTypeOptions}
               disableOptions={
-                ['7', '8'].includes(p_application_headers__loan_target) ? currHouseResidenceTypeOptions.slice(0, 4) : []
+                ['7', '8'].includes(p_application_headers.loan_target) ? currHouseResidenceTypeOptions.slice(0, 4) : []
               }
               onChange={(e) => {
                 if (e.target.value !== '4') {
-                  formik.setFieldValue('p_application_headers__curr_house_owner_name', '');
-                  formik.setFieldValue('p_application_headers__curr_house_owner_rel', '');
+                  formik.setFieldValue('p_application_headers.curr_house_owner_name', '');
+                  formik.setFieldValue('p_application_headers.curr_house_owner_rel', '');
 
-                  formik.setFieldTouched('p_application_headers__curr_house_owner_name', false);
-                  formik.setFieldTouched('p_application_headers__curr_house_owner_rel', false);
+                  formik.setFieldTouched('p_application_headers.curr_house_owner_name', false);
+                  formik.setFieldTouched('p_application_headers.curr_house_owner_rel', false);
                 }
                 if (e.target.value !== '5') {
-                  formik.setFieldValue('p_application_headers__curr_house_schedule_disposal_type', '');
-                  formik.setFieldValue('p_application_headers__curr_house_schedule_disposal_type_other', '');
-                  formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_date', '');
-                  formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_price', '');
-                  formik.setFieldValue('p_application_headers__curr_house_loan_balance_type', '');
+                  formik.setFieldValue('p_application_headers.curr_house_schedule_disposal_type', '');
+                  formik.setFieldValue('p_application_headers.curr_house_schedule_disposal_type_other', '');
+                  formik.setFieldValue('p_application_headers.curr_house_shell_scheduled_date', '');
+                  formik.setFieldValue('p_application_headers.curr_house_shell_scheduled_price', '');
+                  formik.setFieldValue('p_application_headers.curr_house_loan_balance_type', '');
 
-                  formik.setFieldTouched('p_application_headers__curr_house_schedule_disposal_type', false);
-                  formik.setFieldTouched('p_application_headers__curr_house_schedule_disposal_type_other', false);
-                  formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_date', false);
-                  formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_price', false);
-                  formik.setFieldTouched('p_application_headers__curr_house_loan_balance_type', false);
+                  formik.setFieldTouched('p_application_headers.curr_house_schedule_disposal_type', false);
+                  formik.setFieldTouched('p_application_headers.curr_house_schedule_disposal_type_other', false);
+                  formik.setFieldTouched('p_application_headers.curr_house_shell_scheduled_date', false);
+                  formik.setFieldTouched('p_application_headers.curr_house_shell_scheduled_price', false);
+                  formik.setFieldTouched('p_application_headers.curr_house_loan_balance_type', false);
                 }
               }}
             />
-            {formik.values.p_application_headers__curr_house_residence_type === '4' && (
+            {formik.values.p_application_headers.curr_house_residence_type === '4' && (
               <Stack
                 sx={{
                   borderRadius: 2,
@@ -349,14 +266,14 @@ export const ApStep07Page = () => {
                     borderTopLeftRadius={'7px'}
                   >
                     <ApTextInputField
-                      name="p_application_headers__curr_house_owner_name"
+                      name="p_application_headers.curr_house_owner_name"
                       placeholder={'例：山田 太郎'}
                       convertFullWidth
                     />
                   </ApItemGroup>
                   <ApItemGroup label={'続柄'} pb={3} px={2}>
                     <ApTextInputField
-                      name="p_application_headers__curr_house_owner_rel"
+                      name="p_application_headers.curr_house_owner_rel"
                       placeholder={'例：父'}
                       convertFullWidth
                     />
@@ -364,7 +281,7 @@ export const ApStep07Page = () => {
                 </Stack>
               </Stack>
             )}
-            {formik.values.p_application_headers__curr_house_residence_type === '5' && (
+            {formik.values.p_application_headers.curr_house_residence_type === '5' && (
               <Stack
                 sx={{
                   borderRadius: 2,
@@ -388,30 +305,30 @@ export const ApStep07Page = () => {
                   >
                     <Stack spacing={3}>
                       <ApRadioColumnGroup
-                        name="p_application_headers__curr_house_schedule_disposal_type"
+                        name="p_application_headers.curr_house_schedule_disposal_type"
                         options={currHouseScheduleDisposalTypeOptions}
                         onChange={(e) => {
                           if (e.target.value !== '1') {
-                            formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_date', '');
-                            formik.setFieldValue('p_application_headers__curr_house_shell_scheduled_price', '');
+                            formik.setFieldValue('p_application_headers.curr_house_shell_scheduled_date', '');
+                            formik.setFieldValue('p_application_headers.curr_house_shell_scheduled_price', '');
 
-                            formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_date', false);
-                            formik.setFieldTouched('p_application_headers__curr_house_shell_scheduled_price', false);
+                            formik.setFieldTouched('p_application_headers.curr_house_shell_scheduled_date', false);
+                            formik.setFieldTouched('p_application_headers.curr_house_shell_scheduled_price', false);
                           }
                           if (e.target.value !== '99') {
-                            formik.setFieldValue('p_application_headers__curr_house_schedule_disposal_type_other', '');
+                            formik.setFieldValue('p_application_headers.curr_house_schedule_disposal_type_other', '');
 
                             formik.setFieldTouched(
-                              'p_application_headers__curr_house_schedule_disposal_type_other',
+                              'p_application_headers.curr_house_schedule_disposal_type_other',
                               false
                             );
                           }
                         }}
                       />
-                      {formik.values.p_application_headers__curr_house_schedule_disposal_type === '99' && (
+                      {formik.values.p_application_headers.curr_house_schedule_disposal_type === '99' && (
                         <Stack spacing={1}>
                           <ApTextInputField
-                            name="p_application_headers__curr_house_schedule_disposal_type_other"
+                            name="p_application_headers.curr_house_schedule_disposal_type_other"
                             placeholder={'入力してください'}
                             convertFullWidth
                           />
@@ -420,17 +337,17 @@ export const ApStep07Page = () => {
                       )}
                     </Stack>
                   </ApItemGroup>
-                  {formik.values.p_application_headers__curr_house_schedule_disposal_type === '1' && (
+                  {formik.values.p_application_headers.curr_house_schedule_disposal_type === '1' && (
                     <Stack>
                       <ApItemGroup label={'売却予定時期'} pb={3} px={2}>
                         <ApSelectFieldYm
-                          name="p_application_headers__curr_house_shell_scheduled_date"
+                          name="p_application_headers.curr_house_shell_scheduled_date"
                           yearOptions={currHouseShellScheduledDateOptions}
                         />
                       </ApItemGroup>
                       <ApItemGroup label={'売却予定価格'} pb={3} px={2}>
                         <ApNumberInputField
-                          name="p_application_headers__curr_house_shell_scheduled_price"
+                          name="p_application_headers.curr_house_shell_scheduled_price"
                           placeholder="0"
                           unit={
                             <Typography variant="unit" color={'text.main'}>
@@ -450,7 +367,7 @@ export const ApStep07Page = () => {
 
                   <ApItemGroup label={'ローン残高'} pb={3} px={2}>
                     <ApRadioRowGroup
-                      name="p_application_headers__curr_house_loan_balance_type"
+                      name="p_application_headers.curr_house_loan_balance_type"
                       options={currHouseLoanBalanceTypeOptions}
                     />
                   </ApItemGroup>
@@ -472,7 +389,7 @@ export const ApStep07Page = () => {
               </Stack>
             }
           >
-            <ApAreaInputField name="p_application_headers__curr_house_floor_area" />
+            <ApAreaInputField name="p_application_headers.curr_house_floor_area" />
           </ApItemGroup>
         )}
         <ApItemGroup
@@ -504,10 +421,10 @@ export const ApStep07Page = () => {
                 <Stack spacing={3}>
                   <ApStarHelp
                     label={
-                      'ご購入される土地・建物の 所在地・面積・価格などが\n記載されたチラシやパンフレット等があればアップ\nロードしてください。'
+                      'ご購入される土地・建物の 所在地・面積・価格などが記載されたチラシやパンフレット等があればアップロードしてください。'
                     }
                   />
-                  <ApImgUpload name="p_application_headers__property_G" />
+                  <ApImgUpload name="p_uploaded_files.G" />
                 </Stack>
               </ApItemGroup>
 
@@ -526,7 +443,7 @@ export const ApStep07Page = () => {
                 px={2}
               >
                 <ApTextInputField
-                  name="p_application_headers__property_publish_url"
+                  name="p_application_headers.property_publish_url"
                   placeholder={'例：http://xxxxxx.com'}
                 />
               </ApItemGroup>
@@ -536,23 +453,23 @@ export const ApStep07Page = () => {
         <ApItemGroup label={'新しい住居を必要とする理由'}>
           <Stack spacing={3}>
             <ApSelectField
-              name="p_application_headers__new_house_acquire_reason"
+              name="p_application_headers.new_house_acquire_reason"
               placeholder={'選択してください'}
               options={newHouseAcquireReasonOptions}
               justifyContent={'start'}
               width={1}
               onChange={(e) => {
                 if (e.target.value !== '99') {
-                  formik.setFieldValue('p_application_headers__new_house_acquire_reason_other', '');
-                  formik.setFieldTouched('p_application_headers__new_house_acquire_reason_other', false);
+                  formik.setFieldValue('p_application_headers.new_house_acquire_reason_other', '');
+                  formik.setFieldTouched('p_application_headers.new_house_acquire_reason_other', false);
                 }
               }}
             />
-            {formik.values.p_application_headers__new_house_acquire_reason === '99' && (
+            {formik.values.p_application_headers.new_house_acquire_reason === '99' && (
               <Stack spacing={'2px'}>
                 <ApStarHelp label={'その他の方は詳細を入力ください。'} />
                 <ApTextInputField
-                  name="p_application_headers__new_house_acquire_reason_other"
+                  name="p_application_headers.new_house_acquire_reason_other"
                   placeholder={'入力してください'}
                   convertFullWidth
                 />
@@ -564,37 +481,42 @@ export const ApStep07Page = () => {
         <ApItemGroup label={'新しい住居に、あなたは居住しますか？'}>
           <Stack spacing={3}>
             <ApRadioRowGroup
-              name="p_application_headers__new_house_self_resident"
+              name="p_application_headers.new_house_self_resident"
               options={newHouseSelfResidentOptions}
               onChange={(e) => {
                 if (e.target.value !== '0') {
-                  formik.setFieldValue('p_application_headers__new_house_self_not_resident_reason', '');
-                  formik.setFieldTouched('p_application_headers__new_house_self_not_resident_reason', false);
-                  formik.setFieldValue('p_residents', {
-                    id: '',
-                    last_name_kanji: '',
-                    first_name_kanji: '',
-                    last_name_kana: '',
-                    first_name_kana: '',
-                    rel_to_applicant_a_name: '',
-                    nationality: '',
-                    birthday: '',
-                    loan_from_japan_house_finance_agency: '',
-                    contact_phone: '',
-                    postal_code: '',
-                    prefecture_kanji: '',
-                    city_kanji: '',
-                    district_kanji: '',
-                    other_address_kanji: '',
-                  });
+                  formik.setFieldValue('p_application_headers.new_house_self_not_resident_reason', '');
+                  formik.setFieldTouched('p_application_headers.new_house_self_not_resident_reason', false);
+                  formik.setFieldValue('p_residents', []);
+                }
+                if (e.target.value === '0' && isMCJ) {
+                  formik.setFieldValue('p_residents', [
+                    {
+                      id: '',
+                      last_name_kanji: '',
+                      first_name_kanji: '',
+                      last_name_kana: '',
+                      first_name_kana: '',
+                      rel_to_applicant_a_name: '',
+                      nationality: '',
+                      birthday: '',
+                      loan_from_japan_house_finance_agency: '',
+                      contact_phone: '',
+                      postal_code: '',
+                      prefecture_kanji: '',
+                      city_kanji: '',
+                      district_kanji: '',
+                      other_address_kanji: '',
+                    },
+                  ]);
                 }
               }}
             />
-            {formik.values.p_application_headers__new_house_self_resident === '0' && (
+            {formik.values.p_application_headers.new_house_self_resident === '0' && (
               <Stack spacing={'2px'}>
                 <ApStarHelp label={'「いいえ」の方は理由を入力ください。'} />
                 <ApTextInputField
-                  name="p_application_headers__new_house_self_not_resident_reason"
+                  name="p_application_headers.new_house_self_not_resident_reason"
                   placeholder={'入力してください'}
                   convertFullWidth
                 />
@@ -615,36 +537,39 @@ export const ApStep07Page = () => {
               }}
             >
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
-                <ApCheckox
-                  name="p_application_headers__new_house_planned_resident_overview.spouse_umu"
-                  label={'配偶者'}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.spouse', '1');
-                    } else {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.spouse', '');
-                    }
-                  }}
-                />
+                {!formik.values.p_application_headers.new_house_planned_resident_overview.fiance_umu && (
+                  <ApCheckox
+                    name="p_application_headers.new_house_planned_resident_overview.spouse_umu"
+                    label={'配偶者'}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '1');
+                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '');
+                      } else {
+                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '');
+                      }
+                    }}
+                  />
+                )}
               </Stack>
               <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
 
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
                 <ApCheckox
-                  name="p_application_headers__new_house_planned_resident_overview.children_umu"
+                  name="p_application_headers.new_house_planned_resident_overview.children_umu"
                   label={'子ども'}
                   onChange={(e) => {
                     if (!e.target.checked) {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.children', '');
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.children', '');
                     }
                   }}
                 />
                 <ApSelectField
-                  name="p_application_headers__new_house_planned_resident_overview.children"
+                  name="p_application_headers.new_house_planned_resident_overview.children"
                   placeholder={'--'}
                   width={62}
                   unit={'人'}
-                  disabled={!formik.values.p_application_headers__new_house_planned_resident_overview.children_umu}
+                  disabled={!formik.values.p_application_headers.new_house_planned_resident_overview.children_umu}
                   options={newHousePlannedResidentOptions}
                 />
               </Stack>
@@ -652,13 +577,13 @@ export const ApStep07Page = () => {
 
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
                 <ApCheckox
-                  name="p_application_headers__new_house_planned_resident_overview.father_umu"
+                  name="p_application_headers.new_house_planned_resident_overview.father_umu"
                   label={'父'}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.father', '1');
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.father', '1');
                     } else {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.father', '');
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.father', '');
                     }
                   }}
                 />
@@ -667,13 +592,13 @@ export const ApStep07Page = () => {
 
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
                 <ApCheckox
-                  name="p_application_headers__new_house_planned_resident_overview.mother_umu"
+                  name="p_application_headers.new_house_planned_resident_overview.mother_umu"
                   label={'母'}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.mother', '1');
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.mother', '1');
                     } else {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.mother', '');
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.mother', '');
                     }
                   }}
                 />
@@ -682,69 +607,72 @@ export const ApStep07Page = () => {
 
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
                 <ApCheckox
-                  name="p_application_headers__new_house_planned_resident_overview.brothers_sisters_umu"
+                  name="p_application_headers.new_house_planned_resident_overview.brothers_sisters_umu"
                   label={'兄弟姉妹'}
                   onChange={(e) => {
                     if (!e.target.checked) {
                       formik.setFieldValue(
-                        'p_application_headers__new_house_planned_resident_overview.brothers_sisters',
+                        'p_application_headers.new_house_planned_resident_overview.brothers_sisters',
                         ''
                       );
                     }
                   }}
                 />
                 <ApSelectField
-                  name="p_application_headers__new_house_planned_resident_overview.brothers_sisters"
+                  name="p_application_headers.new_house_planned_resident_overview.brothers_sisters"
                   placeholder={'--'}
                   width={62}
                   unit={'人'}
                   disabled={
-                    !formik.values.p_application_headers__new_house_planned_resident_overview.brothers_sisters_umu
+                    !formik.values.p_application_headers.new_house_planned_resident_overview.brothers_sisters_umu
                   }
                   options={newHousePlannedResidentOptions}
                 />
               </Stack>
               <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
 
-              <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
-                <ApCheckox
-                  name="p_application_headers__new_house_planned_resident_overview.fiance_umu"
-                  label={'婚約者'}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.fiance', '1');
-                    } else {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.fiance', '');
-                    }
-                  }}
-                />
-              </Stack>
+              {!formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu && (
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
+                  <ApCheckox
+                    name="p_application_headers.new_house_planned_resident_overview.fiance_umu"
+                    label={'婚約者'}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '1');
+                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '');
+                      } else {
+                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '');
+                      }
+                    }}
+                  />
+                </Stack>
+              )}
               <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
 
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
                 <ApCheckox
-                  name="p_application_headers__new_house_planned_resident_overview.others_umu"
+                  name="p_application_headers.new_house_planned_resident_overview.others_umu"
                   label={'その他'}
                   onChange={(e) => {
                     if (!e.target.checked) {
-                      formik.setFieldValue('p_application_headers__new_house_planned_resident_overview.others', '');
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.others', '');
                     }
                   }}
                 />
                 <ApSelectField
-                  name="p_application_headers__new_house_planned_resident_overview.others"
+                  name="p_application_headers.new_house_planned_resident_overview.others"
                   placeholder={'--'}
                   width={62}
                   unit={'人'}
-                  disabled={!formik.values.p_application_headers__new_house_planned_resident_overview.others_umu}
+                  disabled={!formik.values.p_application_headers.new_house_planned_resident_overview.others_umu}
                   options={newHousePlannedResidentOptions}
                 />
               </Stack>
-              {formik.values.p_application_headers__new_house_planned_resident_overview.others_umu && (
+              {formik.values.p_application_headers.new_house_planned_resident_overview.others_umu && (
                 <Stack spacing={'6px'} sx={{ pb: 3 }}>
                   <ApStarHelp label={'その他の方は続柄をご入力ください。'} />
                   <ApTextInputField
-                    name="values.p_application_headers__new_house_planned_resident_overview.others_rel"
+                    name="p_application_headers.new_house_planned_resident_overview.others_rel"
                     placeholder={'続柄を入力ください'}
                     convertFullWidth
                   />
@@ -775,15 +703,15 @@ export const ApStep07Page = () => {
                     }}
                   >
                     <Typography variant="unit">
-                      {Number(formik.values.p_application_headers__new_house_planned_resident_overview.spouse) +
-                        Number(formik.values.p_application_headers__new_house_planned_resident_overview.children) +
-                        Number(formik.values.p_application_headers__new_house_planned_resident_overview.mother) +
-                        Number(formik.values.p_application_headers__new_house_planned_resident_overview.father) +
+                      {Number(formik.values.p_application_headers.new_house_planned_resident_overview.spouse) +
+                        Number(formik.values.p_application_headers.new_house_planned_resident_overview.children) +
+                        Number(formik.values.p_application_headers.new_house_planned_resident_overview.mother) +
+                        Number(formik.values.p_application_headers.new_house_planned_resident_overview.father) +
                         Number(
-                          formik.values.p_application_headers__new_house_planned_resident_overview.brothers_sisters
+                          formik.values.p_application_headers.new_house_planned_resident_overview.brothers_sisters
                         ) +
-                        Number(formik.values.p_application_headers__new_house_planned_resident_overview.fiance) +
-                        Number(formik.values.p_application_headers__new_house_planned_resident_overview.others)}
+                        Number(formik.values.p_application_headers.new_house_planned_resident_overview.fiance) +
+                        Number(formik.values.p_application_headers.new_house_planned_resident_overview.others)}
                     </Typography>
                   </Stack>
                   <Typography variant="unit" color={'text.main'}>
@@ -792,7 +720,7 @@ export const ApStep07Page = () => {
                 </Stack>
               </Stack>
             </Stack>
-            {isMCJ && formik.values.p_application_headers__new_house_self_resident === '0' && (
+            {isMCJ && formik.values.p_application_headers.new_house_self_resident === '0' && (
               <Stack
                 sx={{
                   mt: 3,
@@ -823,37 +751,37 @@ export const ApStep07Page = () => {
                 >
                   <ApItemGroup label={'入居予定者の氏名'} pb={3} px={2}>
                     <Stack spacing={3}>
-                      <ApTextInputField name="p_residents.last_name_kanji" placeholder={'姓'} convertFullWidth />
-                      <ApTextInputField name="p_residents.first_name_kanji" placeholder={'名'} convertFullWidth />
+                      <ApTextInputField name="p_residents[0].last_name_kanji" placeholder={'姓'} convertFullWidth />
+                      <ApTextInputField name="p_residents[0].first_name_kanji" placeholder={'名'} convertFullWidth />
                     </Stack>
                   </ApItemGroup>
                   <ApItemGroup label={'入居予定者の氏名（フリガナ）'} pb={3} px={2}>
                     <Stack spacing={3}>
-                      <ApTextInputField name="p_residents.last_name_kana" placeholder={'セイ'} convertFullWidth />
-                      <ApTextInputField name="p_residents.first_name_kana" placeholder={'メイ'} convertFullWidth />
+                      <ApTextInputField name="p_residents[0].last_name_kana" placeholder={'セイ'} convertFullWidth />
+                      <ApTextInputField name="p_residents[0].first_name_kana" placeholder={'メイ'} convertFullWidth />
                     </Stack>
                   </ApItemGroup>
                   <ApItemGroup label={'続柄'} pb={3} px={2}>
                     <ApTextInputField
-                      name="p_residents.rel_to_applicant_a_name"
+                      name="p_residents[0].rel_to_applicant_a_name"
                       placeholder={'例：父'}
                       convertFullWidth
                     />
                   </ApItemGroup>
                   <ApItemGroup label={'国籍'} pb={3} px={2}>
-                    <ApRadioRowGroup name="p_residents.nationality" options={nationalityOptions} />
+                    <ApRadioRowGroup name="p_residents[0].nationality" options={nationalityOptions} />
                   </ApItemGroup>
                   <ApItemGroup label={'生年月日'} pb={3} px={2}>
-                    <ApSelectFieldYmd name="p_residents.birthday" yearOptions={yearOptions} />
+                    <ApSelectFieldYmd name="p_residents[0].birthday" yearOptions={yearOptions} />
                   </ApItemGroup>
                   <ApItemGroup label={'住宅金融支援機構（旧：公庫）からの融資の有無'} pb={3} px={2}>
                     <ApRadioRowGroup
-                      name="p_residents.loan_from_japan_house_finance_agency"
+                      name="p_residents[0].loan_from_japan_house_finance_agency"
                       options={loanFromJapanHouseFinanceAgencyOptions}
                     />
                   </ApItemGroup>
                   <ApItemGroup label={'電話番号'} pb={3} px={2}>
-                    <ApPhoneInputField name="p_residents.contact_phone" />
+                    <ApPhoneInputField name="p_residents[0].contact_phone" />
                     <ApStarHelp label={'半角数字でご入力ください。'} />
                   </ApItemGroup>
                   <ApItemGroup label={'住所'} pb={3} px={2}>
@@ -863,60 +791,63 @@ export const ApStep07Page = () => {
                         label={'申込者本人と同じ住所'}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            formik.setFieldValue('p_residents.postal_code', p_applicant_persons__0__postal_code);
+                            formik.setFieldValue('p_residents[0].postal_code', p_applicant_persons__0.postal_code);
                             formik.setFieldValue(
-                              'p_residents.prefecture_kanji',
-                              p_applicant_persons__0__prefecture_kanji
+                              'p_residents[0].prefecture_kanji',
+                              p_applicant_persons__0.prefecture_kanji
                             );
-                            formik.setFieldValue('p_residents.city_kanji', p_applicant_persons__0__city_kanji);
-                            formik.setFieldValue('p_residents.district_kanji', p_applicant_persons__0__district_kanji);
+                            formik.setFieldValue('p_residents[0].city_kanji', p_applicant_persons__0.city_kanji);
                             formik.setFieldValue(
-                              'p_residents.other_address_kanji',
-                              p_applicant_persons__0__other_address_kanji
+                              'p_residents[0].district_kanji',
+                              p_applicant_persons__0.district_kanji
+                            );
+                            formik.setFieldValue(
+                              'p_residents[0].other_address_kanji',
+                              p_applicant_persons__0.other_address_kanji
                             );
                           } else {
-                            formik.setFieldValue('p_residents.postal_code', '');
-                            formik.setFieldValue('p_residents.prefecture_kanji', '');
-                            formik.setFieldValue('p_residents.city_kanji', '');
-                            formik.setFieldValue('p_residents.district_kanji', '');
-                            formik.setFieldValue('p_residents.other_address_kanji', '');
+                            formik.setFieldValue('p_residents[0].postal_code', '');
+                            formik.setFieldValue('p_residents[0].prefecture_kanji', '');
+                            formik.setFieldValue('p_residents[0].city_kanji', '');
+                            formik.setFieldValue('p_residents[0].district_kanji', '');
+                            formik.setFieldValue('p_residents[0].other_address_kanji', '');
                           }
                         }}
                       />
                       <ApZipCodeInputField
-                        name="p_residents.postal_code"
+                        name="p_residents[0].postal_code"
                         callback={(addr) => {
-                          formik.setFieldValue('p_residents.prefecture_kanji', addr.prefecture_kanji);
-                          formik.setFieldValue('p_residents.city_kanji', addr.city_kanji);
-                          formik.setFieldValue('p_residents.district_kanji', addr.district_kanji);
+                          formik.setFieldValue('p_residents[0].prefecture_kanji', addr.prefecture_kanji);
+                          formik.setFieldValue('p_residents[0].city_kanji', addr.city_kanji);
+                          formik.setFieldValue('p_residents[0].district_kanji', addr.district_kanji);
                         }}
                         errorCallback={() => {
-                          formik.setFieldValue('p_residents.prefecture_kanji', '');
-                          formik.setFieldValue('p_residents.city_kanji', '');
-                          formik.setFieldValue('p_residents.district_kanji', '');
+                          formik.setFieldValue('p_residents[0].prefecture_kanji', '');
+                          formik.setFieldValue('p_residents[0].city_kanji', '');
+                          formik.setFieldValue('p_residents[0].district_kanji', '');
                         }}
                       />
                       <ApSelectField
-                        name="p_residents.prefecture_kanji"
+                        name="p_residents[0].prefecture_kanji"
                         options={PREFECTURES}
                         placeholder={'----'}
                         width={110}
                         label={'都道府県'}
                       />
                       <ApTextInputField
-                        name="p_residents.city_kanji"
+                        name="p_residents[0].city_kanji"
                         placeholder={'例：港区'}
                         label={'市区郡　（例：港区）'}
                         convertFullWidth
                       />
                       <ApTextInputField
-                        name="p_residents.district_kanji"
+                        name="p_residents[0].district_kanji"
                         placeholder={'例：芝浦４丁目'}
                         label={'町村丁目（例：芝浦４丁目）'}
                         convertFullWidth
                       />
                       <ApTextInputField
-                        name="p_residents.other_address_kanji"
+                        name="p_residents[0].other_address_kanji"
                         placeholder={'例：12-38　キャナルゲート芝浦605号室'}
                         label={'丁目以下・建物名・部屋番号（例：12-38　キャナルゲート芝浦605号室）'}
                         convertFullWidth
@@ -931,7 +862,7 @@ export const ApStep07Page = () => {
         <ApItemGroup optional label={'新しい住居（融資対象物件）の事業性'} note={'※該当する方のみお答えください。'}>
           <Stack spacing={3}>
             <ApCheckboxButtonGroup
-              name="p_application_headers__property_business_type"
+              name="p_application_headers.property_business_type"
               options={propertyBusinessTypeOptions}
             />
             <ApStarHelp label={'事業用との併用物件の場合は居宅部分が延床面積の1/2以上あることが必要です。'} />
@@ -942,27 +873,27 @@ export const ApStep07Page = () => {
             <ApStarHelp label={'登記簿上の表記でご入力ください。'} />
             <ApStarHelp label={'住信SBIネット銀行は借地・共有仮換地・保有地・離島にある物件はお取扱いできません。'} />
             <ApSelectField
-              name="p_application_headers__property_prefecture"
+              name="p_application_headers.property_prefecture"
               options={PREFECTURES}
               placeholder={'----'}
               width={110}
               label={'都道府県'}
             />
             <ApTextInputField
-              name="p_application_headers__property_city"
+              name="p_application_headers.property_city"
               placeholder={'港区芝浦'}
               label={'市区町村郡'}
               convertFullWidth
             />
             <ApTextInputField
-              name="p_application_headers__property_district"
+              name="p_application_headers.property_district"
               placeholder={'４丁目１２−３８'}
               label={'以下地番'}
               convertFullWidth
             />
-            {['2', '3'].includes(p_application_headers__loan_target) && (
+            {['2', '3'].includes(p_application_headers.loan_target) && (
               <ApTextInputField
-                name="p_application_headers__property_apartment_and_room_no"
+                name="p_application_headers.property_apartment_and_room_no"
                 placeholder={'４−１２−３８ 建物名 部屋番号'}
                 label={'丁目以下'}
                 convertFullWidth
@@ -972,19 +903,19 @@ export const ApStep07Page = () => {
         </ApItemGroup>
 
         <ApItemGroup optional label={'ご購入物件の面積'}>
-          {['2', '3'].includes(p_application_headers__loan_target) ? (
+          {['2', '3'].includes(p_application_headers.loan_target) ? (
             <Stack spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="label" color={'text.main'} lineHeight={'130%'}>
                   専有面積
                 </Typography>
-                <ApAreaInputField name="p_application_headers__property_private_area" />
+                <ApAreaInputField name="p_application_headers.property_private_area" />
               </Stack>
               <Stack spacing={1}>
                 <Typography variant="label" color={'text.main'} lineHeight={'130%'}>
                   マンション全体の延べ床面積
                 </Typography>
-                <ApAreaInputField name="p_application_headers__property_total_floor_area" />
+                <ApAreaInputField name="p_application_headers.property_total_floor_area" />
               </Stack>
             </Stack>
           ) : (
@@ -993,13 +924,13 @@ export const ApStep07Page = () => {
                 <Typography variant="label" color={'text.main'} lineHeight={'130%'}>
                   土地の敷地面積
                 </Typography>
-                <ApAreaInputField name="p_application_headers__property_land_area" />
+                <ApAreaInputField name="p_application_headers.property_land_area" />
               </Stack>
               <Stack spacing={1}>
                 <Typography variant="label" color={'text.main'} lineHeight={'130%'}>
                   建物の延べ床面積
                 </Typography>
-                <ApAreaInputField name="p_application_headers__property_floor_area" />
+                <ApAreaInputField name="p_application_headers.property_floor_area" />
               </Stack>
             </Stack>
           )}
@@ -1008,11 +939,11 @@ export const ApStep07Page = () => {
         {isMCJ && (
           <Stack>
             <ApItemGroup optional label={'ご購入物件の土地権利'} note={'※該当する方のみお答えください。(MCJ固有項目)'}>
-              <ApRadioColumnGroup name="p_application_headers__property_land_type" options={propertyLandTypeOptions} />
+              <ApRadioColumnGroup name="p_application_headers.property_land_type" options={propertyLandTypeOptions} />
             </ApItemGroup>
             <ApItemGroup optional label={'買戻・保留地・仮換地'} note={'※該当する方のみお答えください。(MCJ固有項目)'}>
               <ApRadioColumnGroup
-                name="p_application_headers__property_purchase_type"
+                name="p_application_headers.property_purchase_type"
                 options={propertyPurchaseTypeOptions}
               />
             </ApItemGroup>
@@ -1032,14 +963,14 @@ export const ApStep07Page = () => {
             >
               <Stack spacing={2}>
                 <ApRadioColumnGroup
-                  name="p_application_headers__property_planning_area"
+                  name="p_application_headers.property_planning_area"
                   options={propertyPlanningAreaOptions}
                 />
-                {formik.values.p_application_headers__property_planning_area === '99' && (
+                {formik.values.p_application_headers.property_planning_area === '99' && (
                   <Stack spacing={'6px'}>
                     <ApStarHelp label={'その他の方は詳細を入力ください。'} />
                     <ApTextInputField
-                      name="p_application_headers__property_planning_area_other"
+                      name="p_application_headers.property_planning_area_other"
                       placeholder={'入力してください'}
                       convertFullWidth
                     />
@@ -1047,7 +978,7 @@ export const ApStep07Page = () => {
                 )}
               </Stack>
             </ApItemGroup>
-            {['1', '2'].includes(formik.values.p_application_headers__property_planning_area) && (
+            {['1', '2'].includes(formik.values.p_application_headers.property_planning_area) && (
               <ApItemGroup
                 optional
                 label={'上記に該当する場合の「再建築理由」を教えてください。'}
@@ -1055,14 +986,14 @@ export const ApStep07Page = () => {
               >
                 <Stack spacing={2}>
                   <ApRadioColumnGroup
-                    name="p_application_headers__property_rebuilding_reason"
+                    name="p_application_headers.property_rebuilding_reason"
                     options={propertyRebuildingReasonOptions}
                   />
-                  {formik.values.p_application_headers__property_rebuilding_reason === '99' && (
+                  {formik.values.p_application_headers.property_rebuilding_reason === '99' && (
                     <Stack spacing={'6px'}>
                       <ApStarHelp label={'その他の方は詳細を入力ください。'} />
                       <ApTextInputField
-                        name="p_application_headers__property_rebuilding_reason_other"
+                        name="p_application_headers.property_rebuilding_reason_other"
                         placeholder={'入力してください'}
                         convertFullWidth
                       />
@@ -1077,29 +1008,29 @@ export const ApStep07Page = () => {
               note={'※該当する方のみお答えください。(MCJ固有項目)'}
             >
               <ApRadioColumnGroup
-                name="p_application_headers__property_flat_35_plan"
+                name="p_application_headers.property_flat_35_plan"
                 options={propertyFlat35PlanOptions}
                 onChange={(e) => {
                   if (!e.target.value === '2') {
-                    formik.setFieldValue('p_application_headers__property_flat_35_tech', '');
+                    formik.setFieldValue('p_application_headers.property_flat_35_tech', '');
                   }
                 }}
               />
             </ApItemGroup>
             <ApItemGroup optional label={'維持保全型'} note={'※該当する方のみお答えください。(MCJ固有項目)'}>
               <ApRadioColumnGroup
-                name="p_application_headers__property_maintenance_type"
+                name="p_application_headers.property_maintenance_type"
                 options={propertyMaintenanceTypeOptions}
               />
             </ApItemGroup>
-            {formik.values.p_application_headers__property_flat_35_plan === '2' && (
+            {formik.values.p_application_headers.property_flat_35_plan === '2' && (
               <ApItemGroup
                 optional
                 label={'フラット35S（優良住宅取得支援制度）対象項目②'}
                 note={'※該当する方のみお答えください。(MCJ固有項目)'}
               >
                 <ApRadioColumnGroup
-                  name="p_application_headers__property_flat_35_tech"
+                  name="p_application_headers.property_flat_35_tech"
                   options={propertyFlat35TechOptions}
                 />
               </ApItemGroup>
@@ -1110,14 +1041,14 @@ export const ApStep07Page = () => {
               note={'※該当する方のみお答えください。(MCJ固有項目)'}
             >
               <ApRadioColumnGroup
-                name="p_application_headers__property_region_type"
+                name="p_application_headers.property_region_type"
                 options={propertyRegionTypeOptions}
               />
             </ApItemGroup>
           </Stack>
         )}
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
+        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

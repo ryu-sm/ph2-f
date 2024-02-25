@@ -83,6 +83,9 @@ export const ApNumberInputField = ({
           onBlur={handelBlue}
           onFocus={handleFocus}
           onChange={handleChange}
+          inputProps={{
+            readOnly: props.readOnly,
+          }}
         />
         {typeof unit === 'string' ? (
           <Typography variant="unit" color={'text.main'} whiteSpace={'nowrap'}>

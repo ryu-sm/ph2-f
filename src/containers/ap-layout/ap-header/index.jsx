@@ -9,7 +9,7 @@ import { applicantRoutes } from '@/router/applicant-routes';
 
 export const ApHeader = ({ hasMenu, menu }) => {
   const navigate = useNavigate();
-  const { isLogined, loginType } = useRecoilValue(authAtom);
+  const { isLogined, roleType } = useRecoilValue(authAtom);
   const applyNo = useRecoilValue(applyNoSelector);
   const { pathname } = useLocation();
 
@@ -29,7 +29,7 @@ export const ApHeader = ({ hasMenu, menu }) => {
           sx={{ px: 4, py: 3, cursor: 'pointer' }}
           onClick={() => {
             if (isLogined) {
-              if (loginType === 1) {
+              if (roleType === 1) {
                 if (
                   applicantRoutes.find((item) => item.path === pathname).path &&
                   pathname !== routeNames.apAgreementPage.path
@@ -51,7 +51,7 @@ export const ApHeader = ({ hasMenu, menu }) => {
                 navigate(routeNames.apStartPage.path);
               }
             } else {
-              if (loginType === 1) {
+              if (roleType === 1) {
                 navigate(routeNames.apStartPage.path);
               } else {
                 // TODO

@@ -21,6 +21,8 @@ import {
   ApStep12Page,
   ApStep13Page,
   ApTopPage,
+  ApStep14Page,
+  ApConfirmPage,
 } from '@/pages/applicant';
 
 export const applicantRoutes = [
@@ -109,5 +111,13 @@ export const applicantRoutes = [
   {
     ...routeNames.apStep13Page,
     element: <ApStep13Page />,
+  },
+  {
+    ...routeNames.apStep14Page,
+    element: <ApStep14Page />,
+  },
+  {
+    ...routeNames.apConfirmPage,
+    element: <ApConfirmPage />,
   },
 ];

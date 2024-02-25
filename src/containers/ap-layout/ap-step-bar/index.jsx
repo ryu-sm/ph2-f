@@ -241,12 +241,32 @@ export const ApStepBar = () => {
               <Box pt={1}>
                 <Stack spacing={1} direction={'row'} alignItems={'end'}>
                   {index < stepIndex && <Icons.ApStepComplete />}
-                  <Typography variant={'label'} color={calcTextColor(index)}>
-                    STEP{' '}
-                    <Typography variant={'label'} color={calcTextColor(index)}>
+                  <Stack direction={'row'} alignItems={'end'} spacing={1}>
+                    <Typography
+                      sx={{
+                        fontFamily: 'Barlow',
+                        fontSize: 14,
+                        fontStyle: 'normal',
+                        fontWeight: 500,
+                        lineHeight: '100%',
+                      }}
+                      color={calcTextColor(index)}
+                    >
+                      STEP
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: 'Barlow',
+                        fontSize: 18,
+                        fontStyle: 'normal',
+                        fontWeight: 500,
+                        lineHeight: '100%',
+                      }}
+                      color={calcTextColor(index)}
+                    >
                       {String(index + 1).padStart(2, '0')}
                     </Typography>
-                  </Typography>
+                  </Stack>
                 </Stack>
               </Box>
 

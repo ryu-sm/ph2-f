@@ -25,3 +25,5 @@ export { ApStep10Page } from './step-10';
 export { ApStep11Page } from './step-11';
 export { ApStep12Page } from './step-12';
 export { ApStep13Page } from './step-13';
+export { ApStep14Page } from './step-14';
+export { ApConfirmPage } from './confirm';

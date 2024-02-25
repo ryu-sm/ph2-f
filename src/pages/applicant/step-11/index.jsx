@@ -7,150 +7,143 @@ import {
   ApRadioColumnGroupUpload,
   ApSaveDraftButton,
   ApStarHelp,
+  ApUpdateApply,
 } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom } from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
 
 import { validationSchema } from './validationSchema';
 import { useNavigate } from 'react-router-dom';
-import { routeNames } from '@/router/settings';
-import { Stack, Typography } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import { Stack, Typography, Link } from '@mui/material';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Icons } from '@/assets';
+import { cloneDeep } from 'lodash';
+import { useBoolean } from '@/hooks';
+import { routeNames } from '@/router/settings';
+import { apApplicationImg } from '@/services';
 
 export const ApStep11Page = () => {
   const navigate = useNavigate();
-  const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-
-  const {
-    p_applicant_persons__1__identity_verification_type,
-    p_applicant_persons__1__A__01__a,
-    p_applicant_persons__1__A__01__b,
-    p_applicant_persons__1__A__02,
-    p_applicant_persons__1__A__03__a,
-    p_applicant_persons__1__A__03__b,
-    p_applicant_persons__1__B__a,
-    p_applicant_persons__1__B__b,
-    p_applicant_persons__1__C__01,
-    p_applicant_persons__1__C__02,
-    p_applicant_persons__1__C__03,
-    p_applicant_persons__1__C__04,
-    p_applicant_persons__1__C__05,
-    p_applicant_persons__1__D__01,
-    p_applicant_persons__1__D__02,
-    p_applicant_persons__1__D__03,
-    p_applicant_persons__1__E,
-    p_applicant_persons__1__F__01,
-    p_applicant_persons__1__F__02,
-    p_applicant_persons__1__F__03,
-    p_applicant_persons__1__K,
-    //
-    p_applicant_persons__1__tax_return,
-    p_applicant_persons__1__tax_return_reasons,
-    p_applicant_persons__1__office_occupation,
-    p_applicant_persons__1__income_sources,
-  } = useRecoilValue(applicationAtom);
+  const applyNo = useRecoilValue(applyNoSelector);
+  const agentSended = useRecoilValue(agentSendedSelector);
+  const updateModal = useBoolean(false);
+  const { apNextStepId, apPreStepId, p_applicant_persons__1, p_uploaded_files } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
     initialValues: {
-      p_applicant_persons__1__A__01__a,
-      p_applicant_persons__1__A__01__b,
-      p_applicant_persons__1__A__02,
-      p_applicant_persons__1__A__03__a,
-      p_applicant_persons__1__A__03__b,
-      p_applicant_persons__1__B__a,
-      p_applicant_persons__1__B__b,
-      p_applicant_persons__1__C__01,
-      p_applicant_persons__1__C__02,
-      p_applicant_persons__1__C__03,
-      p_applicant_persons__1__C__04,
-      p_applicant_persons__1__C__05,
-      p_applicant_persons__1__D__01,
-      p_applicant_persons__1__D__02,
-      p_applicant_persons__1__D__03,
-      p_applicant_persons__1__E,
-      p_applicant_persons__1__F__01,
-      p_applicant_persons__1__F__02,
-      p_applicant_persons__1__F__03,
-      p_applicant_persons__1__K,
-      p_applicant_persons__1__identity_verification_type,
+      p_applicant_persons__1,
+      p_uploaded_files,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      setApplicationInfo((pre) => {
-        return { ...pre, ...values };
-      });
-      navigate(`/step-id-${apNextStepId}`);
+      if (agentSended) {
+        updateModal.onTrue();
+      } else {
+        setApplicationInfo((pre) => {
+          return { ...pre, ...values };
+        });
+        navigate(`/step-id-${apNextStepId}`);
+      }
     },
   });
 
+  const sendedImg = useCallback(async () => {
+    if (agentSended) {
+      try {
+        const res = await apApplicationImg(applyNo);
+        formik.setFieldValue(
+          'p_uploaded_files.p_applicant_persons__1__A__01__a',
+          res.data.p_applicant_persons__1__A__01__a
+        );
+        formik.setFieldValue(
+          'p_uploaded_files.p_applicant_persons__1__A__01__b',
+          res.data.p_applicant_persons__1__A__01__b
+        );
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__02', res.data.p_applicant_persons__1__A__02);
+        formik.setFieldValue(
+          'p_uploaded_files.p_applicant_persons__1__A__03__a',
+          res.data.p_applicant_persons__1__A__03__a
+        );
+        formik.setFieldValue(
+          'p_uploaded_files.p_applicant_persons__1__A__03__b',
+          res.data.p_applicant_persons__1__A__03__b
+        );
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__B__a', res.data.p_applicant_persons__1__B__a);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__B__b', res.data.p_applicant_persons__1__B__b);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__C__01', res.data.p_applicant_persons__1__C__01);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__C__02', res.data.p_applicant_persons__1__C__02);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__C__03', res.data.p_applicant_persons__1__C__03);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__C__04', res.data.p_applicant_persons__1__C__04);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__C__05', res.data.p_applicant_persons__1__C__05);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__D__01', res.data.p_applicant_persons__1__D__01);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__D__02', res.data.p_applicant_persons__1__D__02);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__D__03', res.data.p_applicant_persons__1__D__03);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__E', res.data.p_applicant_persons__1__E);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__F__01', res.data.p_applicant_persons__1__F__01);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__F__02', res.data.p_applicant_persons__1__F__02);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__F__03', res.data.p_applicant_persons__1__F__03);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__K', res.data.p_applicant_persons__1__K);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  });
+
+  useEffect(() => {
+    sendedImg();
+  }, [agentSended, applyNo]);
+
   const parseVaildData = useMemo(() => {
-    return {
-      p_applicant_persons__1__A__01__a: formik.values.p_applicant_persons__1__A__01__a,
-      p_applicant_persons__1__A__01__b: formik.values.p_applicant_persons__1__A__01__b,
-      p_applicant_persons__1__A__02: formik.values.p_applicant_persons__1__A__02,
-      p_applicant_persons__1__A__03__a: formik.values.p_applicant_persons__1__A__03__a,
-      p_applicant_persons__1__A__03__b: formik.values.p_applicant_persons__1__A__03__b,
-      p_applicant_persons__1__B__a: formik.values.p_applicant_persons__1__B__a,
-      p_applicant_persons__1__B__b: formik.values.p_applicant_persons__1__B__b,
-      p_applicant_persons__1__C__01: formik.values.p_applicant_persons__1__C__01,
-      p_applicant_persons__1__C__02: formik.values.p_applicant_persons__1__C__02,
-      p_applicant_persons__1__C__03: formik.values.p_applicant_persons__1__C__03,
-      p_applicant_persons__1__C__04: formik.values.p_applicant_persons__1__C__04,
-      p_applicant_persons__1__C__05: formik.values.p_applicant_persons__1__C__05,
-      p_applicant_persons__1__D__01: formik.values.p_applicant_persons__1__D__01,
-      p_applicant_persons__1__D__02: formik.values.p_applicant_persons__1__D__02,
-      p_applicant_persons__1__D__03: formik.values.p_applicant_persons__1__D__03,
-      p_applicant_persons__1__E: formik.values.p_applicant_persons__1__E,
-      p_applicant_persons__1__F__01: formik.values.p_applicant_persons__1__F__01,
-      p_applicant_persons__1__F__02: formik.values.p_applicant_persons__1__F__02,
-      p_applicant_persons__1__F__03: formik.values.p_applicant_persons__1__F__03,
-      p_applicant_persons__1__K: formik.values.p_applicant_persons__1__K,
-      p_applicant_persons__1__identity_verification_type:
-        formik.values.p_applicant_persons__1__identity_verification_type,
-    };
+    const dataCopy = cloneDeep(formik.values);
+    return dataCopy;
   }, [formik.values]);
+
   const handelLeft = () => {
-    navigate(`/step-id-${apPreStepId}`);
+    if (agentSended) {
+      navigate(routeNames.apTopPage.path);
+    } else {
+      navigate(`/step-id-${apPreStepId}`);
+    }
   };
 
   const plan = useMemo(() => {
     if (
-      p_applicant_persons__1__tax_return === '1' &&
-      (p_applicant_persons__1__tax_return_reasons.includes('1') ||
-        p_applicant_persons__1__tax_return_reasons.includes('2') ||
-        p_applicant_persons__1__tax_return_reasons.includes('3') ||
-        p_applicant_persons__1__tax_return_reasons.includes('6') ||
-        p_applicant_persons__1__tax_return_reasons.includes('99'))
+      p_applicant_persons__1.tax_return === '1' &&
+      (p_applicant_persons__1.tax_return_reasons.includes('1') ||
+        p_applicant_persons__1.tax_return_reasons.includes('2') ||
+        p_applicant_persons__1.tax_return_reasons.includes('3') ||
+        p_applicant_persons__1.tax_return_reasons.includes('6') ||
+        p_applicant_persons__1.tax_return_reasons.includes('99'))
     ) {
       return 'B';
     } else {
       return 'A';
     }
-  }, [p_applicant_persons__1__tax_return, p_applicant_persons__1__tax_return_reasons]);
+  }, [p_applicant_persons__1.tax_return, p_applicant_persons__1.tax_return_reasons]);
 
   const identityVerificationOption = [
     {
       value: '1',
       label: '運転免許証',
-      touched: formik.touched.p_applicant_persons__1__A__01__a && formik.touched.p_applicant_persons__1__A__01__b,
+      touched:
+        formik.touched.p_uploaded_files?.p_applicant_persons__1__A__01__a &&
+        formik.touched.p_uploaded_files?.p_applicant_persons__1__A__01__b,
       imgUpload: (
         <Stack spacing={3} direction={'row'} alignItems={'start'} sx={{ width: 1, bgcolor: 'white', px: 3 }}>
           <Stack spacing={'6px'}>
             <Typography variant="label" color={'text.main'}>
               〈表面〉
             </Typography>
-            <ApImgUpload name="p_applicant_persons__1__A__01__a" singleFile />
+            <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__A__01__a" singleFile />
           </Stack>
           <Stack spacing={'6px'}>
             <Typography variant="label" color={'text.main'}>
               〈裏面〉
             </Typography>
-            <ApImgUpload name="p_applicant_persons__1__A__01__b" singleFile />
+            <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__A__01__b" singleFile />
           </Stack>
         </Stack>
       ),
@@ -158,14 +151,14 @@ export const ApStep11Page = () => {
     {
       value: '2',
       label: 'マイナンバーカード',
-      touched: formik.touched.p_applicant_persons__1__A__02,
+      touched: formik.touched.p_uploaded_files?.p_applicant_persons__1__A__02,
       imgUpload: (
         <Stack spacing={3} direction={'row'} alignItems={'start'} sx={{ width: 1, bgcolor: 'white', px: 3 }}>
           <Stack spacing={'6px'}>
             <Typography variant="label" color={'text.main'}>
               〈表面〉
             </Typography>
-            <ApImgUpload name="p_applicant_persons__1__A__02" singleFile />
+            <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__A__02" singleFile />
           </Stack>
         </Stack>
       ),
@@ -173,30 +166,36 @@ export const ApStep11Page = () => {
     {
       value: '3',
       label: '住民基本台帳カード',
-      touched: formik.touched.p_applicant_persons__1__A__03__a && formik.touched.p_applicant_persons__1__A__03__b,
+      touched:
+        formik.touched.p_uploaded_files?.p_applicant_persons__1__A__03__a &&
+        formik.touched.p_uploaded_files?.p_applicant_persons__1__A__03__b,
       imgUpload: (
         <Stack spacing={3} direction={'row'} alignItems={'start'} sx={{ width: 1, bgcolor: 'white', px: 3 }}>
           <Stack spacing={'6px'}>
             <Typography variant="label" color={'text.main'}>
               〈表面〉
             </Typography>
-            <ApImgUpload name="p_applicant_persons__1__A__03__a" singleFile />
+            <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__A__03__a" singleFile />
           </Stack>
           <Stack spacing={'6px'}>
             <Typography variant="label" color={'text.main'}>
               〈裏面〉
             </Typography>
-            <ApImgUpload name="p_applicant_persons__1__A__03__b" singleFile />
+            <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__A__03__b" singleFile />
           </Stack>
         </Stack>
       ),
     },
   ];
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
       <ApLayout hasMenu hasStepBar pb={18}>
+        <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle>{`本人確認書類など\n書類を添付しましょう`}</ApPageTitle>
         <Stack sx={{ px: 4, pb: 4 }}>
           <ApStarHelp label={'審査状況により他の資料提出をお願いすることがありますのでご了承ください。'} />
@@ -213,7 +212,7 @@ export const ApStep11Page = () => {
           }
         >
           <ApRadioColumnGroupUpload
-            name="p_applicant_persons__1__identity_verification_type"
+            name="p_applicant_persons__1.identity_verification_type"
             options={identityVerificationOption}
           />
         </ApItemGroup>
@@ -225,18 +224,18 @@ export const ApStep11Page = () => {
                 <Typography variant="label" color={'text.main'}>
                   〈表面〉
                 </Typography>
-                <ApImgUpload name="p_applicant_persons__1__B__a" singleFile />
+                <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__B__a" singleFile />
               </Stack>
               <Stack spacing={'6px'}>
                 <Typography variant="label" color={'text.main'}>
                   〈裏面〉
                 </Typography>
-                <ApImgUpload name="p_applicant_persons__1__B__b" singleFile />
+                <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__B__b" singleFile />
               </Stack>
             </Stack>
           </Stack>
         </ApItemGroup>
-        {plan === 'A' && p_applicant_persons__1__office_occupation === '1' && (
+        {plan === 'A' && p_applicant_persons__1.office_occupation === '1' && (
           <Stack>
             <ApItemGroup label={'収入に関する書類'}>
               <Stack spacing={3}>
@@ -247,7 +246,7 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     源泉徴収票（前年度分）
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__C__01" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__01" />
                 </Stack>
                 <Stack
                   spacing={'6px'}
@@ -256,14 +255,28 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     源泉徴収票（前々年度分）
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__C__02" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__02" />
                 </Stack>
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={`非上場企業の役員の方は\n下記の書類も添付してください。`}>
               <Stack spacing={3}>
                 <ApStarHelp
-                  label={'枚数が多い場合はPDFファイルをssnbmbk_info@ssnbagent.netbk.co.jp へメール送付してください。'}
+                  label={
+                    <Typography variant="note" color={'text.main'}>
+                      {`枚数が多い場合はPDFファイルを\n`}
+                      <Typography
+                        component={Link}
+                        variant="note"
+                        color={'text.main'}
+                        href={`mailto:ssnbmbk_info@ssnbagent.netbk.co.jp`}
+                        sx={{ textDecorationLine: 'none' }}
+                      >
+                        ssnbmbk_info@ssnbagent.netbk.co.jp
+                      </Typography>
+                      へメール送付してください。
+                    </Typography>
+                  }
                 />
                 <Stack
                   spacing={'6px'}
@@ -272,7 +285,7 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（1期前）
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__D__01" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__D__01" />
                 </Stack>
                 <Stack
                   spacing={'6px'}
@@ -281,7 +294,7 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（2期前）
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__D__02" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__D__02" />
                 </Stack>
                 <Stack
                   spacing={'6px'}
@@ -290,14 +303,14 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（3期前）
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__D__03" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__D__03" />
                 </Stack>
               </Stack>
             </ApItemGroup>
           </Stack>
         )}
 
-        {plan === 'A' && ['6', '7', '8'].includes(p_applicant_persons__1__office_occupation) && (
+        {plan === 'A' && ['6', '7', '8'].includes(p_applicant_persons__1.office_occupation) && (
           <Stack>
             <ApItemGroup label={'収入に関する書類'}>
               <Stack
@@ -307,7 +320,7 @@ export const ApStep11Page = () => {
                 <Typography variant="label" color={'text.main'}>
                   源泉徴収票（前年度分）
                 </Typography>
-                <ApImgUpload name="p_applicant_persons__1__C__01" />
+                <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__01" />
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={`雇用契約に関する書類`}>
@@ -318,13 +331,13 @@ export const ApStep11Page = () => {
                 <Typography variant="label" color={'text.main'}>
                   雇用契約書
                 </Typography>
-                <ApImgUpload name="p_applicant_persons__1__E" />
+                <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__E" />
               </Stack>
             </ApItemGroup>
           </Stack>
         )}
 
-        {plan === 'A' && !['1', '6', '7', '8'].includes(p_applicant_persons__1__office_occupation) && (
+        {plan === 'A' && !['1', '6', '7', '8'].includes(p_applicant_persons__1.office_occupation) && (
           <Stack>
             <ApItemGroup label={'収入に関する書類'}>
               <Stack spacing={3}>
@@ -335,10 +348,10 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     源泉徴収票（前年度分）
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__C__01" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__01" />
                 </Stack>
-                {(p_applicant_persons__1__income_sources.includes('2') ||
-                  p_applicant_persons__1__income_sources.includes('3')) && (
+                {(p_applicant_persons__1.income_sources.includes('2') ||
+                  p_applicant_persons__1.income_sources.includes('3')) && (
                   <Stack
                     spacing={'6px'}
                     sx={{ p: 4, bgcolor: 'white', borderRadius: 2, boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)' }}
@@ -346,7 +359,7 @@ export const ApStep11Page = () => {
                     <Typography variant="label" color={'text.main'}>
                       源泉徴収票（前々年度分）
                     </Typography>
-                    <ApImgUpload name="p_applicant_persons__1__C__02" />
+                    <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__02" />
                   </Stack>
                 )}
               </Stack>
@@ -354,7 +367,21 @@ export const ApStep11Page = () => {
             <ApItemGroup label={`親族経営の会社等にご勤務の方は\n下記の書類も添付してください。`}>
               <Stack spacing={3}>
                 <ApStarHelp
-                  label={'枚数が多い場合はPDFファイルをssnbmbk_info@ssnbagent.netbk.co.jp へメール送付してください。'}
+                  label={
+                    <Typography variant="note" color={'text.main'}>
+                      {`枚数が多い場合はPDFファイルを\n`}
+                      <Typography
+                        component={Link}
+                        variant="note"
+                        color={'text.main'}
+                        href={`mailto:ssnbmbk_info@ssnbagent.netbk.co.jp`}
+                        sx={{ textDecorationLine: 'none' }}
+                      >
+                        ssnbmbk_info@ssnbagent.netbk.co.jp
+                      </Typography>
+                      へメール送付してください。
+                    </Typography>
+                  }
                 />
                 <Stack
                   spacing={'6px'}
@@ -363,7 +390,7 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（1期前）`}
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__F__01" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__F__01" />
                 </Stack>
                 <Stack
                   spacing={'6px'}
@@ -372,7 +399,7 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（2期前）`}
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__F__02" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__F__02" />
                 </Stack>
                 <Stack
                   spacing={'6px'}
@@ -381,7 +408,7 @@ export const ApStep11Page = () => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（3期前）`}
                   </Typography>
-                  <ApImgUpload name="p_applicant_persons__1__F__03" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__F__03" />
                 </Stack>
               </Stack>
             </ApItemGroup>
@@ -405,7 +432,7 @@ export const ApStep11Page = () => {
                       個人番号を隠した画像を添付してください
                     </Typography>
                   </Stack>
-                  <ApImgUpload name="p_applicant_persons__1__C__03" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__03" />
                 </Stack>
                 <Stack
                   spacing={'6px'}
@@ -420,7 +447,7 @@ export const ApStep11Page = () => {
                       個人番号を隠した画像を添付してください
                     </Typography>
                   </Stack>
-                  <ApImgUpload name="p_applicant_persons__1__C__04" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__04" />
                 </Stack>
                 <Stack
                   spacing={'6px'}
@@ -435,15 +462,29 @@ export const ApStep11Page = () => {
                       個人番号を隠した画像を添付してください
                     </Typography>
                   </Stack>
-                  <ApImgUpload name="p_applicant_persons__1__C__05" />
+                  <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__C__05" />
                 </Stack>
               </Stack>
             </ApItemGroup>
-            {p_applicant_persons__1__office_occupation === '1' && (
+            {p_applicant_persons__1.office_occupation === '1' && (
               <ApItemGroup label={`非上場企業の役員の方は\n下記の書類も添付してください。`}>
                 <Stack spacing={3}>
                   <ApStarHelp
-                    label={'枚数が多い場合はPDFファイルをssnbmbk_info@ssnbagent.netbk.co.jp へメール送付してください。'}
+                    label={
+                      <Typography variant="note" color={'text.main'}>
+                        {`枚数が多い場合はPDFファイルを\n`}
+                        <Typography
+                          component={Link}
+                          variant="note"
+                          color={'text.main'}
+                          href={`mailto:ssnbmbk_info@ssnbagent.netbk.co.jp`}
+                          sx={{ textDecorationLine: 'none' }}
+                        >
+                          ssnbmbk_info@ssnbagent.netbk.co.jp
+                        </Typography>
+                        へメール送付してください。
+                      </Typography>
+                    }
                   />
                   <Stack
                     spacing={'6px'}
@@ -452,7 +493,7 @@ export const ApStep11Page = () => {
                     <Typography variant="label" color={'text.main'}>
                       会社の決算報告書（1期前）
                     </Typography>
-                    <ApImgUpload name="p_applicant_persons__1__D__01" />
+                    <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__D__01" />
                   </Stack>
                   <Stack
                     spacing={'6px'}
@@ -461,7 +502,7 @@ export const ApStep11Page = () => {
                     <Typography variant="label" color={'text.main'}>
                       会社の決算報告書（2期前）
                     </Typography>
-                    <ApImgUpload name="p_applicant_persons__1__D__02" />
+                    <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__D__02" />
                   </Stack>
                   <Stack
                     spacing={'6px'}
@@ -470,17 +511,31 @@ export const ApStep11Page = () => {
                     <Typography variant="label" color={'text.main'}>
                       会社の決算報告書（3期前）
                     </Typography>
-                    <ApImgUpload name="p_applicant_persons__1__D__03" />
+                    <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__D__03" />
                   </Stack>
                 </Stack>
               </ApItemGroup>
             )}
 
-            {!['1', '5', '10'].includes(p_applicant_persons__1__office_occupation) && (
+            {!['1', '5', '10'].includes(p_applicant_persons__1.office_occupation) && (
               <ApItemGroup label={`親族経営の会社等にご勤務の方は\n下記の書類も添付してください。`}>
                 <Stack spacing={3}>
                   <ApStarHelp
-                    label={'枚数が多い場合はPDFファイルをssnbmbk_info@ssnbagent.netbk.co.jp へメール送付してください。'}
+                    label={
+                      <Typography variant="note" color={'text.main'}>
+                        {`枚数が多い場合はPDFファイルを\n`}
+                        <Typography
+                          component={Link}
+                          variant="note"
+                          color={'text.main'}
+                          href={`mailto:ssnbmbk_info@ssnbagent.netbk.co.jp`}
+                          sx={{ textDecorationLine: 'none' }}
+                        >
+                          ssnbmbk_info@ssnbagent.netbk.co.jp
+                        </Typography>
+                        へメール送付してください。
+                      </Typography>
+                    }
                   />
                   <Stack
                     spacing={'6px'}
@@ -489,7 +544,7 @@ export const ApStep11Page = () => {
                     <Typography variant="label" color={'text.main'}>
                       {`会社の決算報告書\nまたは経営する親族の確定申告書（1期前）`}
                     </Typography>
-                    <ApImgUpload name="p_applicant_persons__1__F__01" />
+                    <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__F__01" />
                   </Stack>
                   <Stack
                     spacing={'6px'}
@@ -498,7 +553,7 @@ export const ApStep11Page = () => {
                     <Typography variant="label" color={'text.main'}>
                       {`会社の決算報告書\nまたは経営する親族の確定申告書（2期前）`}
                     </Typography>
-                    <ApImgUpload name="p_applicant_persons__1__F__02" />
+                    <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__F__02" />
                   </Stack>
                   <Stack
                     spacing={'6px'}
@@ -507,7 +562,7 @@ export const ApStep11Page = () => {
                     <Typography variant="label" color={'text.main'}>
                       {`会社の決算報告書\nまたは経営する親族の確定申告書（3期前）`}
                     </Typography>
-                    <ApImgUpload name="p_applicant_persons__1__F__03" />
+                    <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__F__03" />
                   </Stack>
                 </Stack>
               </ApItemGroup>
@@ -517,11 +572,11 @@ export const ApStep11Page = () => {
 
         <ApItemGroup optional label={'その他の書類'}>
           <Stack sx={{ p: 4, bgcolor: 'white', borderRadius: 2, boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)' }}>
-            <ApImgUpload name="p_applicant_persons__1__K" />
+            <ApImgUpload name="p_uploaded_files.p_applicant_persons__1__K" />
           </Stack>
         </ApItemGroup>
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
+        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

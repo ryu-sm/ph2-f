@@ -35,7 +35,10 @@ export const ApAgreementPage = () => {
         return {
           ...pre,
           p_applicant_persons_a_agreement: true,
-          p_application_headers__apply_date: dayjs().format('YYYY/MM/DD'),
+          p_application_headers: {
+            ...pre.p_application_headers,
+            apply_date: dayjs().format('YYYY/MM/DD'),
+          },
         };
       });
       navigate(routeNames.apTopPage.path);

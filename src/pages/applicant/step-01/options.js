@@ -50,6 +50,7 @@ export const loanTypeOptions = [
 ];
 
 export const hasJoinGuarantorOptions = [{ value: '1', label: 'いる' }];
+
 export const loanPlusOptions = [{ value: '1', label: '申し込む' }];
 
 export const bonusRepaymentMonthOptions = [

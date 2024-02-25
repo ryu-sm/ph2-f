@@ -114,4 +114,12 @@ export const routeNames = {
     name: 'apStep13Page',
     path: '/step-id-13',
   },
+  apStep14Page: {
+    name: 'apStep14Page',
+    path: '/step-id-14',
+  },
+  apConfirmPage: {
+    name: 'apConfirmPage',
+    path: '/confirm',
+  },
 };

@@ -1,10 +1,12 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { Fragment, useEffect, useMemo } from 'react';
+import { Fragment, useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
+  agentSendedSelector,
   apNextStepIdSelector,
   apPreStepIdSelector,
   applicationAtom,
+  applyNoSelector,
   hasIncomeTotalizerSelector,
   isMcjSelector,
 } from '@/store';
@@ -26,6 +28,7 @@ import {
   ApSelectFieldYm,
   ApStarHelp,
   ApTextInputField,
+  ApUpdateApply,
 } from '@/components';
 import { Stack, Typography } from '@mui/material';
 import {
@@ -46,96 +49,140 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '@/assets';
+import { cloneDeep } from 'lodash';
+import { useBoolean } from '@/hooks';
+import { routeNames } from '@/router/settings';
+import { apPborrowings } from '@/services';
 
 export const ApStep08Page = () => {
   const navigate = useNavigate();
-  const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const isMCJ = useRecoilValue(isMcjSelector);
-  const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
+  const applyNo = useRecoilValue(applyNoSelector);
+  const agentSended = useRecoilValue(agentSendedSelector);
+  const updateModal = useBoolean(false);
   const {
-    p_application_headers__curr_borrowing_status,
+    isMCJ,
+    apNextStepId,
+    apPreStepId,
+    hasIncomeTotalizer,
+    //
+    p_application_headers,
     p_borrowings,
-    p_application_headers__refund_source_type,
-    p_application_headers__refund_source_type_other,
-    p_application_headers__refund_source_content,
-    p_application_headers__refund_source_amount,
-    p_application_headers__rent_to_be_paid_land_borrower,
-    p_application_headers__rent_to_be_paid_land,
-    p_application_headers__rent_to_be_paid_house_borrower,
-    p_application_headers__rent_to_be_paid_house,
   } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
     initialValues: {
-      p_application_headers__curr_borrowing_status,
+      p_application_headers,
       p_borrowings,
-      p_application_headers__refund_source_type,
-      p_application_headers__refund_source_type_other,
-      p_application_headers__refund_source_content,
-      p_application_headers__refund_source_amount,
-      p_application_headers__rent_to_be_paid_land_borrower,
-      p_application_headers__rent_to_be_paid_land,
-      p_application_headers__rent_to_be_paid_house_borrower,
-      p_application_headers__rent_to_be_paid_house,
       //
       isMCJ,
       hasIncomeTotalizer,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      setApplicationInfo((pre) => {
-        return {
-          ...pre,
-          p_application_headers__curr_borrowing_status: formik.values.p_application_headers__curr_borrowing_status,
-          p_borrowings: formik.values.p_borrowings,
-          p_application_headers__refund_source_type: formik.values.p_application_headers__refund_source_type,
-          p_application_headers__refund_source_type_other:
-            formik.values.p_application_headers__refund_source_type_other,
-          p_application_headers__refund_source_content: formik.values.p_application_headers__refund_source_content,
-          p_application_headers__refund_source_amount: formik.values.p_application_headers__refund_source_amount,
-          p_application_headers__rent_to_be_paid_land_borrower:
-            formik.values.p_application_headers__rent_to_be_paid_land_borrower,
-          p_application_headers__rent_to_be_paid_land: formik.values.p_application_headers__rent_to_be_paid_land,
-          p_application_headers__rent_to_be_paid_house_borrower:
-            formik.values.p_application_headers__rent_to_be_paid_house_borrower,
-          p_application_headers__rent_to_be_paid_house: formik.values.p_application_headers__rent_to_be_paid_house,
-        };
-      });
-      navigate(`/step-id-${apNextStepId}`);
+      const dataCopy = cloneDeep(values);
+      delete dataCopy.isMCJ;
+      delete dataCopy.hasIncomeTotalizer;
+      if (agentSended) {
+        updateModal.onTrue();
+      } else {
+        setApplicationInfo((pre) => {
+          return { ...pre, ...dataCopy };
+        });
+        navigate(`/step-id-${apNextStepId}`);
+      }
     },
   });
 
+  const sendedImg = useCallback(async () => {
+    if (formik.values.p_borrowings?.length === 0) return;
+    if (agentSended) {
+      try {
+        const res = await apPborrowings(applyNo);
+        console.log(res);
+        const temp = formik.values.p_borrowings.map((item) => {
+          const sendedData = res.data.find((sended) => sended.id === item.id);
+          if (sendedData) {
+            return { ...item, p_borrowings__I: sendedData?.p_borrowings__I };
+          } else {
+            return item;
+          }
+        });
+
+        formik.setFieldValue('p_borrowings', temp);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  });
+
+  useEffect(() => {
+    sendedImg();
+  }, [agentSended, applyNo, formik.values.p_borrowings?.length]);
+
   const parseVaildData = useMemo(() => {
-    return {
-      p_application_headers__curr_borrowing_status: formik.values.p_application_headers__curr_borrowing_status,
-      p_borrowings: formik.values.p_borrowings,
-      p_application_headers__refund_source_type: formik.values.p_application_headers__refund_source_type,
-      p_application_headers__refund_source_type_other: formik.values.p_application_headers__refund_source_type_other,
-      p_application_headers__refund_source_content: formik.values.p_application_headers__refund_source_content,
-      p_application_headers__refund_source_amount: formik.values.p_application_headers__refund_source_amount,
-      p_application_headers__rent_to_be_paid_land_borrower:
-        formik.values.p_application_headers__rent_to_be_paid_land_borrower,
-      p_application_headers__rent_to_be_paid_land: formik.values.p_application_headers__rent_to_be_paid_land,
-      p_application_headers__rent_to_be_paid_house_borrower:
-        formik.values.p_application_headers__rent_to_be_paid_house_borrower,
-      p_application_headers__rent_to_be_paid_house: formik.values.p_application_headers__rent_to_be_paid_house,
-    };
+    const dataCopy = cloneDeep(formik.values);
+    delete dataCopy.isMCJ;
+    delete dataCopy.hasIncomeTotalizer;
+    return dataCopy;
   }, [formik.values]);
 
   const handelLeft = () => {
-    navigate(`/step-id-${apPreStepId}`);
+    if (agentSended) {
+      navigate(routeNames.apTopPage.path);
+    } else {
+      navigate(`/step-id-${apPreStepId}`);
+    }
   };
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
       <ApLayout hasMenu hasStepBar pb={18}>
+        <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <Stack flex={1}>
           <ApPageTitle py={8}>{`現在のお借入状況について\n教えてください。`}</ApPageTitle>
           <ApItemGroup label={'あなたや連帯保証人予定者に、現在お借入はありますか？'}>
-            <ApRadioRowGroup name="p_application_headers__curr_borrowing_status" options={CurrBorrowingStatusOptions} />
+            <ApRadioRowGroup
+              name="p_application_headers.curr_borrowing_status"
+              options={CurrBorrowingStatusOptions}
+              onChange={(e) => {
+                if (e.target.value === '1') {
+                  formik.setFieldValue('p_borrowings', [
+                    {
+                      id: '',
+                      p_borrowings__I: [],
+                      self_input: '0',
+                      borrower: '',
+                      type: '',
+                      lender: '',
+                      borrowing_from_house_finance_agency: '',
+                      loan_start_date: '',
+                      loan_amount: '',
+                      curr_loan_balance_amount: '',
+                      annual_repayment_amount: '',
+                      loan_end_date: '',
+                      scheduled_loan_payoff: '',
+                      scheduled_loan_payoff_date: '',
+                      loan_business_target: '',
+                      loan_business_target_other: '',
+                      loan_purpose: '',
+                      loan_purpose_other: '',
+                      category: '',
+                      card_expiry_date: '',
+                      rental_room_num: '',
+                      common_housing: '',
+                      estate_setting: '',
+                    },
+                  ]);
+                } else {
+                  formik.setFieldValue('p_borrowings', []);
+                }
+              }}
+            />
           </ApItemGroup>
           <Stack px={4} pb={4}>
             <ApStarHelp
@@ -144,7 +191,7 @@ export const ApStep08Page = () => {
               }
             />
           </Stack>
-          {formik.values.p_application_headers__curr_borrowing_status === '1' && (
+          {formik.values.p_application_headers.curr_borrowing_status === '1' && (
             <Stack>
               <FieldArray
                 name="p_borrowings"
@@ -188,9 +235,14 @@ export const ApStep08Page = () => {
                               borderRadius: '7px',
                             }}
                           >
-                            <ApItemGroup label={'借入名義人'} pb={3} px={2}>
-                              <ApRadioColumnGroup name={`p_borrowings[${index}].borrower`} options={borrowerOptions} />
-                            </ApItemGroup>
+                            {hasIncomeTotalizer && (
+                              <ApItemGroup label={'借入名義人'} pb={3} px={2}>
+                                <ApRadioColumnGroup
+                                  name={`p_borrowings[${index}].borrower`}
+                                  options={borrowerOptions}
+                                />
+                              </ApItemGroup>
+                            )}
                             <ApItemGroup label={'お借入の種類は？'} pb={3} px={2}>
                               <ApSelectField
                                 name={`p_borrowings[${index}].type`}
@@ -210,15 +262,22 @@ export const ApStep08Page = () => {
                               px={2}
                             >
                               <Stack spacing={3}>
-                                <ApImgUpload name={`p_borrowings[${index}].p_borrowing_I`} />
+                                <ApImgUpload name={`p_borrowings[${index}].p_borrowings__I`} />
                                 <ApCheckox
                                   name={`p_borrowings[${index}].self_input`}
                                   label={'アップロードせず、詳細入力する'}
                                   disabled={formik.values.p_borrowings[index].type === ''}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      formik.setFieldValue(`p_borrowings[${index}].self_input`, '1');
+                                    } else {
+                                      formik.setFieldValue(`p_borrowings[${index}].self_input`, '0');
+                                    }
+                                  }}
                                 />
                               </Stack>
                             </ApItemGroup>
-                            {formik.values.p_borrowings[index].self_input && (
+                            {formik.values.p_borrowings[index].self_input === '1' && (
                               <Stack>
                                 <ApItemGroup label={'借入先（金融機関）'} pb={3} px={2}>
                                   <ApTextInputField
@@ -421,7 +480,7 @@ export const ApStep08Page = () => {
                           onClick={() => {
                             arrayHelpers.push({
                               id: '',
-                              self_input: false,
+                              self_input: '0',
                               borrower: '',
                               type: '',
                               lender: '',
@@ -472,14 +531,14 @@ export const ApStep08Page = () => {
                         完済原資の種類
                       </Typography>
                       <ApCheckboxButtonGroup
-                        name="p_application_headers__refund_source_type"
+                        name="p_application_headers.refund_source_type"
                         options={refundSourceTypeOptions}
                       />
-                      {formik.values.p_application_headers__refund_source_type.includes('99') && (
+                      {formik.values.p_application_headers.refund_source_type.includes('99') && (
                         <Stack spacing={'6px'}>
                           <ApStarHelp label={'その他の方は詳細を入力ください。'} />
                           <ApTextInputField
-                            name="p_application_headers__refund_source_type_other"
+                            name="p_application_headers.refund_source_type_other"
                             placeholder={'入力してください'}
                             convertFullWidth
                           />
@@ -492,7 +551,7 @@ export const ApStep08Page = () => {
                         </Typography>
                       </Typography>
                       <ApTextInputField
-                        name="p_application_headers__refund_source_content"
+                        name="p_application_headers.refund_source_content"
                         placeholder={'例：〇〇○○銀行 普通預金'}
                         convertFullWidth
                       />
@@ -503,7 +562,7 @@ export const ApStep08Page = () => {
                         </Typography>
                       </Typography>
                       <ApNumberInputField
-                        name="p_application_headers__refund_source_amount"
+                        name="p_application_headers.refund_source_amount"
                         placeholder={'0'}
                         unit={'万円'}
                         maxLength={5}
@@ -546,12 +605,12 @@ export const ApStep08Page = () => {
                           <Stack spacing={3}>
                             {hasIncomeTotalizer && (
                               <ApRadioColumnGroup
-                                name="p_application_headers__rent_to_be_paid_land_borrower"
+                                name="p_application_headers.rent_to_be_paid_land_borrower"
                                 options={borrowerOptions}
                               />
                             )}
                             <ApNumberInputField
-                              name="p_application_headers__rent_to_be_paid_land"
+                              name="p_application_headers.rent_to_be_paid_land"
                               label={'月間の支払金額'}
                               placeholder={'0'}
                               unit={'円'}
@@ -565,12 +624,12 @@ export const ApStep08Page = () => {
                           <Stack spacing={3}>
                             {hasIncomeTotalizer && (
                               <ApRadioColumnGroup
-                                name="p_application_headers__rent_to_be_paid_house_borrower"
+                                name="p_application_headers.rent_to_be_paid_house_borrower"
                                 options={borrowerOptions}
                               />
                             )}
                             <ApNumberInputField
-                              name="p_application_headers__rent_to_be_paid_house"
+                              name="p_application_headers.rent_to_be_paid_house"
                               label={'月間の支払金額'}
                               placeholder={'0'}
                               unit={'円'}
@@ -588,7 +647,7 @@ export const ApStep08Page = () => {
           )}
         </Stack>
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} />
+        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

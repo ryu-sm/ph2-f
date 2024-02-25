@@ -10,6 +10,11 @@ export const ApSecondaryButton = ({ children, width, height, ...props }) => {
         width: width || 327,
         height: height || 54,
         boxShadow: '0px 0px 15px rgba(60, 72, 196, 0.1)',
+        '&.Mui-disabled': {
+          backgroundColor: 'white',
+          opacity: 0.4,
+          color: 'primary.main',
+        },
         '&:hover': {
           backgroundColor: 'white',
         },

@@ -97,3 +97,4 @@ export { ApArrowLeftIcon } from './ap-arrow-left';
 export { ApImportentIcon } from './ap-importent';
 export { ApSaveIcon } from './ap-save';
 export { ApSaveMainIcon } from './ap-save-main';
+export { ApXIcon } from './ap-x';

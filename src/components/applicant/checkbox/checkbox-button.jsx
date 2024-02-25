@@ -27,7 +27,7 @@ export const ApCheckboxButton = ({ options, ...props }) => {
     <Stack spacing={'2px'}>
       <Stack
         justifyContent={'center'}
-        spacing={3}
+        spacing={'10px'}
         sx={{
           px: 3,
           width: 1,
@@ -40,7 +40,7 @@ export const ApCheckboxButton = ({ options, ...props }) => {
       >
         <input name={field.name} type="hidden" />
         {options.map((option) => (
-          <Box key={option.value} sx={{ height: 34 }}>
+          <Box key={option.value} sx={{ height: 36 }}>
             <FormControlLabel
               {...field}
               onChange={handleChange}
@@ -69,7 +69,7 @@ export const ApCheckboxButton = ({ options, ...props }) => {
       </Stack>
 
       {isError && (
-        <Typography variant="note" sx={{ fontWeight: 500, color: (theme) => theme.palette.secondary.main }}>
+        <Typography variant="note" sx={{ fontWeight: 500, color: 'secondary.main' }}>
           ※{meta.error}
         </Typography>
       )}
