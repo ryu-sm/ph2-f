@@ -1,11 +1,12 @@
-import { Avatar, Box, Stack, Typography } from '@mui/material';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Box, Stack, Typography } from '@mui/material';
+import { useCallback, useRef } from 'react';
 import SignaturePad from 'react-signature-canvas';
 import { ApLighterButton, ApPrimaryButton, ApSecondaryButton } from '../button';
 import { useField } from 'formik';
 import { Icons } from '@/assets';
 import { useBoolean } from '@/hooks';
 import { YUP_MESSAGES } from '@/constant';
+import { v4 as uuid4 } from 'uuid';
 
 export const ApSignatureBoard = ({ showError, onChange, ...props }) => {
   const [field, meta, helpers] = useField(props);
@@ -23,7 +24,7 @@ export const ApSignatureBoard = ({ showError, onChange, ...props }) => {
     await setValue([
       {
         src: sigCanvas.current.toDataURL('image/png'),
-        name: crypto.randomUUID(),
+        name: uuid4(),
       },
     ]);
     await setTouched(true);

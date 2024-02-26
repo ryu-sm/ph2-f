@@ -155,7 +155,7 @@ export const ApStep12Page = () => {
     <FormikProvider value={formik}>
       <ApLayout hasMenu hasStepBar pb={18}>
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
-        <Stack flex={1}>
+        <Stack flex={1} sx={{ minHeight: '100dvh' }}>
           <ApPageTitle py={8}>{`提携先企業（住宅メーカー・\n不動産会社等）の\n担当者を教えてください`}</ApPageTitle>
           {!formik.values.input_type && (
             <Stack spacing={4} sx={{ px: 4, pb: 8 }}>

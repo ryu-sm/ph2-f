@@ -6,6 +6,7 @@ import 'react-html5-camera-photo/build/css/index.css';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
+import { v4 as uuid4 } from 'uuid';
 
 export const ApImageUploadModal = ({ isOpen, onClose, setImages }) => {
   const [showCamera, setShowCamera] = useState(false);
@@ -17,7 +18,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, setImages }) => {
           return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onloadend = () => {
-              resolve({ src: reader.result, name: file.name.includes('pdf') ? file.name : crypto.randomUUID() });
+              resolve({ src: reader.result, name: file.name.includes('pdf') ? file.name : uuid4() });
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
@@ -48,7 +49,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, setImages }) => {
     maxSize: MAX_SIZE_FILE,
   });
   const handleTakePhoto = (data) => {
-    setImages([{ src: data, name: crypto.randomUUID() }]);
+    setImages([{ src: data, name: uuid4() }]);
     setShowCamera(false);
     onClose();
   };
