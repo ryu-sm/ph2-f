@@ -1,15 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { Fragment, useEffect, useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  agentSendedSelector,
-  apNextStepIdSelector,
-  apPreStepIdSelector,
-  applicationAtom,
-  applyNoSelector,
-  isMcjSelector,
-  userEmailSelector,
-} from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -43,13 +35,29 @@ export const ApStep06Page = () => {
   const applyNo = useRecoilValue(applyNoSelector);
   const agentSended = useRecoilValue(agentSendedSelector);
   const updateModal = useBoolean(false);
-  const { apNextStepId, apPreStepId, hasJoinGuarantor, p_join_guarantors } = useRecoilValue(applicationAtom);
+  const {
+    apNextStepId,
+    apPreStepId,
+    hasJoinGuarantor,
+    changeToIncomeTotalizer,
+    changeJoinGuarantor,
+    p_join_guarantors,
+    p_application_headers,
+  } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: { hasJoinGuarantor, p_join_guarantors },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      if (agentSended) {
+      if (changeToIncomeTotalizer) {
+        setApplicationInfo((pre) => {
+          return { ...pre, ...values };
+        });
+        navigate(routeNames.apStep11Page.path);
+      } else if (changeJoinGuarantor) {
+        await updateApply(applyNo, { ...values, p_application_headers: p_application_headers });
+        updateModal.onTrue();
+      } else if (agentSended) {
         await updateApply(applyNo, values);
         updateModal.onTrue();
       } else {
@@ -66,7 +74,11 @@ export const ApStep06Page = () => {
   }, [formik.values]);
 
   const handelLeft = () => {
-    if (agentSended) {
+    if (changeToIncomeTotalizer) {
+      navigate(routeNames.apStep05Page.path);
+    } else if (changeJoinGuarantor) {
+      navigate(routeNames.apStep01Page.path);
+    } else if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
       navigate(`/step-id-${apPreStepId}`);
@@ -275,7 +287,11 @@ export const ApStep06Page = () => {
           )}
         />
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+        <ApStepFooter
+          left={handelLeft}
+          right={formik.handleSubmit}
+          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+        />
       </ApLayout>
     </FormikProvider>
   );

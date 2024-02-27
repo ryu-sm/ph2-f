@@ -36,6 +36,7 @@ export const ApStep11Page = () => {
     changeToIncomeTotalizer,
     p_applicant_persons__1,
     p_uploaded_files,
+    p_application_headers,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
@@ -43,6 +44,7 @@ export const ApStep11Page = () => {
       p_applicant_persons__1,
       p_uploaded_files,
       hasIncomeTotalizer,
+      p_application_headers,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {

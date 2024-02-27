@@ -62,6 +62,7 @@ export const ApStep05Page = () => {
     apNextStepId,
     apPreStepId,
     hasIncomeTotalizer,
+    changeJoinGuarantor,
     changeToIncomeTotalizer,
 
     //
@@ -72,7 +73,10 @@ export const ApStep05Page = () => {
     initialValues: { p_applicant_persons__1, hasIncomeTotalizer },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      if (changeToIncomeTotalizer) {
+      if (changeJoinGuarantor) {
+        setApplicationInfo((pre) => ({ ...pre, ...values }));
+        navigate(routeNames.apStep06Page.path);
+      } else if (changeToIncomeTotalizer) {
         setApplicationInfo((pre) => ({ ...pre, ...values }));
         navigate(routeNames.apStep11Page.path);
       } else if (agentSended) {

@@ -121,7 +121,7 @@ export const ApBonusRepaymentModal = () => {
                     }}
                   >
                     <Typography variant="unit" color={'white'}>
-                      {formik.values.time}
+                      {Number(formik.values.time) * Number(formik.values.amount) * Number(formik.values.years)}
                     </Typography>
                   </Stack>
                   <Stack direction={'row'} alignItems={'center'}>

@@ -63,6 +63,7 @@ export const ApStep01Page = () => {
   const {
     isMCJ,
     apNextStepId,
+    changeJoinGuarantor,
     changeToIncomeTotalizer,
     //
     p_application_headers,
@@ -89,6 +90,9 @@ export const ApStep01Page = () => {
       if (changeToIncomeTotalizer) {
         setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
         navigate(routeNames.apStep04Page.path);
+      } else if (changeJoinGuarantor) {
+        setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
+        navigate(routeNames.apStep06Page.path);
       } else if (agentSended) {
         await updateApply(applyNo, dataCopy);
         updateModal.onTrue();
@@ -678,6 +682,11 @@ export const ApStep01Page = () => {
             name={'p_application_headers.join_guarantor_umu'}
             options={hasJoinGuarantorOptions}
             onChange={(e) => {
+              if (e.target.checked && p_application_headers.join_guarantor_umu !== '1' && agentSended) {
+                setApplicationInfo((pre) => ({ ...pre, changeJoinGuarantor: true }));
+              } else {
+                setApplicationInfo((pre) => ({ ...pre, changeJoinGuarantor: false }));
+              }
               if (e.target.checked) {
                 setApplicationInfo((pre) => ({
                   ...pre,
@@ -721,7 +730,7 @@ export const ApStep01Page = () => {
         <ApStepFooter
           left={handelLeft}
           right={formik.handleSubmit}
-          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+          rightLabel={changeToIncomeTotalizer || changeJoinGuarantor ? false : agentSended && '保存'}
         />
       </ApLayout>
     </FormikProvider>

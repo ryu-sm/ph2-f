@@ -8,6 +8,7 @@ export const applicationInitialValues = {
   apPreStepId: 1,
   hasJoinGuarantor: false,
   hasIncomeTotalizer: false,
+  changeJoinGuarantor: false,
   changeToIncomeTotalizer: false,
   //
   p_applicant_persons_a_agreement: false,
