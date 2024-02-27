@@ -37,6 +37,12 @@ export const ApThemeProvider = ({ children }) => {
               backgroundColor: '#E7E7E7',
             },
           },
+          '.react-html5-camera-photo-fullscreen>video': {
+            objectFit: 'cover',
+          },
+          '#container-circles': {
+            bottom: '15%',
+          },
 
           '@font-face': [
             {

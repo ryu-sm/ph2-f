@@ -85,7 +85,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, setImages }) => {
           </Stack>
         </Box>
       ) : (
-        <>
+        <Box zIndex={99} position={"fixed"} top={0} left={0} sx={{ width: 1, height: 1 }}>
           <Camera
             isMaxResolution={true}
             isFullscreen={true}
@@ -116,7 +116,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, setImages }) => {
           >
             <Icons.ApHeaderMenuCloseIcon color={'white'} />
           </Button>
-        </>
+        </Box>
       )}
     </Modal>
   );
