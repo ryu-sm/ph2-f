@@ -7,7 +7,7 @@ export const yearOptions = [{ value: '', label: '西暦' }].concat(
     const kanjiDateG2 = format('{G:2}', +year, 1, 1);
     const kanjiDateN = format('{N}', +year, 1, 1);
     return {
-      value: year,
+      value: year.toString(),
       label: `${year}（${kanjiDateG2}${kanjiDateN}）`,
     };
   })
@@ -16,7 +16,7 @@ export const yearOptions = [{ value: '', label: '西暦' }].concat(
 export const yearNumOptions = [{ value: '', label: '年' }].concat(
   Array.from(Array(50), (_, index) => {
     return {
-      value: index + 1,
+      value: (index + 1).toString(),
       label: (index + 1).toString(),
     };
   })

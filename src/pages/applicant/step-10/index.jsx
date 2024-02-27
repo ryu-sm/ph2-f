@@ -20,7 +20,7 @@ import { Link, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apApplicationImg } from '@/services';
 
@@ -31,7 +31,7 @@ export const ApStep10Page = () => {
   const agentSended = useRecoilValue(agentSendedSelector);
   const updateModal = useBoolean(false);
   const { apNextStepId, apPreStepId, p_applicant_persons__0, p_uploaded_files } = useRecoilValue(applicationAtom);
-
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: {
       p_applicant_persons__0,
@@ -39,7 +39,35 @@ export const ApStep10Page = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      const dataCopy = cloneDeep(formik.values);
+      if (values.p_applicant_persons__0.identity_verification_type === '1') {
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__02 = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__b = [];
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__02', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__b', []);
+      }
+      if (values.p_applicant_persons__0.identity_verification_type === '2') {
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__b = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__b = [];
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__b', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__b', []);
+      }
+      if (values.p_applicant_persons__0.identity_verification_type === '3') {
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__b = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__0__A__02 = [];
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__b', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__02', []);
+      }
       if (agentSended) {
+        await updateApply(applyNo, dataCopy);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {

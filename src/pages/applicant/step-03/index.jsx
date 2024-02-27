@@ -40,7 +40,7 @@ import { PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { routeNames } from '@/router/settings';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 
 export const ApStep03Page = () => {
   const navigate = useNavigate();
@@ -55,12 +55,13 @@ export const ApStep03Page = () => {
     //
     p_applicant_persons__0,
   } = useRecoilValue(applicationAtom);
-
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: { p_applicant_persons__0 },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       if (agentSended) {
+        await updateApply(applyNo, values);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {

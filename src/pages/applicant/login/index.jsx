@@ -12,7 +12,7 @@ import {
 } from '@/components';
 import { ApLayout } from '@/containers';
 import { validationSchema } from './validatior';
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 
 import { routeNames } from '@/router/settings';
@@ -83,13 +83,17 @@ export const ApLoginPage = () => {
               ...pre,
               ...res.data,
               apCurrStepId: 14,
+              isMCJ: res.data.p_application_banks?.lengt > 1,
+              hasIncomeTotalizer: Boolean(res.data.p_applicant_persons__1),
+              hasJoinGuarantor: Boolean(res.data.p_join_guarantors),
             };
           });
           navigate(routeNames.apTopPage.path);
         }
 
-        if (!payload.has_draft && !payload?.agent_sended) navigate(routeNames.apAgreementPage.path);
-        // TODO:
+        if (!payload.has_draft && !payload?.agent_sended) {
+          navigate(routeNames.apAgreementPage.path);
+        }
       } catch (error) {
         console.log(error);
         switch (error?.status) {
@@ -107,7 +111,6 @@ export const ApLoginPage = () => {
       }
     },
   });
-
   return (
     <FormikProvider value={formik}>
       <ApLayout hasFooter>

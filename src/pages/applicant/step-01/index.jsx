@@ -14,6 +14,7 @@ import {
   ApNumberInputField,
   ApPageTitle,
   ApPairLoanModal,
+  ApPrimaryButton,
   ApRadioColumnGroup,
   ApRepaymentMethodModal,
   ApSaveDraftButton,
@@ -43,7 +44,7 @@ import {
 import { validationSchema } from './validationSchema';
 import { useBankMaster } from '@/hooks/use-bank-master';
 import { Box, Stack, Typography } from '@mui/material';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { Icons } from '@/assets';
 import { MCJ_CODE, SBI_CODE } from '@/configs';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +55,7 @@ import { YUP_MESSAGES } from '@/constant';
 export const ApStep01Page = () => {
   const navigate = useNavigate();
   const pairLoanModal = useBoolean(false);
+  const delPairLoanModal = useBoolean(false);
   const updateModal = useBoolean(false);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const applyNo = useRecoilValue(applyNoSelector);
@@ -61,13 +63,14 @@ export const ApStep01Page = () => {
   const {
     isMCJ,
     apNextStepId,
+    changeToIncomeTotalizer,
     //
     p_application_headers,
     p_application_banks,
     p_borrowing_details__1,
     p_borrowing_details__2,
   } = useRecoilValue(applicationAtom);
-
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: {
       p_application_headers,
@@ -83,7 +86,11 @@ export const ApStep01Page = () => {
       // 補助フィールドを削除する
       delete dataCopy.loan_target_;
       console.log(agentSended);
-      if (agentSended) {
+      if (changeToIncomeTotalizer) {
+        setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
+        navigate(routeNames.apStep04Page.path);
+      } else if (agentSended) {
+        await updateApply(applyNo, dataCopy);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
@@ -302,7 +309,22 @@ export const ApStep01Page = () => {
             name={'p_application_headers.loan_type'}
             options={loanTypeOptions}
             onChange={(e) => {
-              if (e.target.value === '2' && !applyNo) pairLoanModal.onTrue();
+              if (e.target.value !== '2' && formik.values.p_application_headers.loan_type === '2' && !!applyNo) {
+                delPairLoanModal.onTrue();
+              }
+              if (
+                (e.target.value === '3' || e.target.value === '4') &&
+                (p_application_headers.loan_type !== '3' || p_application_headers.loan_type !== '4')
+              ) {
+                setApplicationInfo((pre) => {
+                  return { ...pre, changeToIncomeTotalizer: true, apNextStepId: 4 };
+                });
+              } else {
+                setApplicationInfo((pre) => {
+                  return { ...pre, changeToIncomeTotalizer: false, apNextStepId: 2 };
+                });
+              }
+              if (e.target.value === '2') pairLoanModal.onTrue();
               if (e.target.value === '3' || e.target.value === '4') {
                 setApplicationInfo((pre) => {
                   return { ...pre, hasIncomeTotalizer: true };
@@ -331,6 +353,30 @@ export const ApStep01Page = () => {
               }
             }}
           />
+          <ApModalWrapper open={delPairLoanModal.value} icon={<Icons.ApSmileIcon />} label={'確認'}>
+            <Stack spacing={8} sx={{ px: 8 }}>
+              <Stack alignItems={'center'}>
+                <Typography variant="notify" color={'text.main'} textAlign={'center'}>
+                  {`借入状態にペアローンを外しましたら、\nペアローンに関して登録された情報が削除されますが、よろしいでしょうか。`}
+                </Typography>
+              </Stack>
+              <Stack spacing={4} direction={'row'} alignItems={'center'} justifyContent={'center'}>
+                <ApLighterButton
+                  height={40}
+                  width={160}
+                  onClick={() => {
+                    formik.setFieldValue('p_application_headers.loan_type', '2');
+                    delPairLoanModal.onFalse();
+                  }}
+                >
+                  キャンセル
+                </ApLighterButton>
+                <ApPrimaryButton height={40} width={160} onClick={delPairLoanModal.onFalse}>
+                  OK
+                </ApPrimaryButton>
+              </Stack>
+            </Stack>
+          </ApModalWrapper>
           {formik.values.p_application_headers.loan_type === '2' && (
             <Stack sx={{ pt: 4 }}>
               <Stack
@@ -390,7 +436,7 @@ export const ApStep01Page = () => {
                   <Box>
                     <Icons.ApWarningMainIcon />
                   </Box>
-                  <Typography variant="modal_label" sx={{ color: 'taxt.main', textAlign: 'start' }}>
+                  <Typography variant="modal_label" sx={{ color: 'text.main', textAlign: 'start' }}>
                     {'ペアローンを組むお相手も、別途仮審査申込が必要です。'}
                   </Typography>
                 </Stack>
@@ -672,7 +718,11 @@ export const ApStep01Page = () => {
           <ApCheckboxButton name={'p_application_headers.loan_plus'} options={loanPlusOptions} />
         </ApItemGroup>
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+        <ApStepFooter
+          left={handelLeft}
+          right={formik.handleSubmit}
+          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+        />
       </ApLayout>
     </FormikProvider>
   );

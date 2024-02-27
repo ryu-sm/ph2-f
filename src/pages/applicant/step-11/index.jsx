@@ -13,14 +13,13 @@ import { ApLayout, ApStepFooter } from '@/containers';
 
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
-
 import { validationSchema } from './validationSchema';
 import { useNavigate } from 'react-router-dom';
 import { Stack, Typography, Link } from '@mui/material';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apApplicationImg } from '@/services';
 
@@ -30,16 +29,52 @@ export const ApStep11Page = () => {
   const applyNo = useRecoilValue(applyNoSelector);
   const agentSended = useRecoilValue(agentSendedSelector);
   const updateModal = useBoolean(false);
-  const { apNextStepId, apPreStepId, p_applicant_persons__1, p_uploaded_files } = useRecoilValue(applicationAtom);
-
+  const {
+    apNextStepId,
+    apPreStepId,
+    hasIncomeTotalizer,
+    changeToIncomeTotalizer,
+    p_applicant_persons__1,
+    p_uploaded_files,
+  } = useRecoilValue(applicationAtom);
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: {
       p_applicant_persons__1,
       p_uploaded_files,
+      hasIncomeTotalizer,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      const dataCopy = cloneDeep(formik.values);
+      if (values.p_applicant_persons__1.identity_verification_type === '1') {
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__02 = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__b = [];
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__02', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__b', []);
+      }
+      if (values.p_applicant_persons__1.identity_verification_type === '2') {
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__b = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__b = [];
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__b', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__b', []);
+      }
+      if (values.p_applicant_persons__1.identity_verification_type === '3') {
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__a = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__b = [];
+        dataCopy.p_uploaded_files.p_applicant_persons__1__A__02 = [];
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__a', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__b', []);
+        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__02', []);
+      }
       if (agentSended) {
+        await updateApply(applyNo, dataCopy);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {
@@ -102,7 +137,9 @@ export const ApStep11Page = () => {
   }, [formik.values]);
 
   const handelLeft = () => {
-    if (agentSended) {
+    if (changeToIncomeTotalizer) {
+      navigate(routeNames.apStep05Page.path);
+    } else if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
       navigate(`/step-id-${apPreStepId}`);

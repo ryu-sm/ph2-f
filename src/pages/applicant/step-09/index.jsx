@@ -24,7 +24,7 @@ import {
 import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 
 export const ApStep09Page = () => {
@@ -39,7 +39,7 @@ export const ApStep09Page = () => {
     //
     p_application_headers,
   } = useRecoilValue(applicationAtom);
-
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: {
       p_application_headers,
@@ -47,6 +47,7 @@ export const ApStep09Page = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       if (agentSended) {
+        await updateApply(applyNo, values);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {

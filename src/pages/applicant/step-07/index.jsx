@@ -53,7 +53,7 @@ import { PREFECTURES } from '@/constant';
 
 import { cloneDeep } from 'lodash';
 import { apApplicationImg } from '@/services';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 
 export const ApStep07Page = () => {
@@ -72,7 +72,7 @@ export const ApStep07Page = () => {
     p_applicant_persons__0,
     p_uploaded_files,
   } = useRecoilValue(applicationAtom);
-
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: {
       isMCJ,
@@ -90,6 +90,7 @@ export const ApStep07Page = () => {
       delete dataCopy.set_addr_with_application_a;
 
       if (agentSended) {
+        await updateApply(applyNo, dataCopy);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {

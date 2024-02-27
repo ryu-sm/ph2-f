@@ -67,3 +67,7 @@ export const apApplicationImg = async (apply_no) => {
 export const apPborrowings = async (apply_no) => {
   return await service.get(`/p_borrowings?apply_no=${apply_no}`);
 };
+
+export const apUpdateApplyInfo = async (apply_no, data) => {
+  return await service.put(`/application?apply_no=${apply_no}`, data);
+};

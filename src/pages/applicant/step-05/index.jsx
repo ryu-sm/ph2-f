@@ -47,7 +47,7 @@ import { PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 import { cloneDeep } from 'lodash';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 
 export const ApStep05Page = () => {
@@ -56,10 +56,12 @@ export const ApStep05Page = () => {
   const applyNo = useRecoilValue(applyNoSelector);
   const agentSended = useRecoilValue(agentSendedSelector);
   const updateModal = useBoolean(false);
+  const updateApply = useApUpdateApplyInfo();
   const {
     isMCJ,
     apNextStepId,
     apPreStepId,
+    changeToIncomeTotalizer,
     //
     p_applicant_persons__1,
   } = useRecoilValue(applicationAtom);
@@ -68,7 +70,11 @@ export const ApStep05Page = () => {
     initialValues: { p_applicant_persons__1 },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      if (agentSended) {
+      if (changeToIncomeTotalizer) {
+        setApplicationInfo((pre) => ({ ...pre, ...values }));
+        navigate(routeNames.apStep11Page.path);
+      } else if (agentSended) {
+        await updateApply(applyNo, values);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {
@@ -85,7 +91,9 @@ export const ApStep05Page = () => {
   }, [formik.values]);
 
   const handelLeft = () => {
-    if (agentSended) {
+    if (changeToIncomeTotalizer) {
+      navigate(routeNames.apStep04Page.path);
+    } else if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
       navigate(`/step-id-${apPreStepId}`);
@@ -576,7 +584,11 @@ export const ApStep05Page = () => {
           </ApItemGroup>
         )}
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+        <ApStepFooter
+          left={handelLeft}
+          right={formik.handleSubmit}
+          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+        />
       </ApLayout>
     </FormikProvider>
   );

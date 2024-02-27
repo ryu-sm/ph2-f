@@ -28,7 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
 import { CONFIRMATION_URL, CONSENT_URL } from '@/configs';
 import { cloneDeep } from 'lodash';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { apApplicationImg } from '@/services';
 import { routeNames } from '@/router/settings';
 
@@ -42,12 +42,13 @@ export const ApStep04Page = () => {
   const {
     apNextStepId,
     apPreStepId,
+    changeToIncomeTotalizer,
     //
     p_applicant_persons_b_agreement,
     p_applicant_persons__1,
     p_uploaded_files,
   } = useRecoilValue(applicationAtom);
-
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: {
       consent: '',
@@ -62,7 +63,11 @@ export const ApStep04Page = () => {
       delete dataCopy.confirmation;
       delete dataCopy.consent;
 
-      if (agentSended) {
+      if (changeToIncomeTotalizer) {
+        setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
+        navigate(routeNames.apStep05Page.path);
+      } else if (agentSended) {
+        await updateApply(applyNo, dataCopy);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {
@@ -97,7 +102,9 @@ export const ApStep04Page = () => {
   }, [formik.values]);
 
   const handelLeft = () => {
-    if (agentSended) {
+    if (changeToIncomeTotalizer) {
+      navigate(routeNames.apStep01Page.path);
+    } else if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
       navigate(`/step-id-${apPreStepId}`);
@@ -353,7 +360,11 @@ export const ApStep04Page = () => {
           </Stack>
         )}
         <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+        <ApStepFooter
+          left={handelLeft}
+          right={formik.handleSubmit}
+          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+        />
       </ApLayout>
     </FormikProvider>
   );

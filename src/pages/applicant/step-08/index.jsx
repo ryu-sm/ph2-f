@@ -1,15 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { Fragment, useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  agentSendedSelector,
-  apNextStepIdSelector,
-  apPreStepIdSelector,
-  applicationAtom,
-  applyNoSelector,
-  hasIncomeTotalizerSelector,
-  isMcjSelector,
-} from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -50,7 +42,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apPborrowings } from '@/services';
 
@@ -69,7 +61,7 @@ export const ApStep08Page = () => {
     p_application_headers,
     p_borrowings,
   } = useRecoilValue(applicationAtom);
-
+  const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
     initialValues: {
       p_application_headers,
@@ -84,6 +76,7 @@ export const ApStep08Page = () => {
       delete dataCopy.isMCJ;
       delete dataCopy.hasIncomeTotalizer;
       if (agentSended) {
+        await updateApply(applyNo, dataCopy);
         updateModal.onTrue();
       } else {
         setApplicationInfo((pre) => {
@@ -480,6 +473,7 @@ export const ApStep08Page = () => {
                           onClick={() => {
                             arrayHelpers.push({
                               id: '',
+                              p_borrowings__I: [],
                               self_input: '0',
                               borrower: '',
                               type: '',
