@@ -43,6 +43,7 @@ export const ApStep04Page = () => {
     apNextStepId,
     apPreStepId,
     changeToIncomeTotalizer,
+    hasIncomeTotalizer,
     //
     p_applicant_persons_b_agreement,
     p_applicant_persons__1,
@@ -53,6 +54,7 @@ export const ApStep04Page = () => {
     initialValues: {
       consent: '',
       confirmation: '',
+      hasIncomeTotalizer,
       p_applicant_persons_b_agreement,
       p_applicant_persons__1,
       p_uploaded_files,

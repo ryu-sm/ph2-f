@@ -43,10 +43,10 @@ export const ApStep06Page = () => {
   const applyNo = useRecoilValue(applyNoSelector);
   const agentSended = useRecoilValue(agentSendedSelector);
   const updateModal = useBoolean(false);
-  const { apNextStepId, apPreStepId, p_join_guarantors } = useRecoilValue(applicationAtom);
+  const { apNextStepId, apPreStepId, hasJoinGuarantor, p_join_guarantors } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
   const formik = useFormik({
-    initialValues: { p_join_guarantors },
+    initialValues: { hasJoinGuarantor, p_join_guarantors },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       if (agentSended) {

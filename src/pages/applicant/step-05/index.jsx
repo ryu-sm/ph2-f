@@ -61,13 +61,15 @@ export const ApStep05Page = () => {
     isMCJ,
     apNextStepId,
     apPreStepId,
+    hasIncomeTotalizer,
     changeToIncomeTotalizer,
+
     //
     p_applicant_persons__1,
   } = useRecoilValue(applicationAtom);
 
   const formik = useFormik({
-    initialValues: { p_applicant_persons__1 },
+    initialValues: { p_applicant_persons__1, hasIncomeTotalizer },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
