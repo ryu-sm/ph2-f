@@ -5,18 +5,24 @@ import { useBoolean } from '@/hooks';
 import { clearStorage } from '@/libs';
 import { routeNames } from '@/router/settings';
 import { apUnsubcribed } from '@/services';
+import { applicationAtom, authAtom } from '@/store';
 import { Box, Stack, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useResetRecoilState } from 'recoil';
 
 export const ApUnsubcribedPage = () => {
   const navigate = useNavigate();
+  const resetAuth = useResetRecoilState(authAtom);
+  const resetApplication = useResetRecoilState(applicationAtom);
   const modal = useBoolean(false);
   const [warningText, setWarningText] = useState('');
 
   const handleUnsubcribed = useCallback(async () => {
     try {
       await apUnsubcribed();
+      resetAuth();
+      resetApplication();
       clearStorage();
       modal.onTrue();
     } catch (error) {

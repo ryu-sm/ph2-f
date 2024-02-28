@@ -36,6 +36,7 @@ import {
   scheduledLoanPayoffOptions,
   scheduledLoanPayoffYearOptions,
   typeOptions,
+  loanBusinessTargetOptions,
 } from './options';
 
 import { useNavigate } from 'react-router-dom';
@@ -191,7 +192,7 @@ export const ApStep08Page = () => {
                 render={(arrayHelpers) => (
                   <Fragment>
                     <Stack spacing={8} sx={{ px: 4 }}>
-                      {formik.values.p_borrowings.map((item, index) => (
+                      {formik.values.p_borrowings.map((p_borrowing, index) => (
                         <Stack
                           key={index}
                           sx={{
@@ -243,12 +244,39 @@ export const ApStep08Page = () => {
                                 options={typeOptions}
                                 justifyContent={'start'}
                                 width={1}
+                                onChange={() => {
+                                  arrayHelpers.replace(index, {
+                                    id: p_borrowing.id,
+                                    p_borrowings__I: [],
+                                    self_input: '0',
+                                    borrower: '',
+                                    type: '',
+                                    lender: '',
+                                    borrowing_from_house_finance_agency: '',
+                                    loan_start_date: '',
+                                    loan_amount: '',
+                                    curr_loan_balance_amount: '',
+                                    annual_repayment_amount: '',
+                                    loan_end_date: '',
+                                    scheduled_loan_payoff: '',
+                                    scheduled_loan_payoff_date: '',
+                                    loan_business_target: '',
+                                    loan_business_target_other: '',
+                                    loan_purpose: '',
+                                    loan_purpose_other: '',
+                                    category: '',
+                                    card_expiry_date: '',
+                                    rental_room_num: '',
+                                    common_housing: '',
+                                    estate_setting: '',
+                                  });
+                                }}
                               />
                             </ApItemGroup>
                             <ApItemGroup
                               label={
                                 <Typography variant="notify" lineHeight={'130%'}>
-                                  {'返済予定表・利用明細等の画像をアップロードするか、詳細を入力してください。'}
+                                  {'①返済予定表・利用明細等の画像をアップロードするか、\n②詳細を入力してください。'}
                                 </Typography>
                               }
                               pb={3}
@@ -308,7 +336,7 @@ export const ApStep08Page = () => {
                                       <ApSelectField
                                         name={`p_borrowings[${index}].loan_business_target`}
                                         placeholder={'選択してください'}
-                                        options={loanPurposeOptions}
+                                        options={loanBusinessTargetOptions}
                                         width={1}
                                         justifyContent={'start'}
                                       />
@@ -397,7 +425,7 @@ export const ApStep08Page = () => {
                                   </ApItemGroup>
                                 ) : (
                                   <ApItemGroup
-                                    label={formik.values.p_borrowings[index].type === '2' ? '最終期限' : '最終返済年月'}
+                                    label={formik.values.p_borrowings[index].type === '1' ? '最終期限' : '最終返済年月'}
                                     pb={3}
                                     px={2}
                                   >

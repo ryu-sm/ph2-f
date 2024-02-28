@@ -1,8 +1,9 @@
-import { useCallback, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   agentSendedSelector,
   apCurrStepIdSelector,
+  applicationAtom,
   appliedBanksSelector,
   applyNoSelector,
   hasDraftDataSelector,
@@ -23,6 +24,8 @@ import {
 import { MCJ_CODE } from '@/configs';
 import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
+import { apApplication } from '@/services';
+import { toast } from 'react-toastify';
 
 export const ApTopPage = () => {
   const applyNo = useRecoilValue(applyNoSelector);
@@ -33,6 +36,35 @@ export const ApTopPage = () => {
   const agentSended = useRecoilValue(agentSendedSelector);
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
+  const setApplicationInfo = useSetRecoilState(applicationAtom);
+  useEffect(() => {
+    toast.error('99999', { toastId: 1 });
+  }, []);
+
+  const refreshApplyInfo = useCallback(async () => {
+    try {
+      const res = await apApplication(applyNo);
+      setApplicationInfo((pre) => {
+        return {
+          ...pre,
+          ...res.data,
+          apCurrStepId: 14,
+          isMCJ: res.data.p_application_banks?.lengt > 1,
+          hasIncomeTotalizer: Boolean(res.data.p_applicant_persons__1),
+          hasJoinGuarantor: Boolean(res.data.p_join_guarantors),
+          changeJoinGuarantor: false,
+          changeToIncomeTotalizer: false,
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  useEffect(() => {
+    if (agentSended) {
+      refreshApplyInfo();
+    }
+  }, [agentSended, applyNo]);
 
   const topItems = useMemo(
     () => [

@@ -193,7 +193,7 @@ export const ApStep10Page = () => {
     },
     {
       value: '3',
-      label: '住民基本台帳カード',
+      label: '住民基本台帳カード（顔写真付き）',
       touched:
         formik.touched.p_uploaded_files?.p_applicant_persons__0__A__03__a &&
         formik.touched.p_uploaded_files?.p_applicant_persons__0__A__03__b,

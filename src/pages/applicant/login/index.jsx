@@ -86,6 +86,8 @@ export const ApLoginPage = () => {
               isMCJ: res.data.p_application_banks?.lengt > 1,
               hasIncomeTotalizer: Boolean(res.data.p_applicant_persons__1),
               hasJoinGuarantor: Boolean(res.data.p_join_guarantors),
+              changeJoinGuarantor: false,
+              changeToIncomeTotalizer: false,
             };
           });
           navigate(routeNames.apTopPage.path);
