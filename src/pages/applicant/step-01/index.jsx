@@ -318,7 +318,8 @@ export const ApStep01Page = () => {
               }
               if (
                 (e.target.value === '3' || e.target.value === '4') &&
-                (p_application_headers.loan_type !== '3' || p_application_headers.loan_type !== '4')
+                (p_application_headers.loan_type !== '3' || p_application_headers.loan_type !== '4') &&
+                agentSended
               ) {
                 setApplicationInfo((pre) => {
                   return { ...pre, changeToIncomeTotalizer: true, apNextStepId: 4 };
