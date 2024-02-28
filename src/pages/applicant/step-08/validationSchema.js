@@ -124,7 +124,7 @@ export const validationSchema = yup.object({
         }
       }),
       loan_business_target_other: yup.string().when('loan_business_target', ([loan_business_target], field) => {
-        if (!!loan_business_target) {
+        if (loan_business_target === '99') {
           return field.required(YUP_MESSAGES.REQUIRED);
         } else {
           return field;
@@ -198,7 +198,6 @@ export const validationSchema = yup.object({
           },
         }
       ) => {
-        console.log(isMCJ, p_borrowings);
         if (isMCJ) {
           if (p_borrowings?.some((item) => item.scheduled_loan_payoff === '1')) {
             return !!field_vale.length;

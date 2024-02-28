@@ -130,8 +130,8 @@ export const ApStep08Page = () => {
   };
 
   useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
+    console.log(formik.errors);
+  }, [formik.errors]);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -212,7 +212,7 @@ export const ApStep08Page = () => {
                             }}
                           >
                             <Typography variant="form_item_label" color="white">
-                              {`${index + 1}人目`}
+                              {`${index + 1}件目`}
                             </Typography>
                             {index > 0 && (
                               <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
