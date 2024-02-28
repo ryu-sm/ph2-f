@@ -189,7 +189,7 @@ export const ApStepBar = () => {
         display: 'flex',
         position: 'fixed',
         top: 44,
-        zIndex: 1,
+        zIndex: 3,
         maxWidth: 480,
         alignItems: 'center',
         width: 1,
