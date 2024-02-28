@@ -24,7 +24,7 @@ export const ApThemeProvider = ({ children }) => {
             boxSizing: 'border-box',
           },
           body: {
-            overscrollBehaviorY: 'none',
+            overscrollBehavior: 'none',
             backgroundColor: theme.palette.background.wrapper,
 
             '.day-of-week-0, .day-of-week-6': {
