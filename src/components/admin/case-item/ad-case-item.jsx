@@ -43,19 +43,16 @@ export const AdCaseItem = ({ item }) => {
       name: 'rectifying_incomplete_documents',
       title: '申込人',
       label: '書類不備対応中',
-      width: 200,
     },
     {
       name: 'under_preliminary_review',
       title: '住信SBIネット銀行',
       label: '仮審査中',
-      width: 400,
     },
     {
       name: 'publish_preliminary_results',
       title: 'みらいバンク支店',
       label: '提携会社へ仮審査結果公開',
-      width: 200,
     },
   ];
 
