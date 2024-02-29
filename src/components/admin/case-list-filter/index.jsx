@@ -7,7 +7,7 @@ export const CaseListFilter = () => {
   const filterArray = [
     { name: '受付番号', label: '受付番号', style: { width: 180 } },
     { name: '申込銀行', label: '申込銀行', style: { width: 180 } },
-    { name: '申込人', label: '申込人', style: { width: 180 } },
+    { name: '申込人', label: '申込人', style: { width: 140 } },
     { name: '申込日時', label: '申込日時', style: { width: 130 } },
     { name: '実行予定日', label: '実行予定日', style: { width: 130 } },
     { name: '申込金額', label: '申込金額', style: { width: 130 } },

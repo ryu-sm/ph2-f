@@ -44,3 +44,7 @@ export function isWeekend(dateString) {
 export function formatTimeMessage(time) {
   return dayjs(time).utcOffset(0).format('MM月DD日 (ddd) HH:mm');
 }
+
+export function formatApplyTime(time) {
+  return time.split(':')[0] + '時';
+}

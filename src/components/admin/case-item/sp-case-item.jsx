@@ -1,10 +1,11 @@
 import { AdSlashIcon } from '@/assets/icons/ad-slash';
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { Fragment, useMemo } from 'react';
-import { SectionDivider } from '../common/Divider';
 import { PopoverSelect } from './popover-select';
 import { ProgressStatus } from './progress-status';
 import PropTypes from 'prop-types';
+import { FieldItem } from './field-item';
+import { formatApplyTime } from '@/utils';
 
 export const SpCase = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -52,37 +53,7 @@ export const SpCase = ({ item }) => {
     { value: 2, label: 'manager-2' },
   ];
 
-  const CaseItem = ({ width, fontSize, value, isText, isLast }) => {
-    return (
-      <Stack
-        flexShrink={0}
-        direction={'row'}
-        alignItems={'center'}
-        justifyContent={'center'}
-        width={width}
-        position={'relative'}
-      >
-        {isText ? (
-          <Typography variant="case_content_title" fontSize={fontSize}>
-            {value}
-          </Typography>
-        ) : (
-          value
-        )}
-        {!isLast && <SectionDivider orientation="vertical" height="70%" top="20%" />}
-      </Stack>
-    );
-  };
-
-  CaseItem.propTypes = {
-    width: PropTypes.number,
-    fontSize: PropTypes.number,
-    value: PropTypes.any,
-    isText: PropTypes.bool,
-    isLast: PropTypes.bool,
-  };
-
-  const Case = ({ item, index }) => {
+  const CaseItem = ({ item, index }) => {
     return (
       <Stack
         p={2}
@@ -96,19 +67,26 @@ export const SpCase = ({ item }) => {
         }}
       >
         <Stack direction={'row'} py={'10px'}>
-          <CaseItem width={160} fontSize={17} value={item.apply_no} isText={true} />
-          <CaseItem width={180} fontSize={15} value={item.bank_name} isText={true} />
-          <CaseItem
-            width={180}
-            fontSize={15}
+          <FieldItem width={160} textStyle={'case_content_title'} value={item.apply_no} isText={true} />
+          <FieldItem width={180} textStyle={'case_content_text'} value={item.bank_name} isText={true} />
+          <FieldItem
+            width={140}
+            textStyle={'case_content_text'}
             value={`${item.last_name_kanji} ${item.first_name_kanji}`}
             isText={true}
           />
-          <CaseItem width={130} fontSize={15} value={item.created_at} isText={true} />
-          <CaseItem width={130} fontSize={15} value={item.desired_borrowing_date} isText={true} />
-          <CaseItem
+          <FieldItem
             width={130}
-            fontSize={15}
+            textStyle={'case_content_text'}
+            fontFamily="Barlow"
+            value={formatApplyTime(item.created_at)}
+            isText={true}
+          />
+          <FieldItem width={130} textStyle={'case_content_text'} value={item.desired_borrowing_date} isText={true} />
+          <FieldItem
+            width={130}
+            textStyle={'case_content_text'}
+            fontFamily="Barlow"
             value={
               <Box lineHeight={'25px'}>
                 {item.desired_loan_amount}
@@ -119,25 +97,25 @@ export const SpCase = ({ item }) => {
             }
             isText={true}
           />
-          <CaseItem width={200} value={<ProgressStatus code={item.pre_examination_status} />} isText={false} />
-          <CaseItem
+          <FieldItem width={200} value={<ProgressStatus code={item.pre_examination_status} />} isText={false} />
+          <FieldItem
             width={140}
-            fontSize={15}
+            textStyle="case_content_text"
             value={item.provisional_result !== null ? PROVISIONAL_RESULT[Number(item.provisional_result)] : 'ー'}
             isText={true}
           />
-          <CaseItem
+          <FieldItem
             width={160}
             fontSize={15}
             value={<PopoverSelect value={item.sales_area_id} options={managerOptions} />}
             isText={false}
           />
-          <CaseItem
+          <FieldItem
             width={160}
             value={<PopoverSelect value={item.s_sales_person_id} options={managerOptions} />}
             isText={false}
           />
-          <CaseItem
+          <FieldItem
             width={160}
             value={<PopoverSelect value={item.s_manager_id} options={managerOptions} />}
             isText={false}
@@ -206,16 +184,21 @@ export const SpCase = ({ item }) => {
     );
   };
 
+  CaseItem.propTypes = {
+    item: PropTypes.object,
+    index: PropTypes.number,
+  };
+
   return (
     <>
       {isPairLoan ? (
         <Stack>
           {pairLoanData.map((pairLoanItem, index) => (
-            <Case key={pairLoanItem.id} item={pairLoanItem} index={index} />
+            <CaseItem key={pairLoanItem.id} item={pairLoanItem} index={index} />
           ))}
         </Stack>
       ) : (
-        <Case item={item} />
+        <CaseItem item={item} />
       )}
     </>
   );
@@ -223,5 +206,4 @@ export const SpCase = ({ item }) => {
 
 SpCase.propTypes = {
   item: PropTypes.object,
-  index: PropTypes.number,
 };

@@ -139,4 +139,21 @@ export const typography = {
     fontStyle: 'normal',
     letterSpacing: 0.4,
   },
+
+  manager_progress_item: {
+    fontFamily: 'Hiragino Sans',
+    fontStyle: 'normal',
+    fontWeight: 300,
+    fontSize: 15,
+    lineHeight: '24px',
+    letterSpacing: 0.5,
+  },
+  manager_progress_item_title: {
+    fontFamily: 'Hiragino Sans',
+    fontSize: 8,
+    fontWeight: 400,
+    lineHeight: '24px',
+    letterSpacing: 1,
+    color: '#666666',
+  },
 };
