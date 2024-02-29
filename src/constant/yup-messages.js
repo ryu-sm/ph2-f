@@ -52,7 +52,6 @@ export const YUP_MESSAGES = {
   PLEASE_SPECIFY_IN_THE_FUTURE_PERIOD: '${path}は借入希望日以前の日を指定してください。',
   PLEASE_SPECIFY_AFTER_CREATED_AT: '${path}は申込日以降の年月を指定してください。',
   PLEASE_SPECIFY_BEFORE_CREATED_AT: '${path}は申込日以前の年月を指定してください。',
-  REQUIRED: 'この項目を入力してください。',
   DROPDOWN_REQUIRED: 'お客様に該当する項目を選択してください。',
   DROPDOWN_LOAN_PURPOSE: 'お借入の目的を選択してください。',
 
@@ -93,4 +92,10 @@ export const YUP_MESSAGES = {
   NAME_RELATIONSHIP_INCOME: '漢字・ひらがな・カタカナ・英数字が入力可能です。',
   OTHER_NAME_RELATIONSHIP_INCOME: '漢字・ひらがな・カタカナ・英数字が入力可能です。',
   MOBILE_PHONE_ADMIN_NEW: '電話番号は正しく入力してください。',
+
+  AD_LOGIN_EMAIL_INVALID: 'メールアドレスの形式が正しくありません。',
+  AD_LOGIN_PASSWORD_MIN: '8文字でご入力ください。',
+  AD_LOGIN_PASSWORD_MAX: 'パスワードは20桁以内で設定ください。',
+  AD_LOGIN_PASSWORD_INVALID: 'パスワードは大文字、小文字、数字をそれぞれ1つ以上で設定してください。',
+  AD_SET_PASSWORD_CONFIRM: '新しいパスワードと確認用パスワードが一致しません。',
 };

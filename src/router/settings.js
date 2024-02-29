@@ -94,4 +94,60 @@ export const routeNames = {
     name: 'apStep09Page',
     path: '/step-id-9',
   },
+  adLoginPage: {
+    name: 'adLoginPage',
+    path: '/manager/login',
+  },
+  spLoginPage: {
+    name: 'spLoginPage',
+    path: '/agent/login',
+  },
+  adResetPwdPage: {
+    name: 'adResetPwdPage',
+    path: '/manager/reset-password',
+  },
+  spResetPwdPage: {
+    name: 'spResetPwdPage',
+    path: '/agent/reset-password',
+  },
+  adSendMailPage: {
+    name: 'adSendMailPage',
+    path: '/manager/send-mail',
+  },
+  spSendMailPage: {
+    name: 'spSendMailPage',
+    path: '/agent/send-mail',
+  },
+  adEmailExpiredPage: {
+    name: 'adEmailExpiredPage',
+    path: '/manager/email-expired',
+  },
+  spEmailExpiredPage: {
+    name: 'spEmailExpiredPage',
+    path: '/agent/email-expired',
+  },
+  adSetNewPwdPage: {
+    name: 'adSetNewPwd',
+    path: '/manager/set-new-password',
+  },
+  spSetNewPwdPage: {
+    name: 'spSetNewPwd',
+    path: '/agent/set-new-password',
+  },
+  adCasesReviewPage: {
+    name: 'adCasesReview',
+    path: '/manager/cases-review',
+  },
+  spCasesReviewPage: {
+    name: 'spCasesReview',
+    path: '/agent/cases-review',
+  },
+  adFininshResetPwdPage: {
+    name: 'adFinishResetPwd',
+    path: '/manager/reset-password-finished',
+  },
+  spFinishResetPwdPage: {
+    name: 'spFinishResetPwd',
+    path: '/agent/reset-password-finished',
+  },
 };

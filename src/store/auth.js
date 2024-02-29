@@ -18,10 +18,12 @@ const authInitialValues = {
   salesPerson: {
     id: null,
     email: null,
+    name: '',
   },
   manager: {
     id: null,
     email: null,
+    name: '',
   },
   isMCJ: false,
   apCurrStepId: 1,

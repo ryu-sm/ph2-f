@@ -1,5 +1,4 @@
 import { RouteGuard } from '@/components';
-import { routeNames } from '../settings';
 import {
   ApAccountInformationPage,
   ApChangeEmailPage,
@@ -14,6 +13,17 @@ import {
   ApUnsubcribedPage,
   ApUpdatePasswordPage,
 } from '@/pages/applicant';
+import {
+  AdDashBoardPage,
+  AdOrSpEmailExpiredPage,
+  AdOrSpLoginPage,
+  AdOrSpResetPasswordPage,
+  AdOrSpSendEmailPage,
+  AdOrSpSetNewPasswordPage,
+  SpDashBoardPage,
+} from '@/pages/manager';
+import { ResetPwdFinishedPage } from '@/pages/manager/reset-pwd-finished';
+import { routeNames } from '../settings';
 
 export const publicRoutes = [
   {
@@ -67,5 +77,61 @@ export const publicRoutes = [
   {
     ...routeNames.apChangeEmailPage,
     element: <ApChangeEmailPage />,
+  },
+  {
+    ...routeNames.adLoginPage,
+    element: <AdOrSpLoginPage />,
+  },
+  {
+    ...routeNames.spLoginPage,
+    element: <AdOrSpLoginPage />,
+  },
+  {
+    ...routeNames.adResetPwdPage,
+    element: <AdOrSpResetPasswordPage />,
+  },
+  {
+    ...routeNames.spResetPwdPage,
+    element: <AdOrSpResetPasswordPage />,
+  },
+  {
+    ...routeNames.adSendMailPage,
+    element: <AdOrSpSendEmailPage />,
+  },
+  {
+    ...routeNames.spSendMailPage,
+    element: <AdOrSpSendEmailPage />,
+  },
+  {
+    ...routeNames.adEmailExpiredPage,
+    element: <AdOrSpEmailExpiredPage />,
+  },
+  {
+    ...routeNames.spEmailExpiredPage,
+    element: <AdOrSpEmailExpiredPage />,
+  },
+  {
+    ...routeNames.adSetNewPwdPage,
+    element: <AdOrSpSetNewPasswordPage />,
+  },
+  {
+    ...routeNames.spSetNewPwdPage,
+    element: <AdOrSpSetNewPasswordPage />,
+  },
+  {
+    ...routeNames.adFininshResetPwdPage,
+    element: <ResetPwdFinishedPage />,
+  },
+  {
+    ...routeNames.spFininshResetPwdPage,
+    element: <ResetPwdFinishedPage />,
+  },
+  {
+    ...routeNames.adCasesReviewPage,
+    element: <AdDashBoardPage />,
+  },
+  {
+    ...routeNames.spCasesReviewPage,
+    element: <SpDashBoardPage />,
   },
 ];

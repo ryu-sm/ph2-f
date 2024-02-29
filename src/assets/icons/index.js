@@ -87,3 +87,6 @@ export { ApCalculatorIcon } from './ap-calculator';
 
 export { ApAddIcon } from './ap-add';
 export { ApDeleteIcon } from './ap-delete';
+
+export { AdViewOff } from './ad-view-off';
+export { AdViewOn } from './ad-view-on';
