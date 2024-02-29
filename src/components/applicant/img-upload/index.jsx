@@ -4,7 +4,7 @@ import { useField } from 'formik';
 import { ApPrimaryButton } from '../button';
 import { Icons } from '@/assets';
 import { ApImageUploadModal } from './img-upload-modal';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { ApImageDeleteModal } from './img-delete-modal';
 
 export const ApImgUpload = ({ disable, singleFile, ...props }) => {
@@ -48,57 +48,60 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
       {meta.value.length > 0 && (
         <Stack
           direction={'row'}
-          alignItems={'start'}
+          alignItems={'flex-start'}
           spacing={2}
-          sx={{ pb: 1, width: 1, height: 1, overflowX: 'auto' }}
+          sx={{ pb: 1, width: 1, height: 1, maxWidth: '100%' }}
         >
-          {meta.value?.map((file, index) => {
-            const isPdf = file.name.includes('pdf');
-            return (
-              <Stack key={`image-${file.name}`} spacing={1} sx={{ width: 136, minWidth: 136 }}>
-                <Box
-                  sx={{
-                    height: 100,
-                    bgcolor: 'background.wrapper',
-                    border: 'none',
-                    boxShadow: 0,
-                    p: 0,
-                    borderRadius: 1,
-                  }}
-                  onClick={(e) => handleViewImage(isPdf, index)}
-                >
-                  {isPdf ? (
-                    <Avatar
-                      variant="square"
-                      alt={file.name}
-                      sx={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                        bgcolor: 'background.wrapper',
-                        borderRadius: 1,
-                      }}
-                    >
-                      <Icons.ApPdfOutlineBlackIcon sx={{ height: 1, width: 80 }} />
-                    </Avatar>
-                  ) : (
-                    <Avatar
-                      variant="square"
-                      src={file.src}
-                      alt={file.name}
-                      sx={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 1 }}
-                    />
+          <Stack direction={'row'} spacing={2} sx={{ minWidth: 136, maxWidth: 'calc(100% - 90px)', overflowX: 'auto' }}>
+            {meta.value?.map((file, index) => {
+              const isPdf = file.name.includes('pdf');
+              return (
+                <Fragment key={`image-${file.name}`}>
+                  <Box
+                    sx={{
+                      width: 136,
+                      minWidth: 136,
+                      height: 100,
+                      bgcolor: 'background.wrapper',
+                      border: 'none',
+                      boxShadow: 0,
+                      p: 0,
+                      borderRadius: 1,
+                    }}
+                    onClick={(e) => handleViewImage(isPdf, index)}
+                  >
+                    {isPdf ? (
+                      <Avatar
+                        variant="square"
+                        alt={file.name}
+                        sx={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          bgcolor: 'background.wrapper',
+                          borderRadius: 1,
+                        }}
+                      >
+                        <Icons.ApPdfOutlineBlackIcon sx={{ height: 1, width: 80 }} />
+                      </Avatar>
+                    ) : (
+                      <Avatar
+                        variant="square"
+                        src={file.src}
+                        alt={file.name}
+                        sx={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 1 }}
+                      />
+                    )}
+                  </Box>
+                  {isPdf && (
+                    <Typography variant="notify" sx={{ lineHeight: '130%', color: 'text.main', textAlign: 'center' }}>
+                      {file.name}
+                    </Typography>
                   )}
-                </Box>
-                {isPdf && (
-                  <Typography variant="notify" sx={{ lineHeight: '130%', color: 'text.main', textAlign: 'center' }}>
-                    {file.name}
-                  </Typography>
-                )}
-              </Stack>
-            );
-          })}
-
+                </Fragment>
+              );
+            })}
+          </Stack>
           {!singleFile && (
             <Stack sx={{ py: '6px' }}>
               <Button

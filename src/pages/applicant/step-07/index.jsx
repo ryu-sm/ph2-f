@@ -537,23 +537,25 @@ export const ApStep07Page = () => {
                 bgcolor: 'white',
               }}
             >
-              <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
-                {!formik.values.p_application_headers.new_house_planned_resident_overview.fiance_umu && (
-                  <ApCheckox
-                    name="p_application_headers.new_house_planned_resident_overview.spouse_umu"
-                    label={'配偶者'}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '1');
-                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '');
-                      } else {
-                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '');
-                      }
-                    }}
-                  />
-                )}
-              </Stack>
-              <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
+              {!formik.values.p_application_headers.new_house_planned_resident_overview.fiance_umu && (
+                <Stack>
+                  <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
+                    <ApCheckox
+                      name="p_application_headers.new_house_planned_resident_overview.spouse_umu"
+                      label={'配偶者'}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '1');
+                          formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '');
+                        } else {
+                          formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '');
+                        }
+                      }}
+                    />
+                  </Stack>
+                  <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
+                </Stack>
+              )}
 
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
                 <ApCheckox
@@ -633,22 +635,24 @@ export const ApStep07Page = () => {
               <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
 
               {!formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu && (
-                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
-                  <ApCheckox
-                    name="p_application_headers.new_house_planned_resident_overview.fiance_umu"
-                    label={'婚約者'}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '1');
-                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '');
-                      } else {
-                        formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '');
-                      }
-                    }}
-                  />
+                <Stack>
+                  <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
+                    <ApCheckox
+                      name="p_application_headers.new_house_planned_resident_overview.fiance_umu"
+                      label={'婚約者'}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '1');
+                          formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.spouse', '');
+                        } else {
+                          formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.fiance', '');
+                        }
+                      }}
+                    />
+                  </Stack>
+                  <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
                 </Stack>
               )}
-              <Box sx={{ borderTop: (theme) => `1px dashed ${theme.palette.primary[60]}` }} />
 
               <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ py: '10px' }}>
                 <ApCheckox
