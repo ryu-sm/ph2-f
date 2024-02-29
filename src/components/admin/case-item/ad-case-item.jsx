@@ -1,0 +1,3 @@
+export const AdCaseItem = () => {
+  return <></>;
+};
