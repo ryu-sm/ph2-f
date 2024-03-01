@@ -11,7 +11,7 @@ export const DocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
       onClose={onClose}
       sx={{
         marginTop: 6,
-        left: -6,
+        left: -17,
         '.MuiPopover-paper': {
           overflow: 'visible',
           boxShadow: 'none',
@@ -24,7 +24,7 @@ export const DocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
         overflow={'hidden'}
         sx={{
           border: `1px solid ${theme.palette.gray[80]}`,
-          width: 200,
+          width: 193,
           borderBottomLeftRadius: 2,
           borderBottomRightRadius: 2,
         }}
