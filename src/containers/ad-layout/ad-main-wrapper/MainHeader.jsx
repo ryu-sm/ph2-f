@@ -30,6 +30,8 @@ export const MainHeader = ({ isAdmin }) => {
     setAnchorEl(null);
   };
 
+  const itemLabels = ['監視ログダウンロード', 'パスワード変更', '管理画面をエクスポート', 'ログアウト'];
+
   const casesStatusList = [
     {
       name: 'preReview',
@@ -120,7 +122,7 @@ export const MainHeader = ({ isAdmin }) => {
         </Stack>
       </Stack>
 
-      <SettingPopover open={open} anchorEl={anchorEl} onClose={handleClosePopover} />
+      <SettingPopover open={open} anchorEl={anchorEl} onClose={handleClosePopover} itemLabels={itemLabels} />
     </>
   );
 };

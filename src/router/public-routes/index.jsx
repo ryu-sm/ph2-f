@@ -24,6 +24,8 @@ import {
 } from '@/pages/manager';
 import { ResetPwdFinishedPage } from '@/pages/manager/reset-pwd-finished';
 import { routeNames } from '../settings';
+import { AdEditCasePage } from '@/pages/manager/edit-case/ad-edit-case';
+import { SpEditCasePage } from '@/pages/manager/edit-case/sp-edit-case';
 
 export const publicRoutes = [
   {
@@ -133,5 +135,13 @@ export const publicRoutes = [
   {
     ...routeNames.spCasesReviewPage,
     element: <SpDashBoardPage />,
+  },
+  {
+    ...routeNames.adCaseEditPage,
+    element: <AdEditCasePage />,
+  },
+  {
+    ...routeNames.spCaseEditPage,
+    element: <SpEditCasePage />,
   },
 ];

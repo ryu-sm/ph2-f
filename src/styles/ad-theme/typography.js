@@ -55,6 +55,7 @@ export const typography = {
     lineHeight: '18px',
     textAlign: 'center',
   },
+
   annotation_02: {
     fontFamily: 'Hiragino Sans',
     fontWeight: 250,
@@ -155,5 +156,19 @@ export const typography = {
     lineHeight: '24px',
     letterSpacing: 1,
     color: '#666666',
+  },
+  edit_header_tools: {
+    fontFamily: 'Hiragino Sans',
+    fontStyle: 'normal',
+    fontWeight: 300,
+    fontSize: '13px',
+    lineHeight: '19.5px',
+  },
+  applicant_name: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 500,
+    fontSize: '13px',
+    lineHeight: '24px',
+    letterSpacing: '0.1px',
   },
 };

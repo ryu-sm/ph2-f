@@ -134,6 +134,14 @@ export const routeNames = {
     name: 'spSetNewPwd',
     path: '/agent/set-new-password',
   },
+  adFininshResetPwdPage: {
+    name: 'adFinishResetPwd',
+    path: '/manager/reset-password-finished',
+  },
+  spFinishResetPwdPage: {
+    name: 'spFinishResetPwd',
+    path: '/agent/reset-password-finished',
+  },
   adCasesReviewPage: {
     name: 'adCasesReview',
     path: '/manager/cases-review',
@@ -142,12 +150,12 @@ export const routeNames = {
     name: 'spCasesReview',
     path: '/agent/cases-review',
   },
-  adFininshResetPwdPage: {
-    name: 'adFinishResetPwd',
-    path: '/manager/reset-password-finished',
+  adCaseEditPage: {
+    name: 'adCaseEdit',
+    path: '/manager/case-edit/:caseId',
   },
-  spFinishResetPwdPage: {
-    name: 'spFinishResetPwd',
-    path: '/agent/reset-password-finished',
+  spCaseEditPage: {
+    name: 'spCaseEdit',
+    path: 'agent/case-edit/:caseId',
   },
 };

@@ -3,9 +3,7 @@ import { useTheme } from '@emotion/react';
 import { Box, Button, Popover, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export const SettingPopover = ({ open, onClose, anchorEl }) => {
-  const itemLabels = ['監視ログダウンロード', 'パスワード変更', '管理画面をエクスポート', 'ログアウト'];
-
+export const SettingPopover = ({ open, onClose, anchorEl, itemLabels }) => {
   const theme = useTheme();
   return (
     <Popover
@@ -67,4 +65,5 @@ SettingPopover.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   anchorEl: PropTypes.instanceOf(Element),
+  itemLabels: PropTypes.array,
 };
