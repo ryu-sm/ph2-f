@@ -1,4 +1,5 @@
 export const YUP_MESSAGES = {
+  EMAIL_AD: 'メールアドレスの形式が正しくありません。',
   EMAIL_AP: '有効なメールアドレスを入力してください。',
   EMAIL_AP_NEW_EMAIL: 'メールアドレスと新しいメールアドレスが一致しています。',
   EMAIL_AP_NEW_EMAIL_CONFIRM: '新しいメールアドレスと新しいメールアドレス（確認用）が一致していません',
@@ -93,4 +94,11 @@ export const YUP_MESSAGES = {
   NAME_RELATIONSHIP_INCOME: '漢字・ひらがな・カタカナ・英数字が入力可能です。',
   OTHER_NAME_RELATIONSHIP_INCOME: '漢字・ひらがな・カタカナ・英数字が入力可能です。',
   MOBILE_PHONE_ADMIN_NEW: '電話番号は正しく入力してください。',
+
+  // add
+  AD_LOGIN_EMAIL_INVALID: 'メールアドレスの形式が正しくありません。',
+  AD_LOGIN_PASSWORD_MIN: '8文字でご入力ください。',
+  AD_LOGIN_PASSWORD_MAX: 'パスワードは20桁以内で設定ください。',
+  AD_LOGIN_PASSWORD_INVALID: 'パスワードは大文字、小文字、数字をそれぞれ1つ以上で設定してください。',
+  AD_SET_PASSWORD_CONFIRM: '新しいパスワードと確認用パスワードが一致しません。',
 };

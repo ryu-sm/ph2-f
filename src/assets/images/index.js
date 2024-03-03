@@ -15,3 +15,9 @@ export { apRepaymentMethod02 };
 
 import apPdf from './pdf.png';
 export { apPdf };
+
+import adBackground from './ad-background.png';
+export { adBackground };
+
+import adLogoCompany from './logo-company.png';
+export { adLogoCompany };

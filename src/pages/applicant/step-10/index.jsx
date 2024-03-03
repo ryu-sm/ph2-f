@@ -599,8 +599,13 @@ export const ApStep10Page = () => {
         )}
 
         <ApItemGroup optional label={'その他の書類'}>
-          <Stack sx={{ p: 4, bgcolor: 'white', borderRadius: 2, boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)' }}>
-            <ApImgUpload name="p_uploaded_files.p_applicant_persons__0__K" />
+          <Stack spacing={3}>
+            {plan === 'B' && !['1', '5', '10'].includes(p_applicant_persons__0.office_occupation) && (
+              <ApStarHelp label={'契約社員・派遣社員・嘱託の方は雇用契約書を添付してください。'} />
+            )}
+            <Stack sx={{ p: 4, bgcolor: 'white', borderRadius: 2, boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)' }}>
+              <ApImgUpload name="p_uploaded_files.p_applicant_persons__0__K" />
+            </Stack>
           </Stack>
         </ApItemGroup>
         <ApSaveDraftButton pageInfo={parseVaildData} />

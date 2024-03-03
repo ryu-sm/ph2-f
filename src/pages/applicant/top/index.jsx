@@ -37,9 +37,6 @@ export const ApTopPage = () => {
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  useEffect(() => {
-    toast.error('99999', { toastId: 1 });
-  }, []);
 
   const refreshApplyInfo = useCallback(async () => {
     try {

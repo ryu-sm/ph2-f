@@ -227,6 +227,9 @@ export const ApStep02Page = () => {
                 formik.setFieldValue('p_applicant_persons__0.city_kanji', '');
                 formik.setFieldValue('p_applicant_persons__0.district_kanji', '');
               }}
+              onChange={(e) => {
+                console.log(e);
+              }}
             />
             <ApSelectField
               name="p_applicant_persons__0.prefecture_kanji"

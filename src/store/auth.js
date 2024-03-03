@@ -16,10 +16,14 @@ const authInitialValues = {
   salesPerson: {
     id: null,
     email: null,
+    name: null,
+    orgs: null,
   },
   manager: {
     id: null,
     email: null,
+    name: null,
+    role: null,
   },
   applyNo: null,
   agentSended: false,

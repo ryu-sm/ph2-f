@@ -74,6 +74,7 @@ export const ApNumberInputField = ({
               '&&&& fieldset': { border: 'none' },
             }),
           }}
+          inputMode={{ type: 'number' }}
           onInput={(e) => {
             e.target.value = convertToHalfWidth(e.target.value);
             e.target.value = e.target.value.substring(0, maxLength);

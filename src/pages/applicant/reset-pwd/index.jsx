@@ -36,7 +36,7 @@ export const ApResetPasswordPage = () => {
         modal.onTrue();
       } catch (error) {
         switch (error?.status) {
-          case 401:
+          case 400:
             setIsValidToken(false);
             break;
           default:

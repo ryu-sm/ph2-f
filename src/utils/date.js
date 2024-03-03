@@ -54,3 +54,7 @@ export const formatJapanDate = (date, showEpoch = false) => {
   if (day) formatDate += `${parseInt(day, 10)}日`;
   return formatDate;
 };
+
+export function formatApplyTime(time) {
+  return time.split(':')[0] + '時';
+}

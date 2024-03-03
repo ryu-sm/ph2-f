@@ -142,7 +142,7 @@ export const ApStep04Page = () => {
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
           <ApIncomeTotalizerModal />
         </Stack>
-        {!p_applicant_persons_b_agreement && (
+        {(!p_applicant_persons_b_agreement || !agentSended || changeToIncomeTotalizer) && (
           <Stack>
             <Stack spacing={8} alignItems={'center'} sx={{ px: 4, pb: 8 }}>
               <Box

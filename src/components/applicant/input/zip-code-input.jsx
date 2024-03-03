@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FormikProvider, useField, useFormik } from 'formik';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
+export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
 
@@ -98,6 +98,7 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
 
   const handleKeyPress = useCallback(
     async (e) => {
+      onChange && onChange();
       if ((e.target.value.length === 3 && e.target.name === 'firstCode') || e.target.value.length === 4)
         handleNextInput();
       if (e.target.value.length === 0) handleBackInput();
@@ -162,6 +163,7 @@ export const ApZipCodeInputField = ({ callback, errorCallback, ...props }) => {
                         '&&&& fieldset': { border: 'none' },
                       }),
                   }}
+                  inputMode={{ type: 'number' }}
                   onInput={(e) => {
                     e.target.value = convertToHalfWidth(e.target.value);
                     e.target.value = e.target.value.substring(0, input.maxLength);

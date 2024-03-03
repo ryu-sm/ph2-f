@@ -71,3 +71,87 @@ export const apPborrowings = async (apply_no) => {
 export const apUpdateApplyInfo = async (apply_no, data) => {
   return await service.put(`/application?apply_no=${apply_no}`, data);
 };
+
+//
+export const adManagerLogin = async (data) => {
+  return await service.post('/manager/token', data);
+};
+
+export const adSalesPersonLogin = async (data) => {
+  return await service.post('/sales-person/token', data);
+};
+export const adManagerResetPasswordVerifyEmail = async (data) => {
+  return await service.post('/manager/password/verify-email', data);
+};
+
+export const adSalesPersonResetPasswordVerifyEmail = async (data) => {
+  return await service.post('/sales-person/password/verify-email', data);
+};
+
+export const adManagerResetPassword = async (data) => {
+  return await service.post('/manager/password', data);
+};
+
+export const adSalesPersonResetPassword = async (data) => {
+  return await service.post('/sales-person/password', data);
+};
+
+export const adManagerUpdatePassword = async (data) => {
+  return await service.put('/manager/password', data);
+};
+
+export const adSalesPersonUpdatePassword = async (data) => {
+  return await service.put('/sales-person/password', data);
+};
+
+export const adManagerPreliminaries = async (status) => {
+  return await service.get(`/manager/preliminaries?status=${status}`);
+};
+
+export const adSalesPersonPreliminaries = async (status) => {
+  return await service.get(`/sales-person/preliminaries?status=${status}`);
+};
+
+export const adUpdatePreliminarieManagerId = async (data) => {
+  return await service.put('/preliminarie/s_manager_id', data);
+};
+
+export const adUpdatePreliminarieSalesPersonId = async (data) => {
+  return await service.put('/preliminarie/s_sales_person_id', data);
+};
+
+export const adUpdatePreliminarieSalesAreaId = async (data) => {
+  return await service.put('/preliminarie/sales_area_id', data);
+};
+
+export const adGetSalesPersonOptions = async (parent_id) => {
+  return await service.get(`/sales_person_options?parent_id=${parent_id}`);
+};
+
+export const adGetPairLoanOptions = async (p_application_header_id) => {
+  return await service.get(`/pair_loan_options?id=${p_application_header_id}`);
+};
+
+export const adUnPairLoan = async (data) => {
+  return await service.put('/manager/un-pair-loan', data);
+};
+
+export const adSetPairLoan = async (data) => {
+  return await service.put('/manager/set-pair-loan', data);
+};
+
+export const adGetMemo = async (p_application_header_id) => {
+  return await service.get(`/manager/memos?id=${p_application_header_id}`);
+};
+
+export const adNewMemo = async (data) => {
+  return await service.post(`/manager/memo`, data);
+};
+
+export const adUpdateMemo = async (data) => {
+  return await service.put(`/manager/memo`, data);
+};
+
+export const adUpdateProvisionalAfterResult = async (data) => {
+  return await service.put(`/manager/provisional_after_result`, data);
+};

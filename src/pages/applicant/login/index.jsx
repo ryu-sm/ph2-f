@@ -78,6 +78,7 @@ export const ApLoginPage = () => {
         }
         if (payload?.agent_sended) {
           const res = await apApplication(payload.apply_no);
+          console.log(JSON.stringify(res.data));
           setApplicationInfo((pre) => {
             return {
               ...pre,

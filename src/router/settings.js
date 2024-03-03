@@ -122,4 +122,51 @@ export const routeNames = {
     name: 'apConfirmPage',
     path: '/confirm',
   },
+
+  //
+  adManagerLoginPage: {
+    name: 'adLoginPage',
+    path: '/manager/login',
+  },
+  adSalesPersonLoginPage: {
+    name: 'adSalesPersonLoginPage',
+    path: '/sales-person/login',
+  },
+  adManagerResetPasswordVerifyEmailPage: {
+    name: 'adManagerResetPasswordVerifyEmailPage',
+    path: '/manager/reset-password/verify-email',
+  },
+  adSalesPersonResetPasswordVerifyEmailPage: {
+    name: 'adManagerResetPasswordVerifyEmailPage',
+    path: '/sales-person/reset-password/verify-email',
+  },
+  adManagerResetPasswordPage: {
+    name: 'adManagerResetPasswordPage',
+    path: '/manager/reset-password',
+  },
+  adSalesPersonResetPasswordPage: {
+    name: 'adSalesPersonResetPasswordPage',
+    path: '/sales-person/reset-password',
+  },
+  adManagerResetPasswordFinishedPage: {
+    name: 'adManagerResetPasswordFinishedPage',
+    path: '/manager/reset-password/finished',
+  },
+  adSalesPersonResetPasswordFinishedPage: {
+    name: 'adSalesPersonResetPasswordFinishedPage',
+    path: '/sales-person/reset-password/finished',
+  },
+  adManagerDashboardPage: {
+    name: 'adManagerDashboardPage',
+    path: '/manager/preliminaries',
+  },
+  adSalesPersonDashboardPage: {
+    name: 'adSalesPersonDashboardPage',
+    path: '/sales-person/preliminaries',
+  },
+
+  adMemoPage: {
+    name: 'adMemoPage',
+    path: '/manager/memo',
+  },
 };

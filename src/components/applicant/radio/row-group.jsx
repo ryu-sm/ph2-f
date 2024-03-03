@@ -16,6 +16,18 @@ export const ApRadioRowGroup = ({ options, disabled, height, ...props }) => {
     },
     [field, props, setValue]
   );
+  const handleClick = useCallback(
+    async (e, option) => {
+      if (option.value === meta.value) {
+        await setValue('');
+        await setTouched(false);
+      } else {
+        await setValue(e.target.value);
+        await setTouched(true);
+      }
+    },
+    [field, props, setValue]
+  );
   const MockIcon = ({ children }) => (
     <Stack sx={{ height: height }} alignItems={'center'} justifyContent={'center'}>
       <Typography
@@ -30,7 +42,7 @@ export const ApRadioRowGroup = ({ options, disabled, height, ...props }) => {
   );
   return (
     <Stack spacing={'6px'}>
-      <RadioGroup field={field} onChange={handleChange}>
+      <RadioGroup field={field}>
         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} spacing={4} sx={{ width: 1 }}>
           {options.map((option) => (
             <FormControlLabel
@@ -66,6 +78,8 @@ export const ApRadioRowGroup = ({ options, disabled, height, ...props }) => {
                       opacity: 0.5,
                     },
                   }}
+                  onChange={handleChange}
+                  onClick={(e) => handleClick(e, option)}
                 />
               }
             />

@@ -24,7 +24,6 @@ export const ApResetPasswordVerifyEmailPage = () => {
       } catch (error) {
         switch (error?.status) {
           case 400:
-            // TODO:
             setWarningText('未登録のメールアドレスは送信されません。ご登録のメールアドレスを入力してください。');
             break;
           default:

@@ -116,20 +116,20 @@ export const ApStep12Page = () => {
     getOrgs();
   }, []);
   const salesCompanyOptions = useMemo(() => {
-    return orgs.filter((item) => item.category === '2');
+    return orgs.filter((item) => item.category === 'C');
   }, [orgs]);
 
   const salesAreaOptions = useMemo(() => {
     if (!formik.values.p_application_headers.sales_company_id) return [{ value: '', label: '' }];
     return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === '3' && item.pid === formik.values.p_application_headers.sales_company_id)
+      orgs.filter((item) => item.category === 'B' && item.pid === formik.values.p_application_headers.sales_company_id)
     );
   }, [orgs, formik.values.p_application_headers.sales_company_id]);
 
   const exhibitionHallOptions = useMemo(() => {
     if (!formik.values.p_application_headers.sales_area_id) return [{ value: '', label: '' }];
     return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === '4' && item.pid === formik.values.p_application_headers.sales_area_id)
+      orgs.filter((item) => item.category === 'E' && item.pid === formik.values.p_application_headers.sales_area_id)
     );
   }, [orgs, formik.values.p_application_headers.sales_area_id]);
 

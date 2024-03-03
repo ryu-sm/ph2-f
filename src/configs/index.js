@@ -21,3 +21,4 @@ export const ALLOWED_IMAGE_TYPES = {
 };
 
 export const MAX_SIZE_FILE = 35 * 1000 * 1000;
+export const MAX_FILES = 3;
