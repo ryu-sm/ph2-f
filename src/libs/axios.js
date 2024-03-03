@@ -2,7 +2,7 @@ import axios from 'axios';
 import { APP_MODE, APP_SERVER_URL } from '../configs';
 
 const BASE_URL = APP_SERVER_URL;
-const service = axios.create({ baseURL: BASE_URL, timeout: 1000 * 5 });
+const service = axios.create({ baseURL: BASE_URL, timeout: 1000 * 20 });
 
 service.interceptors.request.use(
   (config) => {
