@@ -2,12 +2,13 @@ import { Icons } from '@/assets';
 import { AdSettingPopover } from '@/containers/ad-layout/ad-main-wrapper/setting-popover';
 import { useBoolean, useIsManager } from '@/hooks';
 import { routeNames } from '@/router/settings';
-import { authAtom, tabStatusAtom } from '@/store';
+import { authAtom, preliminarieListAtom, showProgressAtom, tabStatusAtom } from '@/store';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AdChangePasswordModal } from './chang-password';
+import { adManagerPreliminaries, adSalesPersonPreliminaries } from '@/services';
 
 export const MainHeader = ({ leftContent, rightAddItems }) => {
   const theme = useTheme();
@@ -15,6 +16,8 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
   const { pathname } = useLocation();
   const authInfo = useRecoilValue(authAtom);
   const [tabStatus, setTabStatus] = useRecoilState(tabStatusAtom);
+  const setShowProgress = useSetRecoilState(showProgressAtom);
+  const setPreliminariesData = useSetRecoilState(preliminarieListAtom);
   const isManager = useIsManager();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -48,6 +51,27 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
       label: '過去の案件',
     },
   ];
+
+  const queryPreliminaries = useCallback(async () => {
+    try {
+      setShowProgress(true);
+      let res;
+      if (isManager) {
+        res = await adManagerPreliminaries(tabStatus);
+      } else {
+        res = await adSalesPersonPreliminaries(tabStatus);
+      }
+      setPreliminariesData(res.data);
+      setShowProgress(false);
+    } catch (error) {
+      setShowProgress(false);
+      console.log(error);
+    }
+  }, [tabStatus, isManager]);
+
+  useEffect(() => {
+    queryPreliminaries();
+  }, [tabStatus, isManager]);
 
   return (
     <>

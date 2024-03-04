@@ -154,7 +154,6 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
                         '&&&& fieldset': { border: 'none' },
                       }),
                     }}
-                    inputMode={{ type: 'number' }}
                     onInput={(e) => {
                       e.target.value = convertToHalfWidth(e.target.value);
                       if (e.target.value.length > input.maxLength)

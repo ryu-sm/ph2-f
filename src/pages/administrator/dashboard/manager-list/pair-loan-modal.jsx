@@ -1,12 +1,16 @@
 import { Icons } from '@/assets';
-import { useManagerPreliminaries } from '@/hooks';
 import { adGetPairLoanOptions, adSetPairLoan, adUnPairLoan } from '@/services';
+import { preliminarieListAtom, showProgressAtom, tabStatusAtom } from '@/store';
 import { Box, Button, Divider, MenuItem, Modal, Select, Stack, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, isPairLoan }) => {
+  const tabStatus = useRecoilValue(tabStatusAtom);
+  const setShowProgress = useSetRecoilState(showProgressAtom);
+  const setPreliminariesData = useSetRecoilState(preliminarieListAtom);
   const [pairLoanOptions, setPairLoanOptions] = useState([{ value: pair_loan_id, label: apply_no }]);
   const queryPairLoanOptions = useCallback(async () => {
     try {
@@ -22,7 +26,19 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
       queryPairLoanOptions();
     }
   }, [isPairLoan]);
-  const { queryPreliminaries } = useManagerPreliminaries();
+
+  const queryPreliminaries = async () => {
+    try {
+      setShowProgress(true);
+      const res = await adManagerPreliminaries(tabStatus);
+      setPreliminariesData(res.data);
+      setShowProgress(false);
+    } catch (error) {
+      setShowProgress(false);
+      console.log(error);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       id: id,

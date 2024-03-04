@@ -1,14 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  agentSendedSelector,
-  apNextStepIdSelector,
-  apPreStepIdSelector,
-  applicationAtom,
-  applyNoSelector,
-  userEmailSelector,
-} from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {

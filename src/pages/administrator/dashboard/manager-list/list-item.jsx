@@ -7,18 +7,21 @@ import { formatApplyTime } from '@/utils';
 import { Icons } from '@/assets';
 import { FormikProvider, useFormik } from 'formik';
 import {
+  adManagerPreliminaries,
   adUpdatePreliminarieManagerId,
   adUpdatePreliminarieSalesAreaId,
   adUpdatePreliminarieSalesPersonId,
   adUpdateProvisionalAfterResult,
 } from '@/services';
 import { toast } from 'react-toastify';
-import { useBoolean, useManagerPreliminaries, useSalesPersonOptions } from '@/hooks';
+import { useBoolean, useSalesPersonOptions } from '@/hooks';
 import { SetPairLoanModal } from './pair-loan-modal';
 import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { UpAfterResultModal } from './after-result-modal';
+import { preliminarieListAtom, showProgressAtom, tabStatusAtom } from '@/store';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 export const AdCaseItem = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -50,6 +53,9 @@ export const AdCaseItem = ({ item }) => {
 };
 
 const CaseItem = ({ item, isPairLoan, index }) => {
+  const tabStatus = useRecoilValue(tabStatusAtom);
+  const setShowProgress = useSetRecoilState(showProgressAtom);
+  const setPreliminariesData = useSetRecoilState(preliminarieListAtom);
   const navigator = useNavigate();
   const pairLoanModal = useBoolean(false);
   const afterResultModal = useBoolean(false);
@@ -93,7 +99,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       {
         label: '仮審査否決',
         value: '0',
-        enable: item.provisional_after_result === '',
+        enable: item.provisional_after_result === '' && tabStatus === 1,
         active: item.provisional_after_result === '0',
         onClick: () => {
           setAfterResult({
@@ -185,7 +191,19 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   ];
 
   const salesPersonOptions = useSalesPersonOptions(formik.values.sales_area_id);
-  const { queryPreliminaries } = useManagerPreliminaries();
+
+  const queryPreliminaries = async () => {
+    try {
+      setShowProgress(true);
+      const res = await adManagerPreliminaries(tabStatus);
+      setPreliminariesData(res.data);
+      setShowProgress(false);
+    } catch (error) {
+      setShowProgress(false);
+      console.log(error);
+    }
+  };
+
   const handleUpdateProvisionalAfterResult = useCallback(async () => {
     try {
       await adUpdateProvisionalAfterResult(afterResult);

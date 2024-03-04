@@ -23,12 +23,11 @@ export const ApNumberInputField = ({
 
   const handelBlue = useCallback(
     async (e) => {
-      console.log(e);
-      // e.target.value = e.target.value.replaceAll(',', '');
+      e.target.value = e.target.value.replaceAll(',', '');
       field.onBlur(e);
       props.onBlur && props.onBlur(e);
-      // let value = autoTrim ? e.target.value?.toString().trim() : e.target.value?.toString();
-      // await setValue(value);
+      let value = autoTrim ? e.target.value?.toString().trim() : e.target.value?.toString();
+      await setValue(value);
     },
     [field, props]
   );
@@ -76,18 +75,19 @@ export const ApNumberInputField = ({
               '&&&& fieldset': { border: 'none' },
             }),
           }}
+          inputMode={{ type: 'number' }}
           onInput={(e) => {
             e.target.value = convertToHalfWidth(e.target.value);
             e.target.value = e.target.value.substring(0, maxLength);
+            e.target.value = e.target.value.replace(/^(0+)|[^\d ,]+/g, '');
             return e;
-          }}
-          inputProps={{
-            maxLength: maxLength,
           }}
           onBlur={handelBlue}
           onFocus={handleFocus}
           onChange={handleChange}
-          onValueChange={async (values) => await setValue(values.value)}
+          inputProps={{
+            readOnly: props.readOnly,
+          }}
         />
         {typeof unit === 'string' ? (
           <Typography variant="unit" color={'text.main'} whiteSpace={'nowrap'}>
