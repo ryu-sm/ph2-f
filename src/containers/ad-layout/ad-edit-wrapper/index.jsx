@@ -14,7 +14,7 @@ export const AdEditWrapper = ({ children }) => {
         sx={{
           height: '100dvh',
           minHeight: '100dvh',
-          background: (theme) => theme.palette.gray[60],
+          background: (theme) => theme.palette.gray[20],
         }}
       >
         <EditHeader isAdmin={isManager} />

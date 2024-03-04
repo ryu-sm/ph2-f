@@ -6,7 +6,7 @@ import { Stack } from '@mui/material';
 export const SpEditCasePage = () => {
   return (
     <AdEditWrapper>
-      <Stack sx={{ height: '100%', marginX: 0, p: 0, flexGrow: 1 }} overflow={'auto'} mt={11} mb={8}>
+      <Stack sx={{ height: '100%', marginX: 0, p: 0 }} mt={11} mb={8}>
         <ReviewProgress />
         <ReviewDetail />
       </Stack>

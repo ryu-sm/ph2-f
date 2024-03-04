@@ -1,7 +1,7 @@
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { IconButton, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
-import { ContentDetail } from './content-detail';
+import { ContentDetail } from './content';
 
 export const ReviewDetail = () => {
   const reviewData = {
