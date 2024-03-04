@@ -5,6 +5,7 @@ import { useBoolean, useIsManager, useSortPreliminaries } from '@/hooks';
 import { widthConfig } from './width-config';
 import { useRecoilValue } from 'recoil';
 import { tabStatusAtom } from '@/store';
+import { AdFilterModal } from './filter-modal';
 
 export const HeaderFilter = () => {
   const isManager = useIsManager();
@@ -26,14 +27,14 @@ export const HeaderFilter = () => {
   ];
   return (
     <Stack
-      position={'fixed'}
+      position={'sticky'}
       direction={'row'}
       alignItems={'center'}
       justifyContent={'space-between'}
       bgcolor={'white'}
       boxShadow={'rgba(59, 118, 129, 0.15) 0px 2px 8px'}
       minWidth={Object.values(widthConfig).reduce((acc, curr) => acc + curr, 0) + 40}
-      sx={{ px: 5, width: 1 }}
+      sx={{ px: 5, width: 1, top: 0 }}
       zIndex={3}
     >
       <Stack

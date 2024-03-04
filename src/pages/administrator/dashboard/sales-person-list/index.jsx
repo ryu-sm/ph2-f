@@ -10,8 +10,14 @@ export const SalesPersonList = () => {
   return (
     <Stack sx={{ height: '100%', marginX: 0, p: 0, flexGrow: 1 }} overflow={'auto'} mt={11} mb={8}>
       <HeaderFilter />
-      <Stack pt={10}>{showProgress && <LinearProgress />}</Stack>
-      <Stack p={3} pt={13} width={'100%'} spacing={3}>
+      <Stack>{showProgress && <LinearProgress />}</Stack>
+      <Stack
+        p={3}
+        width={1}
+        spacing={3}
+        minWidth={Object.values(widthConfig).reduce((acc, curr) => acc + curr, 0) + 40}
+        overflow={'auto'}
+      >
         {preliminariesData.map((item) => (
           <SpCaseItem
             key={`${item.id}${item.provisional_after_result}${item.pair_loan_data?.provisional_after_result}`}
