@@ -307,7 +307,7 @@ export const ApStep04Page = () => {
             <ApItemGroup label={'生年月日'}>
               <Stack spacing={3}>
                 <ApSelectFieldYmd name="p_applicant_persons__1.birthday" yearOptions={yearOptions} />
-                <ApStarHelp label={'借入時満18歳以上満65歳以下・完済時満80歳未満の方がご利用いただけます。'} />
+                {/* <ApStarHelp label={'借入時満18歳以上満65歳以下・完済時満80歳未満の方がご利用いただけます。'} /> */}
               </Stack>
             </ApItemGroup>
             <ApItemGroup label={'現在の国籍'}>

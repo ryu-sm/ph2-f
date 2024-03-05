@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { applicationAtom } from '@/store';
 import { dayjs } from '@/libs';
-import { AGREE_OPTIONS } from '@/constant';
+import { agreeOptions } from './options';
 
 export const ApAgreementPage = () => {
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ export const ApAgreementPage = () => {
                 全文を見る
               </Typography>
             </Stack>
-            <ApRadioRowGroup name="consent" options={AGREE_OPTIONS} disabled={!isReadedConsent} />
+            <ApRadioRowGroup name="consent" options={agreeOptions} disabled={!isReadedConsent} />
           </Stack>
         </ApItemGroup>
         <ApItemGroup label={'銀行代理業にかかる確認書　兼　個人情報の取扱い等に関する同意書'}>
@@ -98,7 +98,7 @@ export const ApAgreementPage = () => {
                 全文を見る
               </Typography>
             </Stack>
-            <ApRadioRowGroup name="confirmation" options={AGREE_OPTIONS} disabled={!isReadedConfirmation} />
+            <ApRadioRowGroup name="confirmation" options={agreeOptions} disabled={!isReadedConfirmation} />
           </Stack>
         </ApItemGroup>
       </FormikProvider>

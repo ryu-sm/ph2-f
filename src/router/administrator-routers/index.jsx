@@ -5,6 +5,7 @@ import {
   AdOrSpResetPasswordPage,
   AdOrSpResetPasswordVerifyEmailPage,
   DashboardPage,
+  EditPreliminary,
 } from '@/pages/administrator';
 import { routeNames } from '../settings';
 
@@ -48,6 +49,14 @@ export const administratorRoutes = [
   {
     ...routeNames.adSalesPersonDashboardPage,
     element: <DashboardPage />,
+  },
+  {
+    ...routeNames.adManagerEditPreliminaryPage,
+    element: <EditPreliminary />,
+  },
+  {
+    ...routeNames.adSalesPersonEditPreliminaryPage,
+    element: <EditPreliminary />,
   },
   {
     ...routeNames.adMemoPage,

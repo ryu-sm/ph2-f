@@ -12,7 +12,7 @@ export const nationalityOptions = [
 ];
 
 export const yearOptions = [{ value: '', label: '西暦' }].concat(
-  Array.from(Array(48), (_, index) => {
+  Array.from(Array(83), (_, index) => {
     const year = String(dayjs().year() - 18 - index).padStart(2, '0');
     const startDay = year === '1989' ? 8 : 1;
     const kanjiDateG2 = format('{G:2}', +year, 1, startDay);

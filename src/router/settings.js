@@ -164,6 +164,14 @@ export const routeNames = {
     name: 'adSalesPersonDashboardPage',
     path: '/sales-person/preliminaries',
   },
+  adManagerEditPreliminaryPage: {
+    name: 'adManagerEditPreliminaryPage',
+    path: '/manager/edit-preliminary',
+  },
+  adSalesPersonEditPreliminaryPage: {
+    name: 'adSalesPersonEditPreliminaryPage',
+    path: '/sales-person/edit-preliminary',
+  },
 
   adMemoPage: {
     name: 'adMemoPage',

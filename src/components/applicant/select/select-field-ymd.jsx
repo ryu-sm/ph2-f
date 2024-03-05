@@ -43,14 +43,18 @@ export const ApSelectFieldYmd = ({ yearOptions, ...props }) => {
       { value: '', label: '日', className: undefined },
       ...getClassDate(formik.values.year, formik.values.month),
     ].map((d) => {
-      if (publicHolidays.find((p) => p.date === `${formik.values.year}-${formik.values.month}-${d.value}`)) {
-        return {
-          ...d,
-          className: field.name.includes('desired_borrowing_date')
-            ? `${d.className ?? ''} is-public-holiday-desired`
-            : `${d.className ?? ''} is-public-holiday`,
-        };
+      if (field.name.includes('desired_borrowing_date')) {
+        if (publicHolidays.find((p) => p.date === `${formik.values.year}-${formik.values.month}-${d.value}`)) {
+          return {
+            ...d,
+            className: field.name.includes('desired_borrowing_date')
+              ? `${d.className ?? ''} is-public-holiday-desired`
+              : `${d.className ?? ''} is-public-holiday`,
+          };
+        }
+        return d;
       }
+
       return d;
     });
   }, [publicHolidays, formik.values.year, formik.values.month]);
