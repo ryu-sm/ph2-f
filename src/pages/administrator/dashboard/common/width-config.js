@@ -10,4 +10,5 @@ export const widthConfig = {
   9: 160,
   10: 160,
   11: 160,
+  12: 160,
 };

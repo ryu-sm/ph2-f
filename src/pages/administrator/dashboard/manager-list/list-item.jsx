@@ -10,11 +10,12 @@ import {
   adManagerPreliminaries,
   adUpdatePreliminarieManagerId,
   adUpdatePreliminarieSalesAreaId,
+  adUpdatePreliminarieSalesExhibitionHallId,
   adUpdatePreliminarieSalesPersonId,
   adUpdateProvisionalAfterResult,
 } from '@/services';
 import { toast } from 'react-toastify';
-import { useBoolean, useSalesPersonOptions } from '@/hooks';
+import { useBoolean, useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
 import { SetPairLoanModal } from './pair-loan-modal';
 import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
@@ -62,6 +63,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const formik = useFormik({
     initialValues: {
       sales_area_id: item?.sales_area_id,
+      sales_exhibition_hall_id: item?.sales_exhibition_hall_id,
       s_sales_person_id: item?.s_sales_person_id,
       s_manager_id: item?.s_manager_id,
     },
@@ -97,7 +99,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const provisionalAfterResult = useMemo(() => {
     const basicList = [
       {
-        label: '仮審査否決',
+        label: '仮審査否決等',
         value: '0',
         enable: item.provisional_after_result === '' && tabStatus === 1,
         active: item.provisional_after_result === '0',
@@ -125,7 +127,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         },
       },
       {
-        label: '本審査否決',
+        label: '本審査否決等',
         value: '2',
         enable: item.provisional_after_result === '1',
         active: item.provisional_after_result === '2',
@@ -190,7 +192,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     { value: '2', label: '否決' },
   ];
 
-  const salesPersonOptions = useSalesPersonOptions(formik.values.sales_area_id);
+  const salesExhibitionHallOptions = useSalesExhibitionHallOptions(formik.values.sales_area_id);
+  const salesPersonOptions = useSalesPersonOptions(formik.values.sales_exhibition_hall_id);
 
   const queryPreliminaries = async () => {
     try {
@@ -243,12 +246,30 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     }
   }, []);
 
-  const handleChangeSalesArea = useCallback(async (sales_area_id, item) => {
+  const handleChangeSalesArea = useCallback(async (sales_area_id, sales_exhibition_hall_id, item) => {
     try {
       const res = await adUpdatePreliminarieSalesAreaId({
         p_application_header_id: item?.id,
         sales_area_id: sales_area_id,
+        sales_exhibition_hall_id: sales_exhibition_hall_id,
       });
+      formik.setFieldValue('sales_exhibition_hall_id', res.data.sales_exhibition_hall_id);
+      toast.success('エリアを変更しました。');
+    } catch (error) {
+      console.log(error);
+      toast.error('サーバーとの通信に失敗しました。再度お試しください。');
+      return;
+    }
+  }, []);
+
+  const handleChangeSalesExhibitionHall = useCallback(async (sales_exhibition_hall_id, s_sales_person_id, item) => {
+    try {
+      const res = await adUpdatePreliminarieSalesExhibitionHallId({
+        p_application_header_id: item?.id,
+        sales_exhibition_hall_id: sales_exhibition_hall_id,
+        s_sales_person_id: s_sales_person_id,
+      });
+      formik.setFieldValue('s_sales_person_id', res.data.s_sales_person_id);
       toast.success('エリアを変更しました。');
     } catch (error) {
       console.log(error);
@@ -377,7 +398,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
               <PopoverSelect
                 name="sales_area_id"
                 options={item?.area_options}
-                onChange={(value) => handleChangeSalesArea(value, item)}
+                onChange={(value) => handleChangeSalesArea(value, formik.values.sales_exhibition_hall_id, item)}
               />
             }
             isText={false}
@@ -385,6 +406,19 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           <FieldItem
             maxWidth={widthConfig[10]}
             minWidth={widthConfig[10]}
+            fontSize={15}
+            value={
+              <PopoverSelect
+                name="sales_exhibition_hall_id"
+                options={salesExhibitionHallOptions}
+                onChange={(value) => handleChangeSalesExhibitionHall(value, formik.values.s_sales_person_id, item)}
+              />
+            }
+            isText={false}
+          />
+          <FieldItem
+            maxWidth={widthConfig[11]}
+            minWidth={widthConfig[11]}
             value={
               <PopoverSelect
                 name="s_sales_person_id"
@@ -395,8 +429,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             isText={false}
           />
           <FieldItem
-            maxWidth={widthConfig[11]}
-            minWidth={widthConfig[11]}
+            maxWidth={widthConfig[12]}
+            minWidth={widthConfig[12]}
             value={
               <PopoverSelect
                 name="s_manager_id"

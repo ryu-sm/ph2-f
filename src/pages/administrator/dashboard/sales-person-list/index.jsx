@@ -3,6 +3,7 @@ import { HeaderFilter } from '../common/header-filter';
 import { SpCaseItem } from './list-item';
 import { useRecoilValue } from 'recoil';
 import { preliminarieListAtom, showProgressAtom } from '@/store';
+import { widthConfig } from '../common/width-config';
 
 export const SalesPersonList = () => {
   const showProgress = useRecoilValue(showProgressAtom);

@@ -22,8 +22,9 @@ export const HeaderFilter = () => {
     ...(isManager ? [{ name: 'provisional_status', label: '進捗状況', limitWidth: widthConfig[7] }] : []),
     { name: 'provisional_result', label: '仮審査結果', limitWidth: widthConfig[8] },
     { name: 'sales_area_id', label: 'エリア', limitWidth: widthConfig[9] },
-    { name: 's_sales_person_id', label: '営業担当', limitWidth: widthConfig[10] },
-    { name: 's_manager_id', label: '銀代担当', limitWidth: widthConfig[11] },
+    { name: 'sales_exhibition_hall_id', label: '展示場', limitWidth: widthConfig[10] },
+    { name: 's_sales_person_id', label: '営業担当', limitWidth: widthConfig[11] },
+    { name: 's_manager_id', label: '銀代担当', limitWidth: widthConfig[12] },
   ];
   return (
     <Stack

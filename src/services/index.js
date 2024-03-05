@@ -128,8 +128,16 @@ export const adUpdatePreliminarieSalesAreaId = async (data) => {
   return await service.put('/preliminarie/sales_area_id', data);
 };
 
+export const adUpdatePreliminarieSalesExhibitionHallId = async (data) => {
+  return await service.put('/preliminarie/sales_exhibition_hall_id', data);
+};
+
 export const adGetSalesPersonOptions = async (parent_id) => {
   return await service.get(`/sales_person_options?parent_id=${parent_id}`);
+};
+
+export const adGetSalesExhibitionHallOptions = async (parent_id) => {
+  return await service.get(`/sales_exhibition_hall_options?parent_id=${parent_id}`);
 };
 
 export const adGetPairLoanOptions = async (p_application_header_id) => {

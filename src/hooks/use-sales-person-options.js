@@ -1,19 +1,19 @@
 import { adGetSalesPersonOptions } from '@/services';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useSalesPersonOptions = (sales_area_id) => {
+export const useSalesPersonOptions = (sales_exhibition_hall_id) => {
   const [salesPersonOptions, setSalesPersonOptions] = useState([]);
   const queryPersonOptions = useCallback(async () => {
-    if (!sales_area_id) return;
+    if (!sales_exhibition_hall_id) return;
     try {
-      const res = await adGetSalesPersonOptions(sales_area_id);
+      const res = await adGetSalesPersonOptions(sales_exhibition_hall_id);
       setSalesPersonOptions(res.data);
     } catch (error) {
       console.log(error);
     }
-  }, [sales_area_id]);
+  }, [sales_exhibition_hall_id]);
   useEffect(() => {
     queryPersonOptions();
-  }, [sales_area_id]);
+  }, [sales_exhibition_hall_id]);
   return salesPersonOptions;
 };
