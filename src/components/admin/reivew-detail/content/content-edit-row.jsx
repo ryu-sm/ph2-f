@@ -1,16 +1,20 @@
+import { useBoolean } from '@/hooks';
 import { Box, Stack, Typography } from '@mui/material';
-import { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { useMemo } from 'react';
+import { UpdateHistoryModal } from '../update-history';
 
-export const EditRow = ({ item, label, requiredSupply, content, component }) => {
+export const EditRow = ({ item, label, requiredSupply, hasDropDown, content, component, supplyComponent }) => {
   const noticeIcon = useMemo(() => {
     return item.isRequired ? '○' : '△';
   }, [item]);
+
+  const { value: open, onTrue: handleOpenModal, onFalse: handleCloseModal } = useBoolean(false);
   return (
     <Stack
       direction={'row'}
       width={'100%'}
-      height={49}
+      minHeight={49}
       alignItems={'center'}
       borderBottom={'1px solid'}
       borderColor={'gray.70'}
@@ -35,13 +39,29 @@ export const EditRow = ({ item, label, requiredSupply, content, component }) => 
             textAlign: 'center',
             cursor: item.isUpdated ? 'pointer' : 'default',
           }}
+          onClick={handleOpenModal}
         >
           {item.isUpdated && '...'}
         </Box>
-        <Stack direction={'row'} alignItems={'center'} bgcolor={'white'} p={'10px'}>
-          {component ? component : <Typography variant="edit_content">{content}</Typography>}
+        <Stack
+          direction={'row'}
+          alignItems={'center'}
+          bgcolor={'white'}
+          p={'10px'}
+          flex={1}
+          paddingLeft={!hasDropDown ? '25px' : '10px'}
+        >
+          {supplyComponent
+            ? [component, supplyComponent].map((comp, index) => (
+                <Stack key={index} flex={0.5}>
+                  {comp}
+                </Stack>
+              ))
+            : component || <Typography variant="edit_content">{content}</Typography>}
         </Stack>
       </Stack>
+
+      <UpdateHistoryModal open={open} onClose={handleCloseModal} />
     </Stack>
   );
 };
@@ -50,6 +70,8 @@ EditRow.propTypes = {
   item: PropTypes.object,
   label: PropTypes.string,
   content: PropTypes.string,
-  component: PropTypes.node,
   requiredSupply: PropTypes.bool,
+  component: PropTypes.node,
+  supplyComponent: PropTypes.node,
+  hasDropDown: PropTypes.bool,
 };

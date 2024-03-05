@@ -209,4 +209,13 @@ export const typography = {
     fontSize: '10px',
     lineHeight: '15px',
   },
+  update_history_title: {
+    fontFamily: 'Hiragino Sans',
+    fontSize: '16px',
+    fontWeight: 500,
+    height: '24px',
+    letterSpacing: '0.15px',
+    lineHeight: '24px',
+    color: '#333333',
+  },
 };
