@@ -12,7 +12,7 @@ import {
 import { ApLayout, ApStepFooter } from '@/containers';
 
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 
 import { validationSchema } from './validationSchema';
 import { useNavigate } from 'react-router-dom';
@@ -23,57 +23,153 @@ import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apApplicationImg } from '@/services';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApStep10Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const { apNextStepId, apPreStepId, p_applicant_persons__0, p_uploaded_files } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
-  const formik = useFormik({
-    initialValues: {
-      p_applicant_persons__0,
-      p_uploaded_files,
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_uploaded_files: {
+          ...pre.p_uploaded_files,
+          p_applicant_persons__0__A__01__a: values.p_uploaded_files.p_applicant_persons__0__A__01__a,
+          p_applicant_persons__0__A__01__b: values.p_uploaded_files.p_applicant_persons__0__A__01__b,
+          p_applicant_persons__0__A__02: values.p_uploaded_files.p_applicant_persons__0__A__02,
+          p_applicant_persons__0__A__03__a: values.p_uploaded_files.p_applicant_persons__0__A__03__a,
+          p_applicant_persons__0__A__03__b: values.p_uploaded_files.p_applicant_persons__0__A__03__b,
+          p_applicant_persons__0__B__a: values.p_uploaded_files.p_applicant_persons__0__B__a,
+          p_applicant_persons__0__B__b: values.p_uploaded_files.p_applicant_persons__0__B__b,
+          p_applicant_persons__0__C__01: values.p_uploaded_files.p_applicant_persons__0__C__01,
+          p_applicant_persons__0__C__02: values.p_uploaded_files.p_applicant_persons__0__C__02,
+          p_applicant_persons__0__C__03: values.p_uploaded_files.p_applicant_persons__0__C__03,
+          p_applicant_persons__0__C__04: values.p_uploaded_files.p_applicant_persons__0__C__04,
+          p_applicant_persons__0__C__05: values.p_uploaded_files.p_applicant_persons__0__C__05,
+          p_applicant_persons__0__D__01: values.p_uploaded_files.p_applicant_persons__0__D__01,
+          p_applicant_persons__0__D__02: values.p_uploaded_files.p_applicant_persons__0__D__02,
+          p_applicant_persons__0__D__03: values.p_uploaded_files.p_applicant_persons__0__D__03,
+          p_applicant_persons__0__E: values.p_uploaded_files.p_applicant_persons__0__E,
+          p_applicant_persons__0__F__01: values.p_uploaded_files.p_applicant_persons__0__F__01,
+          p_applicant_persons__0__F__02: values.p_uploaded_files.p_applicant_persons__0__F__02,
+          p_applicant_persons__0__F__03: values.p_uploaded_files.p_applicant_persons__0__F__03,
+          p_applicant_persons__0__K: values.p_uploaded_files.p_applicant_persons__0__K,
+        },
+        p_applicant_persons__0: {
+          ...pre.p_applicant_persons__0,
+          identity_verification_type: values.p_applicant_persons__0.identity_verification_type,
+        },
+      };
+    });
+  };
+  const initialValues = {
+    p_uploaded_files: {
+      p_applicant_persons__0__A__01__a: p_uploaded_files.p_applicant_persons__0__A__01__a,
+      p_applicant_persons__0__A__01__b: p_uploaded_files.p_applicant_persons__0__A__01__b,
+      p_applicant_persons__0__A__02: p_uploaded_files.p_applicant_persons__0__A__02,
+      p_applicant_persons__0__A__03__a: p_uploaded_files.p_applicant_persons__0__A__03__a,
+      p_applicant_persons__0__A__03__b: p_uploaded_files.p_applicant_persons__0__A__03__b,
+      p_applicant_persons__0__B__a: p_uploaded_files.p_applicant_persons__0__B__a,
+      p_applicant_persons__0__B__b: p_uploaded_files.p_applicant_persons__0__B__b,
+      p_applicant_persons__0__C__01: p_uploaded_files.p_applicant_persons__0__C__01,
+      p_applicant_persons__0__C__02: p_uploaded_files.p_applicant_persons__0__C__02,
+      p_applicant_persons__0__C__03: p_uploaded_files.p_applicant_persons__0__C__03,
+      p_applicant_persons__0__C__04: p_uploaded_files.p_applicant_persons__0__C__04,
+      p_applicant_persons__0__C__05: p_uploaded_files.p_applicant_persons__0__C__05,
+      p_applicant_persons__0__D__01: p_uploaded_files.p_applicant_persons__0__D__01,
+      p_applicant_persons__0__D__02: p_uploaded_files.p_applicant_persons__0__D__02,
+      p_applicant_persons__0__D__03: p_uploaded_files.p_applicant_persons__0__D__03,
+      p_applicant_persons__0__E: p_uploaded_files.p_applicant_persons__0__E,
+      p_applicant_persons__0__F__01: p_uploaded_files.p_applicant_persons__0__F__01,
+      p_applicant_persons__0__F__02: p_uploaded_files.p_applicant_persons__0__F__02,
+      p_applicant_persons__0__F__03: p_uploaded_files.p_applicant_persons__0__F__03,
+      p_applicant_persons__0__K: p_uploaded_files.p_applicant_persons__0__K,
     },
-    validationSchema: validationSchema,
+    p_applicant_persons__0: {
+      identity_verification_type: p_applicant_persons__0.identity_verification_type,
+    },
+  };
+
+  const setUpdateData = (values) => {
+    const newData = {
+      p_uploaded_files: {
+        ...(values.p_applicant_persons__0.identity_verification_type === '1'
+          ? {
+              p_applicant_persons__0__A__01__a: values.p_uploaded_files.p_applicant_persons__0__A__01__a,
+              p_applicant_persons__0__A__01__b: values.p_uploaded_files.p_applicant_persons__0__A__01__b,
+              p_applicant_persons__0__A__02: [],
+              p_applicant_persons__0__A__03__a: [],
+              p_applicant_persons__0__A__03__b: [],
+            }
+          : {}),
+        ...(values.p_applicant_persons__0.identity_verification_type === '2'
+          ? {
+              p_applicant_persons__0__A__01__a: [],
+              p_applicant_persons__0__A__01__b: [],
+              p_applicant_persons__0__A__02: values.p_uploaded_files.p_applicant_persons__0__A__02,
+              p_applicant_persons__0__A__03__a: [],
+              p_applicant_persons__0__A__03__b: [],
+            }
+          : {}),
+        ...(values.p_applicant_persons__0.identity_verification_type === '3'
+          ? {
+              p_applicant_persons__0__A__01__a: [],
+              p_applicant_persons__0__A__01__b: [],
+              p_applicant_persons__0__A__02: [],
+              p_applicant_persons__0__A__03__a: values.p_uploaded_files.p_applicant_persons__0__A__03__a,
+              p_applicant_persons__0__A__03__b: values.p_uploaded_files.p_applicant_persons__0__A__03__b,
+            }
+          : {}),
+        p_applicant_persons__0__B__a: values.p_uploaded_files.p_applicant_persons__0__B__a,
+        p_applicant_persons__0__B__b: values.p_uploaded_files.p_applicant_persons__0__B__b,
+        p_applicant_persons__0__C__01: values.p_uploaded_files.p_applicant_persons__0__C__01,
+        p_applicant_persons__0__C__02: values.p_uploaded_files.p_applicant_persons__0__C__02,
+        p_applicant_persons__0__C__03: values.p_uploaded_files.p_applicant_persons__0__C__03,
+        p_applicant_persons__0__C__04: values.p_uploaded_files.p_applicant_persons__0__C__04,
+        p_applicant_persons__0__C__05: values.p_uploaded_files.p_applicant_persons__0__C__05,
+        p_applicant_persons__0__D__01: values.p_uploaded_files.p_applicant_persons__0__D__01,
+        p_applicant_persons__0__D__02: values.p_uploaded_files.p_applicant_persons__0__D__02,
+        p_applicant_persons__0__D__03: values.p_uploaded_files.p_applicant_persons__0__D__03,
+        p_applicant_persons__0__E: values.p_uploaded_files.p_applicant_persons__0__E,
+        p_applicant_persons__0__F__01: values.p_uploaded_files.p_applicant_persons__0__F__01,
+        p_applicant_persons__0__F__02: values.p_uploaded_files.p_applicant_persons__0__F__02,
+        p_applicant_persons__0__F__03: values.p_uploaded_files.p_applicant_persons__0__F__03,
+        p_applicant_persons__0__K: values.p_uploaded_files.p_applicant_persons__0__K,
+      },
+      p_applicant_persons__0: {
+        identity_verification_type: values.p_applicant_persons__0.identity_verification_type,
+      },
+    };
+    const diffData = {
+      p_uploaded_files: {
+        ...diffObj(initialValues.p_uploaded_files, newData.p_uploaded_files),
+      },
+      p_applicant_persons__0: {
+        ...diffObj(initialValues.p_applicant_persons__0, newData.p_applicant_persons__0),
+      },
+    };
+    return diffData;
+  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      const dataCopy = cloneDeep(formik.values);
-      if (values.p_applicant_persons__0.identity_verification_type === '1') {
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__02 = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__b = [];
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__02', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__b', []);
-      }
-      if (values.p_applicant_persons__0.identity_verification_type === '2') {
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__b = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__03__b = [];
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__b', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__03__b', []);
-      }
-      if (values.p_applicant_persons__0.identity_verification_type === '3') {
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__01__b = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__0__A__02 = [];
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__01__b', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__A__02', []);
-      }
-      if (agentSended) {
-        await updateApply(applyNo, dataCopy);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...values };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -133,6 +229,7 @@ export const ApStep10Page = () => {
     if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };
@@ -217,8 +314,9 @@ export const ApStep10Page = () => {
   ];
 
   useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
+    console.log(formik.errors);
+  }, [formik.errors]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

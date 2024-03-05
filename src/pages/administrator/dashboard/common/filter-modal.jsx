@@ -1,5 +1,4 @@
 import { Icons } from '@/assets';
-import { Close } from '@mui/icons-material';
 import { Button, IconButton, Modal, Stack, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 

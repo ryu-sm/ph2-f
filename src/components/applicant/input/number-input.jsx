@@ -13,6 +13,7 @@ export const ApNumberInputField = ({
   width,
   autoTrim = true,
   sx,
+  thousandSeparator = true,
   ...props
 }) => {
   const [field, meta, helpers] = useField(props);
@@ -23,12 +24,8 @@ export const ApNumberInputField = ({
 
   const handelBlue = useCallback(
     async (e) => {
-      console.log(e);
-      // e.target.value = e.target.value.replaceAll(',', '');
       field.onBlur(e);
       props.onBlur && props.onBlur(e);
-      // let value = autoTrim ? e.target.value?.toString().trim() : e.target.value?.toString();
-      // await setValue(value);
     },
     [field, props]
   );
@@ -60,7 +57,7 @@ export const ApNumberInputField = ({
           {...field}
           {...props}
           customInput={TextField}
-          thousandSeparator
+          thousandSeparator={thousandSeparator}
           autoComplete="off"
           type="tel"
           placeholder={placeholder}
@@ -80,9 +77,6 @@ export const ApNumberInputField = ({
             e.target.value = convertToHalfWidth(e.target.value);
             e.target.value = e.target.value.substring(0, maxLength);
             return e;
-          }}
-          inputProps={{
-            maxLength: maxLength,
           }}
           onBlur={handelBlue}
           onFocus={handleFocus}

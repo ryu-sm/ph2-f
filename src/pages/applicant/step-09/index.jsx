@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector, authAtom } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -19,12 +19,14 @@ import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApStep09Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const {
     apNextStepId,
@@ -33,20 +35,76 @@ export const ApStep09Page = () => {
     p_application_headers,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
-  const formik = useFormik({
-    initialValues: {
-      p_application_headers,
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          required_funds_land_amount: values.p_application_headers.required_funds_land_amount,
+          required_funds_house_amount: values.p_application_headers.required_funds_house_amount,
+          required_funds_accessory_amount: values.p_application_headers.required_funds_accessory_amount,
+          required_funds_additional_amount: values.p_application_headers.required_funds_additional_amount,
+          required_funds_refinance_loan_balance: values.p_application_headers.required_funds_refinance_loan_balance,
+          required_funds_upgrade_amount: values.p_application_headers.required_funds_upgrade_amount,
+          required_funds_loan_plus_amount: values.p_application_headers.required_funds_loan_plus_amount,
+          required_funds_total_amount: values.p_application_headers.required_funds_total_amount,
+          funding_saving_amount: values.p_application_headers.funding_saving_amount,
+          funding_estate_sale_amount: values.p_application_headers.funding_estate_sale_amount,
+          funding_other_saving_amount: values.p_application_headers.funding_other_saving_amount,
+          funding_relative_donation_amount: values.p_application_headers.funding_relative_donation_amount,
+          funding_loan_amount: values.p_application_headers.funding_loan_amount,
+          funding_pair_loan_amount: values.p_application_headers.funding_pair_loan_amount,
+          funding_other_amount: values.p_application_headers.funding_other_amount,
+          funding_other_amount_detail: values.p_application_headers.funding_other_amount_detail,
+          funding_total_amount: values.p_application_headers.funding_total_amount,
+        },
+      };
+    });
+  };
+  const initialValues = {
+    p_application_headers: {
+      required_funds_land_amount: p_application_headers.required_funds_land_amount,
+      required_funds_house_amount: p_application_headers.required_funds_house_amount,
+      required_funds_accessory_amount: p_application_headers.required_funds_accessory_amount,
+      required_funds_additional_amount: p_application_headers.required_funds_additional_amount,
+      required_funds_refinance_loan_balance: p_application_headers.required_funds_refinance_loan_balance,
+      required_funds_upgrade_amount: p_application_headers.required_funds_upgrade_amount,
+      required_funds_loan_plus_amount: p_application_headers.required_funds_loan_plus_amount,
+      required_funds_total_amount: p_application_headers.required_funds_total_amount,
+      funding_saving_amount: p_application_headers.funding_saving_amount,
+      funding_estate_sale_amount: p_application_headers.funding_estate_sale_amount,
+      funding_other_saving_amount: p_application_headers.funding_other_saving_amount,
+      funding_relative_donation_amount: p_application_headers.funding_relative_donation_amount,
+      funding_loan_amount: p_application_headers.funding_loan_amount,
+      funding_pair_loan_amount: p_application_headers.funding_pair_loan_amount,
+      funding_other_amount: p_application_headers.funding_other_amount,
+      funding_other_amount_detail: p_application_headers.funding_other_amount_detail,
+      funding_total_amount: p_application_headers.funding_total_amount,
     },
-    validationSchema: validationSchema,
+  };
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_application_headers: {
+        ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+      },
+    };
+    return diffData;
+  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      if (agentSended) {
-        await updateApply(applyNo, values);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...values };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -60,6 +118,7 @@ export const ApStep09Page = () => {
     if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };

@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector, authAtom } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -49,18 +49,19 @@ import {
   propertyRegionTypeOptions,
   yearOptions,
 } from './options';
-import { PREFECTURES } from '@/constant';
+import { API_500_ERROR, PREFECTURES } from '@/constant';
 
 import { cloneDeep } from 'lodash';
 import { apApplicationImg } from '@/services';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
 
 export const ApStep07Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const {
     isMCJ,
@@ -73,30 +74,130 @@ export const ApStep07Page = () => {
     p_uploaded_files,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
-  const formik = useFormik({
-    initialValues: {
-      isMCJ,
-      p_application_headers,
-      p_residents,
-      p_applicant_persons__0,
-      p_uploaded_files,
-      //
-      set_addr_with_application_a: false,
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          curr_house_lived_year: values.p_application_headers.curr_house_lived_year,
+          curr_house_lived_month: values.p_application_headers.curr_house_lived_month,
+          curr_house_residence_type: values.p_application_headers.curr_house_residence_type,
+          curr_house_floor_area: values.p_application_headers.curr_house_floor_area,
+          curr_house_owner_name: values.p_application_headers.curr_house_owner_name,
+          curr_house_owner_rel: values.p_application_headers.curr_house_owner_rel,
+          curr_house_schedule_disposal_type: values.p_application_headers.curr_house_schedule_disposal_type,
+          curr_house_schedule_disposal_type_other: values.p_application_headers.curr_house_schedule_disposal_type_other,
+          curr_house_shell_scheduled_date: values.p_application_headers.curr_house_shell_scheduled_date,
+          curr_house_shell_scheduled_price: values.p_application_headers.curr_house_shell_scheduled_price,
+          curr_house_loan_balance_type: values.p_application_headers.curr_house_loan_balance_type,
+          property_publish_url: values.p_application_headers.property_publish_url,
+          new_house_acquire_reason: values.p_application_headers.new_house_acquire_reason,
+          new_house_acquire_reason_other: values.p_application_headers.new_house_acquire_reason_other,
+          new_house_self_resident: values.p_application_headers.new_house_self_resident,
+          new_house_self_not_resident_reason: values.p_application_headers.new_house_self_not_resident_reason,
+          new_house_planned_resident_overview: values.p_application_headers.new_house_planned_resident_overview,
+          property_business_type: values.p_application_headers.property_business_type,
+          property_prefecture: values.p_application_headers.property_prefecture,
+          property_city: values.p_application_headers.property_city,
+          property_district: values.p_application_headers.property_district,
+          property_apartment_and_room_no: values.p_application_headers.property_apartment_and_room_no,
+          property_private_area: values.p_application_headers.property_private_area,
+          property_total_floor_area: values.p_application_headers.property_total_floor_area,
+          property_land_area: values.p_application_headers.property_land_area,
+          property_floor_area: values.p_application_headers.property_floor_area,
+          property_land_type: values.p_application_headers.property_land_type,
+          property_purchase_type: values.p_application_headers.property_purchase_type,
+          property_planning_area: values.p_application_headers.property_planning_area,
+          property_planning_area_other: values.p_application_headers.property_planning_area_other,
+          property_rebuilding_reason: values.p_application_headers.property_rebuilding_reason,
+          property_rebuilding_reason_other: values.p_application_headers.property_rebuilding_reason_other,
+          property_flat_35_plan: values.p_application_headers.property_flat_35_plan,
+          property_maintenance_type: values.p_application_headers.property_maintenance_type,
+          property_flat_35_tech: values.p_application_headers.property_flat_35_tech,
+          property_region_type: values.p_application_headers.property_region_type,
+        },
+        p_uploaded_files: {
+          ...pre.p_uploaded_files,
+          G: values.p_uploaded_files.G,
+        },
+        p_residents: values.p_residents,
+      };
+    });
+  };
+  const initialValues = {
+    p_application_headers: {
+      curr_house_lived_year: p_application_headers.curr_house_lived_year,
+      curr_house_lived_month: p_application_headers.curr_house_lived_month,
+      curr_house_residence_type: p_application_headers.curr_house_residence_type,
+      curr_house_floor_area: p_application_headers.curr_house_floor_area,
+      curr_house_owner_name: p_application_headers.curr_house_owner_name,
+      curr_house_owner_rel: p_application_headers.curr_house_owner_rel,
+      curr_house_schedule_disposal_type: p_application_headers.curr_house_schedule_disposal_type,
+      curr_house_schedule_disposal_type_other: p_application_headers.curr_house_schedule_disposal_type_other,
+      curr_house_shell_scheduled_date: p_application_headers.curr_house_shell_scheduled_date,
+      curr_house_shell_scheduled_price: p_application_headers.curr_house_shell_scheduled_price,
+      curr_house_loan_balance_type: p_application_headers.curr_house_loan_balance_type,
+      property_publish_url: p_application_headers.property_publish_url,
+      new_house_acquire_reason: p_application_headers.new_house_acquire_reason,
+      new_house_acquire_reason_other: p_application_headers.new_house_acquire_reason_other,
+      new_house_self_resident: p_application_headers.new_house_self_resident,
+      new_house_self_not_resident_reason: p_application_headers.new_house_self_not_resident_reason,
+      new_house_planned_resident_overview: p_application_headers.new_house_planned_resident_overview,
+      property_business_type: p_application_headers.property_business_type,
+      property_prefecture: p_application_headers.property_prefecture,
+      property_city: p_application_headers.property_city,
+      property_district: p_application_headers.property_district,
+      property_apartment_and_room_no: p_application_headers.property_apartment_and_room_no,
+      property_private_area: p_application_headers.property_private_area,
+      property_total_floor_area: p_application_headers.property_total_floor_area,
+      property_land_area: p_application_headers.property_land_area,
+      property_floor_area: p_application_headers.property_floor_area,
+      property_land_type: p_application_headers.property_land_type,
+      property_purchase_type: p_application_headers.property_purchase_type,
+      property_planning_area: p_application_headers.property_planning_area,
+      property_planning_area_other: p_application_headers.property_planning_area_other,
+      property_rebuilding_reason: p_application_headers.property_rebuilding_reason,
+      property_rebuilding_reason_other: p_application_headers.property_rebuilding_reason_other,
+      property_flat_35_plan: p_application_headers.property_flat_35_plan,
+      property_maintenance_type: p_application_headers.property_maintenance_type,
+      property_flat_35_tech: p_application_headers.property_flat_35_tech,
+      property_region_type: p_application_headers.property_region_type,
     },
-    validationSchema: validationSchema,
+    p_uploaded_files: {
+      G: p_uploaded_files.G,
+    },
+    p_residents,
+    isMCJ,
+    set_addr_with_application_a: false,
+  };
+  console.log(888, initialValues);
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_application_headers: {
+        ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+      },
+      p_uploaded_files: {
+        G: values.p_uploaded_files.G,
+      },
+      p_residents: values.p_residents,
+    };
+    return diffData;
+  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      const dataCopy = cloneDeep(values);
-      delete dataCopy.isMCJ;
-      delete dataCopy.set_addr_with_application_a;
-
-      if (agentSended) {
-        await updateApply(applyNo, dataCopy);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...dataCopy };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -128,6 +229,7 @@ export const ApStep07Page = () => {
     if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };
@@ -203,7 +305,7 @@ export const ApStep07Page = () => {
             />
             <ApSelectField
               name="p_application_headers.curr_house_lived_month"
-              unit={'ヶ月'}
+              unit={'月'}
               placeholder={'--'}
               options={monthOptions}
               width={52}
@@ -508,6 +610,9 @@ export const ApStep07Page = () => {
                       city_kanji: '',
                       district_kanji: '',
                       other_address_kanji: '',
+                      prefecture_kana: '',
+                      city_kana: '',
+                      district_kana: '',
                     },
                   ]);
                 }
@@ -810,12 +915,21 @@ export const ApStep07Page = () => {
                               'p_residents[0].other_address_kanji',
                               p_applicant_persons__0.other_address_kanji
                             );
+                            formik.setFieldValue(
+                              'p_residents[0].prefecture_kana',
+                              p_applicant_persons__0.prefecture_kana
+                            );
+                            formik.setFieldValue('p_residents[0].city_kana', p_applicant_persons__0.city_kana);
+                            formik.setFieldValue('p_residents[0].district_kana', p_applicant_persons__0.district_kana);
                           } else {
                             formik.setFieldValue('p_residents[0].postal_code', '');
                             formik.setFieldValue('p_residents[0].prefecture_kanji', '');
                             formik.setFieldValue('p_residents[0].city_kanji', '');
                             formik.setFieldValue('p_residents[0].district_kanji', '');
                             formik.setFieldValue('p_residents[0].other_address_kanji', '');
+                            formik.setFieldValue('p_residents[0].prefecture_kana', '');
+                            formik.setFieldValue('p_residents[0].city_kana', '');
+                            formik.setFieldValue('p_residents[0].district_kana', '');
                           }
                         }}
                       />
@@ -825,11 +939,17 @@ export const ApStep07Page = () => {
                           formik.setFieldValue('p_residents[0].prefecture_kanji', addr.prefecture_kanji);
                           formik.setFieldValue('p_residents[0].city_kanji', addr.city_kanji);
                           formik.setFieldValue('p_residents[0].district_kanji', addr.district_kanji);
+                          formik.setFieldValue('p_residents[0].prefecture_kana', addr.prefecture_kana);
+                          formik.setFieldValue('p_residents[0].city_kana', addr.city_kana);
+                          formik.setFieldValue('p_residents[0].district_kana', addr.district_kana);
                         }}
                         errorCallback={() => {
                           formik.setFieldValue('p_residents[0].prefecture_kanji', '');
                           formik.setFieldValue('p_residents[0].city_kanji', '');
                           formik.setFieldValue('p_residents[0].district_kanji', '');
+                          formik.setFieldValue('p_residents[0].prefecture_kana', '');
+                          formik.setFieldValue('p_residents[0].city_kana', '');
+                          formik.setFieldValue('p_residents[0].district_kana', '');
                         }}
                       />
                       <ApSelectField

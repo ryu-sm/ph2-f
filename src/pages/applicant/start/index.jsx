@@ -7,13 +7,19 @@ import { routeNames } from '@/router/settings';
 import { useCurrSearchParams } from '@/hooks';
 import { useEffect } from 'react';
 import { setSalesCompanyOrgId } from '@/libs';
+import { jwtDecode } from 'jwt-decode';
 
 export const ApStartPage = () => {
   const navigate = useNavigate();
-  const org_id = useCurrSearchParams().get('org_id');
+  const token = useCurrSearchParams().get('token');
+  console.log(token);
   useEffect(() => {
-    if (org_id) setSalesCompanyOrgId(org_id);
-  }, [org_id, setSalesCompanyOrgId]);
+    if (token) {
+      console.log(token);
+      const payload = jwtDecode(token);
+      setSalesCompanyOrgId(payload?.s_sales_company_org_id);
+    }
+  }, [token]);
   return (
     <ApWrapper bgImage={`url(${apBackground})`}>
       <Stack height={'calc(100dvh - 158px)'} justifyContent={'center'} alignItems={'center'}>

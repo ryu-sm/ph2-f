@@ -14,14 +14,7 @@ import {
 import { CONSENT_URL } from '@/configs';
 import { ApLayout, ApStepFooter } from '@/containers';
 import { apApplicationImg, apGetSalesCompanyOrgs } from '@/services';
-import {
-  agentSendedSelector,
-  apNextStepIdSelector,
-  apPreStepIdSelector,
-  applicationAtom,
-  applyNoSelector,
-  authAtom,
-} from '@/store';
+import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, authAtom } from '@/store';
 import { Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -31,7 +24,10 @@ import { inputOptions } from './options';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { routeNames } from '@/router/settings';
-import { useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
+import { diffObj } from '@/utils';
 
 export const ApStep12Page = () => {
   const navigate = useNavigate();
@@ -42,31 +38,79 @@ export const ApStep12Page = () => {
     user: { salesCompanyOrgId },
   } = useRecoilValue(authAtom);
   const [orgs, setOrgs] = useState([]);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const { p_uploaded_files, p_application_headers } = useRecoilValue(applicationAtom);
+  const updateApply = useApUpdateApplyInfo();
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_uploaded_files: {
+          ...pre.p_uploaded_files,
+          J: values.p_uploaded_files.J,
+        },
+        p_application_headers: {
+          ...pre.p_application_headers,
+          sales_company_id: values.p_application_headers.sales_company_id,
+          sales_area_id: values.p_application_headers.sales_area_id,
+          sales_exhibition_hall_id: values.p_application_headers.sales_exhibition_hall_id,
+          vendor_name: values.p_application_headers.vendor_name,
+          vendor_phone: values.p_application_headers.vendor_phone,
+        },
+      };
+    });
+  };
+  const initialValues = {
+    p_uploaded_files: {
+      J: p_uploaded_files.J,
+    },
+    p_application_headers: {
+      sales_company_id: p_application_headers.sales_company_id,
+      sales_area_id: p_application_headers.sales_area_id,
+      sales_exhibition_hall_id: p_application_headers.sales_exhibition_hall_id,
+      vendor_name: p_application_headers.vendor_name,
+      vendor_phone: p_application_headers.vendor_phone,
+    },
+    input_type: '',
+  };
+
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_application_headers: {
+        ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+      },
+      p_uploaded_files: {
+        ...diffObj(initialValues.p_uploaded_files, values.p_uploaded_files),
+      },
+    };
+    return diffData;
+  };
 
   const formik = useFormik({
-    initialValues: {
-      input_type: '',
-      p_uploaded_files,
-      p_application_headers,
-    },
-    validationSchema: validationSchema,
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      const dataCopy = cloneDeep(values);
-      delete dataCopy.input_type;
-      if (agentSended) {
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...dataCopy };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(API_500_ERROR);
       }
     },
   });
+
+  useEffect(() => {
+    if (salesCompanyOrgId) {
+    } else {
+    }
+  }, [salesCompanyOrgId]);
 
   const sendedImg = useCallback(async () => {
     if (agentSended) {
@@ -93,6 +137,7 @@ export const ApStep12Page = () => {
     if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };
@@ -107,6 +152,12 @@ export const ApStep12Page = () => {
         category: item.category,
       }));
       setOrgs(tempOrgs);
+      if (salesCompanyOrgId) {
+        formik.setFieldValue(
+          'p_application_headers.sales_company_id',
+          tempOrgs.find((item) => item.category === 'C').value
+        );
+      }
     } catch (error) {
       console.error(error);
     }

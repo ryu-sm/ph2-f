@@ -25,7 +25,6 @@ import { MCJ_CODE } from '@/configs';
 import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 import { apApplication } from '@/services';
-import { toast } from 'react-toastify';
 
 export const ApTopPage = () => {
   const applyNo = useRecoilValue(applyNoSelector);

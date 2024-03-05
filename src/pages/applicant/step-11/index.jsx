@@ -12,7 +12,7 @@ import {
 import { ApLayout, ApStepFooter } from '@/containers';
 
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import { validationSchema } from './validationSchema';
 import { useNavigate } from 'react-router-dom';
 import { Stack, Typography, Link } from '@mui/material';
@@ -22,67 +22,233 @@ import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apApplicationImg } from '@/services';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApStep11Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const {
     apNextStepId,
     apPreStepId,
-    hasIncomeTotalizer,
     changeToIncomeTotalizer,
+    changeJoinGuarantor,
+    p_application_headers,
     p_applicant_persons__1,
     p_uploaded_files,
-    p_application_headers,
+    p_join_guarantors,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
-  const formik = useFormik({
-    initialValues: {
-      p_applicant_persons__1,
-      p_uploaded_files,
-      hasIncomeTotalizer,
-      p_application_headers,
+
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_uploaded_files: {
+          ...pre.p_uploaded_files,
+          p_applicant_persons__1__A__01__a: values.p_uploaded_files.p_applicant_persons__1__A__01__a,
+          p_applicant_persons__1__A__01__b: values.p_uploaded_files.p_applicant_persons__1__A__01__b,
+          p_applicant_persons__1__A__02: values.p_uploaded_files.p_applicant_persons__1__A__02,
+          p_applicant_persons__1__A__03__a: values.p_uploaded_files.p_applicant_persons__1__A__03__a,
+          p_applicant_persons__1__A__03__b: values.p_uploaded_files.p_applicant_persons__1__A__03__b,
+          p_applicant_persons__1__B__a: values.p_uploaded_files.p_applicant_persons__1__B__a,
+          p_applicant_persons__1__B__b: values.p_uploaded_files.p_applicant_persons__1__B__b,
+          p_applicant_persons__1__C__01: values.p_uploaded_files.p_applicant_persons__1__C__01,
+          p_applicant_persons__1__C__02: values.p_uploaded_files.p_applicant_persons__1__C__02,
+          p_applicant_persons__1__C__03: values.p_uploaded_files.p_applicant_persons__1__C__03,
+          p_applicant_persons__1__C__04: values.p_uploaded_files.p_applicant_persons__1__C__04,
+          p_applicant_persons__1__C__05: values.p_uploaded_files.p_applicant_persons__1__C__05,
+          p_applicant_persons__1__D__01: values.p_uploaded_files.p_applicant_persons__1__D__01,
+          p_applicant_persons__1__D__02: values.p_uploaded_files.p_applicant_persons__1__D__02,
+          p_applicant_persons__1__D__03: values.p_uploaded_files.p_applicant_persons__1__D__03,
+          p_applicant_persons__1__E: values.p_uploaded_files.p_applicant_persons__1__E,
+          p_applicant_persons__1__F__01: values.p_uploaded_files.p_applicant_persons__1__F__01,
+          p_applicant_persons__1__F__02: values.p_uploaded_files.p_applicant_persons__1__F__02,
+          p_applicant_persons__1__F__03: values.p_uploaded_files.p_applicant_persons__1__F__03,
+          p_applicant_persons__1__K: values.p_uploaded_files.p_applicant_persons__1__K,
+        },
+        p_applicant_persons__1: {
+          ...pre.p_applicant_persons__1,
+          identity_verification_type: values.p_applicant_persons__1.identity_verification_type,
+        },
+      };
+    });
+  };
+  const initialValues = {
+    p_uploaded_files: {
+      p_applicant_persons__1__A__01__a: p_uploaded_files.p_applicant_persons__1__A__01__a,
+      p_applicant_persons__1__A__01__b: p_uploaded_files.p_applicant_persons__1__A__01__b,
+      p_applicant_persons__1__A__02: p_uploaded_files.p_applicant_persons__1__A__02,
+      p_applicant_persons__1__A__03__a: p_uploaded_files.p_applicant_persons__1__A__03__a,
+      p_applicant_persons__1__A__03__b: p_uploaded_files.p_applicant_persons__1__A__03__b,
+      p_applicant_persons__1__B__a: p_uploaded_files.p_applicant_persons__1__B__a,
+      p_applicant_persons__1__B__b: p_uploaded_files.p_applicant_persons__1__B__b,
+      p_applicant_persons__1__C__01: p_uploaded_files.p_applicant_persons__1__C__01,
+      p_applicant_persons__1__C__02: p_uploaded_files.p_applicant_persons__1__C__02,
+      p_applicant_persons__1__C__03: p_uploaded_files.p_applicant_persons__1__C__03,
+      p_applicant_persons__1__C__04: p_uploaded_files.p_applicant_persons__1__C__04,
+      p_applicant_persons__1__C__05: p_uploaded_files.p_applicant_persons__1__C__05,
+      p_applicant_persons__1__D__01: p_uploaded_files.p_applicant_persons__1__D__01,
+      p_applicant_persons__1__D__02: p_uploaded_files.p_applicant_persons__1__D__02,
+      p_applicant_persons__1__D__03: p_uploaded_files.p_applicant_persons__1__D__03,
+      p_applicant_persons__1__E: p_uploaded_files.p_applicant_persons__1__E,
+      p_applicant_persons__1__F__01: p_uploaded_files.p_applicant_persons__1__F__01,
+      p_applicant_persons__1__F__02: p_uploaded_files.p_applicant_persons__1__F__02,
+      p_applicant_persons__1__F__03: p_uploaded_files.p_applicant_persons__1__F__03,
+      p_applicant_persons__1__K: p_uploaded_files.p_applicant_persons__1__K,
     },
-    validationSchema: validationSchema,
+    p_applicant_persons__1: {
+      identity_verification_type: p_applicant_persons__1.identity_verification_type,
+    },
+  };
+
+  const setUpdateData = (values) => {
+    const newData = {
+      p_uploaded_files: {
+        ...(values.p_applicant_persons__1.identity_verification_type === '1'
+          ? {
+              p_applicant_persons__1__A__01__a: values.p_uploaded_files.p_applicant_persons__1__A__01__a,
+              p_applicant_persons__1__A__01__b: values.p_uploaded_files.p_applicant_persons__1__A__01__b,
+              p_applicant_persons__1__A__02: [],
+              p_applicant_persons__1__A__03__a: [],
+              p_applicant_persons__1__A__03__b: [],
+            }
+          : {}),
+        ...(values.p_applicant_persons__1.identity_verification_type === '2'
+          ? {
+              p_applicant_persons__1__A__01__a: [],
+              p_applicant_persons__1__A__01__b: [],
+              p_applicant_persons__1__A__02: values.p_uploaded_files.p_applicant_persons__1__A__02,
+              p_applicant_persons__1__A__03__a: [],
+              p_applicant_persons__1__A__03__b: [],
+            }
+          : {}),
+        ...(values.p_applicant_persons__1.identity_verification_type === '3'
+          ? {
+              p_applicant_persons__1__A__01__a: [],
+              p_applicant_persons__1__A__01__b: [],
+              p_applicant_persons__1__A__02: [],
+              p_applicant_persons__1__A__03__a: values.p_uploaded_files.p_applicant_persons__1__A__03__a,
+              p_applicant_persons__1__A__03__b: values.p_uploaded_files.p_applicant_persons__1__A__03__b,
+            }
+          : {}),
+        p_applicant_persons__1__B__a: values.p_uploaded_files.p_applicant_persons__1__B__a,
+        p_applicant_persons__1__B__b: values.p_uploaded_files.p_applicant_persons__1__B__b,
+        p_applicant_persons__1__C__01: values.p_uploaded_files.p_applicant_persons__1__C__01,
+        p_applicant_persons__1__C__02: values.p_uploaded_files.p_applicant_persons__1__C__02,
+        p_applicant_persons__1__C__03: values.p_uploaded_files.p_applicant_persons__1__C__03,
+        p_applicant_persons__1__C__04: values.p_uploaded_files.p_applicant_persons__1__C__04,
+        p_applicant_persons__1__C__05: values.p_uploaded_files.p_applicant_persons__1__C__05,
+        p_applicant_persons__1__D__01: values.p_uploaded_files.p_applicant_persons__1__D__01,
+        p_applicant_persons__1__D__02: values.p_uploaded_files.p_applicant_persons__1__D__02,
+        p_applicant_persons__1__D__03: values.p_uploaded_files.p_applicant_persons__1__D__03,
+        p_applicant_persons__1__E: values.p_uploaded_files.p_applicant_persons__1__E,
+        p_applicant_persons__1__F__01: values.p_uploaded_files.p_applicant_persons__1__F__01,
+        p_applicant_persons__1__F__02: values.p_uploaded_files.p_applicant_persons__1__F__02,
+        p_applicant_persons__1__F__03: values.p_uploaded_files.p_applicant_persons__1__F__03,
+        p_applicant_persons__1__K: values.p_uploaded_files.p_applicant_persons__1__K,
+      },
+      p_applicant_persons__1: {
+        identity_verification_type: values.p_applicant_persons__1.identity_verification_type,
+      },
+    };
+    const diffData = {
+      p_uploaded_files: {
+        ...diffObj(initialValues.p_uploaded_files, newData.p_uploaded_files),
+        ...(changeToIncomeTotalizer
+          ? {
+              p_applicant_persons__1__H__a: p_uploaded_files.p_applicant_persons__1__H__a,
+              p_applicant_persons__1__H__b: p_uploaded_files.p_applicant_persons__1__H__b,
+            }
+          : {}),
+      },
+      p_applicant_persons__1: {
+        ...diffObj(initialValues.p_applicant_persons__1, newData.p_applicant_persons__1),
+        ...(changeToIncomeTotalizer
+          ? {
+              last_name_kanji: p_applicant_persons__1.last_name_kanji,
+              first_name_kanji: p_applicant_persons__1.first_name_kanji,
+              last_name_kana: p_applicant_persons__1.last_name_kana,
+              first_name_kana: p_applicant_persons__1.first_name_kana,
+              gender: p_applicant_persons__1.gender,
+              birthday: p_applicant_persons__1.birthday,
+              nationality: p_applicant_persons__1.nationality,
+              mobile_phone: p_applicant_persons__1.mobile_phone,
+              home_phone: p_applicant_persons__1.home_phone,
+              postal_code: p_applicant_persons__1.postal_code,
+              prefecture_kanji: p_applicant_persons__1.prefecture_kanji,
+              city_kanji: p_applicant_persons__1.city_kanji,
+              district_kanji: p_applicant_persons__1.district_kanji,
+              other_address_kanji: p_applicant_persons__1.other_address_kanji,
+              prefecture_kana: p_applicant_persons__1.prefecture_kana,
+              city_kana: p_applicant_persons__1.city_kana,
+              district_kana: p_applicant_persons__1.district_kana,
+              //
+              office_occupation: p_applicant_persons__1.office_occupation,
+              office_occupation_other: p_applicant_persons__1.office_occupation_other,
+              office_industry: p_applicant_persons__1.office_industry,
+              office_industry_other: p_applicant_persons__1.office_industry_other,
+              office_occupation_detail: p_applicant_persons__1.office_occupation_detail,
+              office_occupation_detail_other: p_applicant_persons__1.office_occupation_detail_other,
+              office_name_kanji: p_applicant_persons__1.office_name_kanji,
+              office_department: p_applicant_persons__1.office_department,
+              office_phone: p_applicant_persons__1.office_phone,
+              office_postal_code: p_applicant_persons__1.office_postal_code,
+              office_prefecture_kanji: p_applicant_persons__1.office_prefecture_kanji,
+              office_city_kanji: p_applicant_persons__1.office_city_kanji,
+              office_district_kanji: p_applicant_persons__1.office_district_kanji,
+              office_other_address_kanji: p_applicant_persons__1.office_other_address_kanji,
+              office_prefecture_kana: p_applicant_persons__1.office_prefecture_kana,
+              office_city_kana: p_applicant_persons__1.office_city_kana,
+              office_district_kana: p_applicant_persons__1.office_district_kana,
+              office_employee_num: p_applicant_persons__1.office_employee_num,
+              office_joining_date: p_applicant_persons__1.office_joining_date,
+              last_year_income: p_applicant_persons__1.last_year_income,
+              last_year_bonus_income: p_applicant_persons__1.last_year_bonus_income,
+              income_sources: p_applicant_persons__1.income_sources,
+              tax_return: p_applicant_persons__1.tax_return,
+              tax_return_reasons: p_applicant_persons__1.tax_return_reasons,
+              tax_return_reason_other: p_applicant_persons__1.tax_return_reason_other,
+              transfer_office: p_applicant_persons__1.transfer_office,
+              transfer_office_name_kanji: p_applicant_persons__1.transfer_office_name_kanji,
+              transfer_office_name_kana: p_applicant_persons__1.transfer_office_name_kana,
+              transfer_office_phone: p_applicant_persons__1.transfer_office_phone,
+              transfer_office_postal_code: p_applicant_persons__1.transfer_office_postal_code,
+              transfer_office_prefecture_kanji: p_applicant_persons__1.transfer_office_prefecture_kanji,
+              transfer_office_city_kanji: p_applicant_persons__1.transfer_office_city_kanji,
+              transfer_office_district_kanji: p_applicant_persons__1.transfer_office_district_kanji,
+              transfer_office_other_address_kanji: p_applicant_persons__1.transfer_office_other_address_kanji,
+              maternity_paternity_leave: p_applicant_persons__1.maternity_paternity_leave,
+              maternity_paternity_leave_start_date: p_applicant_persons__1.maternity_paternity_leave_start_date,
+              maternity_paternity_leave_end_date: p_applicant_persons__1.maternity_paternity_leave_end_date,
+              nursing_leave: p_applicant_persons__1.nursing_leave,
+            }
+          : {}),
+      },
+      ...(changeJoinGuarantor ? { p_join_guarantors: p_join_guarantors } : {}),
+      p_application_headers: {
+        loan_type: p_application_headers.loan_type,
+      },
+    };
+    return diffData;
+  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      const dataCopy = cloneDeep(formik.values);
-      if (values.p_applicant_persons__1.identity_verification_type === '1') {
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__02 = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__b = [];
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__02', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__b', []);
-      }
-      if (values.p_applicant_persons__1.identity_verification_type === '2') {
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__b = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__03__b = [];
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__b', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__03__b', []);
-      }
-      if (values.p_applicant_persons__1.identity_verification_type === '3') {
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__a = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__01__b = [];
-        dataCopy.p_uploaded_files.p_applicant_persons__1__A__02 = [];
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__a', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__01__b', []);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__A__02', []);
-      }
-      if (agentSended) {
-        await updateApply(applyNo, dataCopy);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...values };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -140,10 +306,12 @@ export const ApStep11Page = () => {
 
   const handelLeft = () => {
     if (changeToIncomeTotalizer) {
+      setLocalData(formik.values);
       navigate(routeNames.apStep05Page.path);
     } else if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };

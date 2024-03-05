@@ -1,10 +1,8 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApPageTitle, ApSignatureBoard } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 import {
-  agentSendedSelector,
   apNextStepIdSelector,
   apPreStepIdSelector,
-  applayTypeSelector,
   applicationAtom,
   authAtom,
   hasIncomeTotalizerSelector,
@@ -26,7 +24,6 @@ import { ApStep10Info } from '../step-10/step-10-info';
 import { ApStep11Info } from '../step-11/step-11-info';
 import { ApStep12Info } from '../step-12/step-12-info';
 import { useNavigate } from 'react-router-dom';
-import { routeNames } from '@/router/settings';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import { Box, Stack, Typography } from '@mui/material';
@@ -120,10 +117,13 @@ export const ApStep13Page = () => {
     }
   }, [errorMsgRef.current]);
 
-  const formik = useFormik({
-    initialValues: {
-      p_uploaded_files: application.p_uploaded_files,
+  const initialValues = {
+    p_uploaded_files: {
+      S: application.p_uploaded_files.S,
     },
+  };
+  const formik = useFormik({
+    initialValues,
     onSubmit: async (values) => {
       try {
         if (errorMsg.length > 0) {
@@ -132,7 +132,7 @@ export const ApStep13Page = () => {
         }
         const sendRes = await apAgentSend({
           ...application,
-          p_uploaded_files: formik.values.p_uploaded_files,
+          p_uploaded_files: application.p_uploaded_files,
         });
         setAuthInfo((pre) => {
           return {
@@ -197,7 +197,7 @@ export const ApStep13Page = () => {
           tempMsg.push('収入合算者の本人確認書類');
         }
       }
-      if (application.p_applicant_persons__1.identity_verification_type === '2') {
+      if (application.p_applicant_persons__1.identity_verification_type === '3') {
         if (
           application.p_uploaded_files.p_applicant_persons__1__A__03__a.length === 0 ||
           application.p_uploaded_files.p_applicant_persons__1__A__03__b.length === 0
@@ -234,7 +234,7 @@ export const ApStep13Page = () => {
 
     return tempMsg;
   }, [formik.values.p_uploaded_files, application]);
-
+  console.log(application);
   return (
     <FormikProvider value={formik}>
       <ApLayout hasMenu hasStepBar pb={24}>

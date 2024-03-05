@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { Fragment, useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { agentSendedSelector, applicationAtom, applyNoSelector, authAtom } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -46,12 +46,14 @@ import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apPborrowings } from '@/services';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApStep08Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const {
     isMCJ,
@@ -63,27 +65,67 @@ export const ApStep08Page = () => {
     p_borrowings,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
-  const formik = useFormik({
-    initialValues: {
-      p_application_headers,
-      p_borrowings,
-      //
-      isMCJ,
-      hasIncomeTotalizer,
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          curr_borrowing_status: values.p_application_headers.curr_borrowing_status,
+          refund_source_type: values.p_application_headers.refund_source_type,
+          refund_source_type_other: values.p_application_headers.refund_source_type_other,
+          refund_source_content: values.p_application_headers.refund_source_content,
+          refund_source_amount: values.p_application_headers.refund_source_amount,
+          rent_to_be_paid_land: values.p_application_headers.rent_to_be_paid_land,
+          rent_to_be_paid_land_borrower: values.p_application_headers.rent_to_be_paid_land_borrower,
+          rent_to_be_paid_house: values.p_application_headers.rent_to_be_paid_house,
+          rent_to_be_paid_house_borrower: values.p_application_headers.rent_to_be_paid_house_borrower,
+        },
+        p_borrowings: values.p_borrowings,
+      };
+    });
+  };
+  const initialValues = {
+    p_application_headers: {
+      curr_borrowing_status: p_application_headers.curr_borrowing_status,
+      refund_source_type: p_application_headers.refund_source_type,
+      refund_source_type_other: p_application_headers.refund_source_type_other,
+      refund_source_content: p_application_headers.refund_source_content,
+      refund_source_amount: p_application_headers.refund_source_amount,
+      rent_to_be_paid_land: p_application_headers.rent_to_be_paid_land,
+      rent_to_be_paid_land_borrower: p_application_headers.rent_to_be_paid_land_borrower,
+      rent_to_be_paid_house: p_application_headers.rent_to_be_paid_house,
+      rent_to_be_paid_house_borrower: p_application_headers.rent_to_be_paid_house_borrower,
     },
-    validationSchema: validationSchema,
+    p_borrowings: p_borrowings,
+    isMCJ,
+    hasIncomeTotalizer,
+  };
+
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_application_headers: {
+        ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+        curr_borrowing_status: values.p_application_headers.curr_borrowing_status,
+      },
+      p_borrowings: values.p_borrowings,
+    };
+    return diffData;
+  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      const dataCopy = cloneDeep(values);
-      delete dataCopy.isMCJ;
-      delete dataCopy.hasIncomeTotalizer;
-      if (agentSended) {
-        await updateApply(applyNo, dataCopy);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...dataCopy };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -125,6 +167,7 @@ export const ApStep08Page = () => {
     if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };
@@ -245,31 +288,32 @@ export const ApStep08Page = () => {
                                 justifyContent={'start'}
                                 width={1}
                                 onChange={() => {
-                                  arrayHelpers.replace(index, {
-                                    id: p_borrowing.id,
-                                    p_borrowings__I: [],
-                                    self_input: '0',
-                                    borrower: '',
-                                    type: '',
-                                    lender: '',
-                                    borrowing_from_house_finance_agency: '',
-                                    loan_start_date: '',
-                                    loan_amount: '',
-                                    curr_loan_balance_amount: '',
-                                    annual_repayment_amount: '',
-                                    loan_end_date: '',
-                                    scheduled_loan_payoff: '',
-                                    scheduled_loan_payoff_date: '',
-                                    loan_business_target: '',
-                                    loan_business_target_other: '',
-                                    loan_purpose: '',
-                                    loan_purpose_other: '',
-                                    category: '',
-                                    card_expiry_date: '',
-                                    rental_room_num: '',
-                                    common_housing: '',
-                                    estate_setting: '',
-                                  });
+                                  if (formik.values.p_borrowings[index].type !== '')
+                                    arrayHelpers.replace(index, {
+                                      id: p_borrowing.id,
+                                      p_borrowings__I: [],
+                                      self_input: '0',
+                                      borrower: '',
+                                      type: '',
+                                      lender: '',
+                                      borrowing_from_house_finance_agency: '',
+                                      loan_start_date: '',
+                                      loan_amount: '',
+                                      curr_loan_balance_amount: '',
+                                      annual_repayment_amount: '',
+                                      loan_end_date: '',
+                                      scheduled_loan_payoff: '',
+                                      scheduled_loan_payoff_date: '',
+                                      loan_business_target: '',
+                                      loan_business_target_other: '',
+                                      loan_purpose: '',
+                                      loan_purpose_other: '',
+                                      category: '',
+                                      card_expiry_date: '',
+                                      rental_room_num: '',
+                                      common_housing: '',
+                                      estate_setting: '',
+                                    });
                                 }}
                               />
                             </ApItemGroup>

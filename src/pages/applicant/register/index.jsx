@@ -10,7 +10,7 @@ import {
   ApPwdInputField,
 } from '@/components';
 import { ApLayout } from '@/containers';
-import { validationSchema } from './validatior';
+import { validationSchema } from './validationSchema';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 import { routeNames } from '@/router/settings';
@@ -20,6 +20,8 @@ import { setToken } from '@/libs';
 import { jwtDecode } from 'jwt-decode';
 import { authAtom } from '@/store';
 import { useSetRecoilState } from 'recoil';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApRegisterPage = () => {
   const navigate = useNavigate();
@@ -49,7 +51,6 @@ export const ApRegisterPage = () => {
               ...pre.user,
               id: payload?.id,
               email: payload?.email,
-              isFirstLogin: Boolean(payload?.first_login),
               salesCompanyOrgId: payload?.s_sales_company_org_id,
               preExaminationStatus: payload?.pre_examination_status,
               displayPdf: Boolean(payload?.display_pdf),
@@ -64,11 +65,11 @@ export const ApRegisterPage = () => {
           case 400:
             setWarningText('このメールアドレスは既に存在しています。別のメールアドレスで登録してください。');
             break;
-          case 401:
+          case 407:
             setIsValidToken(false);
             break;
           default:
-            setWarningText('サーバーとの通信に失敗しました。再度お試しください。');
+            toast.error(API_500_ERROR);
         }
       }
     },

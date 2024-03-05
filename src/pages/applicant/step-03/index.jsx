@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -36,17 +36,18 @@ import {
   taxReturnReasonsOptions,
   transferOfficeOptions,
 } from './options';
-import { PREFECTURES } from '@/constant';
+import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { routeNames } from '@/router/settings';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
 
 export const ApStep03Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const {
     isMCJ,
@@ -56,18 +57,120 @@ export const ApStep03Page = () => {
     p_applicant_persons__0,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_applicant_persons__0: {
+          ...pre.p_applicant_persons__0,
+          office_occupation: values.p_applicant_persons__0.office_occupation,
+          office_occupation_other: values.p_applicant_persons__0.office_occupation_other,
+          office_industry: values.p_applicant_persons__0.office_industry,
+          office_industry_other: values.p_applicant_persons__0.office_industry_other,
+          office_occupation_detail: values.p_applicant_persons__0.office_occupation_detail,
+          office_occupation_detail_other: values.p_applicant_persons__0.office_occupation_detail_other,
+          office_name_kanji: values.p_applicant_persons__0.office_name_kanji,
+          office_department: values.p_applicant_persons__0.office_department,
+          office_phone: values.p_applicant_persons__0.office_phone,
+          office_postal_code: values.p_applicant_persons__0.office_postal_code,
+          office_prefecture_kanji: values.p_applicant_persons__0.office_prefecture_kanji,
+          office_city_kanji: values.p_applicant_persons__0.office_city_kanji,
+          office_district_kanji: values.p_applicant_persons__0.office_district_kanji,
+          office_other_address_kanji: values.p_applicant_persons__0.office_other_address_kanji,
+          office_prefecture_kana: values.p_applicant_persons__0.office_prefecture_kana,
+          office_city_kana: values.p_applicant_persons__0.office_city_kana,
+          office_district_kana: values.p_applicant_persons__0.office_district_kana,
+          office_employee_num: values.p_applicant_persons__0.office_employee_num,
+          office_joining_date: values.p_applicant_persons__0.office_joining_date,
+          last_year_income: values.p_applicant_persons__0.last_year_income,
+          last_year_bonus_income: values.p_applicant_persons__0.last_year_bonus_income,
+          income_sources: values.p_applicant_persons__0.income_sources,
+          tax_return: values.p_applicant_persons__0.tax_return,
+          tax_return_reasons: values.p_applicant_persons__0.tax_return_reasons,
+          tax_return_reason_other: values.p_applicant_persons__0.tax_return_reason_other,
+          transfer_office: values.p_applicant_persons__0.transfer_office,
+          transfer_office_name_kanji: values.p_applicant_persons__0.transfer_office_name_kanji,
+          transfer_office_name_kana: values.p_applicant_persons__0.transfer_office_name_kana,
+          transfer_office_phone: values.p_applicant_persons__0.transfer_office_phone,
+          transfer_office_postal_code: values.p_applicant_persons__0.transfer_office_postal_code,
+          transfer_office_prefecture_kanji: values.p_applicant_persons__0.transfer_office_prefecture_kanji,
+          transfer_office_city_kanji: values.p_applicant_persons__0.transfer_office_city_kanji,
+          transfer_office_district_kanji: values.p_applicant_persons__0.transfer_office_district_kanji,
+          transfer_office_other_address_kanji: values.p_applicant_persons__0.transfer_office_other_address_kanji,
+          maternity_paternity_leave: values.p_applicant_persons__0.maternity_paternity_leave,
+          maternity_paternity_leave_start_date: values.p_applicant_persons__0.maternity_paternity_leave_start_date,
+          maternity_paternity_leave_end_date: values.p_applicant_persons__0.maternity_paternity_leave_end_date,
+          nursing_leave: values.p_applicant_persons__0.nursing_leave,
+        },
+      };
+    });
+  };
+  const initialValues = {
+    p_applicant_persons__0: {
+      office_occupation: p_applicant_persons__0.office_occupation,
+      office_occupation_other: p_applicant_persons__0.office_occupation_other,
+      office_industry: p_applicant_persons__0.office_industry,
+      office_industry_other: p_applicant_persons__0.office_industry_other,
+      office_occupation_detail: p_applicant_persons__0.office_occupation_detail,
+      office_occupation_detail_other: p_applicant_persons__0.office_occupation_detail_other,
+      office_name_kanji: p_applicant_persons__0.office_name_kanji,
+      office_department: p_applicant_persons__0.office_department,
+      office_phone: p_applicant_persons__0.office_phone,
+      office_postal_code: p_applicant_persons__0.office_postal_code,
+      office_prefecture_kanji: p_applicant_persons__0.office_prefecture_kanji,
+      office_city_kanji: p_applicant_persons__0.office_city_kanji,
+      office_district_kanji: p_applicant_persons__0.office_district_kanji,
+      office_other_address_kanji: p_applicant_persons__0.office_other_address_kanji,
+      office_prefecture_kana: p_applicant_persons__0.office_prefecture_kana,
+      office_city_kana: p_applicant_persons__0.office_city_kana,
+      office_district_kana: p_applicant_persons__0.office_district_kana,
+      office_employee_num: p_applicant_persons__0.office_employee_num,
+      office_joining_date: p_applicant_persons__0.office_joining_date,
+      last_year_income: p_applicant_persons__0.last_year_income,
+      last_year_bonus_income: p_applicant_persons__0.last_year_bonus_income,
+      income_sources: p_applicant_persons__0.income_sources,
+      tax_return: p_applicant_persons__0.tax_return,
+      tax_return_reasons: p_applicant_persons__0.tax_return_reasons,
+      tax_return_reason_other: p_applicant_persons__0.tax_return_reason_other,
+      transfer_office: p_applicant_persons__0.transfer_office,
+      transfer_office_name_kanji: p_applicant_persons__0.transfer_office_name_kanji,
+      transfer_office_name_kana: p_applicant_persons__0.transfer_office_name_kana,
+      transfer_office_phone: p_applicant_persons__0.transfer_office_phone,
+      transfer_office_postal_code: p_applicant_persons__0.transfer_office_postal_code,
+      transfer_office_prefecture_kanji: p_applicant_persons__0.transfer_office_prefecture_kanji,
+      transfer_office_city_kanji: p_applicant_persons__0.transfer_office_city_kanji,
+      transfer_office_district_kanji: p_applicant_persons__0.transfer_office_district_kanji,
+      transfer_office_other_address_kanji: p_applicant_persons__0.transfer_office_other_address_kanji,
+      maternity_paternity_leave: p_applicant_persons__0.maternity_paternity_leave,
+      maternity_paternity_leave_start_date: p_applicant_persons__0.maternity_paternity_leave_start_date,
+      maternity_paternity_leave_end_date: p_applicant_persons__0.maternity_paternity_leave_end_date,
+      nursing_leave: p_applicant_persons__0.nursing_leave,
+    },
+  };
+
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_applicant_persons__0: {
+        ...diffObj(initialValues.p_applicant_persons__0, values.p_applicant_persons__0),
+      },
+    };
+    return diffData;
+  };
+
   const formik = useFormik({
-    initialValues: { p_applicant_persons__0 },
-    validationSchema: validationSchema,
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      if (agentSended) {
-        await updateApply(applyNo, values);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...values };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -81,6 +184,7 @@ export const ApStep03Page = () => {
     if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };
@@ -100,7 +204,6 @@ export const ApStep03Page = () => {
               justifyContent={'start'}
               options={occupationOptions}
               onChange={(e) => {
-                // TODO: 1
                 if (e.target.value === '12') {
                   formik.setFieldValue('p_applicant_persons__0.office_phone', '');
                 }
@@ -216,11 +319,17 @@ export const ApStep03Page = () => {
                 formik.setFieldValue('p_applicant_persons__0.office_prefecture_kanji', addr.prefecture_kanji);
                 formik.setFieldValue('p_applicant_persons__0.office_city_kanji', addr.city_kanji);
                 formik.setFieldValue('p_applicant_persons__0.office_district_kanji', addr.district_kanji);
+                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', addr.prefecture_kana);
+                formik.setFieldValue('p_applicant_persons__0.office_city_kana', addr.city_kana);
+                formik.setFieldValue('p_applicant_persons__0.office_district_kana', addr.district_kana);
               }}
               errorCallback={() => {
                 formik.setFieldValue('p_applicant_persons__0.office_prefecture_kanji', '');
                 formik.setFieldValue('p_applicant_persons__0.office_city_kanji', '');
                 formik.setFieldValue('p_applicant_persons__0.office_district_kanji', '');
+                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', '');
+                formik.setFieldValue('p_applicant_persons__0.office_city_kana', '');
+                formik.setFieldValue('p_applicant_persons__0.office_district_kana', '');
               }}
             />
             <ApSelectField

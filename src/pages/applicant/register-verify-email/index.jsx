@@ -10,7 +10,7 @@ import {
   ApPrimaryButton,
 } from '@/components';
 import { ApLayout } from '@/containers';
-import { validationSchema } from './validatior';
+import { validationSchema } from './validationSchema';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 
@@ -18,22 +18,27 @@ import { TERM_OF_SERVICE } from '@/configs';
 import { routeNames } from '@/router/settings';
 import { apRegisterVerifyEmail } from '@/services';
 import { getSalesCompanyOrgId } from '@/libs';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApRegisterVerifyEmailPage = () => {
   const navigate = useNavigate();
   const [confirmed, setConfirmed] = useState(false);
   const [sended, setSended] = useState(false);
   const [warningText, setWarningText] = useState('');
-
+  const s_sales_company_org_id = getSalesCompanyOrgId();
+  console.log(s_sales_company_org_id);
   const formik = useFormik({
     initialValues: {
       email: '',
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const s_sales_company_org_id = getSalesCompanyOrgId();
       try {
-        await apRegisterVerifyEmail({ email: values.email, ...(s_sales_company_org_id && { s_sales_company_org_id }) });
+        await apRegisterVerifyEmail({
+          email: values.email,
+          ...(s_sales_company_org_id && { s_sales_company_org_id: s_sales_company_org_id }),
+        });
         setSended(true);
       } catch (error) {
         switch (error?.status) {
@@ -41,7 +46,7 @@ export const ApRegisterVerifyEmailPage = () => {
             setWarningText('このメールアドレスは既に存在しています。別のメールアドレスで登録してください。');
             break;
           default:
-            setWarningText('サーバーとの通信に失敗しました。再度お試しください。');
+            toast.error(API_500_ERROR);
         }
       }
     },

@@ -28,7 +28,7 @@ import {
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import {
   bonusRepaymentMonthOptions,
   hasJoinGuarantorOptions,
@@ -50,7 +50,9 @@ import { MCJ_CODE, SBI_CODE } from '@/configs';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { cloneDeep } from 'lodash';
-import { YUP_MESSAGES } from '@/constant';
+import { API_500_ERROR, YUP_MESSAGES } from '@/constant';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
 
 export const ApStep01Page = () => {
   const navigate = useNavigate();
@@ -58,8 +60,7 @@ export const ApStep01Page = () => {
   const delPairLoanModal = useBoolean(false);
   const updateModal = useBoolean(false);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const {
     isMCJ,
     apNextStepId,
@@ -72,33 +73,108 @@ export const ApStep01Page = () => {
     p_borrowing_details__2,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
-  const formik = useFormik({
-    initialValues: {
-      p_application_headers,
-      p_application_banks,
-      p_borrowing_details__1,
-      p_borrowing_details__2,
-      // 補助フィールド
-      loan_target_: '0',
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          move_scheduled_date: values.p_application_headers.move_scheduled_date,
+          loan_target: values.p_application_headers.loan_target,
+          land_advance_plan: values.p_application_headers.land_advance_plan,
+          loan_type: values.p_application_headers.loan_type,
+          pair_loan_last_name: values.p_application_headers.pair_loan_last_name,
+          pair_loan_first_name: values.p_application_headers.pair_loan_first_name,
+          pair_loan_rel_name: values.p_application_headers.pair_loan_rel_name,
+          join_guarantor_umu: values.p_application_headers.join_guarantor_umu,
+          loan_plus: values.p_application_headers.loan_plus,
+        },
+        p_application_banks: values.p_application_banks,
+        p_borrowing_details__1: {
+          ...pre.p_borrowing_details__1,
+          desired_borrowing_date: values.p_borrowing_details__1.desired_borrowing_date,
+          desired_loan_amount: values.p_borrowing_details__1.desired_loan_amount,
+          bonus_repayment_amount: values.p_borrowing_details__1.bonus_repayment_amount,
+          bonus_repayment_month: values.p_borrowing_details__1.bonus_repayment_month,
+          loan_term_year: values.p_borrowing_details__1.loan_term_year,
+          repayment_method: values.p_borrowing_details__1.repayment_method,
+        },
+        p_borrowing_details__2: {
+          ...pre.p_borrowing_details__2,
+          desired_borrowing_date: values.p_borrowing_details__2.desired_borrowing_date,
+          desired_loan_amount: values.p_borrowing_details__2.desired_loan_amount,
+          bonus_repayment_amount: values.p_borrowing_details__2.bonus_repayment_amount,
+        },
+      };
+    });
+  };
+
+  const initialValues = {
+    p_application_headers: {
+      move_scheduled_date: p_application_headers.move_scheduled_date,
+      loan_target: p_application_headers.loan_target,
+      land_advance_plan: p_application_headers.land_advance_plan,
+      loan_type: p_application_headers.loan_type,
+      pair_loan_last_name: p_application_headers.pair_loan_last_name,
+      pair_loan_first_name: p_application_headers.pair_loan_first_name,
+      pair_loan_rel_name: p_application_headers.pair_loan_rel_name,
+      join_guarantor_umu: p_application_headers.join_guarantor_umu,
+      loan_plus: p_application_headers.loan_plus,
     },
-    validationSchema: validationSchema,
+    p_application_banks,
+    p_borrowing_details__1: {
+      desired_borrowing_date: p_borrowing_details__1.desired_borrowing_date,
+      desired_loan_amount: p_borrowing_details__1.desired_loan_amount,
+      bonus_repayment_amount: p_borrowing_details__1.bonus_repayment_amount,
+      bonus_repayment_month: p_borrowing_details__1.bonus_repayment_month,
+      loan_term_year: p_borrowing_details__1.loan_term_year,
+      repayment_method: p_borrowing_details__1.repayment_method,
+    },
+    p_borrowing_details__2: {
+      desired_borrowing_date: p_borrowing_details__2.desired_borrowing_date,
+      desired_loan_amount: p_borrowing_details__2.desired_loan_amount,
+      bonus_repayment_amount: p_borrowing_details__2.bonus_repayment_amount,
+    },
+    // 補助フィールド
+    loan_target_: '0',
+  };
+
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_application_headers: {
+        ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+        land_advance_plan: values.p_application_headers.land_advance_plan,
+      },
+      p_application_banks: values.p_application_banks,
+      p_borrowing_details__1: {
+        ...diffObj(initialValues.p_borrowing_details__1, values.p_borrowing_details__1),
+      },
+      p_borrowing_details__2: {
+        ...diffObj(initialValues.p_borrowing_details__2, values.p_borrowing_details__2),
+      },
+    };
+    return diffData;
+  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      const dataCopy = cloneDeep(values);
-      // 補助フィールドを削除する
-      delete dataCopy.loan_target_;
-      console.log(agentSended);
-      if (changeToIncomeTotalizer) {
-        setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
-        navigate(routeNames.apStep04Page.path);
-      } else if (changeJoinGuarantor) {
-        setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
-        navigate(routeNames.apStep06Page.path);
-      } else if (agentSended) {
-        await updateApply(applyNo, dataCopy);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => ({ ...pre, ...dataCopy }));
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (changeToIncomeTotalizer) {
+          setLocalData(values);
+          navigate(routeNames.apStep04Page.path);
+        } else if (changeJoinGuarantor) {
+          setLocalData(values);
+          navigate(routeNames.apStep06Page.path);
+        } else if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -110,6 +186,7 @@ export const ApStep01Page = () => {
   }, [formik.values]);
 
   const handelLeft = () => {
+    setLocalData(formik.values);
     navigate(routeNames.apTopPage.path);
   };
 
@@ -147,21 +224,28 @@ export const ApStep01Page = () => {
     }
   }, [p_application_banks, p_application_headers.loan_type, p_application_headers.join_guarantor_umu, bankMaster]);
 
-  useEffect(() => {
-    if (formik.values.loan_type !== '3' || formik.values.loan_type !== '4') {
-      formik.setFieldValue('p_application_headers', {
-        ...formik.values.p_application_headers,
-        rent_to_be_paid_land_borrower: '',
-        rent_to_be_paid_land: '',
-        rent_to_be_paid_house_borrower: '',
-        rent_to_be_paid_house: '',
-        refund_source_type: [],
-        refund_source_type_other: '',
-        refund_source_content: '',
-        refund_source_amount: '',
-      });
-    }
-  }, [formik.values.loan_type]);
+  // TODO: **delete**
+  // useEffect(() => {
+  //   if (formik.values.loan_type !== '3' || formik.values.loan_type !== '4') {
+  //     setApplicationInfo((pre) => {
+  //       return {
+  //         ...pre,
+  //         p_application_headers: {
+  //           ...pre.p_application_headers,
+  //           rent_to_be_paid_land_borrower: '',
+  //           rent_to_be_paid_land: '',
+  //           rent_to_be_paid_house_borrower: '',
+  //           rent_to_be_paid_house: '',
+  //           refund_source_type: [],
+  //           refund_source_type_other: '',
+  //           refund_source_content: '',
+  //           refund_source_amount: '',
+  //         },
+  //       };
+  //     });
+  //   }
+  // }, [formik.values.loan_type]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -709,6 +793,9 @@ export const ApStep01Page = () => {
                       city_kanji: '',
                       district_kanji: '',
                       other_address_kanji: '',
+                      prefecture_kana: '',
+                      city_kana: '',
+                      district_kana: '',
                     },
                   ],
                 }));

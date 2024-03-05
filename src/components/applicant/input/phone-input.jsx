@@ -2,7 +2,7 @@ import { yup } from '@/libs';
 import { convertToHalfWidth } from '@/utils';
 import { Stack, TextField, Typography } from '@mui/material';
 import { FormikProvider, useField, useFormik } from 'formik';
-import { Fragment, useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 export const ApPhoneInputField = ({ label, showError, ...props }) => {
   const [field, meta, helpers] = useField(props);
@@ -77,10 +77,10 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
   }, [phoneInputs]);
 
   const handleKeyPress = useCallback(
-    async (e) => {
-      if (e.target.value.length === 4) handleNextInput();
+    async (value) => {
+      if (value.length === 4) handleNextInput();
 
-      if (e.target.value.length === 0) handleBackInput();
+      if (value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value || refThree.current?.value) {
         return await setValue(`${refOne.current?.value}-${refTwo.current?.value}-${refThree.current?.value}`);
@@ -138,6 +138,7 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
                 <Stack key={index} spacing={1} direction={'row'} alignItems={'center'}>
                   <TextField
                     autoComplete="off"
+                    type="tel"
                     placeholder={'0'.repeat(input.maxLength).toString()}
                     inputRef={input.ref}
                     name={input.name}
@@ -156,15 +157,14 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
                     }}
                     onInput={(e) => {
                       e.target.value = convertToHalfWidth(e.target.value);
-                      if (e.target.value.length > input.maxLength)
-                        e.target.value = e.target.value.substring(0, e.target.value.length);
-                      return (e.target.value = e.target.value.replace(/[^\d]+/g, ''));
+                      e.target.value = e.target.value.replace(/[^\d]+/g, '');
+                      e.target.value = e.target.value.substring(0, input.maxLength);
+                      return e;
                     }}
                     onChange={handleKeyPress}
                     onKeyDown={(e) => handleFocusInput(e, input.name)}
                     onFocus={() => {
                       currentIndex.current = index;
-                      props.onFocus && props.onFocus();
                     }}
                     onBlur={handleBlur}
                     error={isError}

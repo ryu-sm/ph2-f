@@ -55,7 +55,6 @@ export const ApLoginPage = () => {
               ...pre.user,
               id: payload?.id,
               email: payload?.email,
-              isFirstLogin: Boolean(payload?.first_login),
               salesCompanyOrgId: payload?.s_sales_company_org_id,
               preExaminationStatus: payload?.pre_examination_status,
               displayPdf: Boolean(payload?.display_pdf),
@@ -78,17 +77,47 @@ export const ApLoginPage = () => {
         }
         if (payload?.agent_sended) {
           const res = await apApplication(payload.apply_no);
-          console.log(JSON.stringify(res.data));
           setApplicationInfo((pre) => {
             return {
-              ...pre,
-              ...res.data,
+              p_uploaded_files: {
+                ...pre.p_uploaded_files,
+                ...res.data.p_uploaded_files,
+              },
+              p_application_headers: {
+                ...pre.p_application_headers,
+                ...res.data.p_application_headers,
+              },
+              p_borrowing_details__1: {
+                ...pre.p_borrowing_details__1,
+                ...res.data.p_borrowing_details__1,
+              },
+              p_borrowing_details__2: {
+                ...pre.p_borrowing_details__2,
+                ...res.data.p_borrowing_details__2,
+              },
+              p_application_banks: res.data.p_application_banks,
+              p_applicant_persons__0: {
+                ...pre.p_applicant_persons__0,
+                ...res.data.p_applicant_persons__0,
+              },
+              p_applicant_persons__1: {
+                ...pre.p_applicant_persons__1,
+                ...res.data.p_applicant_persons__1,
+              },
+              p_join_guarantors: res.data.p_join_guarantors,
+              p_residents: res.data.p_residents,
+              p_borrowings: res.data.p_borrowings,
               apCurrStepId: 14,
               isMCJ: res.data.p_application_banks?.lengt > 1,
               hasIncomeTotalizer: Boolean(res.data.p_applicant_persons__1),
               hasJoinGuarantor: Boolean(res.data.p_join_guarantors),
               changeJoinGuarantor: false,
               changeToIncomeTotalizer: false,
+              p_applicant_persons_a_agreement: true,
+              p_applicant_persons_b_agreement:
+                res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4'
+                  ? true
+                  : false,
             };
           });
           navigate(routeNames.apTopPage.path);

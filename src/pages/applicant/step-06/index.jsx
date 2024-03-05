@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { Fragment, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -22,18 +22,18 @@ import {
 } from '@/components';
 import { Stack, Typography } from '@mui/material';
 import { genderOptions, yearOptions } from './options';
-import { PREFECTURES } from '@/constant';
+import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
+import { toast } from 'react-toastify';
 
 export const ApStep06Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const {
     apNextStepId,
@@ -45,26 +45,47 @@ export const ApStep06Page = () => {
     p_application_headers,
   } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_join_guarantors: values.p_join_guarantors,
+      };
+    });
+  };
+  const initialValues = {
+    p_join_guarantors: p_join_guarantors,
+    hasJoinGuarantor: hasJoinGuarantor,
+  };
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_application_headers: {
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+      },
+      p_join_guarantors: values.p_join_guarantors,
+    };
+    return diffData;
+  };
   const formik = useFormik({
-    initialValues: { hasJoinGuarantor, p_join_guarantors },
-    validationSchema: validationSchema,
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      if (changeToIncomeTotalizer) {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...values };
-        });
-        navigate(routeNames.apStep11Page.path);
-      } else if (changeJoinGuarantor) {
-        await updateApply(applyNo, { ...values, p_application_headers: p_application_headers });
-        updateModal.onTrue();
-      } else if (agentSended) {
-        await updateApply(applyNo, values);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...values };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (changeToIncomeTotalizer) {
+          setLocalData(values);
+          navigate(routeNames.apStep11Page.path);
+        } else if (changeJoinGuarantor) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -75,12 +96,15 @@ export const ApStep06Page = () => {
 
   const handelLeft = () => {
     if (changeToIncomeTotalizer) {
+      setLocalData(formik.values);
       navigate(routeNames.apStep05Page.path);
     } else if (changeJoinGuarantor) {
+      setLocalData(formik.values);
       navigate(routeNames.apStep01Page.path);
     } else if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };
@@ -212,11 +236,17 @@ export const ApStep06Page = () => {
                               );
                               formik.setFieldValue(`p_join_guarantors[${index}].city_kanji`, addr.city_kanji);
                               formik.setFieldValue(`p_join_guarantors[${index}].district_kanji`, addr.district_kanji);
+                              formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kana`, addr.prefecture_kana);
+                              formik.setFieldValue(`p_join_guarantors[${index}].city_kana`, addr.city_kana);
+                              formik.setFieldValue(`p_join_guarantors[${index}].district_kana`, addr.district_kana);
                             }}
                             errorCallback={() => {
                               formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kanji`, '');
                               formik.setFieldValue(`p_join_guarantors[${index}].city_kanji`, '');
                               formik.setFieldValue(`p_join_guarantors[${index}].district_kanji`, '');
+                              formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kana`, '');
+                              formik.setFieldValue(`p_join_guarantors[${index}].city_kana`, '');
+                              formik.setFieldValue(`p_join_guarantors[${index}].district_kana`, '');
                             }}
                           />
                           <ApSelectField
@@ -273,6 +303,9 @@ export const ApStep06Page = () => {
                         city_kanji: '',
                         district_kanji: '',
                         other_address_kanji: '',
+                        prefecture_kana: '',
+                        city_kana: '',
+                        district_kana: '',
                       });
                     }}
                   >

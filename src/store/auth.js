@@ -7,7 +7,6 @@ const authInitialValues = {
   user: {
     id: null,
     email: null,
-    isFirstLogin: true,
     salesCompanyOrgId: null,
     preExaminationStatus: null,
     displayPdf: true,
@@ -85,14 +84,6 @@ export const applayTypeSelector = selector({
   get: ({ get }) => {
     const auth = get(authAtom);
     return auth?.applayType;
-  },
-});
-
-export const isFirstLoginSelector = selector({
-  key: 'isFirstLogin',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.user?.isFirstLogin;
   },
 });
 

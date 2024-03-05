@@ -41,7 +41,11 @@ export const apGetBanks = async () => {
 };
 
 export const apGetSalesCompanyOrgs = async (s_sales_company_org_id) => {
-  return await service.get(`/orgs?s_sales_company_org_id=${s_sales_company_org_id}`);
+  if (s_sales_company_org_id) {
+    return await service.get(`/orgs?s_sales_company_org_id=${s_sales_company_org_id}`);
+  } else {
+    return await service.get(`/orgs`);
+  }
 };
 
 export const apSaveDraft = async (data) => {

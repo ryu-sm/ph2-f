@@ -1,14 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  agentSendedSelector,
-  apNextStepIdSelector,
-  apPreStepIdSelector,
-  applicationAtom,
-  applyNoSelector,
-  userEmailSelector,
-} from '@/store';
+import { applicationAtom, authAtom, userEmailSelector } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -29,42 +22,111 @@ import {
 } from '@/components';
 import { Stack, Typography } from '@mui/material';
 import { genderOptions, nationalityOptions, yearOptions } from './options';
-import { PREFECTURES } from '@/constant';
+import { API_500_ERROR, PREFECTURES } from '@/constant';
 
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { apApplicationImg } from '@/services';
 import { routeNames } from '@/router/settings';
+import { diffObj } from '@/utils';
+import { toast } from 'react-toastify';
 
 export const ApStep02Page = () => {
   const navigate = useNavigate();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const userEmail = useRecoilValue(userEmailSelector);
-  const applyNo = useRecoilValue(applyNoSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
 
   const { apNextStepId, apPreStepId, p_applicant_persons__0, p_uploaded_files } = useRecoilValue(applicationAtom);
   const updateApply = useApUpdateApplyInfo();
-  const formik = useFormik({
-    initialValues: {
-      p_applicant_persons__0: {
-        ...p_applicant_persons__0,
-        email: p_applicant_persons__0.email || userEmail,
-      },
-      p_uploaded_files,
+  const setLocalData = (values) => {
+    setApplicationInfo((pre) => {
+      return {
+        ...pre,
+        p_applicant_persons__0: {
+          ...pre.p_applicant_persons__0,
+          last_name_kanji: values.p_applicant_persons__0.last_name_kanji,
+          first_name_kanji: values.p_applicant_persons__0.first_name_kanji,
+          last_name_kana: values.p_applicant_persons__0.last_name_kana,
+          first_name_kana: values.p_applicant_persons__0.first_name_kana,
+          gender: values.p_applicant_persons__0.gender,
+          birthday: values.p_applicant_persons__0.birthday,
+          nationality: values.p_applicant_persons__0.nationality,
+          mobile_phone: values.p_applicant_persons__0.mobile_phone,
+          home_phone: values.p_applicant_persons__0.home_phone,
+          postal_code: values.p_applicant_persons__0.postal_code,
+          prefecture_kanji: values.p_applicant_persons__0.prefecture_kanji,
+          city_kanji: values.p_applicant_persons__0.city_kanji,
+          district_kanji: values.p_applicant_persons__0.district_kanji,
+          other_address_kanji: values.p_applicant_persons__0.other_address_kanji,
+          prefecture_kana: values.p_applicant_persons__0.prefecture_kana,
+          city_kana: values.p_applicant_persons__0.city_kana,
+          district_kana: values.p_applicant_persons__0.district_kana,
+          email: values.p_applicant_persons__0.email,
+        },
+        p_uploaded_files: {
+          ...pre.p_uploaded_files,
+          p_applicant_persons__0__H__a: values.p_uploaded_files.p_applicant_persons__0__H__a,
+          p_applicant_persons__0__H__b: values.p_uploaded_files.p_applicant_persons__0__H__b,
+        },
+      };
+    });
+  };
+  const initialValues = {
+    p_applicant_persons__0: {
+      last_name_kanji: p_applicant_persons__0.last_name_kanji,
+      first_name_kanji: p_applicant_persons__0.first_name_kanji,
+      last_name_kana: p_applicant_persons__0.last_name_kana,
+      first_name_kana: p_applicant_persons__0.first_name_kana,
+      gender: p_applicant_persons__0.gender,
+      birthday: p_applicant_persons__0.birthday,
+      nationality: p_applicant_persons__0.nationality,
+      mobile_phone: p_applicant_persons__0.mobile_phone,
+      home_phone: p_applicant_persons__0.home_phone,
+      postal_code: p_applicant_persons__0.postal_code,
+      prefecture_kanji: p_applicant_persons__0.prefecture_kanji,
+      city_kanji: p_applicant_persons__0.city_kanji,
+      district_kanji: p_applicant_persons__0.district_kanji,
+      other_address_kanji: p_applicant_persons__0.other_address_kanji,
+      prefecture_kana: p_applicant_persons__0.prefecture_kana,
+      city_kana: p_applicant_persons__0.city_kana,
+      district_kana: p_applicant_persons__0.district_kana,
+      email: p_applicant_persons__0.email || userEmail,
     },
-    validationSchema: validationSchema,
+    p_uploaded_files: {
+      p_applicant_persons__0__H__a: p_uploaded_files.p_applicant_persons__0__H__a,
+      p_applicant_persons__0__H__b: p_uploaded_files.p_applicant_persons__0__H__b,
+    },
+  };
+
+  const setUpdateData = (values) => {
+    const diffData = {
+      p_applicant_persons__0: {
+        ...diffObj(initialValues.p_applicant_persons__0, values.p_applicant_persons__0),
+      },
+      p_uploaded_files: {
+        ...diffObj(initialValues.p_uploaded_files, values.p_uploaded_files),
+      },
+    };
+    return diffData;
+  };
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      if (agentSended) {
-        await updateApply(applyNo, values);
-        updateModal.onTrue();
-      } else {
-        setApplicationInfo((pre) => {
-          return { ...pre, ...values };
-        });
-        navigate(`/step-id-${apNextStepId}`);
+      try {
+        if (agentSended) {
+          await updateApply(applyNo, setUpdateData(values));
+          updateModal.onTrue();
+        } else {
+          setLocalData(values);
+          navigate(`/step-id-${apNextStepId}`);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -94,13 +156,14 @@ export const ApStep02Page = () => {
     if (agentSended) {
       navigate(routeNames.apTopPage.path);
     } else {
+      setLocalData(formik.values);
       navigate(`/step-id-${apPreStepId}`);
     }
   };
 
   useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
+    console.log(formik.values);
+  }, [formik.values]);
 
   return (
     <FormikProvider value={formik}>
@@ -221,14 +284,17 @@ export const ApStep02Page = () => {
                 formik.setFieldValue('p_applicant_persons__0.prefecture_kanji', addr.prefecture_kanji);
                 formik.setFieldValue('p_applicant_persons__0.city_kanji', addr.city_kanji);
                 formik.setFieldValue('p_applicant_persons__0.district_kanji', addr.district_kanji);
+                formik.setFieldValue('p_applicant_persons__0.prefecture_kana', addr.prefecture_kana);
+                formik.setFieldValue('p_applicant_persons__0.city_kana', addr.city_kana);
+                formik.setFieldValue('p_applicant_persons__0.district_kana', addr.district_kana);
               }}
               errorCallback={() => {
                 formik.setFieldValue('p_applicant_persons__0.prefecture_kanji', '');
                 formik.setFieldValue('p_applicant_persons__0.city_kanji', '');
                 formik.setFieldValue('p_applicant_persons__0.district_kanji', '');
-              }}
-              onChange={(e) => {
-                console.log(e);
+                formik.setFieldValue('p_applicant_persons__0.prefecture_kana', '');
+                formik.setFieldValue('p_applicant_persons__0.city_kana', '');
+                formik.setFieldValue('p_applicant_persons__0.district_kana', '');
               }}
             />
             <ApSelectField
