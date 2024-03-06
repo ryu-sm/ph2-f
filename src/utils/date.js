@@ -48,3 +48,27 @@ export function formatTimeMessage(time) {
 export function formatApplyTime(time) {
   return time.split(':')[0] + '時';
 }
+
+/**
+ * @param {*} dateString 'YYYY-MM-DD'
+ */
+export function convertToJanpaneseEra(dateString) {
+  const date = new Date(dateString);
+  const eraInfo = [
+    { start: new Date('1926-12-25'), end: new Date('1989-01-07'), name: '昭和', offset: 1925 },
+    { start: new Date('1989-01-08'), end: new Date('2019-04-30'), name: '平成', offset: 1988 },
+    { start: new Date('2019-05-01'), end: new Date('2029-12-31'), name: '令和', offset: 2018 },
+  ];
+
+  for (let i = 0; i < eraInfo.length; i++) {
+    const { start, end, name, offset } = eraInfo[i];
+    if (date >= start && date <= end) {
+      const year = date.getFullYear() - offset;
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const formattedMonth = month < 10 ? `0${month}` : month;
+      const formattedDay = day < 10 ? `0${day}` : day;
+      return `${date.getFullYear()}（${name}${year}）年${formattedMonth}月${formattedDay}日`;
+    }
+  }
+}

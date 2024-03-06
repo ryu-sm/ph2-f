@@ -4,6 +4,7 @@ import { MonthPicker } from '../form/month-picker';
 import { SelectCheckbox } from '../form/select-checkbox';
 import { EditInput } from '../form/edit-input';
 import { DayPicker } from '../form/day-picker';
+import dayjs from 'dayjs';
 
 export const LoanPlan = () => {
   const mockOptions = [
@@ -25,6 +26,9 @@ export const LoanPlan = () => {
       label: '中古マンションの購入',
     },
   ];
+
+  const minDate = dayjs().startOf('year');
+  const maxDate = dayjs().add(4, 'year').endOf('year');
   return (
     <Stack flexGrow={1} overflow={'auto'} pb={'10px'}>
       <EditRow
@@ -37,6 +41,27 @@ export const LoanPlan = () => {
         label="同意日"
         requiredSupply={true}
       />
+      <EditRow
+        item={{ content: '2024（令和6）年2月26日 21:31', isRequired: true, isUpdated: true }}
+        label="同意日"
+        requiredSupply={true}
+      />
+      <EditRow
+        item={{ content: '2024（令和6）年2月26日 21:31', isRequired: true, isUpdated: true }}
+        label="同意日"
+        requiredSupply={true}
+      />
+      <EditRow
+        item={{ content: '2024（令和6）年2月26日 21:31', isRequired: true, isUpdated: true }}
+        label="同意日"
+        requiredSupply={true}
+      />
+      <EditRow
+        item={{ isRequired: false, isUpdated: false }}
+        component=<DayPicker minDate={minDate} maxDate={maxDate} content="2024-03-20T15:00:00.000Z" />
+        hasDropDown={true}
+      />
+
       <EditRow
         item={{ isRequired: true, isUpdated: true }}
         component=<MonthPicker content="2024（令和6）年2月26日 21:31" />
@@ -56,7 +81,12 @@ export const LoanPlan = () => {
       />
       <EditRow
         item={{ isRequired: false, isUpdated: false }}
-        component=<DayPicker content="xxxx" />
+        component=<DayPicker minDate={minDate} maxDate={maxDate} content="2024-03-20T15:00:00.000Z" />
+        hasDropDown={true}
+      />
+      <EditRow
+        item={{ isRequired: false, isUpdated: false }}
+        component=<SelectCheckbox content="建物だけ新築(既に土地をお持ちの方)" options={mockOptions} />
         hasDropDown={true}
       />
     </Stack>

@@ -1,17 +1,20 @@
 import { AdArrowDown } from '@/assets/icons/ad-arrow-down';
-import { Stack, Button, Typography, Popover } from '@mui/material';
-import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { AdArrowUp } from '@/assets/icons/ad-arrow-up';
+import { usePopoverPositionByClick } from '@/hooks/update-popover-position';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Button, Popover, Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 export const SelectCheckbox = ({ content, options }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handlePopoverOpen = (e) => setAnchorEl(e.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
-
   const [currentSelect, setCurrentSelect] = useState('');
+
+  const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
+
   return (
     <Stack direction={'row'} alignItems={'center'} spacing={3}>
       <Button
@@ -28,7 +31,10 @@ export const SelectCheckbox = ({ content, options }) => {
             backgroundColor: 'white',
           },
         }}
-        onClick={handlePopoverOpen}
+        onClick={(e) => {
+          handlePopoverOpen(e);
+          updatePopoverPosition(e);
+        }}
       >
         <AdArrowDown sx={{ width: 8, height: 8, color: 'gray.80' }} />
       </Button>
@@ -36,6 +42,8 @@ export const SelectCheckbox = ({ content, options }) => {
 
       <Popover
         open={open}
+        anchorOrigin={anchorOrigin}
+        transformOrigin={transformOrigin}
         anchorEl={anchorEl}
         onClose={handlePopoverClose}
         sx={{

@@ -1,5 +1,6 @@
 import { AdArrowDown } from '@/assets/icons/ad-arrow-down';
 import { AdArrowUp } from '@/assets/icons/ad-arrow-up';
+import { usePopoverPositionByClick } from '@/hooks/update-popover-position';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { Button, IconButton, Popover, Stack, Typography } from '@mui/material';
@@ -18,6 +19,9 @@ export const MonthPicker = ({ content }) => {
 
   const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
   const years = ['2024', '2025', '2026', '2027', '2028'];
+
+  const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
+
   return (
     <Stack direction={'row'} alignItems={'center'} spacing={3}>
       <Button
@@ -34,7 +38,10 @@ export const MonthPicker = ({ content }) => {
             backgroundColor: 'white',
           },
         }}
-        onClick={handlePopoverOpen}
+        onClick={(e) => {
+          handlePopoverOpen(e);
+          updatePopoverPosition(e);
+        }}
       >
         <AdArrowDown sx={{ width: 8, height: 8, color: 'gray.80' }} />
       </Button>
@@ -43,6 +50,8 @@ export const MonthPicker = ({ content }) => {
       <Popover
         open={open}
         anchorEl={anchorEl}
+        anchorOrigin={anchorOrigin}
+        transformOrigin={transformOrigin}
         onClose={handlePopoverClose}
         sx={{
           top: '0',
