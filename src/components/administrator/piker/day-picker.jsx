@@ -39,7 +39,11 @@ export const DayPicker = ({ content, maxDate, minDate, isBirthday, ...props }) =
       }
       res.data && setHolidays(res.data);
     };
-    fetchHolidays();
+    try {
+      if (currentYear) fetchHolidays();
+    } catch (error) {
+      console.log(111);
+    }
   }, [currentYear]);
 
   const handleChange = (newVal) => {

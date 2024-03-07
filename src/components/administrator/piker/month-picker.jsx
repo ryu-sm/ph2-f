@@ -1,6 +1,6 @@
 import { AdArrowDown } from '@/assets/icons/ad-arrow-down';
 import { AdArrowUp } from '@/assets/icons/ad-arrow-up';
-import { yup } from '@/libs';
+import { dayjs, yup } from '@/libs';
 import { formatJapanDate } from '@/utils';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';

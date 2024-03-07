@@ -1,7 +1,6 @@
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { IconButton, Stack, Tab, Tabs, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
-// import { ContentDetail } from './content';
+import { useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { editMainTabStatusAtom, preliminaryAotm } from '@/store';
 import { MainDetail } from '../main-panel';

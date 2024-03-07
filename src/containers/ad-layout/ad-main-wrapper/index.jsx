@@ -8,7 +8,7 @@ export const AdMainWrapper = ({ leftContent, rightAddItems, children }) => {
     <AdThemeProvider>
       <Stack
         sx={{
-          height: '100dvh',
+          // height: '100dvh',
           minHeight: '100dvh',
           background: (theme) => theme.palette.gray[60],
         }}

@@ -249,6 +249,7 @@ export const preliminaryInitialValues = {
     office_prefecture_kana: '',
     office_city_kana: '',
     office_district_kana: '',
+    office_other_address_kana: '',
     office_employee_num: '',
     office_joining_date: '',
     last_year_income: '',
@@ -270,6 +271,15 @@ export const preliminaryInitialValues = {
     maternity_paternity_leave_start_date: '',
     maternity_paternity_leave_end_date: '',
     nursing_leave: '',
+    office_employment_type: '',
+    office_name_kana: '',
+    office_role: '',
+    office_head_location: '',
+    office_listed_division: '',
+    office_establishment_date: '',
+    office_capital_stock: '',
+    main_income_source: '',
+    before_last_year_bonus_income: '',
     // STEP10
     identity_verification_type: '',
   },
@@ -357,4 +367,23 @@ export const preliminaryAotm = atom({
 export const editMainTabStatusAtom = atom({
   key: 'editMainTabStatusAtom',
   default: 1,
+});
+
+const localStorageEffect =
+  (key) =>
+  ({ setSelf, onSet }) => {
+    const savedValue = localStorage.getItem(key);
+    if (savedValue) {
+      setSelf(savedValue);
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset ? localStorage.removeItem(key) : localStorage.setItem(key, newValue);
+    });
+  };
+
+export const infoGroupTabAtom = atom({
+  key: 'infoGroupTabAtom',
+  default: 1,
+  // effects_UNSTABLE: [localStorageEffect('tab')],
 });

@@ -1,27 +1,38 @@
-import { API_500_ERROR } from '@/constant';
 import { AdMainWrapper } from '@/containers';
 import { useCurrSearchParams, useIsManager } from '@/hooks';
-import { adGetPreliminary } from '@/services';
-import { editMainTabStatusAtom, preliminaryAotm, showProgressAtom } from '@/store';
+
+import { editMainTabStatusAtom, infoGroupTabAtom, preliminaryAotm, showProgressAtom } from '@/store';
 import { Button, LinearProgress, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { useRecoilState, useRecoilValue } from 'recoil';
+
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { AdReviewProgress } from './review-progress';
 import { EditTabs } from './edit-tabs';
+import { adGetPreliminary } from '@/services';
 
 export const EditPreliminary = () => {
   const isManager = useIsManager();
-  const p_application_header_id = useCurrSearchParams().get('id');
-  const [preliminaryInfo, setPreliminaryInfo] = useRecoilState(preliminaryAotm);
-  const [showProgress, setShowProgress] = useRecoilState(showProgressAtom);
 
+  const showProgress = useRecoilValue(showProgressAtom);
+  const preliminaryInfo = useRecoilValue(preliminaryAotm);
+  const p_application_header_id = useCurrSearchParams().get('id');
+  const setPreliminaryInfo = useSetRecoilState(preliminaryAotm);
+  const setShowProgress = useSetRecoilState(showProgressAtom);
   const queryPreliminary = useCallback(async () => {
     try {
       setShowProgress(true);
       const res = await adGetPreliminary(p_application_header_id);
-      console.log(res.data);
-      setPreliminaryInfo((pre) => ({ ...pre, ...res.data }));
+      setPreliminaryInfo((pre) => {
+        return {
+          ...pre,
+          ...res.data,
+          isMCJ: res.data.p_application_banks?.length > 1,
+          hasIncomeTotalizer: Boolean(res.data.p_applicant_persons__1),
+          hasJoinGuarantor: Boolean(res.data.p_application_headers.join_guarantor_umu),
+          changeJoinGuarantor: false,
+          changeToIncomeTotalizer: false,
+        };
+      });
       setShowProgress(false);
     } catch (error) {
       setShowProgress(false);
@@ -29,10 +40,9 @@ export const EditPreliminary = () => {
       toast.error(API_500_ERROR);
     }
   }, [p_application_header_id]);
-
   useEffect(() => {
     queryPreliminary();
-  }, [p_application_header_id]);
+  }, []);
 
   return (
     <AdMainWrapper

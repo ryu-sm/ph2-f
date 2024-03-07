@@ -104,26 +104,18 @@ export const officeJoiningDateOptions = Array.from(Array(50), (_, index) => {
   };
 });
 
-export const leaveStatusDownYearOptions = [{ value: '', label: '西暦' }].concat(
-  Array.from(Array(5), (_, index) => {
-    const year = String(dayjs().year() - index).padStart(2, '0');
-    const kanjiDateG2 = format('{G:2}', +year, 1, 1);
-    const kanjiDateN = format('{N}', +year, 1, 1);
-    return {
-      value: year,
-      label: `${year}（${kanjiDateG2}${kanjiDateN}）`,
-    };
-  })
-);
+export const leaveStatusDownYearOptions = Array.from(Array(5), (_, index) => {
+  const year = String(dayjs().year() - index).padStart(2, '0');
+  return {
+    value: `${year}`,
+    label: `${year}`,
+  };
+});
 
-export const leaveStatusUpYearOptions = [{ value: '', label: '西暦' }].concat(
-  Array.from(Array(5), (_, index) => {
-    const year = String(dayjs().year() + index).padStart(2, '0');
-    const kanjiDateG2 = format('{G:2}', +year, 1, 1);
-    const kanjiDateN = format('{N}', +year, 1, 1);
-    return {
-      value: year,
-      label: `${year}（${kanjiDateG2}${kanjiDateN}）`,
-    };
-  })
-);
+export const leaveStatusUpYearOptions = Array.from(Array(5), (_, index) => {
+  const year = String(dayjs().year() + index).padStart(2, '0');
+  return {
+    value: `${year}`,
+    label: `${year}`,
+  };
+});

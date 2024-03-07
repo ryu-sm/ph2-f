@@ -33,6 +33,7 @@ import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
+import { MCJ_CODE } from '@/configs';
 
 export const Item01 = () => {
   const { p_application_headers, p_application_banks, p_borrowing_details__1, p_borrowing_details__2 } =
@@ -115,6 +116,14 @@ export const Item01 = () => {
       formik.setFieldValue('loan_target_', p_application_headers.loan_target);
     }
   }, [p_application_headers.loan_target]);
+
+  useEffect(() => {
+    if (formik.values.p_application_banks.includes(bankMaster.find((item) => item.code === MCJ_CODE)?.value)) {
+      setPreliminaryInfo((pre) => ({ ...pre, isMCJ: true }));
+    } else {
+      setPreliminaryInfo((pre) => ({ ...pre, isMCJ: false }));
+    }
+  }, [bankMaster.length, formik.values.p_application_banks.length]);
 
   useEffect(() => {
     console.log(formik.errors);

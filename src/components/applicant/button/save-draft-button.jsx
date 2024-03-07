@@ -18,10 +18,67 @@ export const ApSaveDraftButton = ({ pageInfo }) => {
       setApplicationInfo((pre) => {
         return {
           ...pre,
-          ...pageInfo,
+          p_uploaded_files: {
+            ...pre.p_uploaded_files,
+            ...pageInfo?.p_uploaded_files,
+          },
+          p_application_headers: {
+            ...pre.p_application_headers,
+            ...pageInfo?.p_application_headers,
+          },
+          p_borrowing_details__1: {
+            ...pre.p_borrowing_details__1,
+            ...pageInfo?.p_borrowing_details__1,
+          },
+          p_borrowing_details__2: {
+            ...pre.p_borrowing_details__2,
+            ...pageInfo?.p_borrowing_details__2,
+          },
+          p_application_banks: pageInfo?.p_application_banks,
+          p_applicant_persons__0: {
+            ...pre.p_applicant_persons__0,
+            ...pageInfo?.p_applicant_persons__0,
+          },
+          p_applicant_persons__1: {
+            ...pre.p_applicant_persons__1,
+            ...pageInfo?.p_applicant_persons__1,
+          },
+          p_join_guarantors: pageInfo?.p_join_guarantors ? pageInfo?.p_join_guarantors : pre.p_join_guarantors,
+          p_residents: pageInfo?.p_residents ? pageInfo?.p_residents : pre.p_residents,
+          p_borrowings: pageInfo?.p_borrowings ? pageInfo?.p_borrowings : pre.p_borrowings,
         };
       });
-      await apSaveDraft({ ...application, ...pageInfo });
+      await apSaveDraft({
+        ...application,
+        p_uploaded_files: {
+          ...application.p_uploaded_files,
+          ...pageInfo?.p_uploaded_files,
+        },
+        p_application_headers: {
+          ...application.p_application_headers,
+          ...pageInfo?.p_application_headers,
+        },
+        p_borrowing_details__1: {
+          ...application.p_borrowing_details__1,
+          ...pageInfo?.p_borrowing_details__1,
+        },
+        p_borrowing_details__2: {
+          ...application.p_borrowing_details__2,
+          ...pageInfo?.p_borrowing_details__2,
+        },
+        p_application_banks: pageInfo?.p_application_banks,
+        p_applicant_persons__0: {
+          ...application.p_applicant_persons__0,
+          ...pageInfo?.p_applicant_persons__0,
+        },
+        p_applicant_persons__1: {
+          ...application.p_applicant_persons__1,
+          ...pageInfo?.p_applicant_persons__1,
+        },
+        p_join_guarantors: pageInfo?.p_join_guarantors ? pageInfo?.p_join_guarantors : application.p_join_guarantors,
+        p_residents: pageInfo?.p_residents ? pageInfo?.p_residents : application.p_residents,
+        p_borrowings: pageInfo?.p_borrowings ? pageInfo?.p_borrowings : application.p_borrowings,
+      });
 
       modal.onTrue();
     } catch (error) {

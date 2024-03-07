@@ -4,7 +4,7 @@ import { useField } from 'formik';
 import { useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
 
-export const AdNumericInput = ({ unit = '万円', maxLength, width, ...props }) => {
+export const AdYmdInput = ({ width, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue } = helpers;
 
@@ -20,20 +20,20 @@ export const AdNumericInput = ({ unit = '万円', maxLength, width, ...props }) 
     async (e) => {
       e.target.value = e.target.value.replaceAll(',', '');
       props.onChange && props.onChange(e);
+      setValue(e.target.value);
     },
     [field, props, setValue]
   );
 
   return (
     <NumericFormat
-      {...field}
-      {...props}
+      // {...field}
+      // {...props}
+      // type="date"
       customInput={TextField}
-      thousandSeparator
       autoComplete="off"
-      suffix={meta.value ? (unit ? unit : ' 万円') : ''}
-      type="tel"
-      multiline={true}
+      format="###-####"
+      mask="_"
       sx={{
         ml: -2,
         width: 1,
@@ -60,13 +60,15 @@ export const AdNumericInput = ({ unit = '万円', maxLength, width, ...props }) 
       }}
       onInput={(e) => {
         e.target.value = convertToHalfWidth(e.target.value);
-        e.target.value = e.target.value.substring(0, maxLength);
         return e;
       }}
       value={meta.value}
-      onChange={handleChange}
-      onBlur={handelBlue}
-      onValueChange={async (values) => await setValue(values.value)}
+      // onChange={handleChange}
+      // onBlur={handelBlue}
+      onValueChange={async (values) => {
+        console.log(values);
+        // await setValue(values.value);
+      }}
     />
   );
 };

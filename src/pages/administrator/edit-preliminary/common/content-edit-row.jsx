@@ -18,6 +18,7 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
       direction={'row'}
       width={'100%'}
       minHeight={49}
+      height={49}
       alignItems={'center'}
       borderBottom={'1px solid'}
       borderColor={'gray.70'}
@@ -26,9 +27,9 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
         <Box bgcolor={'gray.20'} width={40} padding={'10px'} color={'gray.100'}>
           <Typography variant="edit_notice_icon">{noticeIcon}</Typography>
         </Box>
-        <Box bgcolor={'white'} p={'10px'}>
+        <Stack bgcolor={'white'} justifyContent={'center'} p={'10px'}>
           <Typography variant="edit_content">{label}</Typography>
-        </Box>
+        </Stack>
       </Stack>
 
       <Stack direction={'row'} flex={2} height={'100%'}>
@@ -57,7 +58,7 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
         >
           {typeof children === 'string' ? <Typography variant="edit_content">{children}</Typography> : children}
           {error && (
-            <Stack sx={{ width: 200 }}>
+            <Stack sx={{ width: 300, minWidth: 300 }}>
               <Typography variant="edit_content" color={'secondary.main'}>
                 {error}
               </Typography>
