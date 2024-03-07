@@ -209,7 +209,7 @@ export const typography = {
     fontSize: '10px',
     lineHeight: '15px',
   },
-  update_history_title: {
+  ad_modal_title: {
     fontFamily: 'Hiragino Sans',
     fontSize: '16px',
     fontWeight: 500,
@@ -217,5 +217,12 @@ export const typography = {
     letterSpacing: '0.15px',
     lineHeight: '24px',
     color: '#333333',
+  },
+  filter_clear_button: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 300,
+    fontSize: '12px',
+    color: '#6B70F0',
+    cursor: 'pointer',
   },
 };

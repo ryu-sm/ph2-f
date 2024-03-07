@@ -101,7 +101,7 @@ export const UpdateHistoryModal = ({ open, onClose }) => {
           borderBottom={'1px solid'}
           borderColor={'gray.70'}
         >
-          <Typography variant="update_history_title">入居予定年月の修正履歴</Typography>
+          <Typography variant="ad_modal_title">入居予定年月の修正履歴</Typography>
           <IconButton onClick={onClose} sx={{ position: 'absolute', right: 1, top: 3 }}>
             <CloseIcon />
           </IconButton>
