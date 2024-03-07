@@ -96,7 +96,7 @@ export const ApLoginPage = () => {
               p_join_guarantors: res.data.p_join_guarantors,
               p_residents: res.data.p_residents,
               p_borrowings: res.data.p_borrowings,
-              apCurrStepId: 14,
+              apCurrStepId: res.data.apCurrStepId,
               isMCJ: res.data.p_application_banks?.length > 1,
               hasIncomeTotalizer: Boolean(res.data.p_applicant_persons__1),
               hasJoinGuarantor: Boolean(res.data.p_application_headers.join_guarantor_umu),
