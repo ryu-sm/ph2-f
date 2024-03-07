@@ -7,3 +7,4 @@ export * from './use-is-manager';
 export * from './use-sales-person-options';
 export * from './use-sort-preliminaries';
 export * from './use-sales-exhibition-hall-options';
+export * from './update-popover-position';

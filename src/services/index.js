@@ -167,3 +167,11 @@ export const adUpdateMemo = async (data) => {
 export const adUpdateProvisionalAfterResult = async (data) => {
   return await service.put(`/manager/provisional_after_result`, data);
 };
+
+export const adGetPreliminary = async (p_application_header_id) => {
+  return await service.get(`/preliminary/${p_application_header_id}`);
+};
+
+export const apGetPublicHolidays = async (year) => {
+  return await service.get(`https://date.nager.at/api/v2/publicholidays/${year}/jp`);
+};

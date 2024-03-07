@@ -72,7 +72,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const letfLinkItems = [
     {
       label: '申込内容の修正・確認',
-      onClick: () => {},
+      onClick: () => {
+        navigator(`${routeNames.adManagerEditPreliminaryPage.path}?id=${item.id}`);
+      },
     },
     {
       label: 'メッセージ確認',

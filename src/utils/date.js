@@ -43,6 +43,7 @@ export function isWeekend(dateString) {
 }
 
 export const formatJapanDate = (date, showEpoch = false) => {
+  if (!date) return '';
   const [year, month, day] = date.split('/');
   let formatDate = '';
   let epoch = '';
