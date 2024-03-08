@@ -225,4 +225,32 @@ export const typography = {
     color: '#6B70F0',
     cursor: 'pointer',
   },
+  filter_item_label: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 600,
+    lineHeight: '24px',
+    letterSpacing: '1px',
+    color: '#333333',
+    fontSize: '14px',
+  },
+  filter_search_button: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 600,
+    fontSize: '12px',
+    lineHeight: '18px',
+  },
+  filter_drop_down: {
+    fontFamily: 'Hiragino Sans',
+    letterSpacing: '1px',
+    fontSize: '14px',
+    fontWeight: 300,
+    lineHeight: '20px',
+  },
+  fliter_select: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 500,
+    lineHeight: '27px',
+    color: '#333333',
+    fontSize: '12px',
+  },
 };

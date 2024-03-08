@@ -2,8 +2,14 @@ import { AdListFilterIcon } from '@/assets/icons/ad-list-filter';
 import { Box, Stack, Typography } from '@mui/material';
 import { SortListButton } from './sort-list-button';
 import { SectionDivider } from '@/components/admin/common/Divider';
+import { useState } from 'react';
+import { ListFilter } from '../list-filter';
 
 export const CaseListFilter = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleOpenPopover = (e) => setAnchorEl(e.currentTarget);
+  const handleClosePopover = () => setAnchorEl(null);
   const filterArray = [
     { name: '受付番号', label: '受付番号', style: { width: 180 } },
     { name: '申込銀行', label: '申込銀行', style: { width: 180 } },
@@ -18,31 +24,37 @@ export const CaseListFilter = () => {
     { name: '銀代担当', label: '銀代担当', style: { width: 160 } },
   ];
   return (
-    <Box
-      display={'inline-flex'}
-      alignItems={'center'}
-      bgcolor={'white'}
-      minWidth={'max-content'}
-      boxShadow={'rgba(59, 118, 129, 0.15) 0px 2px 8px'}
-    >
-      {filterArray.map((filterItem, index) => (
-        <Stack
-          key={filterItem.name}
-          flexShrink={0}
-          spacing={1}
-          direction={'row'}
-          alignItems={'center'}
-          justifyContent={'center'}
-          style={filterItem.style}
-          position={'relative'}
-          height={40}
-        >
-          <Typography variant="filter_label">{filterItem.label}</Typography>
-          <SortListButton />
-          {index !== filterArray.length - 1 && <SectionDivider orientation="vertical" />}
-        </Stack>
-      ))}
-      <AdListFilterIcon sx={{ cursor: 'pointer', width: 16, height: 16, marginRight: 3 }} />
-    </Box>
+    <>
+      <Box
+        display={'inline-flex'}
+        alignItems={'center'}
+        bgcolor={'white'}
+        minWidth={'max-content'}
+        boxShadow={'rgba(59, 118, 129, 0.15) 0px 2px 8px'}
+      >
+        {filterArray.map((filterItem, index) => (
+          <Stack
+            key={filterItem.name}
+            flexShrink={0}
+            spacing={1}
+            direction={'row'}
+            alignItems={'center'}
+            justifyContent={'center'}
+            style={filterItem.style}
+            position={'relative'}
+            height={40}
+          >
+            <Typography variant="filter_label">{filterItem.label}</Typography>
+            <SortListButton />
+            {index !== filterArray.length - 1 && <SectionDivider orientation="vertical" />}
+          </Stack>
+        ))}
+        <AdListFilterIcon
+          sx={{ cursor: 'pointer', width: 16, height: 16, marginRight: 3 }}
+          onClick={handleOpenPopover}
+        />
+      </Box>
+      <ListFilter open={open} onClose={handleClosePopover} />
+    </>
   );
 };

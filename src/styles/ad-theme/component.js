@@ -12,6 +12,15 @@ export const componentOverrides = (theme) => {
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          '&::after': {
+            borderBottom: '2px solid #1976d2', // 您希望的样式
+          },
+        },
+      },
+    },
   };
 };
 
