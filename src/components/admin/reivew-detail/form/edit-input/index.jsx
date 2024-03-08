@@ -20,7 +20,7 @@ export const EditInput = ({ content, isFullWidth, isHalfWidth, isMultiline }) =>
     <>
       {isMultiline ? (
         <TextareaAutosize
-          handleBlur={handleBlur}
+          onBlur={handleBlur}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           style={{

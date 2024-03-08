@@ -5,6 +5,7 @@ import { SelectCheckbox } from '../form/select-checkbox';
 import { EditInput } from '../form/edit-input';
 import { DayPicker } from '../form/day-picker';
 import dayjs from 'dayjs';
+import { DateInput } from '../form/date-input';
 
 export const LoanPlan = () => {
   const mockOptions = [
@@ -89,6 +90,7 @@ export const LoanPlan = () => {
         component=<SelectCheckbox content="建物だけ新築(既に土地をお持ちの方)" options={mockOptions} />
         hasDropDown={true}
       />
+      <EditRow item={{ isRequired: false, isUpdated: false }} component=<DateInput /> />
     </Stack>
   );
 };
