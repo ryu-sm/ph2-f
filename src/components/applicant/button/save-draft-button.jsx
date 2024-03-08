@@ -34,7 +34,7 @@ export const ApSaveDraftButton = ({ pageInfo }) => {
             ...pre.p_borrowing_details__2,
             ...pageInfo?.p_borrowing_details__2,
           },
-          p_application_banks: pageInfo?.p_application_banks,
+          p_application_banks: pageInfo?.p_application_banks ? pageInfo?.p_application_banks : pre.p_application_banks,
           p_applicant_persons__0: {
             ...pre.p_applicant_persons__0,
             ...pageInfo?.p_applicant_persons__0,
@@ -66,7 +66,9 @@ export const ApSaveDraftButton = ({ pageInfo }) => {
           ...application.p_borrowing_details__2,
           ...pageInfo?.p_borrowing_details__2,
         },
-        p_application_banks: pageInfo?.p_application_banks,
+        p_application_banks: pageInfo?.p_application_banks
+          ? pageInfo?.p_application_banks
+          : application.p_application_banks,
         p_applicant_persons__0: {
           ...application.p_applicant_persons__0,
           ...pageInfo?.p_applicant_persons__0,
