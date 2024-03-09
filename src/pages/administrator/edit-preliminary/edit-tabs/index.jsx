@@ -2,11 +2,11 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { IconButton, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { editMainTabStatusAtom, preliminaryAotm } from '@/store';
+import { editMainTabStatusAtom } from '@/store';
 import { MainDetail } from '../main-panel';
 
-export const EditTabs = () => {
-  const { p_application_headers } = useRecoilValue(preliminaryAotm);
+export const EditTabs = ({ premliminaryInfo }) => {
+  const { p_application_headers } = premliminaryInfo;
   const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);
 
   const byIncomeTotalizer = useMemo(
@@ -55,7 +55,15 @@ export const EditTabs = () => {
           <Tab
             key={item.value}
             value={item.value}
-            label={<Typography variant="applicant_name">{item.label}</Typography>}
+            label={
+              <Typography
+                variant="applicant_name"
+                fontWeight={item.value === mainTabStatus ? 600 : 300}
+                color={item.value === mainTabStatus ? 'gray.100' : 'primary.main'}
+              >
+                {item.label}
+              </Typography>
+            }
             sx={{
               width: 160,
               color: 'gray.100',
@@ -71,7 +79,7 @@ export const EditTabs = () => {
           sx={{
             position: 'absolute',
             top: 33,
-            left: '12%',
+            left: 180,
             transform: 'translateY(-50%)',
             color: 'primary.main',
           }}
@@ -80,7 +88,7 @@ export const EditTabs = () => {
           <SwapHorizIcon />
         </IconButton>
       )}
-      {mainTabStatus === 1 && <MainDetail />}
+      {mainTabStatus === 1 && <MainDetail premliminaryInfo={premliminaryInfo} />}
     </Stack>
   );
 };

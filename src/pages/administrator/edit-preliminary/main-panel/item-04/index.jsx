@@ -2,9 +2,7 @@ import { Button, Stack, Typography } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { preliminaryAotm } from '@/store';
-import { formatJapanDate } from '@/utils';
+
 import { Fragment, useEffect, useMemo } from 'react';
 import {
   AdEditInput,
@@ -21,11 +19,13 @@ import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR, PREFECTURES } from '@/constant';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 
 export const Item04 = () => {
-  const { p_application_headers, p_applicant_persons__0, p_join_guarantors, hasJoinGuarantor } =
-    useRecoilValue(preliminaryAotm);
-  const setPreliminaryInfo = useSetRecoilState(preliminaryAotm);
+  const {
+    preliminaryInfo: { p_application_headers, p_join_guarantors },
+    preliminarySnap: { hasJoinGuarantor },
+  } = usePreliminaryContext();
   const initialValues = {
     p_join_guarantors: p_join_guarantors,
     hasJoinGuarantor: hasJoinGuarantor,
@@ -63,22 +63,7 @@ export const Item04 = () => {
   return (
     <FormikProvider value={formik}>
       <Stack width={'100%'} marginTop={'16px'}>
-        <Stack width={'100%'} direction={'row'} justifyContent={'flex-end'}>
-          <Button
-            sx={{
-              width: 200,
-              padding: '6px 16px',
-              bgcolor: 'secondary.main',
-              color: 'white',
-              boxShadow: 'none',
-              fontWeight: 500,
-              '&:hover': { bgcolor: 'secondary.main', opacity: 0.8 },
-            }}
-            onClick={formik.handleSubmit}
-          >
-            保存
-          </Button>
-        </Stack>
+        <Stack width={'100%'} direction={'row'} justifyContent={'flex-end'}></Stack>
 
         <FieldArray
           name="p_join_guarantors"

@@ -36,6 +36,8 @@ export const ApTopPage = () => {
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
+  const t = useRecoilValue(applicationAtom);
+  console.log(t);
 
   const refreshApplyInfo = useCallback(async () => {
     try {

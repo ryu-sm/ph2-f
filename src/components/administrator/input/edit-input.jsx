@@ -1,11 +1,22 @@
 import { convertToFullWidth, convertToHalfWidth } from '@/utils';
-import { TextField } from '@mui/material';
+import { Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
+import AutosizeInput from 'react-18-input-autosize';
+import './autosize-style.css';
+import { useRef } from 'react';
 
-export const AdEditInput = ({ isMultiline, convertFullWidth, convertHalfWidth, autoTrim = true, ...props }) => {
+export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = true, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
+  const { setValue, setError } = helpers;
+
+  const inputRef = useRef(null);
+
+  const handleAutoFocus = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   const handelBlue = useCallback(
     async (e) => {
@@ -29,42 +40,26 @@ export const AdEditInput = ({ isMultiline, convertFullWidth, convertHalfWidth, a
     async (e) => {
       field.onChange(e);
       props.onChange && props.onChange(e);
-      await setValue(e.target.value);
     },
     [field, props, setValue]
   );
 
   return (
-    <TextField
-      name={field.name}
-      multiline={isMultiline}
-      sx={{
-        ml: -2,
-        width: 1,
-        '& .MuiOutlinedInput-root': {
-          padding: 0,
-          '& fieldset': {
-            border: 'none',
-          },
-          '&:hover fieldset': {
-            border: 'none',
-          },
-          '&.Mui-focused fieldset': {
-            border: '2px solid #1976d2',
-          },
-        },
-        '& .MuiInputBase-input': {
-          padding: '8px',
-          fontFamily: 'Hiragino Sans',
-          fontSize: '12px',
-          fontWeight: 300,
-          lineHeight: '18px',
-          borderRadius: 4,
-        },
-      }}
-      value={meta.value}
-      onChange={handleChange}
-      onBlur={handelBlue}
-    />
+    <Stack
+      direction={'row'}
+      alignItems={'center'}
+      sx={{ width: 1, py: 1, pl: '36px', ml: -10 }}
+      onClick={handleAutoFocus}
+    >
+      <AutosizeInput
+        ref={inputRef}
+        inputClassName="custom-input-style"
+        name={field.name}
+        value={meta.value}
+        onChange={handleChange}
+        onBlur={handelBlue}
+        onFocus={() => setError('')}
+      />
+    </Stack>
   );
 };

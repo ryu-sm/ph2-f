@@ -70,7 +70,7 @@ export const repaymentMethodOptions = [
 export const pairLoanRelOptions = [
   { value: '1', label: '配偶者' },
   { value: '2', label: '婚約者' },
-  { value: '2', label: '親' },
-  { value: '2', label: '子' },
-  { value: '2', label: 'その他' },
+  { value: '3', label: '親' },
+  { value: '4', label: '子' },
+  { value: '5', label: 'その他' },
 ];

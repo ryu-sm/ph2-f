@@ -1,6 +1,4 @@
-import { API_500_ERROR } from '@/constant';
 import { adGetPreliminary } from '@/services';
-import { toast } from 'react-toastify';
 import { atom, selector, selectorFamily, useSetRecoilState } from 'recoil';
 
 export const preliminarieListAtom = atom({
@@ -23,8 +21,8 @@ export const preliminaryInitialValues = {
   isMCJ: false,
   hasJoinGuarantor: false,
   hasIncomeTotalizer: false,
-  // changeJoinGuarantor: false,
-  // changeToIncomeTotalizer: false,
+  changeJoinGuarantor: false,
+  changeToIncomeTotalizer: false,
 
   p_uploaded_files: {
     // STEP02
@@ -362,9 +360,9 @@ export const preliminaryInitialValues = {
   p_borrowings: [],
 };
 
-export const preliminarySnapAtom = atom({
-  key: 'preliminarySnap',
-  default: {},
+export const preliminaryAotm = atom({
+  key: 'preliminaryAotm',
+  default: preliminaryInitialValues,
 });
 
 export const editMainTabStatusAtom = atom({
@@ -372,9 +370,23 @@ export const editMainTabStatusAtom = atom({
   default: 1,
 });
 
+const localStorageEffect =
+  (key) =>
+  ({ setSelf, onSet }) => {
+    const savedValue = localStorage.getItem(key);
+    if (savedValue) {
+      setSelf(savedValue);
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset ? localStorage.removeItem(key) : localStorage.setItem(key, newValue);
+    });
+  };
+
 export const infoGroupTabAtom = atom({
   key: 'infoGroupTabAtom',
   default: 1,
+  // effects_UNSTABLE: [localStorageEffect('tab')],
 });
 
 export const preliminaryId = atom({
@@ -386,19 +398,21 @@ export const preliminarySelect = selector({
   key: 'preliminarySelect',
   get: async ({ get }) => {
     const id = get(preliminaryId);
-    if (!id) return null;
+    if (!id) return {};
     const response = await adGetPreliminary(id);
     if (response.error) {
       throw response.error;
     }
+
+    // console.log(response.data);
     return {
-      ...preliminaryInitialValues,
+      // ...preliminaryInitialValues,
       ...response.data,
-      // isMCJ: response.data.p_application_banks?.length > 1,
-      // hasIncomeTotalizer: ['3', '4'].includes(response.data.p_application_headers.loan_type),
-      // hasJoinGuarantor: response.data.p_application_headers.join_guarantor_umu === '1',
-      // changeJoinGuarantor: false,
-      // changeToIncomeTotalizer: false,
+      isMCJ: response.data.p_application_banks?.length > 1,
+      hasIncomeTotalizer: Boolean(response.data.p_applicant_persons__1),
+      hasJoinGuarantor: Boolean(response.data.p_application_headers.join_guarantor_umu),
+      changeJoinGuarantor: false,
+      changeToIncomeTotalizer: false,
     };
   },
 });

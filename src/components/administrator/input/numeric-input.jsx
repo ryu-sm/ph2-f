@@ -3,10 +3,21 @@ import { Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
+import AutosizeInput from 'react-18-input-autosize';
+import './autosize-style.css';
+import { useRef } from 'react';
 
-export const AdNumericInput = ({ unit = '万円', maxLength, width, ...props }) => {
+export const AdNumericInput = ({ unit, maxLength, width, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
+  const { setValue, setError } = helpers;
+
+  const inputRef = useRef(null);
+
+  const handleAutoFocus = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   const handelBlue = useCallback(
     async (e) => {
@@ -17,56 +28,41 @@ export const AdNumericInput = ({ unit = '万円', maxLength, width, ...props }) 
   );
 
   const handleChange = useCallback(
-    async (e) => {
-      e.target.value = e.target.value.replaceAll(',', '');
-      props.onChange && props.onChange(e);
+    async (value) => {
+      props.onChange && props.onChange(value);
+      await setValue(value);
     },
     [field, props, setValue]
   );
 
   return (
-    <NumericFormat
-      {...field}
-      {...props}
-      customInput={TextField}
-      thousandSeparator
-      autoComplete="off"
-      suffix={meta.value ? (unit ? unit : ' 万円') : ''}
-      type="tel"
-      multiline={true}
-      sx={{
-        ml: -2,
-        width: 1,
-        '& .MuiOutlinedInput-root': {
-          padding: 0,
-          '& fieldset': {
-            border: 'none',
-          },
-          '&:hover fieldset': {
-            border: 'none',
-          },
-          '&.Mui-focused fieldset': {
-            border: '2px solid #1976d2',
-          },
-        },
-        '& .MuiInputBase-input': {
-          padding: '8px',
-          fontFamily: 'Hiragino Sans',
-          fontSize: '12px',
-          fontWeight: 300,
-          lineHeight: '18px',
-          borderRadius: 4,
-        },
-      }}
-      onInput={(e) => {
-        e.target.value = convertToHalfWidth(e.target.value);
-        e.target.value = e.target.value.substring(0, maxLength);
-        return e;
-      }}
-      value={meta.value}
-      onChange={handleChange}
-      onBlur={handelBlue}
-      onValueChange={async (values) => await setValue(values.value)}
-    />
+    <Stack
+      direction={'row'}
+      alignItems={'center'}
+      sx={{ width: 1, py: 1, pl: '36px', ml: -10 }}
+      onClick={handleAutoFocus}
+    >
+      <NumericFormat
+        customInput={AutosizeInput}
+        thousandSeparator
+        getInputRef={inputRef}
+        inputClassName="custom-input-style"
+        name={field.name}
+        value={meta.value}
+        onInput={(e) => {
+          e.target.value = convertToHalfWidth(e.target.value);
+          e.target.value = e.target.value.substring(0, maxLength);
+          return e;
+        }}
+        onBlur={handelBlue}
+        onFocus={() => setError('')}
+        onValueChange={async (values) => handleChange(values.value)}
+      />
+      {unit && meta.value && (
+        <Typography variant="edit_content" whiteSpace={'nowrap'} color={'gray.100'}>
+          {unit}
+        </Typography>
+      )}
+    </Stack>
   );
 };

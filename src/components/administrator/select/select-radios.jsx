@@ -11,7 +11,7 @@ export const AdSelectRadios = ({ options, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
+  const { setValue, setError, setTouched } = helpers;
   const handleChange = useCallback(
     async (value) => {
       props.onChange && props.onChange(value);
@@ -19,16 +19,22 @@ export const AdSelectRadios = ({ options, ...props }) => {
     },
     [props, setValue]
   );
-  const handlePopoverOpen = (e) => setAnchorEl(e.currentTarget);
-  const handlePopoverClose = () => setAnchorEl(null);
+  const handlePopoverOpen = (e) => {
+    setAnchorEl(e.currentTarget);
+    setTouched(false);
+  };
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+    setTouched(true);
+  };
 
   const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
 
   return (
-    <Stack direction={'row'} alignItems={'center'} spacing={3}>
+    <Stack direction={'row'} alignItems={'center'} spacing={'10px'}>
       <Button
         sx={{
-          width: 20,
+          width: open ? 150 : 20,
           height: 20,
           minWidth: 0,
           padding: 0,
@@ -56,8 +62,8 @@ export const AdSelectRadios = ({ options, ...props }) => {
         anchorEl={anchorEl}
         onClose={handlePopoverClose}
         sx={{
-          top: '0',
-          left: -130,
+          top: 0,
+          left: 0,
           '.MuiPopover-paper': {
             overflow: 'visible',
             boxShadow: 'none',
@@ -66,27 +72,28 @@ export const AdSelectRadios = ({ options, ...props }) => {
         }}
       >
         <Stack
-          width={'150px'}
-          overflow={'hidden'}
           sx={{
-            border: '1px solid',
-            borderColor: 'gray.80',
             width: 150,
+            overflow: 'hidden',
             borderRadius: '2px',
+            border: (theme) => `1px solid ${theme.palette.gray[80]}`,
           }}
         >
           <Stack
-            width={'100%'}
-            height={20}
             direction={'row'}
             alignItems={'center'}
             justifyContent={'flex-end'}
-            borderBottom={'1px solid'}
-            borderColor={'gray.80'}
-            bgcolor={'white'}
-            px={2}
+            sx={{
+              px: 2,
+              width: 1,
+              height: 20,
+              bgcolor: 'white',
+              cursor: 'pointer',
+              borderBottom: (theme) => `1px solid ${theme.palette.gray[80]}`,
+            }}
+            onClick={handlePopoverClose}
           >
-            <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80', cursor: 'pointer' }} onClick={handlePopoverClose} />
+            <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80' }} />
           </Stack>
 
           <Stack width={'100%'} maxHeight={'40dvh'} overflow={'auto'}>

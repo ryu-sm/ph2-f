@@ -1,0 +1,12 @@
+.custom-input-style {
+  padding-left: 4px;
+  min-width: 12px;
+  min-height: 24px;
+  max-width: 400px;
+  border: none;
+  font-family: 'Hiragino Sans';
+  font-size: 12;
+  font-weight: 300;
+  line-height: 28px;
+  color: '#333333';
+}

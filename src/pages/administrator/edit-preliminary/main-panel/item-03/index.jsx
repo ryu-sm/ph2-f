@@ -3,7 +3,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { preliminaryAotm } from '@/store';
+
 import { formatJapanDate } from '@/utils';
 import { useEffect, useMemo } from 'react';
 import {
@@ -35,10 +35,14 @@ import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR, PREFECTURES } from '@/constant';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 
 export const Item03 = () => {
-  const { p_application_headers, p_applicant_persons__0, isMCJ } = useRecoilValue(preliminaryAotm);
-  const setPreliminaryInfo = useSetRecoilState(preliminaryAotm);
+  const {
+    preliminaryInfo: { p_application_headers, p_applicant_persons__0 },
+    preliminarySnap: { isMCJ },
+  } = usePreliminaryContext();
+
   const initialValues = {
     p_applicant_persons__0: {
       office_occupation: p_applicant_persons__0.office_occupation,
@@ -118,12 +122,6 @@ export const Item03 = () => {
     return true;
   }, []);
 
-  const temp = useRecoilValue(preliminaryAotm);
-  console.log(temp);
-  useEffect(() => {
-    console.log(999, isMCJ);
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <Stack width={'100%'} marginTop={'16px'} height={'calc(100dvh - 320px)'}>

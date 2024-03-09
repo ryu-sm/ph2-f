@@ -1,15 +1,21 @@
-import { infoGroupTabAtom, preliminaryAotm } from '@/store';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { infoGroupTabAtom } from '@/store';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Item01 } from './item-01';
 import { Item02 } from './item-02';
 import { Item03 } from './item-03';
 import { Item04 } from './item-04';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
+import { AdSecondaryButton } from '@/components/administrator/button';
 
 export const MainDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
-  const { p_application_headers, hasJoinGuarantor } = useRecoilValue(preliminaryAotm);
+  const {
+    preliminaryInfo,
+    preliminarySnap: { hasJoinGuarantor },
+  } = usePreliminaryContext();
+  // const { p_application_headers, hasJoinGuarantor } = premliminaryInfo;
 
   const infoGroupItems = useMemo(() => {
     return [
@@ -57,52 +63,31 @@ export const MainDetail = () => {
     ];
   }, [hasJoinGuarantor]);
 
-  const renderItem = useMemo(() => {
-    switch (infoGroupTab) {
-      case 1:
-        return <Item01 />;
-      case 2:
-        return <Item02 />;
-      case 3:
-        return <Item03 />;
-      case 4:
-        return <Item04 />;
-      default:
-        return '';
-    }
-  }, [infoGroupTab, p_application_headers.join_guarantor_umu]);
-  console.log(infoGroupTab);
-  useEffect(() => {
-    setInfoGroupTab(1);
-  }, []);
   return (
     <Stack width={'100%'} bgcolor={'white'} boxShadow={'rgba(0, 0, 0, 0.25) 0px 0px 5px'} padding={'14px 20px'}>
-      <Stack direction={'row'} alignItems={'center'} bgcolor={'gray.60'} padding={'6px'} spacing={'6px'}>
-        {infoGroupItems.map((item) => (
-          <Button
-            key={item.id}
-            sx={{
-              height: 38,
-              color: item.id === infoGroupTab ? 'white' : 'primary.main',
-              bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
-              fontFamily: 'Hiragino Sans',
-              fontWeight: item.id === infoGroupTab ? 600 : 300,
-              fontSize: 12,
-              boxShadow: 'none',
-              py: '10px',
-              px: '12px',
-              borderRadius: '2px',
-              '&:hover': {
-                bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
-                boxShadow: 'none',
-              },
-            }}
-            onClick={() => setInfoGroupTab(item.id)}
-            id={item.id}
-          >
-            <Typography variant="edit_content_title">{item.label}</Typography>
-          </Button>
-        ))}
+      <Stack direction={'row'} alignItems={'center'} bgcolor={'gray.60'} padding={'6px'}>
+        <Grid container columnSpacing={2} rowSpacing={2}>
+          {infoGroupItems.map((item) => (
+            <Grid key={item.id} item>
+              <AdSecondaryButton
+                sx={{
+                  height: 38,
+                  color: item.id === infoGroupTab ? 'white' : 'primary.main',
+                  bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
+                  fontWeight: item.id === infoGroupTab ? 600 : 300,
+                  borderRadius: '2px',
+                  '&:hover': {
+                    bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
+                    boxShadow: 'none',
+                  },
+                }}
+                onClick={() => setInfoGroupTab(item.id)}
+              >
+                {item.label}
+              </AdSecondaryButton>
+            </Grid>
+          ))}
+        </Grid>
       </Stack>
       {infoGroupTab === 1 && <Item01 />}
       {infoGroupTab === 2 && <Item02 />}

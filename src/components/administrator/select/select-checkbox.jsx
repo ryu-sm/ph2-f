@@ -5,29 +5,32 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button, Popover, Stack, Typography } from '@mui/material';
 import { useField } from 'formik';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export const AdSelectCheckbox = ({ options, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
+  const { setValue, setError } = helpers;
   const handleChange = useCallback(
     async (value) => {
       await setValue(meta.value.includes(value) ? meta.value.filter((item) => item !== value) : [...meta.value, value]);
     },
     [meta, setValue]
   );
-  const handlePopoverOpen = (e) => setAnchorEl(e.currentTarget);
+  const handlePopoverOpen = (e) => {
+    setAnchorEl(e.currentTarget);
+    setError('');
+  };
   const handlePopoverClose = () => setAnchorEl(null);
 
   const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
 
   return (
-    <Stack direction={'row'} alignItems={'center'} spacing={3}>
+    <Stack direction={'row'} alignItems={'center'} spacing={'10px'}>
       <Button
         sx={{
-          width: 20,
+          width: open ? 150 : 20,
           height: 20,
           minWidth: 0,
           padding: 0,
@@ -60,8 +63,8 @@ export const AdSelectCheckbox = ({ options, ...props }) => {
         anchorEl={anchorEl}
         onClose={handlePopoverClose}
         sx={{
-          top: '0',
-          left: -130,
+          top: 0,
+          left: 0,
           '.MuiPopover-paper': {
             overflow: 'visible',
             boxShadow: 'none',
@@ -70,27 +73,28 @@ export const AdSelectCheckbox = ({ options, ...props }) => {
         }}
       >
         <Stack
-          width={'150px'}
-          overflow={'hidden'}
           sx={{
-            border: '1px solid',
-            borderColor: 'gray.80',
             width: 150,
+            overflow: 'hidden',
             borderRadius: '2px',
+            border: (theme) => `1px solid ${theme.palette.gray[80]}`,
           }}
         >
           <Stack
-            width={'100%'}
-            height={20}
             direction={'row'}
             alignItems={'center'}
             justifyContent={'flex-end'}
-            borderBottom={'1px solid'}
-            borderColor={'gray.80'}
-            bgcolor={'white'}
-            px={2}
+            sx={{
+              px: 2,
+              width: 1,
+              height: 20,
+              bgcolor: 'white',
+              cursor: 'pointer',
+              borderBottom: (theme) => `1px solid ${theme.palette.gray[80]}`,
+            }}
+            onClick={handlePopoverClose}
           >
-            <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80', cursor: 'pointer' }} onClick={handlePopoverClose} />
+            <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80' }} />
           </Stack>
 
           <Stack width={'100%'}>
@@ -106,7 +110,7 @@ export const AdSelectCheckbox = ({ options, ...props }) => {
                 sx={{
                   cursor: 'pointer',
                 }}
-                onClick={() => handleChange(item.value)}
+                onClick={!item?.default ? () => handleChange(item.value) : () => {}}
               >
                 <CheckCircleIcon
                   sx={{ fontSize: 20, color: meta.value.includes(item.value) ? 'primary.main' : 'gray.60' }}

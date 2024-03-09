@@ -2,18 +2,10 @@ import { Button, Stack, Typography } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { preliminaryAotm } from '@/store';
+
 import { formatJapanDate } from '@/utils';
 import { useEffect, useMemo } from 'react';
-import {
-  AdEditInput,
-  AdNumericInput,
-  AdSelectCheckbox,
-  AdSelectRadios,
-  DayPicker,
-  MonthPicker,
-} from '@/components/administrator';
+import { AdEditInput, AdSelectRadios, DayPicker } from '@/components/administrator';
 import { genderOptions, nationalityOptions, yearOptions } from './options';
 
 import dayjs from 'dayjs';
@@ -21,10 +13,13 @@ import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR, PREFECTURES } from '@/constant';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 
 export const Item02 = () => {
-  const { p_application_headers, p_applicant_persons__0 } = useRecoilValue(preliminaryAotm);
-  const setPreliminaryInfo = useSetRecoilState(preliminaryAotm);
+  const {
+    preliminaryInfo: { p_application_headers, p_applicant_persons__0 },
+  } = usePreliminaryContext();
+
   const initialValues = {
     p_applicant_persons__0: {
       last_name_kanji: p_applicant_persons__0.last_name_kanji,

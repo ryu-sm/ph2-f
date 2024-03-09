@@ -14,7 +14,9 @@ export const AdMainWrapper = ({ leftContent, rightAddItems, children }) => {
         }}
       >
         <MainHeader leftContent={leftContent} rightAddItems={rightAddItems} />
-        {children}
+        <Stack flex={1} pt={10}>
+          {children}
+        </Stack>
         <MainFooter />
       </Stack>
     </AdThemeProvider>
