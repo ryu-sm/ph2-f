@@ -1,16 +1,13 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
-import { Field, FieldArray, FormikProvider, useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { FieldArray, FormikProvider, useFormik } from 'formik';
 
 import { formatJapanDate, formatMoney } from '@/utils';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   AdAreaInput,
   AdEditInput,
   AdNumericInput,
-  AdSelectCheckbox,
   AdSelectRadios,
   DayPicker,
   MonthPicker,
@@ -20,11 +17,10 @@ import {
   currHouseResidenceTypeOptions,
   currHouseScheduleDisposalTypeOptions,
   currHouseShellScheduledDateOptions,
-  loanFromJapanHouseFinanceAgencyOptions,
-  nationalityOptions,
+  genderOptions,
   newHouseAcquireReasonOptions,
-  newHousePlannedResidentOptions,
   newHouseSelfResidentOptions,
+  oneRoofOptions,
   propertyBusinessTypeOptions,
   propertyFlat35PlanOptions,
   propertyFlat35TechOptions,
@@ -36,80 +32,77 @@ import {
   propertyRebuildingReasonOptions,
   propertyRegionTypeOptions,
   propertyTypeOptions,
-  yearOptions,
+  relToApplicantAOptions,
 } from './options';
-import { useBankMaster } from '@/hooks/use-bank-master';
 import dayjs from 'dayjs';
-import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj } from '@/utils';
-import { toast } from 'react-toastify';
-import { API_500_ERROR, PREFECTURES } from '@/constant';
-import { MCJ_CODE } from '@/configs';
-import { AdSaveButton } from '@/components/administrator/button';
+import { PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { PlannedResidentSelect } from './planned-resident-select';
+import { tab05Schema } from '../../fullSchema';
 
 export const Item05 = () => {
   const {
     preliminaryInfo: { p_application_headers, p_applicant_persons__0, p_residents },
     preliminarySnap: { isMCJ },
     setPreliminarySnap,
+    handleSave,
+    isEditable,
   } = usePreliminaryContext();
 
   const initialValues = {
     p_application_headers: {
-      curr_house_lived_year: p_application_headers.curr_house_lived_year,
-      curr_house_lived_month: p_application_headers.curr_house_lived_month,
-      curr_house_residence_type: p_application_headers.curr_house_residence_type,
-      curr_house_floor_area: p_application_headers.curr_house_floor_area,
-      curr_house_owner_name: p_application_headers.curr_house_owner_name,
-      curr_house_owner_rel: p_application_headers.curr_house_owner_rel,
-      curr_house_schedule_disposal_type: p_application_headers.curr_house_schedule_disposal_type,
-      curr_house_schedule_disposal_type_other: p_application_headers.curr_house_schedule_disposal_type_other,
-      curr_house_shell_scheduled_date: p_application_headers.curr_house_shell_scheduled_date,
-      curr_house_shell_scheduled_price: p_application_headers.curr_house_shell_scheduled_price,
-      curr_house_loan_balance_type: p_application_headers.curr_house_loan_balance_type,
-      property_publish_url: p_application_headers.property_publish_url,
-      new_house_acquire_reason: p_application_headers.new_house_acquire_reason,
-      new_house_acquire_reason_other: p_application_headers.new_house_acquire_reason_other,
-      new_house_self_resident: p_application_headers.new_house_self_resident,
-      new_house_self_not_resident_reason: p_application_headers.new_house_self_not_resident_reason,
-      new_house_planned_resident_overview: p_application_headers.new_house_planned_resident_overview,
-      property_business_type: p_application_headers.property_business_type,
-      property_prefecture: p_application_headers.property_prefecture,
-      property_postal_code: p_application_headers.property_postal_code,
-      property_city: p_application_headers.property_city,
-      property_district: p_application_headers.property_district,
-      property_apartment_and_room_no: p_application_headers.property_apartment_and_room_no,
-      property_address_kana: p_application_headers.property_address_kana,
-      property_private_area: p_application_headers.property_private_area,
-      property_total_floor_area: p_application_headers.property_total_floor_area,
-      property_land_area: p_application_headers.property_land_area,
-      property_floor_area: p_application_headers.property_floor_area,
-      property_land_type: p_application_headers.property_land_type,
-      property_type: p_application_headers.property_type,
-      property_land_acquire_date: p_application_headers.property_land_acquire_date,
-      property_joint_ownership_type: p_application_headers.property_joint_ownership_type,
-      property_building_ratio_numerator: p_application_headers.property_building_ratio_numerator,
-      property_building_ratio_denominator: p_application_headers.property_building_ratio_denominator,
-      property_land_ratio_numerator: p_application_headers.property_land_ratio_numerator,
-      property_land_ratio_denominator: p_application_headers.property_land_ratio_denominator,
-      property_purchase_type: p_application_headers.property_purchase_type,
-      property_planning_area: p_application_headers.property_planning_area,
-      property_planning_area_other: p_application_headers.property_planning_area_other,
-      property_rebuilding_reason: p_application_headers.property_rebuilding_reason,
-      property_rebuilding_reason_other: p_application_headers.property_rebuilding_reason_other,
-      property_flat_35_plan: p_application_headers.property_flat_35_plan,
-      property_maintenance_type: p_application_headers.property_maintenance_type,
-      property_flat_35_tech: p_application_headers.property_flat_35_tech,
-      property_region_type: p_application_headers.property_region_type,
+      curr_house_lived_year: p_application_headers?.curr_house_lived_year,
+      curr_house_lived_month: p_application_headers?.curr_house_lived_month,
+      curr_house_residence_type: p_application_headers?.curr_house_residence_type,
+      curr_house_floor_area: p_application_headers?.curr_house_floor_area,
+      curr_house_owner_name: p_application_headers?.curr_house_owner_name,
+      curr_house_owner_rel: p_application_headers?.curr_house_owner_rel,
+      curr_house_schedule_disposal_type: p_application_headers?.curr_house_schedule_disposal_type,
+      curr_house_schedule_disposal_type_other: p_application_headers?.curr_house_schedule_disposal_type_other,
+      curr_house_shell_scheduled_date: p_application_headers?.curr_house_shell_scheduled_date,
+      curr_house_shell_scheduled_price: p_application_headers?.curr_house_shell_scheduled_price,
+      curr_house_loan_balance_type: p_application_headers?.curr_house_loan_balance_type,
+      property_publish_url: p_application_headers?.property_publish_url,
+      new_house_acquire_reason: p_application_headers?.new_house_acquire_reason,
+      new_house_acquire_reason_other: p_application_headers?.new_house_acquire_reason_other,
+      new_house_self_resident: p_application_headers?.new_house_self_resident,
+      new_house_self_not_resident_reason: p_application_headers?.new_house_self_not_resident_reason,
+      new_house_planned_resident_overview: p_application_headers?.new_house_planned_resident_overview,
+      property_business_type: p_application_headers?.property_business_type,
+      property_prefecture: p_application_headers?.property_prefecture,
+      property_postal_code: p_application_headers?.property_postal_code,
+      property_city: p_application_headers?.property_city,
+      property_district: p_application_headers?.property_district,
+      property_apartment_and_room_no: p_application_headers?.property_apartment_and_room_no,
+      property_address_kana: p_application_headers?.property_address_kana,
+      property_private_area: p_application_headers?.property_private_area,
+      property_total_floor_area: p_application_headers?.property_total_floor_area,
+      property_land_area: p_application_headers?.property_land_area,
+      property_floor_area: p_application_headers?.property_floor_area,
+      property_land_type: p_application_headers?.property_land_type,
+      property_type: p_application_headers?.property_type,
+      property_land_acquire_date: p_application_headers?.property_land_acquire_date,
+      property_joint_ownership_type: p_application_headers?.property_joint_ownership_type,
+      property_building_ratio_numerator: p_application_headers?.property_building_ratio_numerator,
+      property_building_ratio_denominator: p_application_headers?.property_building_ratio_denominator,
+      property_land_ratio_numerator: p_application_headers?.property_land_ratio_numerator,
+      property_land_ratio_denominator: p_application_headers?.property_land_ratio_denominator,
+      property_purchase_type: p_application_headers?.property_purchase_type,
+      property_planning_area: p_application_headers?.property_planning_area,
+      property_planning_area_other: p_application_headers?.property_planning_area_other,
+      property_rebuilding_reason: p_application_headers?.property_rebuilding_reason,
+      property_rebuilding_reason_other: p_application_headers?.property_rebuilding_reason_other,
+      property_flat_35_plan: p_application_headers?.property_flat_35_plan,
+      property_maintenance_type: p_application_headers?.property_maintenance_type,
+      property_flat_35_tech: p_application_headers?.property_flat_35_tech,
+      property_region_type: p_application_headers?.property_region_type,
     },
     p_residents,
     isMCJ,
   };
 
-  const updateApply = useApUpdateApplyInfo();
   const setUpdateData = (values) => {
     const diffData = {
       p_application_headers: {
@@ -122,20 +115,21 @@ export const Item05 = () => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      try {
-        await updateApply(p_application_headers.apply_no, setUpdateData(values));
-        toast.success('申込内容を更新しました。');
-      } catch (error) {
-        toast.error(API_500_ERROR);
-      }
-    },
+    validationSchema: tab05Schema,
   });
-  const isEditable = useMemo(() => {
-    return true;
-  }, []);
+
+  useEffect(() => {
+    setPreliminarySnap((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          ...formik.values.p_application_headers,
+        },
+        p_residents: formik.values.p_residents,
+      };
+    });
+  }, [formik.values]);
 
   const age = useMemo(() => {
     const date = new Date(p_applicant_persons__0.birthday);
@@ -190,6 +184,7 @@ export const Item05 = () => {
     if (temp.father_umu) conter.push(`父`);
     if (temp.mother_umu) conter.push(`母`);
     if (temp.brothers_sisters_umu) conter.push(`兄弟姉妹（${temp.brothers_sisters}人）`);
+    if (temp.fiance_umu) conter.push(`婚約者`);
     if (temp.others_umu) conter.push(`その他（${temp.others}人）`);
 
     return conter.join('・');
@@ -202,12 +197,14 @@ export const Item05 = () => {
   useEffect(() => {
     console.log(formik.values);
   }, [formik.values]);
+
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={true} handleSave={formik.handleSubmit}>
+      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'現在居住　居住年数（年）'}
           isRequired
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -225,6 +222,7 @@ export const Item05 = () => {
         <EditRow
           label={'現在居住　居住年数（ヶ月）'}
           isRequired
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -242,6 +240,7 @@ export const Item05 = () => {
         <EditRow
           label={'現在のお住まいの種類'}
           isRequired
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -314,6 +313,7 @@ export const Item05 = () => {
             <EditRow
               label={'持家　処分方法'}
               isLogicRequired
+              hasPleft={isEditable}
               field={
                 isEditable ? (
                   <AdSelectRadios
@@ -361,6 +361,7 @@ export const Item05 = () => {
                 />
                 <EditRow
                   label={'持家　売却予定時期'}
+                  hasPleft={isEditable}
                   field={
                     isEditable ? (
                       <MonthPicker
@@ -375,6 +376,7 @@ export const Item05 = () => {
                 />
                 <EditRow
                   label={'持家　ローン残高'}
+                  hasPleft={isEditable}
                   field={
                     isEditable ? (
                       <AdSelectRadios
@@ -407,6 +409,7 @@ export const Item05 = () => {
         />
         <EditRow
           label={'新しい住居を必要とする理由'}
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -424,6 +427,7 @@ export const Item05 = () => {
         {formik.values.p_application_headers.new_house_acquire_reason === '99' && (
           <EditRow
             label={'新しい住居を必要とする理由（その他）'}
+            hasPleft={isEditable}
             field={
               isEditable ? (
                 <AdEditInput name="p_application_headers.new_house_acquire_reason_other" convertFullWidth />
@@ -437,6 +441,7 @@ export const Item05 = () => {
         <EditRow
           label={'新しい住居に、あなたは居住しますか？'}
           isRequired
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -479,6 +484,7 @@ export const Item05 = () => {
             <Stack>
               <EditRow
                 label={'あなた以外の入居予定者'}
+                hasPleft={isEditable}
                 field={
                   isEditable ? (
                     <PlannedResidentSelect
@@ -491,16 +497,141 @@ export const Item05 = () => {
                 }
                 // error={formik.errors?.p_application_headers?.new_house_planned_resident_overview}
               />
-              {/* <Stack>
-                {formik.values.p_residents.map((item, index) => (
-                  <Stack key={index}>11</Stack>
-                ))}
-              </Stack> */}
+              <Stack>
+                {formik.values.p_residents
+                  .sort((a, b) => b.rel_to_applicant_a - a.rel_to_applicant_a)
+                  .map((item, index) => (
+                    <Stack key={index}>
+                      <EditRow
+                        label={`入居家族${index + 1} 現在申込人との同居有無`}
+                        isAddendum
+                        hasPleft={isEditable}
+                        field={
+                          isEditable ? (
+                            <AdSelectRadios name={`p_residents[${index}].one_roof`} options={oneRoofOptions} />
+                          ) : (
+                            oneRoofOptions.find((item) => item.value === item.one_roof)?.label
+                          )
+                        }
+                        error={
+                          formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.one_roof
+                        }
+                      />
+                      <EditRow
+                        label={`入居家族${index + 1} 姓　漢字`}
+                        isLogicRequired
+                        field={
+                          isEditable ? (
+                            <AdEditInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
+                          ) : (
+                            item.last_name_kanji
+                          )
+                        }
+                        error={
+                          formik.errors?.p_residents?.length > index &&
+                          formik.errors?.p_residents[index]?.last_name_kanji
+                        }
+                      />
+                      <EditRow
+                        label={`入居家族${index + 1} 名　漢字`}
+                        isLogicRequired
+                        field={
+                          isEditable ? (
+                            <AdEditInput name={`p_residents[${index}].first_name_kanji`} convertFullWidth />
+                          ) : (
+                            item.first_name_kanji
+                          )
+                        }
+                        error={
+                          formik.errors?.p_residents?.length > index &&
+                          formik.errors?.p_residents[index]?.first_name_kanji
+                        }
+                      />
+                      <EditRow
+                        label={`入居家族${index + 1} 姓　カナ`}
+                        isLogicRequired
+                        field={
+                          isEditable ? (
+                            <AdEditInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
+                          ) : (
+                            item.last_name_kana
+                          )
+                        }
+                        error={
+                          formik.errors?.p_residents?.length > index &&
+                          formik.errors?.p_residents[index]?.last_name_kana
+                        }
+                      />
+                      <EditRow
+                        label={`入居家族${index + 1} 名　カナ`}
+                        isLogicRequired
+                        field={
+                          isEditable ? (
+                            <AdEditInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
+                          ) : (
+                            item.first_name_kana
+                          )
+                        }
+                        error={
+                          formik.errors?.p_residents?.length > index &&
+                          formik.errors?.p_residents[index]?.first_name_kana
+                        }
+                      />
+                      <EditRow
+                        label={`入居家族${index + 1} 性別`}
+                        isAddendum
+                        hasPleft={isEditable}
+                        field={
+                          isEditable ? (
+                            <AdSelectRadios name={`p_residents[${index}].gender`} options={genderOptions} />
+                          ) : (
+                            genderOptions.find((item) => item.value === item.gender)?.label
+                          )
+                        }
+                        error={formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.gender}
+                      />
+                      <EditRow
+                        label={`入居家族${index + 1} 続柄`}
+                        isLogicRequired
+                        hasPleft={isEditable}
+                        field={
+                          isEditable ? (
+                            <AdSelectRadios
+                              name={`p_residents[${index}].rel_to_applicant_a`}
+                              options={relToApplicantAOptions}
+                            />
+                          ) : (
+                            genderOptions.find((item) => item.value === item.rel_to_applicant_a)?.label
+                          )
+                        }
+                        error={
+                          formik.errors?.p_residents?.length > index &&
+                          formik.errors?.p_residents[index]?.rel_to_applicant_a
+                        }
+                      />
+                      <EditRow
+                        label={`入居家族${index + 1} 生年月日`}
+                        hasPleft={isEditable}
+                        field={
+                          isEditable ? (
+                            <DayPicker name={`p_residents[${index}].birthday`} />
+                          ) : (
+                            formatJapanDate(item.birthday, true)
+                          )
+                        }
+                        error={
+                          formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.birthday
+                        }
+                      />
+                    </Stack>
+                  ))}
+              </Stack>
             </Stack>
           )}
         />
         <EditRow
           label={'新しい住居（融資対象物件）の事業性'}
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -643,6 +774,7 @@ export const Item05 = () => {
           label={'担保物件種類'}
           isRequired
           isAddendum
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios name="p_application_headers.property_type" options={propertyTypeOptions} />
@@ -656,6 +788,7 @@ export const Item05 = () => {
         <EditRow
           label={'土地取得時期'}
           isAddendum
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <DayPicker name="p_application_headers.property_land_acquire_date" />
@@ -668,6 +801,7 @@ export const Item05 = () => {
         <EditRow
           label={'共有区分'}
           isAddendum
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -742,6 +876,7 @@ export const Item05 = () => {
           <Stack>
             <EditRow
               label={'購入物件の土地権利'}
+              hasPleft={isEditable}
               field={
                 isEditable ? (
                   <AdSelectRadios name="p_application_headers.property_land_type" options={propertyLandTypeOptions} />
@@ -755,6 +890,7 @@ export const Item05 = () => {
             />
             <EditRow
               label={'買戻・保留地・仮換地'}
+              hasPleft={isEditable}
               field={
                 isEditable ? (
                   <AdSelectRadios
@@ -771,6 +907,7 @@ export const Item05 = () => {
             />
             <EditRow
               label={'都市計画区域等'}
+              hasPleft={isEditable}
               field={
                 isEditable ? (
                   <AdSelectRadios
@@ -802,6 +939,7 @@ export const Item05 = () => {
               <Stack>
                 <EditRow
                   label={'再建築理由'}
+                  hasPleft={isEditable}
                   field={
                     isEditable ? (
                       <AdSelectRadios
@@ -819,6 +957,7 @@ export const Item05 = () => {
                 {formik.values.p_application_headers.property_rebuilding_reason === '99' && (
                   <EditRow
                     label={'再建築理由（その他）'}
+                    hasPleft={isEditable}
                     field={
                       isEditable ? (
                         <AdEditInput name="p_application_headers.property_rebuilding_reason_other" convertFullWidth />
@@ -834,6 +973,7 @@ export const Item05 = () => {
 
             <EditRow
               label={'フラット35S適用プラン'}
+              hasPleft={isEditable}
               field={
                 isEditable ? (
                   <AdSelectRadios
@@ -855,6 +995,7 @@ export const Item05 = () => {
             />
             <EditRow
               label={'維持保全型'}
+              hasPleft={isEditable}
               field={
                 isEditable ? (
                   <AdSelectRadios
@@ -872,6 +1013,7 @@ export const Item05 = () => {
             {formik.values.p_application_headers.property_flat_35_plan === '2' && (
               <EditRow
                 label={'フラット35S（優良住宅取得支援制度）'}
+                hasPleft={isEditable}
                 field={
                   isEditable ? (
                     <AdSelectRadios
@@ -889,6 +1031,7 @@ export const Item05 = () => {
             )}
             <EditRow
               label={'地域連携型・地方移住支援型'}
+              hasPleft={isEditable}
               field={
                 isEditable ? (
                   <AdSelectRadios

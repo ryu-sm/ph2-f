@@ -2,22 +2,19 @@ import { Icons } from '@/assets';
 import { AdSettingPopover } from '@/containers/ad-layout/ad-main-wrapper/setting-popover';
 import { useBoolean, useIsManager } from '@/hooks';
 import { routeNames } from '@/router/settings';
-import { authAtom, preliminarieListAtom, showProgressAtom, tabStatusAtom } from '@/store';
+import { authAtom, dashboardTabStatusAtom } from '@/store';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { AdChangePasswordModal } from './chang-password';
-import { adManagerPreliminaries, adSalesPersonPreliminaries } from '@/services';
 
 export const MainHeader = ({ leftContent, rightAddItems }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const authInfo = useRecoilValue(authAtom);
-  const [tabStatus, setTabStatus] = useRecoilState(tabStatusAtom);
-  const setShowProgress = useSetRecoilState(showProgressAtom);
-  const setPreliminariesData = useSetRecoilState(preliminarieListAtom);
+  const [dashboardTabStatus, setDashboardTabStatus] = useRecoilState(dashboardTabStatusAtom);
   const isManager = useIsManager();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -51,27 +48,6 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
       label: '過去の案件',
     },
   ];
-
-  const queryPreliminaries = useCallback(async () => {
-    try {
-      setShowProgress(true);
-      let res;
-      if (isManager) {
-        res = await adManagerPreliminaries(tabStatus);
-      } else {
-        res = await adSalesPersonPreliminaries(tabStatus);
-      }
-      setPreliminariesData(res.data);
-      setShowProgress(false);
-    } catch (error) {
-      setShowProgress(false);
-      console.log(error);
-    }
-  }, [tabStatus, isManager]);
-
-  useEffect(() => {
-    queryPreliminaries();
-  }, [tabStatus, isManager]);
 
   return (
     <>
@@ -149,15 +125,17 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
                   '&:hover': {
                     opacity: 0.8,
                   },
-                  borderBottom: tabStatus === item.status ? `3px solid ${theme.palette.primary.main}` : 'none',
+                  borderBottom: dashboardTabStatus === item.status ? `3px solid ${theme.palette.primary.main}` : 'none',
                 }}
-                onClick={() => setTabStatus(item.status)}
+                onClick={() => setDashboardTabStatus(item.status)}
               >
                 <Typography
                   variant="main_page_title"
-                  color={tabStatus === item.status ? `${theme.palette.gray[100]}` : `${theme.palette.primary.main}`}
+                  color={
+                    dashboardTabStatus === item.status ? `${theme.palette.gray[100]}` : `${theme.palette.primary.main}`
+                  }
                   sx={{
-                    fontWeight: tabStatus === item.status ? 600 : 400,
+                    fontWeight: dashboardTabStatus === item.status ? 600 : 400,
                     textWrap: 'nowrap',
                   }}
                 >

@@ -1,19 +1,17 @@
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { Fragment, useCallback, useMemo } from 'react';
 import { PopoverSelect } from '../common/popover-select';
-import { ProgressStatus } from '../common/progress-status';
 import { FieldItem } from '../common/field-item';
 import { formatApplyTime } from '@/utils';
 import { Icons } from '@/assets';
 import { FormikProvider, useFormik } from 'formik';
 import {
-  adUpdatePreliminarieManagerId,
   adUpdatePreliminarieSalesAreaId,
   adUpdatePreliminarieSalesExhibitionHallId,
   adUpdatePreliminarieSalesPersonId,
 } from '@/services';
 import { toast } from 'react-toastify';
-import { useBoolean, useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
+import { useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
 
 import { widthConfig } from '../common/width-config';
 

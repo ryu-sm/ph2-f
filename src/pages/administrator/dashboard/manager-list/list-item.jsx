@@ -7,7 +7,6 @@ import { formatApplyTime } from '@/utils';
 import { Icons } from '@/assets';
 import { FormikProvider, useFormik } from 'formik';
 import {
-  adManagerPreliminaries,
   adUpdatePreliminarieManagerId,
   adUpdatePreliminarieSalesAreaId,
   adUpdatePreliminarieSalesExhibitionHallId,
@@ -15,14 +14,14 @@ import {
   adUpdateProvisionalAfterResult,
 } from '@/services';
 import { toast } from 'react-toastify';
-import { useBoolean, useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
+import { useBoolean, useDashboardContext, useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
 import { SetPairLoanModal } from './pair-loan-modal';
 import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { UpAfterResultModal } from './after-result-modal';
-import { preliminarieListAtom, showProgressAtom, tabStatusAtom } from '@/store';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { dashboardTabStatusAtom } from '@/store';
+import { useRecoilValue } from 'recoil';
 
 export const AdCaseItem = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -54,9 +53,8 @@ export const AdCaseItem = ({ item }) => {
 };
 
 const CaseItem = ({ item, isPairLoan, index }) => {
-  const tabStatus = useRecoilValue(tabStatusAtom);
-  const setShowProgress = useSetRecoilState(showProgressAtom);
-  const setPreliminariesData = useSetRecoilState(preliminarieListAtom);
+  const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
+  const { refreshPreliminarieList } = useDashboardContext();
   const navigator = useNavigate();
   const pairLoanModal = useBoolean(false);
   const afterResultModal = useBoolean(false);
@@ -103,7 +101,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       {
         label: '仮審査否決等',
         value: '0',
-        enable: item.provisional_after_result === '' && tabStatus === 1,
+        enable: item.provisional_after_result === '' && dashboardTabStatus === 1,
         active: item.provisional_after_result === '0',
         onClick: () => {
           setAfterResult({
@@ -197,22 +195,10 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const salesExhibitionHallOptions = useSalesExhibitionHallOptions(formik.values.sales_area_id);
   const salesPersonOptions = useSalesPersonOptions(formik.values.sales_exhibition_hall_id);
 
-  const queryPreliminaries = async () => {
-    try {
-      setShowProgress(true);
-      const res = await adManagerPreliminaries(tabStatus);
-      setPreliminariesData(res.data);
-      setShowProgress(false);
-    } catch (error) {
-      setShowProgress(false);
-      console.log(error);
-    }
-  };
-
   const handleUpdateProvisionalAfterResult = useCallback(async () => {
     try {
       await adUpdateProvisionalAfterResult(afterResult);
-      await queryPreliminaries();
+      await refreshPreliminarieList();
       afterResultModal.onFalse();
       toast.success('更新をしました。');
     } catch (error) {

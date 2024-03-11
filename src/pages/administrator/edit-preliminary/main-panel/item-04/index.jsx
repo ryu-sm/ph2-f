@@ -1,65 +1,55 @@
-import { Button, Stack, Typography } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
 
-import { Fragment, useEffect, useMemo } from 'react';
-import {
-  AdEditInput,
-  AdEditOutLineInput,
-  AdNumericInput,
-  AdSelectCheckbox,
-  AdSelectRadios,
-  DayPicker,
-  MonthPicker,
-} from '@/components/administrator';
-import { genderOptions, nationalityOptions, relToApplicantAOptions, yearOptions } from './options';
+import { Fragment, useEffect } from 'react';
+import { AdEditInput, AdEditOutLineInput, AdSelectRadios, DayPicker } from '@/components/administrator';
+import { genderOptions, relToApplicantAOptions } from './options';
 
 import dayjs from 'dayjs';
-import { useApUpdateApplyInfo } from '@/hooks';
-import { diffObj } from '@/utils';
-import { toast } from 'react-toastify';
-import { API_500_ERROR, PREFECTURES } from '@/constant';
+import { PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { AdPrimaryButton } from '@/components/administrator/button';
 import { Icons } from '@/assets';
+import { Stack } from '@mui/material';
+import { tab04Schema } from '../../fullSchema';
 
 export const Item04 = () => {
   const {
     preliminaryInfo: { p_application_headers, p_join_guarantors },
-    preliminarySnap: { hasJoinGuarantor },
+    setPreliminarySnap,
+    handleSave,
+    isEditable,
   } = usePreliminaryContext();
   const initialValues = {
     p_join_guarantors: p_join_guarantors,
-    hasJoinGuarantor: hasJoinGuarantor,
   };
-  const updateApply = useApUpdateApplyInfo();
+
   const setUpdateData = (values) => {
     const diffData = {
-      p_applicant_persons__0: {
-        ...diffObj(initialValues.p_applicant_persons__0, values.p_applicant_persons__0),
+      p_join_guarantors: values.p_join_guarantors,
+      p_application_headers: {
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
       },
     };
+    console.log(diffData);
     return diffData;
   };
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      try {
-        await updateApply(p_application_headers.apply_no, setUpdateData(values));
-        toast.success('申込内容を更新しました。');
-      } catch (error) {
-        toast.error(API_500_ERROR);
-      }
-    },
+    validationSchema: tab04Schema,
   });
-  const isEditable = useMemo(() => {
-    return true;
-  }, []);
+
+  useEffect(() => {
+    setPreliminarySnap((pre) => {
+      return {
+        ...pre,
+        p_join_guarantors: formik.values.p_join_guarantors,
+      };
+    });
+  }, [formik.values]);
+
   useEffect(() => {
     console.log(formik.values);
   }, [formik.values]);
@@ -79,6 +69,7 @@ export const Item04 = () => {
                 label={'担保提供者'}
                 subLabel={`（${index + 1}人目）`}
                 handleDeleteItem={() => arrayHelpers.remove(index)}
+                handleSave={() => handleSave(setUpdateData(formik.values))}
               >
                 <EditRow
                   label={'担保提供者の氏名（姓）'}
@@ -213,7 +204,7 @@ export const Item04 = () => {
                   }
                   error={
                     formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.last_name_kanji
+                    formik.errors?.p_join_guarantors[index]?.birthday
                   }
                 />
                 <EditRow

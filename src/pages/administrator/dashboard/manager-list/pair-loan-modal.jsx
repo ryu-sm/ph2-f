@@ -1,17 +1,14 @@
 import { Icons } from '@/assets';
+import { useDashboardContext } from '@/hooks';
 import { adGetPairLoanOptions, adSetPairLoan, adUnPairLoan } from '@/services';
-import { preliminarieListAtom, showProgressAtom, tabStatusAtom } from '@/store';
 import { Box, Button, Divider, MenuItem, Modal, Select, Stack, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, isPairLoan }) => {
-  const tabStatus = useRecoilValue(tabStatusAtom);
-  const setShowProgress = useSetRecoilState(showProgressAtom);
-  const setPreliminariesData = useSetRecoilState(preliminarieListAtom);
   const [pairLoanOptions, setPairLoanOptions] = useState([{ value: pair_loan_id, label: apply_no }]);
+  const { refreshPreliminarieList } = useDashboardContext();
   const queryPairLoanOptions = useCallback(async () => {
     try {
       const res = await adGetPairLoanOptions(id);
@@ -19,25 +16,13 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
     } catch (error) {
       console.log(error);
     }
-  }, [isPairLoan, id]);
+  }, [id]);
 
   useEffect(() => {
     if (!isPairLoan) {
       queryPairLoanOptions();
     }
-  }, [isPairLoan]);
-
-  const queryPreliminaries = async () => {
-    try {
-      setShowProgress(true);
-      const res = await adManagerPreliminaries(tabStatus);
-      setPreliminariesData(res.data);
-      setShowProgress(false);
-    } catch (error) {
-      setShowProgress(false);
-      console.log(error);
-    }
-  };
+  }, [isPairLoan, id, isOpen]);
 
   const formik = useFormik({
     initialValues: {
@@ -49,12 +34,12 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
         if (isPairLoan) {
           await adUnPairLoan(values);
           toast.success('ペアローンの紐付きを解除しました。');
-          await queryPreliminaries();
+          await refreshPreliminarieList();
           onClose();
         } else {
           await adSetPairLoan(values);
           toast.success('ペアローンの紐付きをしました。');
-          await queryPreliminaries();
+          await refreshPreliminarieList();
           onClose();
         }
       } catch (error) {

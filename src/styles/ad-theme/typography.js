@@ -219,4 +219,14 @@ export const typography = {
     lineHeight: '24px',
     color: '#333333',
   },
+
+  dailog_warring: {
+    fontFamily: 'Hiragino Sans',
+    fontSize: 18,
+    fontWeight: 600,
+    lineHeight: '27px',
+    letterSpacing: 1,
+    textAlign: 'center',
+    whiteSpace: 'break-spaces',
+  },
 };

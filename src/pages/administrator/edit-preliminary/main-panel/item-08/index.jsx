@@ -1,40 +1,9 @@
-import { Button, Stack, Typography } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { formatJapanDate, formatMoney } from '@/utils';
-
-import {
-  AdEditInput,
-  AdNumericInput,
-  AdSelectCheckbox,
-  AdSelectRadios,
-  DayPicker,
-  MonthPicker,
-} from '@/components/administrator';
-import {
-  bonusRepaymentMonthOptions,
-  hasJoinGuarantorOptions,
-  landAadvancePlanOptions,
-  loanPlusOptions,
-  loanTargetOptions,
-  loanTargetOptions_,
-  loanTypeOptions,
-  pairLoanRelOptions,
-  repaymentMethodOptions,
-  yearNumOptions,
-  yearOptions,
-} from './options';
-import { useBankMaster } from '@/hooks/use-bank-master';
-import dayjs from 'dayjs';
-import { useApUpdateApplyInfo, useSalesPersonOptions } from '@/hooks';
+import { AdEditInput, AdSelectRadios } from '@/components/administrator';
+import { useSalesPersonOptions } from '@/hooks';
 import { diffObj } from '@/utils';
-import { toast } from 'react-toastify';
-import { API_500_ERROR } from '@/constant';
-import { MCJ_CODE } from '@/configs';
-import { AdSaveButton } from '@/components/administrator/button';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -45,20 +14,20 @@ export const Item08 = () => {
   const {
     preliminaryInfo: { p_application_headers },
     setPreliminarySnap,
+    handleSave,
+    isEditable,
   } = usePreliminaryContext();
 
   const initialValues = {
     p_application_headers: {
-      sales_company_id: p_application_headers.sales_company_id,
-      sales_area_id: p_application_headers.sales_area_id,
-      sales_exhibition_hall_id: p_application_headers.sales_exhibition_hall_id,
-      s_sales_person_id: p_application_headers.s_sales_person_id,
-      vendor_name: p_application_headers.vendor_name,
-      vendor_phone: p_application_headers.vendor_phone,
+      sales_company_id: p_application_headers?.sales_company_id,
+      sales_area_id: p_application_headers?.sales_area_id,
+      sales_exhibition_hall_id: p_application_headers?.sales_exhibition_hall_id,
+      s_sales_person_id: p_application_headers?.s_sales_person_id,
+      vendor_name: p_application_headers?.vendor_name,
+      vendor_phone: p_application_headers?.vendor_phone,
     },
   };
-
-  const updateApply = useApUpdateApplyInfo();
 
   const setUpdateData = (values) => {
     const diffData = {
@@ -71,20 +40,19 @@ export const Item08 = () => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      try {
-        await updateApply(p_application_headers.apply_no, setUpdateData(values));
-        toast.success('申込内容を更新しました。');
-      } catch (error) {
-        toast.error(API_500_ERROR);
-      }
-    },
   });
-  const isEditable = useMemo(() => {
-    return true;
-  }, []);
+
+  useEffect(() => {
+    setPreliminarySnap((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          ...formik.values.p_application_headers,
+        },
+      };
+    });
+  }, [formik.values]);
 
   const getOrgs = useCallback(async () => {
     try {
@@ -134,7 +102,7 @@ export const Item08 = () => {
   }, [formik.values]);
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={true} handleSave={formik.handleSubmit}>
+      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'提携会社'}
           hasPleft={isEditable}

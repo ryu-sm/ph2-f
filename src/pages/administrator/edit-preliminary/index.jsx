@@ -1,9 +1,9 @@
 import { AdMainWrapper } from '@/containers';
 import { useCurrSearchParams, useIsManager } from '@/hooks';
 
-import { preliminaryId } from '@/store';
+import { preliminaryIdAtom } from '@/store';
 import { Button, LinearProgress, Stack, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useSetRecoilState } from 'recoil';
 import { AdReviewProgress } from './review-progress';
@@ -16,23 +16,30 @@ const Content = () => {
   const isManager = useIsManager();
   // 设定ID
   const p_application_header_id = useCurrSearchParams().get('id');
-  const setPreliminaryId = useSetRecoilState(preliminaryId);
+  const setPreliminaryId = useSetRecoilState(preliminaryIdAtom);
 
   useEffect(() => {
     setPreliminaryId(p_application_header_id);
   }, []);
 
-  const { status, preliminaryInfo, refreshPreliminary } = usePreliminaryContext();
+  const { status, preliminaryInfo } = usePreliminaryContext();
 
-  useEffect(() => {
-    console.log(preliminaryInfo);
+  const fullNmae = useMemo(() => {
+    if (
+      !!preliminaryInfo?.p_applicant_persons__0?.last_name_kanji &&
+      !!preliminaryInfo?.p_applicant_persons__0?.first_name_kanji
+    ) {
+      return `　［ ${preliminaryInfo?.p_applicant_persons__0?.last_name_kanji}${preliminaryInfo?.p_applicant_persons__0?.first_name_kanji} 様］`;
+    } else {
+      return '';
+    }
   }, [preliminaryInfo]);
 
   return (
     <AdMainWrapper
       leftContent={
         <Typography variant="main_page_title" fontWeight={600} color="text.normal">
-          {`申込内容の修正・確認　［ ${11}${22} 様］`}
+          {`申込内容の修正・確認${fullNmae}`}
         </Typography>
       }
       rightAddItems={
@@ -47,7 +54,7 @@ const Content = () => {
         {status === 'hasValue' && (
           <Stack>
             <AdReviewProgress />
-            <EditTabs premliminaryInfo={preliminaryInfo} />
+            <EditTabs />
           </Stack>
         )}
       </Stack>

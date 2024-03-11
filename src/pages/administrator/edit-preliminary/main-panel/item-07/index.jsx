@@ -1,74 +1,47 @@
-import { Button, Stack, Typography } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { formatJapanDate, formatMoney } from '@/utils';
-import { useEffect, useMemo } from 'react';
-import {
-  AdEditInput,
-  AdNumericInput,
-  AdSelectCheckbox,
-  AdSelectRadios,
-  DayPicker,
-  MonthPicker,
-} from '@/components/administrator';
-import {
-  bonusRepaymentMonthOptions,
-  hasJoinGuarantorOptions,
-  landAadvancePlanOptions,
-  loanPlusOptions,
-  loanTargetOptions,
-  loanTargetOptions_,
-  loanTypeOptions,
-  pairLoanRelOptions,
-  repaymentMethodOptions,
-  yearNumOptions,
-  yearOptions,
-} from './options';
-import { useBankMaster } from '@/hooks/use-bank-master';
-import dayjs from 'dayjs';
-import { useApUpdateApplyInfo } from '@/hooks';
+import { formatMoney } from '@/utils';
+import { useEffect } from 'react';
+import { AdNumericInput } from '@/components/administrator';
 import { diffObj } from '@/utils';
-import { toast } from 'react-toastify';
-import { API_500_ERROR } from '@/constant';
-import { MCJ_CODE } from '@/configs';
-import { AdSaveButton } from '@/components/administrator/button';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
+import { tab07Schema } from '../../fullSchema';
 
 export const Item07 = () => {
   const {
     preliminaryInfo: { p_application_headers },
     setPreliminarySnap,
+    handleSave,
+    isEditable,
   } = usePreliminaryContext();
 
   const initialValues = {
     p_application_headers: {
-      required_funds_land_amount: p_application_headers.required_funds_land_amount,
-      required_funds_house_amount: p_application_headers.required_funds_house_amount,
-      required_funds_accessory_amount: p_application_headers.required_funds_accessory_amount,
-      required_funds_additional_amount: p_application_headers.required_funds_additional_amount,
-      required_funds_refinance_loan_balance: p_application_headers.required_funds_refinance_loan_balance,
-      required_funds_upgrade_amount: p_application_headers.required_funds_upgrade_amount,
-      required_funds_loan_plus_amount: p_application_headers.required_funds_loan_plus_amount,
-      required_funds_total_amount: p_application_headers.required_funds_total_amount,
-      funding_saving_amount: p_application_headers.funding_saving_amount,
-      funding_estate_sale_amount: p_application_headers.funding_estate_sale_amount,
-      funding_other_saving_amount: p_application_headers.funding_other_saving_amount,
-      funding_relative_donation_amount: p_application_headers.funding_relative_donation_amount,
-      funding_loan_amount: p_application_headers.funding_loan_amount,
-      funding_pair_loan_amount: p_application_headers.funding_pair_loan_amount,
-      funding_other_amount: p_application_headers.funding_other_amount,
-      funding_other_amount_detail: p_application_headers.funding_other_amount_detail,
-      funding_total_amount: p_application_headers.funding_total_amount,
-      funding_self_amount: p_application_headers.funding_self_amount,
-      property_building_price: p_application_headers.property_building_price,
-      property_land_price: p_application_headers.property_land_price,
-      property_total_price: p_application_headers.property_total_price,
-      funding_other_refinance_amount: p_application_headers.funding_other_refinance_amount,
-      funding_other_loan_amount: p_application_headers.funding_other_loan_amount,
+      required_funds_land_amount: p_application_headers?.required_funds_land_amount,
+      required_funds_house_amount: p_application_headers?.required_funds_house_amount,
+      required_funds_accessory_amount: p_application_headers?.required_funds_accessory_amount,
+      required_funds_additional_amount: p_application_headers?.required_funds_additional_amount,
+      required_funds_refinance_loan_balance: p_application_headers?.required_funds_refinance_loan_balance,
+      required_funds_upgrade_amount: p_application_headers?.required_funds_upgrade_amount,
+      required_funds_loan_plus_amount: p_application_headers?.required_funds_loan_plus_amount,
+      required_funds_total_amount: p_application_headers?.required_funds_total_amount,
+      funding_saving_amount: p_application_headers?.funding_saving_amount,
+      funding_estate_sale_amount: p_application_headers?.funding_estate_sale_amount,
+      funding_other_saving_amount: p_application_headers?.funding_other_saving_amount,
+      funding_relative_donation_amount: p_application_headers?.funding_relative_donation_amount,
+      funding_loan_amount: p_application_headers?.funding_loan_amount,
+      funding_pair_loan_amount: p_application_headers?.funding_pair_loan_amount,
+      funding_other_amount: p_application_headers?.funding_other_amount,
+      funding_other_amount_detail: p_application_headers?.funding_other_amount_detail,
+      funding_total_amount: p_application_headers?.funding_total_amount,
+      funding_self_amount: p_application_headers?.funding_self_amount,
+      property_building_price: p_application_headers?.property_building_price,
+      property_land_price: p_application_headers?.property_land_price,
+      property_total_price: p_application_headers?.property_total_price,
+      funding_other_refinance_amount: p_application_headers?.funding_other_refinance_amount,
+      funding_other_loan_amount: p_application_headers?.funding_other_loan_amount,
     },
   };
   const setUpdateData = (values) => {
@@ -80,24 +53,22 @@ export const Item07 = () => {
     return diffData;
   };
 
-  const updateApply = useApUpdateApplyInfo();
-
   const formik = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      try {
-        await updateApply(p_application_headers.apply_no, setUpdateData(values));
-        toast.success('申込内容を更新しました。');
-      } catch (error) {
-        toast.error(API_500_ERROR);
-      }
-    },
+    validationSchema: tab07Schema,
   });
-  const isEditable = useMemo(() => {
-    return true;
-  }, []);
+
+  useEffect(() => {
+    setPreliminarySnap((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          ...formik.values.p_application_headers,
+        },
+      };
+    });
+  }, [formik.values]);
 
   useEffect(() => {
     if (
@@ -112,7 +83,8 @@ export const Item07 = () => {
     ) {
       formik.setFieldValue(
         'p_application_headers.required_funds_total_amount',
-        Number(formik.values.p_application_headers.required_funds_land_amount) +
+        `${
+          Number(formik.values.p_application_headers.required_funds_land_amount) +
           Number(formik.values.p_application_headers.required_funds_house_amount) +
           Number(formik.values.p_application_headers.required_funds_accessory_amount) +
           Number(formik.values.p_application_headers.required_funds_upgrade_amount) +
@@ -120,6 +92,7 @@ export const Item07 = () => {
           Number(formik.values.p_application_headers.required_funds_additional_amount) +
           Number(formik.values.p_application_headers.required_funds_loan_plus_amount) +
           Number(formik.values.p_application_headers.funding_other_loan_amount)
+        }`
       );
     } else {
       formik.setFieldValue('p_application_headers.required_funds_total_amount', '');
@@ -143,9 +116,11 @@ export const Item07 = () => {
     ) {
       formik.setFieldValue(
         'p_application_headers.funding_self_amount',
-        Number(formik.values.p_application_headers.funding_saving_amount) +
+        `${
+          Number(formik.values.p_application_headers.funding_saving_amount) +
           Number(formik.values.p_application_headers.funding_estate_sale_amount) +
           Number(formik.values.p_application_headers.funding_other_saving_amount)
+        }`
       );
     } else {
       formik.setFieldValue('p_application_headers.funding_self_amount', '');
@@ -168,13 +143,15 @@ export const Item07 = () => {
     ) {
       formik.setFieldValue(
         'p_application_headers.funding_total_amount',
-        Number(formik.values.p_application_headers.funding_saving_amount) +
+        `${
+          Number(formik.values.p_application_headers.funding_saving_amount) +
           Number(formik.values.p_application_headers.funding_estate_sale_amount) +
           Number(formik.values.p_application_headers.funding_other_saving_amount) +
           Number(formik.values.p_application_headers.funding_relative_donation_amount) +
           Number(formik.values.p_application_headers.funding_loan_amount) +
           Number(formik.values.p_application_headers.funding_pair_loan_amount) +
           Number(formik.values.p_application_headers.funding_other_amount)
+        }`
       );
     } else {
       formik.setFieldValue('p_application_headers.funding_total_amount', '');
@@ -198,7 +175,7 @@ export const Item07 = () => {
   }, [formik.values]);
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
+      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         {p_application_headers.loan_target === '6' && (
           <EditRow
             label={'土地'}

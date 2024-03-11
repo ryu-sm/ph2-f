@@ -2,7 +2,7 @@ import { Icons } from '@/assets';
 import { useIsManager } from '@/hooks';
 import { clearStorage } from '@/libs';
 import { routeNames } from '@/router/settings';
-import { applicationAtom, authAtom, preliminarieListAtom, tabStatusAtom } from '@/store';
+import { applicationAtom, authAtom, preliminarieListAtom } from '@/store';
 import { useTheme } from '@emotion/react';
 import { Box, Button, Popover, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
   const resetAuth = useResetRecoilState(authAtom);
   const resetApplication = useResetRecoilState(applicationAtom);
   const resetPreliminarieList = useResetRecoilState(preliminarieListAtom);
-  const resetTabStatus = useResetRecoilState(tabStatusAtom);
+
   const menuItems = [
     ...(isManager
       ? [
@@ -40,7 +40,6 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
       label: 'ログアウト',
       onclick: () => {
         resetAuth();
-        resetTabStatus();
         resetApplication();
         resetPreliminarieList();
         clearStorage();

@@ -1,17 +1,17 @@
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { SortListButton } from './sort-list-button';
 import { Icons } from '@/assets';
-import { useBoolean, useIsManager, useSortPreliminaries } from '@/hooks';
+import { useBoolean, useDashboardContext, useIsManager } from '@/hooks';
 import { widthConfig } from './width-config';
 import { useRecoilValue } from 'recoil';
-import { tabStatusAtom } from '@/store';
+import { dashboardTabStatusAtom } from '@/store';
 import { AdFilterModal } from './filter-modal';
 
 export const HeaderFilter = () => {
   const isManager = useIsManager();
-  const tabStatus = useRecoilValue(tabStatusAtom);
+  const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
   const filetrModal = useBoolean(false);
-  const { sortBy, sortOrder, handleSort } = useSortPreliminaries();
+  const { sortBy, sortOrder, handleSort } = useDashboardContext();
   const filterArray = [
     { name: 'apply_no', label: '受付番号', limitWidth: widthConfig[1] },
     { name: 'bank_name', label: '申込銀行', limitWidth: widthConfig[2] },
@@ -66,7 +66,7 @@ export const HeaderFilter = () => {
         ))}
       </Stack>
       <Box sx={{ width: 16, height: 16, position: 'relative', left: -8 }}>
-        {tabStatus !== 2 && (
+        {dashboardTabStatus !== 2 && (
           <Icons.AdListFilterIcon sx={{ cursor: 'pointer', width: 16, height: 16 }} onClick={filetrModal.onTrue} />
         )}
       </Box>

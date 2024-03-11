@@ -1,5 +1,5 @@
 import { infoGroupTabAtom } from '@/store';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Modal, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Item01 } from './item-01';
@@ -7,17 +7,21 @@ import { Item02 } from './item-02';
 import { Item03 } from './item-03';
 import { Item04 } from './item-04';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
-import { AdSecondaryButton } from '@/components/administrator/button';
+import { AdPrimaryButton, AdSecondaryButton } from '@/components/administrator/button';
 import { Item05 } from './item-05';
 import { Item06 } from './item-06';
 import { Item07 } from './item-07';
 import { Item08 } from './item-08';
+import { Icons } from '@/assets';
+import { useBoolean } from '@/hooks';
 
 export const MainDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
   const {
     preliminaryInfo,
     preliminarySnap: { hasJoinGuarantor },
+    checkUpdate,
+    resetPreliminarySnap,
   } = usePreliminaryContext();
   // const { p_application_headers, hasJoinGuarantor } = premliminaryInfo;
 
@@ -67,6 +71,25 @@ export const MainDetail = () => {
     ];
   }, [hasJoinGuarantor]);
 
+  const changeTab = useBoolean(false);
+  const [tempTab, setTempTab] = useState(null);
+  const handleChangeGroupTab = (id) => {
+    if (checkUpdate()) {
+      setTempTab(id);
+      changeTab.onTrue();
+    } else {
+      setInfoGroupTab(id);
+    }
+  };
+
+  const handleOk = () => {
+    resetPreliminarySnap();
+
+    changeTab.onFalse();
+
+    setInfoGroupTab(tempTab);
+  };
+
   return (
     <Stack width={'100%'} bgcolor={'white'} boxShadow={'rgba(0, 0, 0, 0.25) 0px 0px 5px'} padding={'14px 20px'}>
       <Stack direction={'row'} alignItems={'center'} bgcolor={'gray.60'} padding={'6px'}>
@@ -85,7 +108,7 @@ export const MainDetail = () => {
                     boxShadow: 'none',
                   },
                 }}
-                onClick={() => setInfoGroupTab(item.id)}
+                onClick={() => handleChangeGroupTab(item.id)}
               >
                 {item.label}
               </AdSecondaryButton>
@@ -101,6 +124,39 @@ export const MainDetail = () => {
       {infoGroupTab === 6 && <Item06 />}
       {infoGroupTab === 7 && <Item07 />}
       {infoGroupTab === 8 && <Item08 />}
+
+      <Modal
+        open={changeTab.value}
+        onClose={changeTab.onFalse}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        disableAutoFocus
+      >
+        <Stack
+          sx={{
+            width: 430,
+            bgcolor: 'white',
+            minWidth: 'auto',
+            maxHeight: '75vh',
+            borderRadius: 1,
+            p: 3,
+          }}
+        >
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+            <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={changeTab.onFalse} />
+          </Stack>
+          <Stack sx={{ py: 3 }}>
+            <Typography variant="dailog_warring">{`このタブを離れてもよろしいですか?\n行った変更が保存されない可能性があります。`}</Typography>
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ p: 3, pb: 6 }}>
+            <AdPrimaryButton height={38} width={150} onClick={handleOk}>
+              OK
+            </AdPrimaryButton>
+            <AdPrimaryButton height={38} width={150} onClick={changeTab.onFalse}>
+              キャンセル
+            </AdPrimaryButton>
+          </Stack>
+        </Stack>
+      </Modal>
     </Stack>
   );
 };

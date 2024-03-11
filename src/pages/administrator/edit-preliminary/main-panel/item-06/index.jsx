@@ -44,25 +44,28 @@ import { Icons } from '@/assets';
 export const Item06 = () => {
   const {
     preliminaryInfo: { p_application_headers, p_borrowings },
-    preliminarySnap: { hasJoinGuarantor, isMCJ, hasIncomeTotalizer },
+    preliminarySnap: { isMCJ, hasIncomeTotalizer },
+    setPreliminarySnap,
+    handleSave,
+    isEditable,
   } = usePreliminaryContext();
   const initialValues = {
     p_application_headers: {
-      curr_borrowing_status: p_application_headers.curr_borrowing_status,
-      refund_source_type: p_application_headers.refund_source_type,
-      refund_source_type_other: p_application_headers.refund_source_type_other,
-      refund_source_content: p_application_headers.refund_source_content,
-      refund_source_amount: p_application_headers.refund_source_amount,
-      rent_to_be_paid_land: p_application_headers.rent_to_be_paid_land,
-      rent_to_be_paid_land_borrower: p_application_headers.rent_to_be_paid_land_borrower,
-      rent_to_be_paid_house: p_application_headers.rent_to_be_paid_house,
-      rent_to_be_paid_house_borrower: p_application_headers.rent_to_be_paid_house_borrower,
+      curr_borrowing_status: p_application_headers?.curr_borrowing_status,
+      refund_source_type: p_application_headers?.refund_source_type,
+      refund_source_type_other: p_application_headers?.refund_source_type_other,
+      refund_source_content: p_application_headers?.refund_source_content,
+      refund_source_amount: p_application_headers?.refund_source_amount,
+      rent_to_be_paid_land: p_application_headers?.rent_to_be_paid_land,
+      rent_to_be_paid_land_borrower: p_application_headers?.rent_to_be_paid_land_borrower,
+      rent_to_be_paid_house: p_application_headers?.rent_to_be_paid_house,
+      rent_to_be_paid_house_borrower: p_application_headers?.rent_to_be_paid_house_borrower,
     },
     p_borrowings: p_borrowings,
     isMCJ,
     hasIncomeTotalizer,
   };
-  const updateApply = useApUpdateApplyInfo();
+
   const setUpdateData = (values) => {
     const diffData = {
       p_application_headers: {
@@ -77,19 +80,21 @@ export const Item06 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      try {
-        await updateApply(p_application_headers.apply_no, setUpdateData(values));
-        toast.success('申込内容を更新しました。');
-      } catch (error) {
-        toast.error(API_500_ERROR);
-      }
-    },
   });
-  const isEditable = useMemo(() => {
-    return true;
-  }, []);
+
+  useEffect(() => {
+    setPreliminarySnap((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          ...formik.values.p_application_headers,
+        },
+        p_borrowings: formik.values.p_borrowings,
+      };
+    });
+  }, [formik.values]);
+
   useEffect(() => {
     console.log(formik.values);
   }, [formik.values]);
@@ -98,7 +103,7 @@ export const Item06 = () => {
   }, [formik.errors]);
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
+      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'あなたや連帯保証人予定者に、現在お借入はありますか？'}
           field={

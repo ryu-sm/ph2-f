@@ -19,7 +19,7 @@ import { Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { validationSchema } from './validationSchema';
+
 import { inputOptions } from './options';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
@@ -89,7 +89,6 @@ export const ApStep12Page = () => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
     onSubmit: async (values) => {
       try {
         if (agentSended) {

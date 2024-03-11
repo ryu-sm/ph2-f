@@ -1,11 +1,8 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-
 import { formatJapanDate, formatMoney } from '@/utils';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import {
   AdEditInput,
   AdNumericInput,
@@ -29,14 +26,11 @@ import {
 } from './options';
 import { useBankMaster } from '@/hooks/use-bank-master';
 import dayjs from 'dayjs';
-import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj } from '@/utils';
-import { toast } from 'react-toastify';
-import { API_500_ERROR } from '@/constant';
 import { MCJ_CODE } from '@/configs';
-import { AdSaveButton } from '@/components/administrator/button';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
+import { tab01Schema } from '../../fullSchema';
 
 export const Item01 = () => {
   const {
@@ -48,42 +42,43 @@ export const Item01 = () => {
       p_borrowings,
     },
     setPreliminarySnap,
+    handleSave,
+    isEditable,
   } = usePreliminaryContext();
 
   const initialValues = {
     p_application_headers: {
-      created_at: p_application_headers.created_at,
-      apply_date: p_application_headers.apply_date,
-      move_scheduled_date: p_application_headers.move_scheduled_date,
-      loan_target: p_application_headers.loan_target,
-      land_advance_plan: p_application_headers.land_advance_plan,
-      loan_type: p_application_headers.loan_type,
-      pair_loan_last_name: p_application_headers.pair_loan_last_name,
-      pair_loan_first_name: p_application_headers.pair_loan_first_name,
-      pair_loan_rel_name: p_application_headers.pair_loan_rel_name,
-      pair_loan_rel: p_application_headers.pair_loan_rel,
-      join_guarantor_umu: p_application_headers.join_guarantor_umu,
-      loan_plus: p_application_headers.loan_plus,
+      created_at: p_application_headers?.created_at,
+      apply_date: p_application_headers?.apply_date,
+      move_scheduled_date: p_application_headers?.move_scheduled_date,
+      loan_target: p_application_headers?.loan_target,
+      land_advance_plan: p_application_headers?.land_advance_plan,
+      loan_type: p_application_headers?.loan_type,
+      pair_loan_last_name: p_application_headers?.pair_loan_last_name,
+      pair_loan_first_name: p_application_headers?.pair_loan_first_name,
+      pair_loan_rel_name: p_application_headers?.pair_loan_rel_name,
+      pair_loan_rel: p_application_headers?.pair_loan_rel,
+      join_guarantor_umu: p_application_headers?.join_guarantor_umu,
+      loan_plus: p_application_headers?.loan_plus,
     },
     p_application_banks,
     p_borrowing_details__1: {
-      desired_borrowing_date: p_borrowing_details__1.desired_borrowing_date,
-      desired_loan_amount: p_borrowing_details__1.desired_loan_amount,
-      bonus_repayment_amount: p_borrowing_details__1.bonus_repayment_amount,
-      bonus_repayment_month: p_borrowing_details__1.bonus_repayment_month,
-      loan_term_year: p_borrowing_details__1.loan_term_year,
-      repayment_method: p_borrowing_details__1.repayment_method,
+      desired_borrowing_date: p_borrowing_details__1?.desired_borrowing_date,
+      desired_loan_amount: p_borrowing_details__1?.desired_loan_amount,
+      bonus_repayment_amount: p_borrowing_details__1?.bonus_repayment_amount,
+      bonus_repayment_month: p_borrowing_details__1?.bonus_repayment_month,
+      loan_term_year: p_borrowing_details__1?.loan_term_year,
+      repayment_method: p_borrowing_details__1?.repayment_method,
     },
     p_borrowing_details__2: {
-      desired_borrowing_date: p_borrowing_details__2.desired_borrowing_date,
-      desired_loan_amount: p_borrowing_details__2.desired_loan_amount,
-      bonus_repayment_amount: p_borrowing_details__2.bonus_repayment_amount,
+      desired_borrowing_date: p_borrowing_details__2?.desired_borrowing_date,
+      desired_loan_amount: p_borrowing_details__2?.desired_loan_amount,
+      bonus_repayment_amount: p_borrowing_details__2?.bonus_repayment_amount,
     },
     // 補助フィールド
     loan_target_: '0',
   };
 
-  const updateApply = useApUpdateApplyInfo();
   const setUpdateData = (values) => {
     const diffData = {
       p_application_headers: {
@@ -103,20 +98,29 @@ export const Item01 = () => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      try {
-        await updateApply(p_application_headers.apply_no, setUpdateData(values));
-        toast.success('申込内容を更新しました。');
-      } catch (error) {
-        toast.error(API_500_ERROR);
-      }
-    },
+    validationSchema: tab01Schema,
   });
-  const isEditable = useMemo(() => {
-    return true;
-  }, []);
+
+  useEffect(() => {
+    setPreliminarySnap((pre) => {
+      return {
+        ...pre,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          ...formik.values.p_application_headers,
+        },
+        p_application_banks: formik.values.p_application_banks,
+        p_borrowing_details__1: {
+          ...pre.p_borrowing_details__1,
+          ...formik.values.p_borrowing_details__1,
+        },
+        p_borrowing_details__2: {
+          ...pre.p_borrowing_details__2,
+          ...formik.values.p_borrowing_details__2,
+        },
+      };
+    });
+  }, [formik.values]);
 
   const bankMaster = useBankMaster();
 
@@ -136,16 +140,9 @@ export const Item01 = () => {
     }
   }, [bankMaster.length, formik.values.p_application_banks.length]);
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={true} handleSave={formik.handleSubmit}>
+      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'申込日時'}
           field={`${formatJapanDate(formik.values.p_application_headers.created_at.split(' ')[0], true)} ${
@@ -163,6 +160,7 @@ export const Item01 = () => {
               formatJapanDate(formik.values.p_application_headers.move_scheduled_date, true)
             )
           }
+          error={formik.errors?.p_application_headers?.move_scheduled_date}
         />
         <EditRow
           label={'仮審査を申し込む金融機関の選択'}

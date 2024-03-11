@@ -1,18 +1,15 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { formatJapanDate, formatMoney } from '@/utils';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import {
   AdEditInput,
   AdNumericInput,
   AdSelectCheckbox,
   AdSelectRadios,
   AdYmdInput,
-  DayPicker,
   MonthPicker,
 } from '@/components/administrator';
 import {
@@ -33,73 +30,76 @@ import {
   transferOfficeOptions,
 } from './options';
 
-import dayjs from 'dayjs';
-import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj } from '@/utils';
-import { toast } from 'react-toastify';
-import { API_500_ERROR, PREFECTURES } from '@/constant';
+
+import { PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
+import { tab03Schema } from '../../fullSchema';
 
 export const Item03 = () => {
   const {
-    preliminaryInfo: { p_application_headers, p_applicant_persons__0 },
+    preliminaryInfo: { p_applicant_persons__0 },
     preliminarySnap: { isMCJ },
+    setPreliminarySnap,
+    handleSave,
+    isEditable,
   } = usePreliminaryContext();
 
   const initialValues = {
     p_applicant_persons__0: {
-      office_occupation: p_applicant_persons__0.office_occupation,
-      office_occupation_other: p_applicant_persons__0.office_occupation_other,
-      office_industry: p_applicant_persons__0.office_industry,
-      office_industry_other: p_applicant_persons__0.office_industry_other,
-      office_occupation_detail: p_applicant_persons__0.office_occupation_detail,
-      office_occupation_detail_other: p_applicant_persons__0.office_occupation_detail_other,
-      office_name_kanji: p_applicant_persons__0.office_name_kanji,
-      office_department: p_applicant_persons__0.office_department,
-      office_phone: p_applicant_persons__0.office_phone,
-      office_postal_code: p_applicant_persons__0.office_postal_code,
-      office_prefecture_kanji: p_applicant_persons__0.office_prefecture_kanji,
-      office_city_kanji: p_applicant_persons__0.office_city_kanji,
-      office_district_kanji: p_applicant_persons__0.office_district_kanji,
-      office_other_address_kanji: p_applicant_persons__0.office_other_address_kanji,
-      office_prefecture_kana: p_applicant_persons__0.office_prefecture_kana,
-      office_city_kana: p_applicant_persons__0.office_city_kana,
-      office_district_kana: p_applicant_persons__0.office_district_kana,
-      office_other_address_kana: p_applicant_persons__0.office_other_address_kana,
-      office_employee_num: p_applicant_persons__0.office_employee_num,
-      office_joining_date: p_applicant_persons__0.office_joining_date,
-      last_year_income: p_applicant_persons__0.last_year_income,
-      last_year_bonus_income: p_applicant_persons__0.last_year_bonus_income,
-      income_sources: p_applicant_persons__0.income_sources,
-      tax_return: p_applicant_persons__0.tax_return,
-      tax_return_reasons: p_applicant_persons__0.tax_return_reasons,
-      tax_return_reason_other: p_applicant_persons__0.tax_return_reason_other,
-      transfer_office: p_applicant_persons__0.transfer_office,
-      transfer_office_name_kanji: p_applicant_persons__0.transfer_office_name_kanji,
-      transfer_office_name_kana: p_applicant_persons__0.transfer_office_name_kana,
-      transfer_office_phone: p_applicant_persons__0.transfer_office_phone,
-      transfer_office_postal_code: p_applicant_persons__0.transfer_office_postal_code,
-      transfer_office_prefecture_kanji: p_applicant_persons__0.transfer_office_prefecture_kanji,
-      transfer_office_city_kanji: p_applicant_persons__0.transfer_office_city_kanji,
-      transfer_office_district_kanji: p_applicant_persons__0.transfer_office_district_kanji,
-      transfer_office_other_address_kanji: p_applicant_persons__0.transfer_office_other_address_kanji,
-      maternity_paternity_leave: p_applicant_persons__0.maternity_paternity_leave,
-      maternity_paternity_leave_start_date: p_applicant_persons__0.maternity_paternity_leave_start_date,
-      maternity_paternity_leave_end_date: p_applicant_persons__0.maternity_paternity_leave_end_date,
-      nursing_leave: p_applicant_persons__0.nursing_leave,
-      office_employment_type: p_applicant_persons__0.office_employment_type,
-      office_name_kana: p_applicant_persons__0.office_name_kana,
-      office_role: p_applicant_persons__0.office_role,
-      office_head_location: p_applicant_persons__0.office_head_location,
-      office_listed_division: p_applicant_persons__0.office_listed_division,
-      office_establishment_date: p_applicant_persons__0.office_establishment_date,
-      office_capital_stock: p_applicant_persons__0.office_capital_stock,
-      main_income_source: p_applicant_persons__0.main_income_source,
-      before_last_year_bonus_income: p_applicant_persons__0.before_last_year_bonus_income,
+      office_occupation: p_applicant_persons__0?.office_occupation,
+      office_occupation_other: p_applicant_persons__0?.office_occupation_other,
+      office_industry: p_applicant_persons__0?.office_industry,
+      office_industry_other: p_applicant_persons__0?.office_industry_other,
+      office_occupation_detail: p_applicant_persons__0?.office_occupation_detail,
+      office_occupation_detail_other: p_applicant_persons__0?.office_occupation_detail_other,
+      office_name_kanji: p_applicant_persons__0?.office_name_kanji,
+      office_name_kana: p_applicant_persons__0?.office_name_kana,
+      office_department: p_applicant_persons__0?.office_department,
+      office_phone: p_applicant_persons__0?.office_phone,
+      office_postal_code: p_applicant_persons__0?.office_postal_code,
+      office_prefecture_kanji: p_applicant_persons__0?.office_prefecture_kanji,
+      office_city_kanji: p_applicant_persons__0?.office_city_kanji,
+      office_district_kanji: p_applicant_persons__0?.office_district_kanji,
+      office_other_address_kanji: p_applicant_persons__0?.office_other_address_kanji,
+      office_prefecture_kana: p_applicant_persons__0?.office_prefecture_kana,
+      office_city_kana: p_applicant_persons__0?.office_city_kana,
+      office_district_kana: p_applicant_persons__0?.office_district_kana,
+      office_other_address_kana: p_applicant_persons__0?.office_other_address_kana,
+      office_employee_num: p_applicant_persons__0?.office_employee_num,
+      office_joining_date: p_applicant_persons__0?.office_joining_date,
+      last_year_income: p_applicant_persons__0?.last_year_income,
+      last_year_bonus_income: p_applicant_persons__0?.last_year_bonus_income,
+      income_sources: p_applicant_persons__0?.income_sources,
+      tax_return: p_applicant_persons__0?.tax_return,
+      tax_return_reasons: p_applicant_persons__0?.tax_return_reasons,
+      tax_return_reason_other: p_applicant_persons__0?.tax_return_reason_other,
+      transfer_office: p_applicant_persons__0?.transfer_office,
+      transfer_office_name_kanji: p_applicant_persons__0?.transfer_office_name_kanji,
+      transfer_office_name_kana: p_applicant_persons__0?.transfer_office_name_kana,
+      transfer_office_phone: p_applicant_persons__0?.transfer_office_phone,
+      transfer_office_postal_code: p_applicant_persons__0?.transfer_office_postal_code,
+      transfer_office_prefecture_kanji: p_applicant_persons__0?.transfer_office_prefecture_kanji,
+      transfer_office_city_kanji: p_applicant_persons__0?.transfer_office_city_kanji,
+      transfer_office_district_kanji: p_applicant_persons__0?.transfer_office_district_kanji,
+      transfer_office_other_address_kanji: p_applicant_persons__0?.transfer_office_other_address_kanji,
+      maternity_paternity_leave: p_applicant_persons__0?.maternity_paternity_leave,
+      maternity_paternity_leave_start_date: p_applicant_persons__0?.maternity_paternity_leave_start_date,
+      maternity_paternity_leave_end_date: p_applicant_persons__0?.maternity_paternity_leave_end_date,
+      nursing_leave: p_applicant_persons__0?.nursing_leave,
+      office_employment_type: p_applicant_persons__0?.office_employment_type,
+
+      office_role: p_applicant_persons__0?.office_role,
+      office_head_location: p_applicant_persons__0?.office_head_location,
+      office_listed_division: p_applicant_persons__0?.office_listed_division,
+      office_establishment_date: p_applicant_persons__0?.office_establishment_date,
+      office_capital_stock: p_applicant_persons__0?.office_capital_stock,
+      main_income_source: p_applicant_persons__0?.main_income_source,
+      before_last_year_bonus_income: p_applicant_persons__0?.before_last_year_bonus_income,
     },
   };
-  const updateApply = useApUpdateApplyInfo();
+
   const setUpdateData = (values) => {
     const diffData = {
       p_applicant_persons__0: {
@@ -111,24 +111,27 @@ export const Item03 = () => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      try {
-        await updateApply(p_application_headers.apply_no, setUpdateData(values));
-        toast.success('申込内容を更新しました。');
-      } catch (error) {
-        toast.error(API_500_ERROR);
-      }
-    },
+    validationSchema: tab03Schema,
   });
-  const isEditable = useMemo(() => {
-    return true;
-  }, []);
 
+  useEffect(() => {
+    setPreliminarySnap((pre) => {
+      return {
+        ...pre,
+        p_applicant_persons__0: {
+          ...pre.p_applicant_persons__0,
+          ...formik.values.p_applicant_persons__0,
+        },
+      };
+    });
+  }, [formik.values]);
+
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={true} handleSave={formik.handleSubmit}>
+      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'ご職業'}
           isRequired
@@ -347,7 +350,6 @@ export const Item03 = () => {
         <EditRow
           label={'勤務先設立年月日'}
           isAddendum
-          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdYmdInput name="p_applicant_persons__0.office_establishment_date" />
@@ -362,9 +364,9 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdNumericInput name="p_borrowing_details__1.office_capital_stock" maxLength={13} unit={'万円'} />
+              <AdNumericInput name="p_applicant_persons__0.office_capital_stock" maxLength={13} unit={'万円'} />
             ) : (
-              formatMoney(formik.values.p_borrowing_details__1.office_capital_stock)
+              formatMoney(formik.values.p_applicant_persons__0.office_capital_stock)
             )
           }
           error={formik.errors?.p_applicant_persons__0?.office_capital_stock}
@@ -481,9 +483,9 @@ export const Item03 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdNumericInput name="p_borrowing_details__1.office_employee_num" maxLength={9} unit={' 名'} />
+              <AdNumericInput name="p_applicant_persons__0.office_employee_num" maxLength={9} unit={' 名'} />
             ) : (
-              formatMoney(formik.values.p_borrowing_details__1.office_employee_num, '名')
+              formatMoney(formik.values.p_applicant_persons__0.office_employee_num, '名')
             )
           }
           error={formik.errors?.p_applicant_persons__0?.office_employee_num}
