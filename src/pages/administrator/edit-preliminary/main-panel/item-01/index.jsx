@@ -537,6 +537,33 @@ export const Item01 = () => {
             />
           </Stack>
         )}
+        <EditRow
+          label={'担保提供者がいる方のみ、チェックをつけてください。'}
+          isRequired
+          hasPleft={isEditable}
+          field={
+            isEditable ? (
+              <AdSelectRadios name={'p_application_headers.join_guarantor_umu'} options={hasJoinGuarantorOptions} />
+            ) : (
+              hasJoinGuarantorOptions.find(
+                (item) => item.value === formik.values.p_application_headers.join_guarantor_umu
+              )?.label
+            )
+          }
+          error={formik.errors?.p_application_headers?.join_guarantor_umu}
+        />
+        <EditRow
+          label={'住信SBIネット銀行の「住宅ローンプラス」の申し込みの有無'}
+          hasPleft={isEditable}
+          field={
+            isEditable ? (
+              <AdSelectRadios name={'p_application_headers.loan_plus'} options={loanPlusOptions} />
+            ) : (
+              loanPlusOptions.find((item) => item.value === formik.values.p_application_headers.loan_plus)?.label
+            )
+          }
+          error={formik.errors?.p_application_headers?.loan_plus}
+        />
       </ContentEditGroup>
     </FormikProvider>
   );

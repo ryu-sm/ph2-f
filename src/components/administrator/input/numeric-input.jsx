@@ -3,11 +3,11 @@ import { Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
-import AutosizeInput from 'react-18-input-autosize';
+import AutosizeInput from 'react-input-autosize';
 import './autosize-style.css';
 import { useRef } from 'react';
 
-export const AdNumericInput = ({ unit, maxLength, width, ...props }) => {
+export const AdNumericInput = ({ unit, maxLength, width, showZero, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setError } = helpers;
 

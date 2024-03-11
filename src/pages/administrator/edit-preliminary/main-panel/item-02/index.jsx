@@ -14,6 +14,7 @@ import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
+import { ContentEditGroup } from '../../common/content-edit-group';
 
 export const Item02 = () => {
   const {
@@ -76,100 +77,74 @@ export const Item02 = () => {
   }, [formik.values]);
   return (
     <FormikProvider value={formik}>
-      <Stack width={'100%'} marginTop={'16px'} height={'calc(100dvh - 320px)'}>
-        <Stack width={'100%'} direction={'row'} justifyContent={'flex-end'}>
-          <Button
-            sx={{
-              width: 200,
-              padding: '6px 16px',
-              bgcolor: 'secondary.main',
-              color: 'white',
-              boxShadow: 'none',
-              fontWeight: 500,
-              '&:hover': { bgcolor: 'secondary.main', opacity: 0.8 },
-            }}
-            onClick={formik.handleSubmit}
-          >
-            保存
-          </Button>
-        </Stack>
-
-        <Stack
-          direction={'row'}
-          alignItems={'center'}
-          width={'100%'}
-          borderBottom={'1px solid '}
-          borderColor={'gray.100'}
-        >
-          <Typography
-            variant="edit_content_title"
-            sx={{ fontWeight: 500, color: 'gray.100', flex: 1, textAlign: 'center' }}
-          >
-            入力項目
-          </Typography>
-          <Typography
-            variant="edit_content_title"
-            sx={{ fontWeight: 500, color: 'gray.100', flex: 2, textAlign: 'center' }}
-          >
-            入力内容
-          </Typography>
-        </Stack>
-        <Stack width={1} overflow={'auto'} pb={'10px'}>
-          <EditRow label={'お名前（姓）'} isRequired error={formik.errors?.p_applicant_persons__0?.last_name_kanji}>
-            {isEditable ? (
+      <ContentEditGroup isEditable={true} handleSave={formik.handleSubmit}>
+        <EditRow
+          label={'お名前（姓）'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.last_name_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.last_name_kanji
-            )}
-          </EditRow>
-          <EditRow label={'お名前（名）'} isRequired error={formik.errors?.p_applicant_persons__0?.first_name_kanji}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.last_name_kanji}
+        />
+        <EditRow
+          label={'お名前（名）'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.first_name_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.first_name_kanji
-            )}
-          </EditRow>
-          <EditRow
-            label={'お名前（姓）（フリガナ）'}
-            isRequired
-            error={formik.errors?.p_applicant_persons__0?.last_name_kana}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.first_name_kanji}
+        />
+        <EditRow
+          label={'お名前（姓）（フリガナ）'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.last_name_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.last_name_kana
-            )}
-          </EditRow>
-          <EditRow
-            label={'お名前（名）（フリガナ）'}
-            isRequired
-            error={formik.errors?.p_applicant_persons__0?.first_name_kana}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.last_name_kana}
+        />
+        <EditRow
+          label={'お名前（名）（フリガナ）'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.first_name_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.first_name_kana
-            )}
-          </EditRow>
-          <EditRow
-            label={'性別'}
-            isRequired
-            hasPleft={isEditable}
-            error={formik.errors?.p_applicant_persons__0?.gender}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.first_name_kana}
+        />
+        <EditRow
+          label={'性別'}
+          isRequired
+          hasPleft={isEditable}
+          field={
+            isEditable ? (
               <AdSelectRadios name="p_applicant_persons__0.gender" options={genderOptions} />
             ) : (
               genderOptions.find((item) => item.value === formik.values.p_applicant_persons__0.gender)?.label
-            )}
-          </EditRow>
-          <EditRow
-            label={'生年月日'}
-            isRequired
-            hasPleft={isEditable}
-            error={formik.errors?.p_applicant_persons__0?.birthday}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.gender}
+        />
+        <EditRow
+          label={'生年月日'}
+          isRequired
+          hasPleft={isEditable}
+          field={
+            isEditable ? (
               <DayPicker
                 name="p_applicant_persons__0.birthday"
                 minDate={dayjs().subtract(65, 'y')}
@@ -177,141 +152,184 @@ export const Item02 = () => {
               />
             ) : (
               formatJapanDate(formik.values.p_applicant_persons__0.birthday, true)
-            )}
-          </EditRow>
-          <EditRow
-            label={'現在の国籍'}
-            hasPleft={isEditable}
-            error={formik.errors?.p_applicant_persons__0?.nationality}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.birthday}
+        />
+        <EditRow
+          label={'現在の国籍'}
+          hasPleft={isEditable}
+          field={
+            isEditable ? (
               <AdSelectRadios name="p_applicant_persons__0.nationality" options={nationalityOptions} />
             ) : (
               nationalityOptions.find((item) => item.value === formik.values.p_applicant_persons__0.nationality)?.label
-            )}
-          </EditRow>
-          <EditRow label={'電話番号携帯'} isLogicRequired error={formik.errors?.p_applicant_persons__0?.mobile_phone}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.nationality}
+        />
+        <EditRow
+          label={'電話番号携帯'}
+          isLogicRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.mobile_phone" />
             ) : (
               formik.values.p_applicant_persons__0.mobile_phone
-            )}
-          </EditRow>
-          <EditRow label={'電話番号自宅'} isLogicRequired error={formik.errors?.p_applicant_persons__0?.home_phone}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.mobile_phone}
+        />
+        <EditRow
+          label={'電話番号自宅'}
+          isLogicRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.home_phone" />
             ) : (
               formik.values.p_applicant_persons__0.home_phone
-            )}
-          </EditRow>
-          <EditRow label={'緊急連絡先'} isAddendum error={formik.errors?.p_applicant_persons__0?.emergency_contact}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.home_phone}
+        />
+        <EditRow
+          label={'緊急連絡先'}
+          isAddendum
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.emergency_contact" />
             ) : (
               formik.values.p_applicant_persons__0.emergency_contact
-            )}
-          </EditRow>
-          <EditRow label={'郵便番号'} isRequired error={formik.errors?.p_applicant_persons__0?.postal_code}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.emergency_contact}
+        />
+        <EditRow
+          label={'郵便番号'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.postal_code" />
             ) : (
               formik.values.p_applicant_persons__0.postal_code
-            )}
-          </EditRow>
-          <EditRow
-            label={'都道府県'}
-            isRequired
-            hasPleft={isEditable}
-            error={formik.errors?.p_applicant_persons__0?.prefecture_kanji}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.postal_code}
+        />
+        <EditRow
+          label={'都道府県'}
+          isRequired
+          hasPleft={isEditable}
+          field={
+            isEditable ? (
               <AdSelectRadios name="p_applicant_persons__0.prefecture_kanji" options={PREFECTURES} />
             ) : (
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__0.prefecture_kanji)?.label
-            )}
-          </EditRow>
-          <EditRow label={'市区郡'} isRequired error={formik.errors?.p_applicant_persons__0?.city_kanji}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.prefecture_kanji}
+        />
+        <EditRow
+          label={'市区郡'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.city_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.city_kanji
-            )}
-          </EditRow>
-          <EditRow label={'町村丁目'} isRequired error={formik.errors?.p_applicant_persons__0?.district_kanji}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.city_kanji}
+        />
+        <EditRow
+          label={'町村丁目'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.district_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.district_kanji
-            )}
-          </EditRow>
-          <EditRow
-            label={'丁目以下・建物名・部屋番号'}
-            isRequired
-            error={formik.errors?.p_applicant_persons__0?.other_address_kanji}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.district_kanji}
+        />
+        <EditRow
+          label={'丁目以下・建物名・部屋番号'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.other_address_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.other_address_kanji
-            )}
-          </EditRow>
-          <EditRow
-            label={'都道府県（フリガナ）'}
-            isRequired
-            isAddendum
-            error={formik.errors?.p_applicant_persons__0?.prefecture_kana}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.other_address_kanji}
+        />
+        <EditRow
+          label={'都道府県（フリガナ）'}
+          isRequired
+          isAddendum
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.prefecture_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.prefecture_kana
-            )}
-          </EditRow>
-          <EditRow
-            label={'市区郡（フリガナ）'}
-            isRequired
-            isAddendum
-            error={formik.errors?.p_applicant_persons__0?.city_kana}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.prefecture_kana}
+        />
+        <EditRow
+          label={'市区郡（フリガナ）'}
+          isRequired
+          isAddendum
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.city_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.city_kana
-            )}
-          </EditRow>
-          <EditRow
-            label={'町村丁目（フリガナ）'}
-            isRequired
-            isAddendum
-            error={formik.errors?.p_applicant_persons__0?.district_kana}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.city_kana}
+        />
+        <EditRow
+          label={'町村丁目（フリガナ）'}
+          isRequired
+          isAddendum
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.district_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.district_kana
-            )}
-          </EditRow>
-          <EditRow
-            label={'丁目以下・建物名・部屋番号（フリガナ）'}
-            isRequired
-            isAddendum
-            error={formik.errors?.p_applicant_persons__0?.other_address_kana}
-          >
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.district_kana}
+        />
+        <EditRow
+          label={'丁目以下・建物名・部屋番号（フリガナ）'}
+          isRequired
+          isAddendum
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.other_address_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.other_address_kana
-            )}
-          </EditRow>
-          <EditRow label={'ご連絡先用メールアドレス'} isRequired error={formik.errors?.p_applicant_persons__0?.email}>
-            {isEditable ? (
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.other_address_kana}
+        />
+        <EditRow
+          label={'ご連絡先用メールアドレス'}
+          isRequired
+          field={
+            isEditable ? (
               <AdEditInput name="p_applicant_persons__0.email" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.email
-            )}
-          </EditRow>
-        </Stack>
-      </Stack>
+            )
+          }
+          error={formik.errors?.p_applicant_persons__0?.email}
+        />
+      </ContentEditGroup>
     </FormikProvider>
   );
 };

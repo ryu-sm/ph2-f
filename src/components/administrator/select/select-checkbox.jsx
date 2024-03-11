@@ -14,7 +14,9 @@ export const AdSelectCheckbox = ({ options, ...props }) => {
   const { setValue, setError } = helpers;
   const handleChange = useCallback(
     async (value) => {
-      await setValue(meta.value.includes(value) ? meta.value.filter((item) => item !== value) : [...meta.value, value]);
+      const temp = meta.value.includes(value) ? meta.value.filter((item) => item !== value) : [...meta.value, value];
+      props.onChange && props.onChange(temp);
+      await setValue(temp);
     },
     [meta, setValue]
   );

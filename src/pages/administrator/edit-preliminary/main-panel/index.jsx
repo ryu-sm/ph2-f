@@ -8,6 +8,10 @@ import { Item03 } from './item-03';
 import { Item04 } from './item-04';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { AdSecondaryButton } from '@/components/administrator/button';
+import { Item05 } from './item-05';
+import { Item06 } from './item-06';
+import { Item07 } from './item-07';
+import { Item08 } from './item-08';
 
 export const MainDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
@@ -93,6 +97,10 @@ export const MainDetail = () => {
       {infoGroupTab === 2 && <Item02 />}
       {infoGroupTab === 3 && <Item03 />}
       {infoGroupTab === 4 && <Item04 />}
+      {infoGroupTab === 5 && <Item05 />}
+      {infoGroupTab === 6 && <Item06 />}
+      {infoGroupTab === 7 && <Item07 />}
+      {infoGroupTab === 8 && <Item08 />}
     </Stack>
   );
 };

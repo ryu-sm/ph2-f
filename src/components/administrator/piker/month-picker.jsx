@@ -135,6 +135,8 @@ export const MonthPicker = ({ yearOptions, ...props }) => {
                 justifyContent={'flex-start'}
                 px={1}
                 mt={3}
+                maxHeight={'30dvh'}
+                overflow={'auto'}
               >
                 {toggleExpand
                   ? monthOptions.map((item) => {

@@ -121,3 +121,6 @@ export { AdSlashIcon } from './ad-slash';
 export { AdCloseIcon } from './ad-close';
 export { AdProgressArrowRight } from './ad-progress-arrow-right';
 export { AdExportDocsIcon } from './ad-export-docs';
+
+export { AdAddIcon } from './ad-add';
+export { AdSubtractIcon } from './ad-subtract';

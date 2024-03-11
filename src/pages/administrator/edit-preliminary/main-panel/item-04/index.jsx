@@ -6,13 +6,14 @@ import { validationSchema } from './validationSchema';
 import { Fragment, useEffect, useMemo } from 'react';
 import {
   AdEditInput,
+  AdEditOutLineInput,
   AdNumericInput,
   AdSelectCheckbox,
   AdSelectRadios,
   DayPicker,
   MonthPicker,
 } from '@/components/administrator';
-import { genderOptions, nationalityOptions, yearOptions } from './options';
+import { genderOptions, nationalityOptions, relToApplicantAOptions, yearOptions } from './options';
 
 import dayjs from 'dayjs';
 import { useApUpdateApplyInfo } from '@/hooks';
@@ -20,6 +21,9 @@ import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
+import { ContentEditGroup } from '../../common/content-edit-group';
+import { AdPrimaryButton } from '@/components/administrator/button';
+import { Icons } from '@/assets';
 
 export const Item04 = () => {
   const {
@@ -56,77 +60,397 @@ export const Item04 = () => {
   const isEditable = useMemo(() => {
     return true;
   }, []);
-
   useEffect(() => {
     console.log(formik.values);
   }, [formik.values]);
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.errors]);
   return (
     <FormikProvider value={formik}>
-      <Stack width={'100%'} marginTop={'16px'}>
-        <Stack width={'100%'} direction={'row'} justifyContent={'flex-end'}></Stack>
+      <FieldArray
+        name="p_join_guarantors"
+        render={(arrayHelpers) => (
+          <Fragment>
+            {formik.values.p_join_guarantors.map((item, index) => (
+              <ContentEditGroup
+                key={index}
+                isEditable={index === 0 ? isEditable : false}
+                label={'担保提供者'}
+                subLabel={`（${index + 1}人目）`}
+                handleDeleteItem={() => arrayHelpers.remove(index)}
+              >
+                <EditRow
+                  label={'担保提供者の氏名（姓）'}
+                  isRequired
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].last_name_kanji`} convertFullWidth />
+                    ) : (
+                      item.last_name_kanji
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.last_name_kanji
+                  }
+                />
+                <EditRow
+                  label={'担保提供者の氏名（名）'}
+                  isRequired
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].first_name_kanji`} convertFullWidth />
+                    ) : (
+                      item.first_name_kanji
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.first_name_kanji
+                  }
+                />
+                <EditRow
+                  label={'担保提供者の氏名（姓）（フリガナ）'}
+                  isRequired
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].last_name_kana`} convertFullWidth />
+                    ) : (
+                      item.last_name_kana
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.last_name_kana
+                  }
+                />
+                <EditRow
+                  label={'担保提供者の氏名（名）（フリガナ）'}
+                  isRequired
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].first_name_kana`} convertFullWidth />
+                    ) : (
+                      item.first_name_kana
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.first_name_kana
+                  }
+                />
+                <EditRow
+                  label={'性別'}
+                  hasPleft={isEditable}
+                  field={
+                    isEditable ? (
+                      <AdSelectRadios name={`p_join_guarantors[${index}].gender`} options={genderOptions} />
+                    ) : (
+                      genderOptions.find((item) => item.value === item.gender)?.label
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index && formik.errors?.p_join_guarantors[index]?.gender
+                  }
+                />
+                <EditRow
+                  label={'続柄'}
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].rel_to_applicant_a_name`} convertFullWidth />
+                    ) : (
+                      item.rel_to_applicant_a_name
+                    )
+                  }
+                  subField={
+                    isEditable ? (
+                      <Stack spacing={2} direction={'row'} alignItems={'center'}>
+                        <Stack sx={{ minWidth: 80 }}>
+                          <AdSelectRadios
+                            name={`p_join_guarantors[${index}].rel_to_applicant_a`}
+                            options={relToApplicantAOptions}
+                          />
+                        </Stack>
 
-        <FieldArray
-          name="p_join_guarantors"
-          render={(arrayHelpers) => (
-            <Fragment>
-              {formik.values.p_join_guarantors.map((item, index) => (
-                <Stack key={index}>
-                  <Stack direction={'row'} alignItems={'flex-end'}>
-                    <Typography variant="edit_content_title" sx={{ fontSize: 15, fontWeight: 600, color: 'gray.100' }}>
-                      {`担保提供者`}
-                    </Typography>
-                    <Typography variant="edit_content_title" sx={{ fontWeight: 500, color: 'gray.100' }}>
-                      {`（${index + 1}人目）`}
-                    </Typography>
-                  </Stack>
-                  <Stack
-                    direction={'row'}
-                    alignItems={'center'}
-                    width={'100%'}
-                    borderBottom={'1px solid '}
-                    borderColor={'gray.100'}
-                  >
-                    <Typography
-                      variant="edit_content_title"
-                      sx={{ fontWeight: 500, color: 'gray.100', flex: 1, textAlign: 'center' }}
-                    >
-                      入力項目
-                    </Typography>
-                    <Typography
-                      variant="edit_content_title"
-                      sx={{ fontWeight: 500, color: 'gray.100', flex: 2, textAlign: 'center' }}
-                    >
-                      入力内容
-                    </Typography>
-                  </Stack>
-                  <Stack width={1} overflow={'auto'} pb={'10px'}>
-                    <EditRow label={'担保提供者の氏名（姓）'} isRequired></EditRow>
-                    <EditRow label={'担保提供者の氏名（名）'} isRequired></EditRow>
-                    <EditRow label={'担保提供者の氏名（姓）（フリガナ）'} isRequired></EditRow>
-                    <EditRow label={'担保提供者の氏名（名）（フリガナ）'} isRequired></EditRow>
-                    <EditRow label={'性別'}></EditRow>
-                    <EditRow label={'続柄'}></EditRow>
-                    <EditRow label={'生年月日'} isRequired></EditRow>
-                    <EditRow label={'電話番号携帯'}></EditRow>
-                    <EditRow label={'電話番号自宅'}></EditRow>
-                    <EditRow label={'緊急連絡先'} isAddendum></EditRow>
-                    <EditRow label={'郵便番号'}></EditRow>
-                    <EditRow label={'都道府県'} isRequired></EditRow>
-                    <EditRow label={'市区郡'} isRequired></EditRow>
-                    <EditRow label={'町村丁目'} isRequired></EditRow>
-                    <EditRow label={'丁目以下・建物名・部屋番号'} isRequired></EditRow>
-                    <EditRow label={'都道府県（フリガナ）'} isAddendum></EditRow>
-                    <EditRow label={'市区郡（フリガナ）'} isAddendum></EditRow>
-                    <EditRow label={'町村丁目（フリガナ）'} isAddendum></EditRow>
-                    <EditRow label={'丁目以下・建物名・部屋番号（フリガナ）'} isAddendum></EditRow>
-                    <EditRow label={'メールアドレス'} isAddendum></EditRow>
-                  </Stack>
-                </Stack>
-              ))}
-            </Fragment>
-          )}
-        />
-      </Stack>
+                        {item.rel_to_applicant_a === '99' && (
+                          <Stack>
+                            {isEditable ? (
+                              <AdEditOutLineInput
+                                name={`p_join_guarantors[${index}].rel_to_applicant_a_other`}
+                                width={180}
+                                convertFullWidth
+                              />
+                            ) : (
+                              item.rel_to_applicant_a_other
+                            )}
+                          </Stack>
+                        )}
+                      </Stack>
+                    ) : (
+                      relToApplicantAOptions.find((item) => item.value === item.rel_to_applicant_a)?.label
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.rel_to_applicant_a_name
+                  }
+                />
+                <EditRow
+                  label={'生年月日'}
+                  isRequired
+                  hasPleft={isEditable}
+                  field={
+                    isEditable ? (
+                      <DayPicker
+                        name={`p_join_guarantors[${index}].birthday`}
+                        minDate={dayjs().subtract(65, 'y')}
+                        maxDate={dayjs().subtract(18, 'y')}
+                      />
+                    ) : (
+                      formatJapanDate(item.birthday, true)
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.last_name_kanji
+                  }
+                />
+                <EditRow
+                  label={'電話番号携帯'}
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].mobile_phone`} convertHalfWidth />
+                    ) : (
+                      item.mobile_phone
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.mobile_phone
+                  }
+                />
+                <EditRow
+                  label={'電話番号自宅'}
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].home_phone`} convertHalfWidth />
+                    ) : (
+                      item.home_phone
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.home_phone
+                  }
+                />
+                <EditRow
+                  label={'緊急連絡先'}
+                  isAddendum
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].emergency_contact`} convertHalfWidth />
+                    ) : (
+                      item.emergency_contact
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.emergency_contact
+                  }
+                />
+                <EditRow
+                  label={'郵便番号'}
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].postal_code`} convertHalfWidth />
+                    ) : (
+                      item.postal_code
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.postal_code
+                  }
+                />
+                <EditRow
+                  label={'都道府県'}
+                  isRequired
+                  hasPleft={isEditable}
+                  field={
+                    isEditable ? (
+                      <AdSelectRadios name={`p_join_guarantors[${index}].prefecture_kanji`} options={PREFECTURES} />
+                    ) : (
+                      PREFECTURES.find((item) => item.value === item.prefecture_kanji)?.label
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.prefecture_kanji
+                  }
+                />
+                <EditRow
+                  label={'市区郡'}
+                  isRequired
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].city_kanji`} convertFullWidth />
+                    ) : (
+                      item.city_kanji
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.city_kanji
+                  }
+                />
+                <EditRow
+                  label={'町村丁目'}
+                  isRequired
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].district_kanji`} convertFullWidth />
+                    ) : (
+                      item.district_kanji
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.district_kanji
+                  }
+                />
+                <EditRow
+                  label={'丁目以下・建物名・部屋番号'}
+                  isRequired
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].other_address_kanji`} convertFullWidth />
+                    ) : (
+                      item.other_address_kanji
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.other_address_kanji
+                  }
+                />
+                <EditRow
+                  label={'都道府県（フリガナ）'}
+                  isAddendum
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].prefecture_kana`} convertFullWidth />
+                    ) : (
+                      item.prefecture_kana
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.prefecture_kana
+                  }
+                />
+                <EditRow
+                  label={'市区郡（フリガナ）'}
+                  isAddendum
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].city_kana`} convertFullWidth />
+                    ) : (
+                      item.city_kana
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.city_kana
+                  }
+                />
+                <EditRow
+                  label={'町村丁目（フリガナ）'}
+                  isAddendum
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].district_kana`} convertFullWidth />
+                    ) : (
+                      item.district_kana
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.district_kana
+                  }
+                />
+                <EditRow
+                  label={'丁目以下・建物名・部屋番号（フリガナ）'}
+                  isAddendum
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].other_address_kana`} convertFullWidth />
+                    ) : (
+                      item.other_address_kana
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index &&
+                    formik.errors?.p_join_guarantors[index]?.other_address_kana
+                  }
+                />
+                <EditRow
+                  label={'メールアドレス'}
+                  isAddendum
+                  field={
+                    isEditable ? (
+                      <AdEditInput name={`p_join_guarantors[${index}].email`} convertHalfWidth />
+                    ) : (
+                      item.email
+                    )
+                  }
+                  error={
+                    formik.errors?.p_join_guarantors?.length > index && formik.errors?.p_join_guarantors[index]?.email
+                  }
+                />
+              </ContentEditGroup>
+            ))}
+
+            {formik.values.p_join_guarantors.length < 4 && (
+              <Stack sx={{ py: 4 }}>
+                <AdPrimaryButton
+                  width={120}
+                  startIcon={<Icons.AdNewApply sx={{ width: 14, height: 16 }} />}
+                  onClick={() => {
+                    arrayHelpers.push({
+                      id: '',
+                      last_name_kanji: '',
+                      first_name_kanji: '',
+                      last_name_kana: '',
+                      first_name_kana: '',
+                      gender: '',
+                      rel_to_applicant_a_name: '',
+                      rel_to_applicant_a: '',
+                      rel_to_applicant_a_other: '',
+                      birthday: '',
+                      mobile_phone: '',
+                      home_phone: '',
+                      emergency_contact: '',
+                      email: '',
+                      postal_code: '',
+                      prefecture_kanji: '',
+                      city_kanji: '',
+                      district_kanji: '',
+                      other_address_kanji: '',
+                      prefecture_kana: '',
+                      city_kana: '',
+                      district_kana: '',
+                      other_address_kana: '',
+                    });
+                  }}
+                >
+                  新規作成
+                </AdPrimaryButton>
+              </Stack>
+            )}
+          </Fragment>
+        )}
+      />
     </FormikProvider>
   );
 };

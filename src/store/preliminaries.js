@@ -1,7 +1,5 @@
-import { API_500_ERROR } from '@/constant';
 import { adGetPreliminary } from '@/services';
-import { toast } from 'react-toastify';
-import { atom, selector, selectorFamily, useSetRecoilState } from 'recoil';
+import { atom, selector } from 'recoil';
 
 export const preliminarieListAtom = atom({
   key: 'preliminarieList',
@@ -388,6 +386,7 @@ export const preliminarySelect = selector({
     const id = get(preliminaryId);
     if (!id) return null;
     const response = await adGetPreliminary(id);
+    console.log(response.data);
     if (response.error) {
       throw response.error;
     }

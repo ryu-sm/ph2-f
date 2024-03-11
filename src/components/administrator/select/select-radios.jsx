@@ -7,7 +7,7 @@ import { useField } from 'formik';
 
 import { useCallback, useState } from 'react';
 
-export const AdSelectRadios = ({ options, ...props }) => {
+export const AdSelectRadios = ({ options, unit, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
@@ -53,7 +53,10 @@ export const AdSelectRadios = ({ options, ...props }) => {
       >
         <AdArrowDown sx={{ width: 8, height: 8, color: 'gray.80' }} />
       </Button>
-      <Typography variant="edit_content">{options.find((item) => meta.value === item.value)?.label}</Typography>
+      <Stack direction={'row'} alignItems={'center'}>
+        <Typography variant="edit_content">{options.find((item) => meta.value === item.value)?.label}</Typography>
+        {unit && <Typography variant="edit_content">{unit}</Typography>}
+      </Stack>
 
       <Popover
         open={open}

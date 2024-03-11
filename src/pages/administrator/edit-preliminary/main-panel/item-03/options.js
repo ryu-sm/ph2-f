@@ -119,3 +119,30 @@ export const leaveStatusUpYearOptions = Array.from(Array(5), (_, index) => {
     label: `${year}`,
   };
 });
+
+export const employmentTypeOptions = [
+  { value: '1', label: '経営者' },
+  { value: '2', label: '正社員' },
+  { value: '3', label: '嘱託' },
+  { value: '4', label: 'アルバイト・パート' },
+  { value: '5', label: '契約社員' },
+  { value: '6', label: '派遣社員' },
+  { value: '7', label: '学生・主婦' },
+  { value: '8', label: '無職' },
+];
+
+export const roleOptions = [
+  { value: '1', label: '無職' },
+  { value: '2', label: '代表・社長' },
+  { value: '3', label: '役員・執行役員' },
+  { value: '4', label: '管理職' },
+  { value: '5', label: 'その他役職' },
+  { value: '6', label: '一般職' },
+  { value: '7', label: '学生・主婦' },
+];
+
+export const listedDivisionOptions = [
+  { value: '0', label: '上場' },
+  { value: '1', label: '非上場' },
+  { value: '2', label: '自営・経営者' },
+];

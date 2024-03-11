@@ -3,7 +3,7 @@ import { Stack, TextField } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
 
-export const AdEditInput = ({ isMultiline, convertFullWidth, convertHalfWidth, autoTrim = true, ...props }) => {
+export const AdEditOutLineInput = ({ width, convertFullWidth, convertHalfWidth, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue } = helpers;
 
@@ -11,7 +11,7 @@ export const AdEditInput = ({ isMultiline, convertFullWidth, convertHalfWidth, a
     async (e) => {
       field.onBlur(e);
       props.onBlur && props.onBlur(e);
-      let value = autoTrim ? e.target.value?.toString().trim() : e.target.value?.toString();
+      let value = e.target.value?.toString().trim();
 
       if (convertHalfWidth) {
         value = convertToHalfWidth(value);
@@ -38,17 +38,16 @@ export const AdEditInput = ({ isMultiline, convertFullWidth, convertHalfWidth, a
     <Stack direction={'row'} sx={{ width: 1 }}>
       <TextField
         name={field.name}
-        multiline={isMultiline}
         sx={{
           ml: -2,
-          width: 1,
+          width: width || 1,
           '& .MuiOutlinedInput-root': {
             padding: 0,
             '& fieldset': {
-              border: 'none',
+              border: '1px solid #CCCCCC',
             },
             '&:hover fieldset': {
-              border: 'none',
+              border: '1px solid #CCCCCC',
             },
             '&.Mui-focused fieldset': {
               border: '2px solid #1976d2',
