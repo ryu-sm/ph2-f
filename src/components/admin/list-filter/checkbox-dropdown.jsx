@@ -29,12 +29,15 @@ export const CheckboxDropdown = ({ options, name }) => {
     };
   }, [selectedValues]);
 
-  // mock输入input的时候，没有模糊过滤到选项的情况
-  const [showOptions, setShowOptions] = useState(true);
-  const handleHideOptions = () => setShowOptions(false);
+  const [inputValue, setInputValue] = useState('');
+  const filteredOptions = useMemo(() => {
+    return inputValue
+      ? options.filter((option) => option.label.toLowerCase().includes(inputValue.toLowerCase()))
+      : options;
+  }, [inputValue, options]);
 
   return (
-    <Stack bgcolor={'gray.20'} width={'100%'} py={'12px'} spacing={3}>
+    <Stack bgcolor={'gray.20'} width={'100%'} py={4} spacing={3}>
       {hasInput && (
         <Stack alignItems={'center'} spacing={3}>
           <Box
@@ -43,38 +46,37 @@ export const CheckboxDropdown = ({ options, name }) => {
               width: '100%',
             }}
           >
-            <FilterInput placeholder="キーワードを入力" handleHideOptions={handleHideOptions} />
+            <FilterInput placeholder="キーワードを入力" value={inputValue} setValue={setInputValue} />
           </Box>
           <Divider sx={{ width: '90%' }} />
         </Stack>
       )}
-      <Stack minHeight={120} maxHeight={125} overflow={'auto'} spacing={3}>
-        {showOptions &&
-          options.map((option) => (
-            <Stack key={option.value} direction={'row'} alignItems={'center'} spacing={1} px={'68px'}>
-              <Stack
-                direction={'row'}
-                justifyContent="center"
-                alignItems="center"
-                bgcolor="main_white"
-                height={15}
-                width={15}
-                border={`1px solid ${theme.palette.primary.main}`}
-                borderRadius={1}
-                onClick={() => {
-                  handleClick(option);
-                }}
-              >
-                <img
-                  src={selectedValues.some((val) => val.value === option.value) ? checkboxIcon : unCheckIcon}
-                  alt=""
-                  height={7}
-                  width={9}
-                />
-              </Stack>
-              <Typography variant="filter_drop_down">{option.label}</Typography>
+      <Stack maxHeight={125} minHeight={hasInput ? 120 : 0} overflow={'auto'} spacing={3}>
+        {filteredOptions.map((option) => (
+          <Stack key={option.value} direction={'row'} alignItems={'center'} spacing={1} px={'68px'}>
+            <Stack
+              direction={'row'}
+              justifyContent="center"
+              alignItems="center"
+              bgcolor="main_white"
+              height={15}
+              width={15}
+              border={`1px solid ${theme.palette.primary.main}`}
+              borderRadius={1}
+              onClick={() => {
+                handleClick(option);
+              }}
+            >
+              <img
+                src={selectedValues.some((val) => val.value === option.value) ? checkboxIcon : unCheckIcon}
+                alt=""
+                height={7}
+                width={9}
+              />
             </Stack>
-          ))}
+            <Typography variant="filter_drop_down">{option.label}</Typography>
+          </Stack>
+        ))}
       </Stack>
     </Stack>
   );

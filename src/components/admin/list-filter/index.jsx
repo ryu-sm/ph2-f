@@ -7,6 +7,7 @@ import { Applicant } from './applicant';
 import { CheckboxDropdown } from './checkbox-dropdown';
 import { DateSelect } from './date-select';
 import { FilterItem } from './filter-item';
+import { MoneySelect } from './money-select';
 
 export const ListFilter = ({ open, onClose, type }) => {
   const title = useMemo(() => {
@@ -151,13 +152,17 @@ export const ListFilter = ({ open, onClose, type }) => {
             label="申込銀行"
             dropDownItem={<CheckboxDropdown options={mockBankOptions} name={'master_bank_codes'} />}
           />
-          <FilterItem
-            label="営業所"
-            dropDownItem={<CheckboxDropdown options={mockOfficeOptions} name={'office_names'} />}
-          />
+          <Applicant name={'applicant_name'} />
+          <FilterItem label="申込日時" dropDownItem={<DateSelect />} />
+          <FilterItem label="実行予定日" dropDownItem={<DateSelect />} />
+          <FilterItem label="申込金額" dropDownItem={<MoneySelect />} />
           <FilterItem
             label="支店"
             dropDownItem={<CheckboxDropdown options={mockBranchOptions} name={'branch_names'} />}
+          />
+          <FilterItem
+            label="営業所"
+            dropDownItem={<CheckboxDropdown options={mockOfficeOptions} name={'office_names'} />}
           />
           <FilterItem
             label="展示場"
@@ -167,10 +172,9 @@ export const ListFilter = ({ open, onClose, type }) => {
             label="営業担当者"
             dropDownItem={<CheckboxDropdown options={mockSalePersonOptions} name={'sale_person_names'} />}
           />
-          <Applicant />
-          <FilterItem label="申込日時" dropDownItem={<DateSelect />} />
         </Stack>
-        <Stack height={100} marginTop={'20px'} alignItems={'center'}>
+
+        <Stack minHeight={'100px'} justifyContent={'center'} alignItems={'center'}>
           <Button
             sx={{
               width: 200,
@@ -179,7 +183,6 @@ export const ListFilter = ({ open, onClose, type }) => {
               border: '1px solid',
               borderColor: 'primary.main',
               borderRadius: '2px',
-
               boxShadow: 'none',
               '&:hover': {
                 bgcolor: 'white',

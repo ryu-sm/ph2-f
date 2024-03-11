@@ -1,5 +1,6 @@
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { SpCase } from '../case-item/sp-case-item';
+import { InboxOutlined } from '@mui/icons-material';
 
 export const SpCaseList = () => {
   const caseList = [
@@ -86,11 +87,22 @@ export const SpCaseList = () => {
       unviewed: '0',
     },
   ];
+  const noSearchResult = (
+    <Stack height="calc(100vh - 115px)" width={'100%'} alignItems={'center'} justifyContent={'center'}>
+      <InboxOutlined
+        sx={{
+          width: 80,
+          height: 70,
+          marginRight: '5px',
+          color: '#d8d8d8',
+        }}
+      />
+      <Typography sx={{ color: '#7d7d7d' }}>案件がありません。</Typography>
+    </Stack>
+  );
   return (
     <Stack p={3} width={'100%'} spacing={3}>
-      {caseList.map((item) => (
-        <SpCase key={item.id} item={item} />
-      ))}
+      {caseList.length !== 0 ? caseList.map((item) => <SpCase key={item.id} item={item} />) : noSearchResult}
     </Stack>
   );
 };

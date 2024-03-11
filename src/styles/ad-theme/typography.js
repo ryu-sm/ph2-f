@@ -253,4 +253,17 @@ export const typography = {
     color: '#333333',
     fontSize: '12px',
   },
+  filter_select_render_value: {
+    fontFamily: 'Hiragino Sans',
+    fontSize: '16px',
+    fontWeight: 300,
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+  },
+  filter_select_placeHolder: {
+    fontFamily: 'Hiragino Sans',
+    fontSize: '10px',
+    lineHeight: '15px',
+    color: '#BBBBBB',
+  },
 };

@@ -1,5 +1,6 @@
 import { format } from 'kanjidate';
 import { dayjs } from '@/libs';
+import { calcAmountLabel } from '@/utils';
 
 export const yearOptions = [{ value: '', label: '西暦' }].concat(
   Array.from(Array(5), (_, index) => {
@@ -66,3 +67,8 @@ export const repaymentMethodOptions = [
   { value: '1', label: '元利均等返済' },
   { value: '2', label: '元金均等返済' },
 ];
+
+export const amountOptions = Array.from(Array(40), (_, index) => ({
+  value: String((index + 1) * 500 * 10000),
+  label: calcAmountLabel((index + 1) * 500),
+}));

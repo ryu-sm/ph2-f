@@ -1,18 +1,16 @@
 import { convertToFullWidth } from '@/utils';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
 import PropTypes from 'prop-types';
-export const FilterInput = ({ placeholder, handleHideOptions }) => {
-  const [value, setValue] = useState('');
+export const FilterInput = ({ placeholder, value, setValue }) => {
   const handleBlur = () => {
     setValue(convertToFullWidth(value).trim());
   };
+
   return (
     <TextField
       value={value}
       onChange={(e) => {
         setValue(e.target.value);
-        handleHideOptions && handleHideOptions();
       }}
       onBlur={handleBlur}
       placeholder={placeholder}
@@ -47,5 +45,6 @@ export const FilterInput = ({ placeholder, handleHideOptions }) => {
 
 FilterInput.propTypes = {
   placeholder: PropTypes.string,
-  handleHideOptions: PropTypes.func,
+  value: PropTypes.string,
+  setValue: PropTypes.func,
 };
