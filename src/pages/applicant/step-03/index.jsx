@@ -290,16 +290,18 @@ export const ApStep03Page = () => {
             convertFullWidth
           />
         </ApItemGroup>
-        <ApItemGroup label={'所属部課'}>
-          <Stack spacing={'6px'}>
-            <ApTextInputField
-              name="p_applicant_persons__0.office_department"
-              placeholder={'例：○○部'}
-              convertFullWidth
-            />
-            <ApStarHelp label={'所属部課が無い方は「なし」とご入力ください。'} />
-          </Stack>
-        </ApItemGroup>
+        {formik.values.p_applicant_persons__0.office_occupation !== '5' && (
+          <ApItemGroup label={'所属部課'}>
+            <Stack spacing={'6px'}>
+              <ApTextInputField
+                name="p_applicant_persons__0.office_department"
+                placeholder={'例：○○部'}
+                convertFullWidth
+              />
+              <ApStarHelp label={'所属部課が無い方は「なし」とご入力ください。'} />
+            </Stack>
+          </ApItemGroup>
+        )}
 
         <ApItemGroup label={'勤務先の電話番号'}>
           <Stack spacing={'6px'}>
@@ -599,6 +601,7 @@ export const ApStep03Page = () => {
             <ApRadioColumnGroup
               name="p_applicant_persons__0.maternity_paternity_leave"
               options={maternityPaternityLeaveOptions}
+              cancelable
               onChange={() => {
                 formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_start_date', '');
                 formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_end_date', '');
@@ -673,7 +676,7 @@ export const ApStep03Page = () => {
             }
             note={'※該当する方のみお答えください。'}
           >
-            <ApRadioColumnGroup name="p_applicant_persons__0.nursing_leave" options={nursingLeaveOptions} />
+            <ApRadioColumnGroup name="p_applicant_persons__0.nursing_leave" options={nursingLeaveOptions} cancelable />
           </ApItemGroup>
         )}
         <ApSaveDraftButton pageInfo={parseVaildData} />

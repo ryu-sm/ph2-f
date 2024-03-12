@@ -10,6 +10,7 @@ import {
   hasIncomeTotalizerSelector,
   hasJoinGuarantorSelector,
   preExaminationStatusSelector,
+  provisionalResultSelector,
 } from '@/store';
 import { ApFooter, ApLayout } from '@/containers';
 import { Box, Stack, Typography } from '@mui/material';
@@ -35,9 +36,8 @@ export const ApTopPage = () => {
   const agentSended = useRecoilValue(agentSendedSelector);
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
+  const provisionalResult = useRecoilValue(provisionalResultSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const t = useRecoilValue(applicationAtom);
-  console.log(t);
 
   const refreshApplyInfo = useCallback(async () => {
     try {
@@ -190,14 +190,19 @@ export const ApTopPage = () => {
         buttonLabel: apCurrStepId < 14 ? '---' : '申込内容確認',
         show: true,
       },
-      {
-        id: 15,
-        stepTitle: '仮審査結果',
-        stepIcon: <Icons.ApTopStepIdIcon15 />,
-        stepPath: '',
-        buttonLabel: preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS ? '申込内容確認' : '---',
-        show: true,
-      },
+      ...(preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS
+        ? [
+            {
+              id: 15,
+              stepTitle: '仮審査結果',
+              stepIcon: <Icons.ApTopStepIdIcon15 />,
+              stepPath: '',
+              buttonLabel: preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS ? '申込内容確認' : '---',
+              show: true,
+            },
+          ]
+        : []),
+
       ...(appliedBanks.includes(MCJ_CODE)
         ? [
             {

@@ -12,7 +12,7 @@ export const SalesPersonList = () => {
     refreshPreliminarieList();
   }, []);
   return (
-    <Stack sx={{ height: '100%', marginX: 0, p: 0, flexGrow: 1 }} overflow={'auto'} mt={11} mb={8}>
+    <Stack sx={{ height: '100%', marginX: 0, p: 0, flexGrow: 1 }} overflow={'auto'} mb={8}>
       <HeaderFilter />
       {status === 'loading' && <LinearProgress />}
       {status === 'hasValue' && (

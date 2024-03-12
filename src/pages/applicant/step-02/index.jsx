@@ -27,7 +27,7 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
-import { apApplicationImg } from '@/services';
+import { apApplicationFile } from '@/services';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
@@ -131,10 +131,10 @@ export const ApStep02Page = () => {
     },
   });
 
-  const sendedImg = useCallback(async () => {
+  const sendedFile = useCallback(async () => {
     if (agentSended) {
       try {
-        const res = await apApplicationImg(applyNo);
+        const res = await apApplicationFile(applyNo);
         formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__H__a', res.data.p_applicant_persons__0__H__a);
         formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__H__b', res.data.p_applicant_persons__0__H__b);
       } catch (error) {
@@ -144,7 +144,7 @@ export const ApStep02Page = () => {
   });
 
   useEffect(() => {
-    sendedImg();
+    sendedFile();
   }, [agentSended, applyNo]);
 
   const parseVaildData = useMemo(() => {

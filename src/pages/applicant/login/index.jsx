@@ -59,6 +59,7 @@ export const ApLoginPage = () => {
               preExaminationStatus: payload?.pre_examination_status,
               displayPdf: Boolean(payload?.display_pdf),
               hasDraftData: Boolean(payload.draft),
+              provisionalResult: payload?.provisional_result,
             },
             applyNo: payload?.apply_no,
             agentSended: Boolean(payload?.agent_sended),

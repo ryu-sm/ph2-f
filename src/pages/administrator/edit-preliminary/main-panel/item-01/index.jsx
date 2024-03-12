@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Modal, Stack, Typography } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 import { formatJapanDate, formatMoney } from '@/utils';
@@ -31,6 +31,11 @@ import { MCJ_CODE } from '@/configs';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab01Schema } from '../../fullSchema';
+import { editMainTabStatusAtom, infoGroupTabAtom, joinGuarantorInitialValues } from '@/store';
+import { useSetRecoilState } from 'recoil';
+import { useBoolean } from '@/hooks';
+import { AdPrimaryButton } from '@/components/administrator/button';
+import { Icons } from '@/assets';
 
 export const Item01 = () => {
   const {
@@ -41,10 +46,24 @@ export const Item01 = () => {
       p_borrowing_details__2,
       p_borrowings,
     },
+    preliminarySnap: { changeJoinGuarantor, changeToIncomeTotalizer },
     setPreliminarySnap,
     handleSave,
     isEditable,
   } = usePreliminaryContext();
+
+  const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
+  const changeAfterAction = useBoolean(false);
+  const handleConfirm = () => {
+    if (changeJoinGuarantor) {
+      return setInfoGroupTab(4);
+    }
+    if (changeToIncomeTotalizer) {
+      setMainTabStatus(2);
+      setInfoGroupTab(2);
+    }
+  };
 
   const initialValues = {
     p_application_headers: {
@@ -142,7 +161,16 @@ export const Item01 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup
+        isEditable={isEditable}
+        handleSave={() => {
+          if (changeJoinGuarantor || changeToIncomeTotalizer) {
+            changeAfterAction.onTrue();
+            return;
+          }
+          handleSave(setUpdateData(formik.values));
+        }}
+      >
         <EditRow
           label={'申込日時'}
           field={`${formatJapanDate(formik.values.p_application_headers.created_at.split(' ')[0], true)} ${
@@ -323,6 +351,7 @@ export const Item01 = () => {
                       formik.values.p_application_headers.loan_type === '4') &&
                     (value !== '3' || value !== '4')
                   ) {
+                    // TODO
                     setPreliminarySnap((pre) => {
                       return {
                         ...pre,
@@ -541,7 +570,22 @@ export const Item01 = () => {
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name={'p_application_headers.join_guarantor_umu'} options={hasJoinGuarantorOptions} />
+              <AdSelectRadios
+                name={'p_application_headers.join_guarantor_umu'}
+                options={hasJoinGuarantorOptions}
+                onChange={(value) => {
+                  if (value === '1' && formik.values.p_application_headers.join_guarantor_umu === '') {
+                    console.log('担保人变更');
+                    setPreliminarySnap((pre) => {
+                      return {
+                        ...pre,
+                        hasJoinGuarantor: true,
+                        changeJoinGuarantor: true,
+                      };
+                    });
+                  }
+                }}
+              />
             ) : (
               hasJoinGuarantorOptions.find(
                 (item) => item.value === formik.values.p_application_headers.join_guarantor_umu
@@ -563,6 +607,49 @@ export const Item01 = () => {
           error={formik.errors?.p_application_headers?.loan_plus}
         />
       </ContentEditGroup>
+      <Modal
+        open={changeAfterAction.value}
+        onClose={changeAfterAction.onFalse}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        disableAutoFocus
+      >
+        <Stack
+          sx={{
+            width: 520,
+            bgcolor: 'white',
+            minWidth: 'auto',
+            maxHeight: '75vh',
+            borderRadius: 1,
+            p: 3,
+          }}
+        >
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+            <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={changeAfterAction.onFalse} />
+          </Stack>
+          <Stack sx={{ py: 3 }}>
+            {changeJoinGuarantor && !changeToIncomeTotalizer && (
+              <Typography variant="dailog_warring" fontSize={16} fontWeight={300}>
+                {`このタブのすべての項目入力は「担保提供者」タブの「保存」ボタンを押下した後に反映します。\n「担保提供者」の入力を完了してください。`}
+              </Typography>
+            )}
+            {!changeJoinGuarantor && changeToIncomeTotalizer && (
+              <Typography variant="dailog_warring" fontSize={16} fontWeight={300}>
+                {`このタブのすべての項目入力は「収入合算者」タブの「保存」ボタンを押下した後に反映します。\n「収入合算者」の入力を完了してください。`}
+              </Typography>
+            )}
+            {changeJoinGuarantor && changeToIncomeTotalizer && (
+              <Typography variant="dailog_warring" fontSize={16} fontWeight={300}>
+                {`このタブのすべての項目入力は「収入合算者」タブの「保存」ボタンを押下した後に反映します。\n「担保提供者」の入力と「収入合算者」の入力を両方完了してください。`}
+              </Typography>
+            )}
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }}>
+            <AdPrimaryButton height={38} width={150} onClick={handleConfirm}>
+              閉じる
+            </AdPrimaryButton>
+          </Stack>
+        </Stack>
+      </Modal>
     </FormikProvider>
   );
 };

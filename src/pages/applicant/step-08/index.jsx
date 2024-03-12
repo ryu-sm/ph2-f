@@ -130,7 +130,7 @@ export const ApStep08Page = () => {
     },
   });
 
-  const sendedImg = useCallback(async () => {
+  const sendedFile = useCallback(async () => {
     if (formik.values.p_borrowings?.length === 0) return;
     if (agentSended) {
       try {
@@ -153,7 +153,7 @@ export const ApStep08Page = () => {
   });
 
   useEffect(() => {
-    sendedImg();
+    sendedFile();
   }, [agentSended, applyNo, formik.values.p_borrowings?.length]);
 
   const parseVaildData = useMemo(() => {
@@ -175,6 +175,11 @@ export const ApStep08Page = () => {
   useEffect(() => {
     console.log(formik.errors);
   }, [formik.errors]);
+
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -293,7 +298,7 @@ export const ApStep08Page = () => {
                                       id: p_borrowing.id,
                                       p_borrowings__I: [],
                                       self_input: '0',
-                                      borrower: '',
+                                      borrower: p_borrowing.borrower,
                                       type: '',
                                       lender: '',
                                       borrowing_from_house_finance_agency: '',

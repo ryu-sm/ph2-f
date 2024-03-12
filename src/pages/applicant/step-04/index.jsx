@@ -29,7 +29,7 @@ import { Icons } from '@/assets';
 import { CONFIRMATION_URL, CONSENT_URL } from '@/configs';
 import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
-import { apApplicationImg } from '@/services';
+import { apApplicationFile } from '@/services';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
@@ -152,10 +152,10 @@ export const ApStep04Page = () => {
     },
   });
 
-  const sendedImg = useCallback(async () => {
+  const sendedFile = useCallback(async () => {
     if (agentSended) {
       try {
-        const res = await apApplicationImg(applyNo);
+        const res = await apApplicationFile(applyNo);
         formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__H__a', res.data.p_applicant_persons__1__H__a);
         formik.setFieldValue('p_uploaded_files.p_applicant_persons__1__H__b', res.data.p_applicant_persons__1__H__b);
       } catch (error) {
@@ -165,7 +165,7 @@ export const ApStep04Page = () => {
   });
 
   useEffect(() => {
-    sendedImg();
+    sendedFile();
   }, [agentSended, applyNo]);
 
   const parseVaildData = useMemo(() => {

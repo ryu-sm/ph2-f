@@ -219,20 +219,22 @@ export const validationSchema = yup.object({
     refund_source_content: yup.string(),
     refund_source_amount: yup.string(),
     rent_to_be_paid_land: yup.string(),
-    rent_to_be_paid_land_borrower: yup.string().when('rent_to_be_paid_land', ([rent_to_be_paid_land], field) => {
-      if (!!rent_to_be_paid_land) {
-        return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-      } else {
-        return field;
-      }
-    }),
+    rent_to_be_paid_land_borrower: yup
+      .string()
+      .test('option-required', YUP_MESSAGES.RADIO_REQUIRED, (field_value, { options: { context } }) => {
+        if (context.hasIncomeTotalizer && context.p_application_headers.rent_to_be_paid_land) {
+          return !!field_value;
+        }
+        return true;
+      }),
     rent_to_be_paid_house: yup.string(),
-    rent_to_be_paid_house_borrower: yup.string().when('rent_to_be_paid_house', ([rent_to_be_paid_house], field) => {
-      if (!!rent_to_be_paid_house) {
-        return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-      } else {
-        return field;
-      }
-    }),
+    rent_to_be_paid_house_borrower: yup
+      .string()
+      .test('option-required', YUP_MESSAGES.RADIO_REQUIRED, (field_value, { options: { context } }) => {
+        if (context.hasIncomeTotalizer && context.p_application_headers.rent_to_be_paid_house) {
+          return !!field_value;
+        }
+        return true;
+      }),
   }),
 });

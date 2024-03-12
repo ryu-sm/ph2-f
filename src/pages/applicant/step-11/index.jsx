@@ -21,7 +21,7 @@ import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
-import { apApplicationImg } from '@/services';
+import { apApplicationFile } from '@/services';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
@@ -253,10 +253,10 @@ export const ApStep11Page = () => {
     },
   });
 
-  const sendedImg = useCallback(async () => {
+  const sendedFile = useCallback(async () => {
     if (agentSended) {
       try {
-        const res = await apApplicationImg(applyNo);
+        const res = await apApplicationFile(applyNo);
         formik.setFieldValue(
           'p_uploaded_files.p_applicant_persons__1__A__01__a',
           res.data.p_applicant_persons__1__A__01__a
@@ -296,7 +296,7 @@ export const ApStep11Page = () => {
   });
 
   useEffect(() => {
-    sendedImg();
+    sendedFile();
   }, [agentSended, applyNo]);
 
   const parseVaildData = useMemo(() => {

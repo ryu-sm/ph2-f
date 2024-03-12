@@ -118,9 +118,11 @@ export const ApStep06Page = () => {
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
           <ApJoinGuarantorModal />
         </Stack>
-        <Stack px={4} pb={8}>
-          <ApStarHelp label={'ペアローンの場合、どちらかの申込者の方に記入いただければ結構です。'} />
-        </Stack>
+        {p_application_headers.loan_type === '2' && (
+          <Stack px={4} pb={8}>
+            <ApStarHelp label={'ペアローンの場合、どちらかの申込者の方に記入いただければ結構です。'} />
+          </Stack>
+        )}
         <FieldArray
           name="p_join_guarantors"
           render={(arrayHelpers) => (
@@ -225,7 +227,7 @@ export const ApStep06Page = () => {
                           <ApStarHelp label={'半角数字でご入力ください。'} />
                         </Stack>
                       </ApItemGroup>
-                      <ApItemGroup label={'現住所'} pb={3} px={2}>
+                      <ApItemGroup label={'担保提供者の現住所'} pb={3} px={2}>
                         <Stack spacing={4}>
                           <ApZipCodeInputField
                             name={`p_join_guarantors[${index}].postal_code`}

@@ -52,7 +52,7 @@ import {
 import { API_500_ERROR, PREFECTURES } from '@/constant';
 
 import { cloneDeep } from 'lodash';
-import { apApplicationImg } from '@/services';
+import { apApplicationFile } from '@/services';
 import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
@@ -202,10 +202,10 @@ export const ApStep07Page = () => {
     },
   });
 
-  const sendedImg = useCallback(async () => {
+  const sendedFile = useCallback(async () => {
     if (agentSended) {
       try {
-        const res = await apApplicationImg(applyNo);
+        const res = await apApplicationFile(applyNo);
         console.log(res);
         formik.setFieldValue('p_uploaded_files.G', res.data.G);
       } catch (error) {
@@ -215,7 +215,7 @@ export const ApStep07Page = () => {
   });
 
   useEffect(() => {
-    sendedImg();
+    sendedFile();
   }, [agentSended, applyNo]);
 
   const parseVaildData = useMemo(() => {
@@ -430,12 +430,12 @@ export const ApStep07Page = () => {
                       />
                       {formik.values.p_application_headers.curr_house_schedule_disposal_type === '99' && (
                         <Stack spacing={1}>
+                          <ApStarHelp label={'その他の方は詳細を入力ください。'} />
                           <ApTextInputField
                             name="p_application_headers.curr_house_schedule_disposal_type_other"
                             placeholder={'入力してください'}
                             convertFullWidth
                           />
-                          <ApStarHelp label={'その他の方は詳細を入力ください。'} />
                         </Stack>
                       )}
                     </Stack>
@@ -462,7 +462,7 @@ export const ApStep07Page = () => {
                           }
                           align="right"
                           width={140}
-                          maxLength={6}
+                          maxLength={5}
                         />
                       </ApItemGroup>
                     </Stack>
@@ -498,7 +498,7 @@ export const ApStep07Page = () => {
         <ApItemGroup
           optional
           label={'新しい住居の物件情報'}
-          note={'※物件情報の画像、またはURLのいずれかがあれば\n　添付してください。'}
+          note={'※物件情報の画像、またはURLのいずれかがあれば添付してください。'}
         >
           <Stack
             sx={{

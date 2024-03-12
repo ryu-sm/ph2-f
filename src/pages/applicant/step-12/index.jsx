@@ -13,7 +13,7 @@ import {
 } from '@/components';
 import { CONSENT_URL } from '@/configs';
 import { ApLayout, ApStepFooter } from '@/containers';
-import { apApplicationImg, apGetSalesCompanyOrgs } from '@/services';
+import { apApplicationFile, apGetSalesCompanyOrgs } from '@/services';
 import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, authAtom } from '@/store';
 import { Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
@@ -111,10 +111,10 @@ export const ApStep12Page = () => {
     }
   }, [salesCompanyOrgId]);
 
-  const sendedImg = useCallback(async () => {
+  const sendedFile = useCallback(async () => {
     if (agentSended) {
       try {
-        const res = await apApplicationImg(applyNo);
+        const res = await apApplicationFile(applyNo);
         formik.setFieldValue('p_uploaded_files.J', res.data.J);
       } catch (error) {
         console.error(error);
@@ -123,7 +123,7 @@ export const ApStep12Page = () => {
   });
 
   useEffect(() => {
-    sendedImg();
+    sendedFile();
   }, [agentSended, applyNo]);
 
   const parseVaildData = useMemo(() => {

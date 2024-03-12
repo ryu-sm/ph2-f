@@ -11,6 +11,7 @@ const authInitialValues = {
     preExaminationStatus: null,
     displayPdf: true,
     hasDraftData: false,
+    provisionalResult: null,
   },
   salesPerson: {
     id: null,
@@ -45,6 +46,14 @@ export const authAtom = atom({
   key: 'auth',
   default: authInitialValues,
   effects_UNSTABLE: [localStorageEffect('auth')],
+});
+
+export const provisionalResultSelector = selector({
+  key: 'provisionalResult',
+  get: ({ get }) => {
+    const auth = get(authAtom);
+    return auth?.user?.provisionalResult;
+  },
 });
 
 export const userEmailSelector = selector({

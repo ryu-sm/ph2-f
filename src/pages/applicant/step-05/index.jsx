@@ -306,16 +306,18 @@ export const ApStep05Page = () => {
             convertFullWidth
           />
         </ApItemGroup>
-        <ApItemGroup label={'所属部課'}>
-          <Stack spacing={'6px'}>
-            <ApTextInputField
-              name="p_applicant_persons__1.office_department"
-              placeholder={'例：○○部'}
-              convertFullWidth
-            />
-            <ApStarHelp label={'所属部課が無い方は「なし」とご入力ください。'} />
-          </Stack>
-        </ApItemGroup>
+        {formik.values.p_applicant_persons__1.office_occupation !== '5' && (
+          <ApItemGroup label={'所属部課'}>
+            <Stack spacing={'6px'}>
+              <ApTextInputField
+                name="p_applicant_persons__1.office_department"
+                placeholder={'例：○○部'}
+                convertFullWidth
+              />
+              <ApStarHelp label={'所属部課が無い方は「なし」とご入力ください。'} />
+            </Stack>
+          </ApItemGroup>
+        )}
 
         <ApItemGroup label={'勤務先の電話番号'}>
           <Stack spacing={'6px'}>

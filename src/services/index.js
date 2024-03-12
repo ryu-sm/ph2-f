@@ -64,8 +64,8 @@ export const apApplication = async (apply_no) => {
   return await service.get(`/application?apply_no=${apply_no}`);
 };
 
-export const apApplicationImg = async (apply_no) => {
-  return await service.get(`/application/img?apply_no=${apply_no}`);
+export const apApplicationFile = async (apply_no) => {
+  return await service.get(`/application/files?apply_no=${apply_no}`);
 };
 
 export const apPborrowings = async (apply_no) => {
@@ -117,19 +117,19 @@ export const adSalesPersonPreliminaries = async (status) => {
 };
 
 export const adUpdatePreliminarieManagerId = async (data) => {
-  return await service.put('/preliminarie/s_manager_id', data);
+  return await service.put('/preliminaries/s_manager_id', data);
 };
 
 export const adUpdatePreliminarieSalesPersonId = async (data) => {
-  return await service.put('/preliminarie/s_sales_person_id', data);
+  return await service.put('/preliminaries/s_sales_person_id', data);
 };
 
 export const adUpdatePreliminarieSalesAreaId = async (data) => {
-  return await service.put('/preliminarie/sales_area_id', data);
+  return await service.put('/preliminaries/sales_area_id', data);
 };
 
 export const adUpdatePreliminarieSalesExhibitionHallId = async (data) => {
-  return await service.put('/preliminarie/sales_exhibition_hall_id', data);
+  return await service.put('/preliminaries/sales_exhibition_hall_id', data);
 };
 
 export const adGetSalesPersonOptions = async (parent_id) => {

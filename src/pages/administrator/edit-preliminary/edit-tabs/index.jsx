@@ -14,6 +14,7 @@ import { IncomeTotalizerDetail } from '../income-totalizer-panel';
 export const EditTabs = ({}) => {
   const {
     preliminaryInfo: { p_application_headers },
+    preliminarySnap: { hasIncomeTotalizer },
     checkUpdate,
     resetPreliminarySnap,
     refreshPreliminary,
@@ -37,7 +38,7 @@ export const EditTabs = ({}) => {
         value: 1,
         label: byPairLoan ? '申込人A' : '申込人',
       },
-      ...(byIncomeTotalizer
+      ...(hasIncomeTotalizer
         ? [
             {
               value: 2,
@@ -54,9 +55,10 @@ export const EditTabs = ({}) => {
           ]
         : []),
     ];
-  }, [byIncomeTotalizer, byPairLoan]);
+  }, [hasIncomeTotalizer, byPairLoan]);
 
   const changeTab = useBoolean(false);
+
   const [tempTab, setTempTab] = useState(null);
   const handleChangeMainTab = (id) => {
     if (checkUpdate()) {
@@ -83,7 +85,7 @@ export const EditTabs = ({}) => {
 
     setMainTabStatus(tempTab);
 
-    if (id === 2) {
+    if (tempTab === 2) {
       setInfoGroupTab(2);
     } else {
       setInfoGroupTab(1);

@@ -65,7 +65,6 @@ export const validationSchema = yup.object({
           return true;
         }
       )
-      .test('divisible-by-10', YUP_MESSAGES.ENTER_UNITS_100000YEN, (field_value) => Number(field_value) % 10 === 0)
       .test(
         'loan_amount_with_two',
         YUP_MESSAGES.TEMPORARY_DESIRED_LOAN_AMOUNT,
@@ -82,6 +81,7 @@ export const validationSchema = yup.object({
           return true;
         }
       )
+      .test('divisible-by-10', YUP_MESSAGES.ENTER_UNITS_100000YEN, (field_value) => Number(field_value) % 10 === 0)
       .label('お借入希望額'),
 
     bonus_repayment_amount: yup
@@ -150,13 +150,6 @@ export const validationSchema = yup.object({
           }
         }
       )
-      .test('divisible-by-10', YUP_MESSAGES.ENTER_UNITS_100000YEN, (field_value, { options: { context } }) => {
-        if (context.p_application_headers.land_advance_plan === '1' && !!field_value) {
-          return Number(field_value) % 10 === 0;
-        } else {
-          return true;
-        }
-      })
       .test(
         'loan_amount_with_two',
         YUP_MESSAGES.TEMPORARY_DESIRED_LOAN_AMOUNT,
@@ -174,6 +167,13 @@ export const validationSchema = yup.object({
           }
         }
       )
+      .test('divisible-by-10', YUP_MESSAGES.ENTER_UNITS_100000YEN, (field_value, { options: { context } }) => {
+        if (context.p_application_headers.land_advance_plan === '1' && !!field_value) {
+          return Number(field_value) % 10 === 0;
+        } else {
+          return true;
+        }
+      })
       .label('お借入希望額'),
     bonus_repayment_amount: yup
       .string()

@@ -86,7 +86,7 @@ export const validationSchema = yup.object({
     transfer_office_name_kana: yup
       .string()
       .max(48)
-      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.SP_KANA_FULL_WIDTH)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.SP_KANA_FULL_WIDTH)
       .when('transfer_office', ([transfer_office], field) => {
         if (transfer_office === '1') {
           return field.required(YUP_MESSAGES.REQUIRED);
