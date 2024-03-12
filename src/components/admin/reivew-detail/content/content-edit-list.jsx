@@ -1,6 +1,6 @@
 import { Button, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { LoanPlan } from '../different-contents/loan-plan';
+import { DocsDownload } from '../different-contents/docs-download/docs-download';
 export const ContentEditList = ({ canBeEdited }) => {
   return (
     <Stack width={'100%'} marginTop={'16px'} height={'480px'}>
@@ -23,7 +23,7 @@ export const ContentEditList = ({ canBeEdited }) => {
       )}
 
       {/* edit list */}
-      <Stack
+      {/* <Stack
         direction={'row'}
         alignItems={'center'}
         width={'100%'}
@@ -42,8 +42,8 @@ export const ContentEditList = ({ canBeEdited }) => {
         >
           入力内容
         </Typography>
-      </Stack>
-      <LoanPlan />
+      </Stack> */}
+      <DocsDownload />
     </Stack>
   );
 };

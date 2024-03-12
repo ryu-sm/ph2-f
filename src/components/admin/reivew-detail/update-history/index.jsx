@@ -15,8 +15,9 @@ import {
   alpha,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-export const UpdateHistoryModal = ({ open, onClose }) => {
+export const UpdateHistoryModal = ({ open, onClose, title }) => {
   const theme = useTheme();
+
   const headers = [
     {
       id: 'date',
@@ -101,7 +102,7 @@ export const UpdateHistoryModal = ({ open, onClose }) => {
           borderBottom={'1px solid'}
           borderColor={'gray.70'}
         >
-          <Typography variant="ad_modal_title">入居予定年月の修正履歴</Typography>
+          <Typography variant="ad_modal_title">{title}</Typography>
           <IconButton onClick={onClose} sx={{ position: 'absolute', right: 1, top: 3 }}>
             <CloseIcon />
           </IconButton>
@@ -158,4 +159,5 @@ export const UpdateHistoryModal = ({ open, onClose }) => {
 UpdateHistoryModal.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
+  title: PropTypes.string,
 };

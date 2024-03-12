@@ -72,3 +72,12 @@ export const amountOptions = Array.from(Array(40), (_, index) => ({
   value: String((index + 1) * 500 * 10000),
   label: calcAmountLabel((index + 1) * 500),
 }));
+
+export const docsRadioOptions = [
+  { label: '運転免許書', value: 'driver_license' },
+  { label: 'マイナンバーカード', value: 'card_number' },
+  {
+    label: '住民基本台帳カード',
+    value: 'resident_register',
+  },
+];

@@ -10,6 +10,7 @@ export const EditRow = ({ item, label, requiredSupply, hasDropDown, content, com
   }, [item]);
 
   const { value: open, onTrue: handleOpenModal, onFalse: handleCloseModal } = useBoolean(false);
+
   return (
     <Stack
       direction={'row'}
@@ -61,7 +62,7 @@ export const EditRow = ({ item, label, requiredSupply, hasDropDown, content, com
         </Stack>
       </Stack>
 
-      <UpdateHistoryModal open={open} onClose={handleCloseModal} />
+      <UpdateHistoryModal open={open} onClose={handleCloseModal} title="入居予定年月の修正履歴" />
     </Stack>
   );
 };
