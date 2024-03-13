@@ -264,7 +264,7 @@ export const tab02Schema = yup.object({
     home_phone: yup.string().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
       return !!field_value || !!parent.mobile_phone;
     }),
-    postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ENTER_ZIPCODE_SEVEN_DIGITS),
+    postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
     prefecture_kanji: yup
       .string()
       .required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
@@ -347,7 +347,7 @@ export const tab03Schema = yup.object({
 
     office_phone: yup.string(),
 
-    office_postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ENTER_ZIPCODE_SEVEN_DIGITS),
+    office_postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
 
     office_prefecture_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
     office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
@@ -436,7 +436,7 @@ export const tab03Schema = yup.object({
     }),
     transfer_office_postal_code: yup
       .string()
-      .matches(REGEX.ZIP_CODE, YUP_MESSAGES.ENTER_ZIPCODE_SEVEN_DIGITS)
+      .matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE)
       .when('transfer_office', ([transfer_office], field) => {
         if (transfer_office === '1') {
           return field.required(YUP_MESSAGES.REQUIRED);
@@ -547,7 +547,7 @@ export const tab04Schema = yup.object({
       }),
       emergency_contact: yup.string(),
 
-      postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ENTER_ZIPCODE_SEVEN_DIGITS),
+      postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
       prefecture_kanji: yup
         .string()
         .required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
@@ -691,7 +691,7 @@ export const tab05Schema = yup.object({
       birthday: yup.string().matches(REGEX.YMD, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
       loan_from_japan_house_finance_agency: yup.string(),
       contact_phone: yup.string(),
-      postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ENTER_ZIPCODE_SEVEN_DIGITS),
+      postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
       prefecture_kanji: yup.string().max(8).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
       city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
       district_kanji: yup
@@ -966,5 +966,288 @@ export const tab07Schema = yup.object({
       }
     }),
     funding_total_amount: yup.number().max(99999, '99,999万円以下に入力してください。'),
+  }),
+});
+
+export const tab02SchemaI = yup.object({
+  p_applicant_persons__1: yup.object({
+    last_name_kanji: yup
+      .string()
+      .required(YUP_MESSAGES.REQUIRED)
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
+    first_name_kanji: yup
+      .string()
+      .required(YUP_MESSAGES.REQUIRED)
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
+    last_name_kana: yup
+      .string()
+      .required(YUP_MESSAGES.REQUIRED)
+      .max(48)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+    first_name_kana: yup
+      .string()
+      .required(YUP_MESSAGES.REQUIRED)
+      .max(48)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+
+    birthday: yup
+      .string()
+      .required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
+      .matches(REGEX.YMD, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
+      .label('生年月日'),
+    nationality: yup.string(),
+
+    mobile_phone: yup.string().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      return !!field_value || !!parent.home_phone;
+    }),
+    home_phone: yup.string().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      return !!field_value || !!parent.mobile_phone;
+    }),
+    postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
+    prefecture_kanji: yup
+      .string()
+      .required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
+      .max(8)
+      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH)
+      .label('都道府県'),
+    city_kanji: yup
+      .string()
+      .required(YUP_MESSAGES.REQUIRED)
+      .max(20)
+      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
+    district_kanji: yup
+      .string()
+      .required(YUP_MESSAGES.REQUIRED)
+      .max(40)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
+    other_address_kanji: yup
+      .string()
+      .required(YUP_MESSAGES.REQUIRED)
+      .max(99)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
+
+    prefecture_kana: yup
+      .string()
+      .max(8)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+    city_kana: yup.string().max(20).matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+    district_kana: yup
+      .string()
+      .max(30)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+    other_address_kana: yup
+      .string()
+      .max(138)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+
+    email: yup.string().max(128).matches(REGEX.EMAIL, YUP_MESSAGES.EMAIL_AP).label('メールアドレス'),
+  }),
+});
+
+export const tab03SchemaI = yup.object({
+  p_applicant_persons__0: yup.object({
+    office_occupation: yup.string(),
+
+    office_occupation_other: yup.string().test('option', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.office_occupation === '99') {
+        return !!field_value;
+      } else {
+        return true;
+      }
+    }),
+    office_industry: yup.string(),
+    office_industry_other: yup.string().test('option', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.office_industry === '99') {
+        return !!field_value;
+      } else {
+        return true;
+      }
+    }),
+    office_occupation_detail: yup.string(),
+    office_occupation_detail_other: yup.string().test('option', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.office_occupation_detail === '99') {
+        return !!field_value;
+      } else {
+        return true;
+      }
+    }),
+    office_name_kanji: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
+    office_name_kana: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+    office_department: yup
+      .string()
+      .max(46)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
+
+    office_phone: yup.string(),
+
+    office_postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
+
+    office_prefecture_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
+    office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
+    office_district_kanji: yup
+      .string()
+      .max(40)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
+    office_other_address_kanji: yup
+      .string()
+      .max(99)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
+
+    office_prefecture_kana: yup
+      .string()
+      .max(8)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+    office_city_kana: yup
+      .string()
+      .max(20)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+    office_district_kana: yup
+      .string()
+      .max(30)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+    office_other_address_kana: yup
+      .string()
+      .max(138)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+
+    office_employee_num: yup.string(),
+
+    office_joining_date: yup.string().matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
+
+    last_year_income: yup.string(),
+    before_last_year_bonus_income: yup.string(),
+    last_year_bonus_income: yup.string(),
+    p_applicant_persons__1__last_year_bonus_income: yup.string(),
+
+    income_sources: yup.array(),
+    tax_return: yup.string(),
+    tax_return_reasons: yup
+      .array()
+      .test('option-required', YUP_MESSAGES.DROPDOWN_REQUIRED, (field_value, { parent }) => {
+        if (parent.tax_return === '1') {
+          return !!field_value?.length;
+        } else {
+          return true;
+        }
+      }),
+    tax_return_reason_other: yup.string().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.tax_return_reasons?.includes('99')) {
+        return !!field_value;
+      } else {
+        return true;
+      }
+    }),
+    transfer_office: yup.string(),
+    transfer_office_name_kanji: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
+      .when('transfer_office', ([transfer_office], field) => {
+        if (transfer_office === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    transfer_office_name_kana: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER)
+      .when('transfer_office', ([transfer_office], field) => {
+        if (transfer_office === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    transfer_office_phone: yup.string().when('transfer_office', ([transfer_office], field) => {
+      if (transfer_office === '1') {
+        return field.required(YUP_MESSAGES.REQUIRED);
+      } else {
+        return field;
+      }
+    }),
+    transfer_office_postal_code: yup
+      .string()
+      .matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE)
+      .when('transfer_office', ([transfer_office], field) => {
+        if (transfer_office === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    transfer_office_prefecture_kanji: yup
+      .string()
+      .max(20)
+      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH)
+      .when('transfer_office', ([transfer_office], field) => {
+        if (transfer_office === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    transfer_office_city_kanji: yup
+      .string()
+      .max(20)
+      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH)
+      .when('transfer_office', ([transfer_office], field) => {
+        if (transfer_office === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    transfer_office_district_kanji: yup
+      .string()
+      .max(40)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
+      .when('transfer_office', ([transfer_office], field) => {
+        if (transfer_office === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    transfer_office_other_address_kanji: yup
+      .string()
+      .max(99)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
+      .when('transfer_office', ([transfer_office], field) => {
+        if (transfer_office === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    maternity_paternity_leave: yup.string(),
+    maternity_paternity_leave_start_date: yup
+      .string()
+      .when('maternity_paternity_leave', ([maternity_paternity_leave], field) => {
+        if (!!maternity_paternity_leave) {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    maternity_paternity_leave_end_date: yup
+      .string()
+      .when('maternity_paternity_leave', ([maternity_paternity_leave], field) => {
+        if (!!maternity_paternity_leave) {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    nursing_leave: yup.string(),
   }),
 });

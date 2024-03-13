@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { Item02 } from './item-02';
 import { Item03 } from './item-03';
+import { Item09 } from './item-09';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { AdPrimaryButton, AdSecondaryButton } from '@/components/administrator/button';
 
@@ -15,11 +16,10 @@ export const IncomeTotalizerDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
   const {
     preliminaryInfo,
-    preliminarySnap: { hasJoinGuarantor },
+    preliminarySnap: { changeToIncomeTotalizer },
     checkUpdate,
     resetPreliminarySnap,
   } = usePreliminaryContext();
-  // const { p_application_headers, hasJoinGuarantor } = premliminaryInfo;
 
   const infoGroupItems = useMemo(() => {
     return [
@@ -59,7 +59,13 @@ export const IncomeTotalizerDetail = () => {
 
   return (
     <Stack width={'100%'} bgcolor={'white'} boxShadow={'rgba(0, 0, 0, 0.25) 0px 0px 5px'} padding={'14px 20px'}>
-      <Stack direction={'row'} alignItems={'center'} bgcolor={'gray.60'} padding={'6px'}>
+      <Stack
+        direction={'row'}
+        alignItems={'center'}
+        bgcolor={'gray.60'}
+        padding={'6px'}
+        sx={{ ...(changeToIncomeTotalizer && { pointerEvents: 'none', opacity: 0.6, cursor: 'not-allowed' }) }}
+      >
         <Grid container columnSpacing={2} rowSpacing={2}>
           {infoGroupItems.map((item) => (
             <Grid key={item.id} item>
@@ -85,6 +91,7 @@ export const IncomeTotalizerDetail = () => {
       </Stack>
       {infoGroupTab === 2 && <Item02 />}
       {infoGroupTab === 3 && <Item03 />}
+      {infoGroupTab === 9 && <Item09 />}
 
       <Modal
         open={changeTab.value}

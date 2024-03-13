@@ -2,7 +2,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 
 import { Fragment, useEffect } from 'react';
-import { AdEditInput, AdEditOutLineInput, AdSelectRadios, DayPicker } from '@/components/administrator';
+import { AdEditInput, AdEditOutLineInput, AdSelectRadios, AdZipCodeInput, DayPicker } from '@/components/administrator';
 import { genderOptions, relToApplicantAOptions } from './options';
 
 import dayjs from 'dayjs';
@@ -13,10 +13,22 @@ import { AdPrimaryButton } from '@/components/administrator/button';
 import { Icons } from '@/assets';
 import { Stack } from '@mui/material';
 import { tab04Schema } from '../../fullSchema';
+import { editMainTabStatusAtom, infoGroupTabAtom, joinGuarantorInitialValues } from '@/store';
+import { useSetRecoilState } from 'recoil';
 
 export const Item04 = () => {
+  const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const {
-    preliminaryInfo: { p_application_headers, p_join_guarantors },
+    preliminaryInfo: { p_join_guarantors },
+    preliminarySnap: {
+      changeJoinGuarantor,
+      changeToIncomeTotalizer,
+      p_application_headers,
+      p_application_banks,
+      p_borrowing_details__1,
+      p_borrowing_details__2,
+    },
     setPreliminarySnap,
     handleSave,
     isEditable,
@@ -28,9 +40,36 @@ export const Item04 = () => {
   const setUpdateData = (values) => {
     const diffData = {
       p_join_guarantors: values.p_join_guarantors,
-      p_application_headers: {
-        join_guarantor_umu: p_application_headers.join_guarantor_umu,
-      },
+      ...(changeJoinGuarantor && {
+        p_application_headers: {
+          created_at: p_application_headers?.created_at,
+          apply_date: p_application_headers?.apply_date,
+          move_scheduled_date: p_application_headers?.move_scheduled_date,
+          loan_target: p_application_headers?.loan_target,
+          land_advance_plan: p_application_headers?.land_advance_plan,
+          loan_type: p_application_headers?.loan_type,
+          pair_loan_last_name: p_application_headers?.pair_loan_last_name,
+          pair_loan_first_name: p_application_headers?.pair_loan_first_name,
+          pair_loan_rel_name: p_application_headers?.pair_loan_rel_name,
+          pair_loan_rel: p_application_headers?.pair_loan_rel,
+          join_guarantor_umu: p_application_headers?.join_guarantor_umu,
+          loan_plus: p_application_headers?.loan_plus,
+        },
+        p_application_banks,
+        p_borrowing_details__1: {
+          desired_borrowing_date: p_borrowing_details__1?.desired_borrowing_date,
+          desired_loan_amount: p_borrowing_details__1?.desired_loan_amount,
+          bonus_repayment_amount: p_borrowing_details__1?.bonus_repayment_amount,
+          bonus_repayment_month: p_borrowing_details__1?.bonus_repayment_month,
+          loan_term_year: p_borrowing_details__1?.loan_term_year,
+          repayment_method: p_borrowing_details__1?.repayment_method,
+        },
+        p_borrowing_details__2: {
+          desired_borrowing_date: p_borrowing_details__2?.desired_borrowing_date,
+          desired_loan_amount: p_borrowing_details__2?.desired_loan_amount,
+          bonus_repayment_amount: p_borrowing_details__2?.bonus_repayment_amount,
+        },
+      }),
     };
     console.log(diffData);
     return diffData;
@@ -39,6 +78,15 @@ export const Item04 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab04Schema,
+    validateOnMount: true,
+    onSubmit: (values) => {
+      if (changeToIncomeTotalizer) {
+        setMainTabStatus(2);
+        setInfoGroupTab(2);
+      } else {
+        handleSave(setUpdateData(values));
+      }
+    },
   });
 
   useEffect(() => {
@@ -49,6 +97,12 @@ export const Item04 = () => {
       };
     });
   }, [formik.values]);
+
+  useEffect(() => {
+    if (changeJoinGuarantor) {
+      formik.setFieldValue('p_join_guarantors', [joinGuarantorInitialValues]);
+    }
+  }, [changeJoinGuarantor]);
 
   useEffect(() => {
     console.log(formik.values);
@@ -69,7 +123,13 @@ export const Item04 = () => {
                 label={'担保提供者'}
                 subLabel={`（${index + 1}人目）`}
                 handleDeleteItem={() => arrayHelpers.remove(index)}
-                handleSave={() => handleSave(setUpdateData(formik.values))}
+                handleSave={() => {
+                  if (changeJoinGuarantor) {
+                    formik.handleSubmit();
+                  } else {
+                    handleSave(setUpdateData(formik.values));
+                  }
+                }}
               >
                 <EditRow
                   label={'担保提供者の氏名（姓）'}
@@ -254,7 +314,17 @@ export const Item04 = () => {
                   label={'郵便番号'}
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].postal_code`} convertHalfWidth />
+                      <AdZipCodeInput
+                        name={`p_join_guarantors[${index}].postal_code`}
+                        callback={(values) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kanji`, values.prefecture_kanji);
+                          formik.setFieldValue(`p_join_guarantors[${index}].city_kanji`, values.city_kanji);
+                          formik.setFieldValue(`p_join_guarantors[${index}].district_kanji`, values.district_kanji);
+                          formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kana`, values.prefecture_kana);
+                          formik.setFieldValue(`p_join_guarantors[${index}].city_kana`, values.city_kana);
+                          formik.setFieldValue(`p_join_guarantors[${index}].district_kana`, values.district_kana);
+                        }}
+                      />
                     ) : (
                       item.postal_code
                     )

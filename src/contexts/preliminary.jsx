@@ -1,6 +1,12 @@
 import { API_500_ERROR } from '@/constant';
-import { apUpdateApplyInfo } from '@/services';
-import { preliminarySnapAtom, preliminarySelect, preliminaryIdAtom } from '@/store';
+import { adUpdatePreliminary } from '@/services';
+import {
+  preliminarySnapAtom,
+  preliminarySelect,
+  preliminaryIdAtom,
+  editMainTabStatusAtom,
+  infoGroupTabAtom,
+} from '@/store';
 import deepDiff from 'deep-diff';
 
 import { createContext, useEffect, useMemo } from 'react';
@@ -14,6 +20,9 @@ export const PreliminaryProvider = ({ children }) => {
   const refreshPreliminary = useRecoilRefresher_UNSTABLE(preliminarySelect);
   const [preliminarySnap, setPreliminarySnap] = useRecoilState(preliminarySnapAtom);
   const preliminaryId = useRecoilValue(preliminaryIdAtom);
+
+  const infoGroup = useRecoilValue(infoGroupTabAtom);
+  const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
   useEffect(() => {
     if (result.state === 'hasError') {
       toast.error(API_500_ERROR);
@@ -36,7 +45,11 @@ export const PreliminaryProvider = ({ children }) => {
 
   const handleSave = async (data) => {
     try {
-      await apUpdateApplyInfo(result.contents?.p_application_headers?.apply_no, { ...data });
+      await adUpdatePreliminary(result.contents?.p_application_headers?.id, {
+        mainTab: mainTabStatus,
+        subTab: infoGroup,
+        ...data,
+      });
       toast.success('申込内容を更新しました。');
       refreshPreliminary();
     } catch (error) {

@@ -77,6 +77,10 @@ export const apUpdateApplyInfo = async (apply_no, data) => {
 };
 
 //
+export const adUpdatePreliminary = async (p_application_header_id, data) => {
+  return await service.put(`/preliminary/${p_application_header_id}`, data);
+};
+
 export const adManagerLogin = async (data) => {
   return await service.post('/manager/token', data);
 };

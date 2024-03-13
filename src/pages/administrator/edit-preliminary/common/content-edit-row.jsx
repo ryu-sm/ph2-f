@@ -63,8 +63,8 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
               </Stack>
             ))}
           {error && (
-            <Stack sx={{ width: 300, minWidth: 300 }}>
-              <Typography variant="edit_content" whiteSpace={'normal'} color={'secondary.main'}>
+            <Stack sx={{ minWidth: 300 }}>
+              <Typography variant="edit_content" whiteSpace={'nowrap'} color={'secondary.main'}>
                 {error}
               </Typography>
             </Stack>

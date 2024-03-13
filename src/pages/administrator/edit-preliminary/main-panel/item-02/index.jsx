@@ -2,7 +2,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 import { formatJapanDate } from '@/utils';
 import { useEffect } from 'react';
-import { AdEditInput, AdSelectRadios, DayPicker } from '@/components/administrator';
+import { AdEditInput, AdSelectRadios, AdZipCodeInput, DayPicker } from '@/components/administrator';
 import { genderOptions, nationalityOptions } from './options';
 import { diffObj } from '@/utils';
 import { PREFECTURES } from '@/constant';
@@ -56,6 +56,7 @@ export const Item02 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab02Schema,
+    validateOnMount: true,
   });
 
   useEffect(() => {
@@ -204,7 +205,17 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.postal_code" />
+              <AdZipCodeInput
+                name="p_applicant_persons__0.postal_code"
+                callback={(values) => {
+                  formik.setFieldValue('p_applicant_persons__0.prefecture_kanji', values.prefecture_kanji);
+                  formik.setFieldValue('p_applicant_persons__0.city_kanji', values.city_kanji);
+                  formik.setFieldValue('p_applicant_persons__0.district_kanji', values.district_kanji);
+                  formik.setFieldValue('p_applicant_persons__0.prefecture_kana', values.prefecture_kana);
+                  formik.setFieldValue('p_applicant_persons__0.city_kana', values.city_kana);
+                  formik.setFieldValue('p_applicant_persons__0.district_kana', values.district_kana);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__0.postal_code
             )

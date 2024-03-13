@@ -1,5 +1,5 @@
 import { yup } from '@/libs';
-import { convertToHalfWidth } from '@/utils';
+import { convertToHalfWidth, convertToFullWidth } from '@/utils';
 import { Stack, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { FormikProvider, useField, useFormik } from 'formik';
@@ -25,9 +25,9 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
               prefecture_kanji: res.data.results[0].address1,
               city_kanji: res.data.results[0].address2,
               district_kanji: res.data.results[0].address3,
-              prefecture_kana: res.data.results[0].kana1,
-              city_kana: res.data.results[0].kana2,
-              district_kana: res.data.results[0].kana3,
+              prefecture_kana: convertToFullWidth(res.data.results[0].kana1),
+              city_kana: convertToFullWidth(res.data.results[0].kana2),
+              district_kana: convertToFullWidth(res.data.results[0].kana3),
             });
           } else {
             setAddrError(true);

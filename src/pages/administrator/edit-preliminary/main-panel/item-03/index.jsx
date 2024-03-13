@@ -10,6 +10,7 @@ import {
   AdSelectCheckbox,
   AdSelectRadios,
   AdYmdInput,
+  AdZipCodeInput,
   MonthPicker,
 } from '@/components/administrator';
 import {
@@ -112,6 +113,7 @@ export const Item03 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab03Schema,
+    validateOnMount: true,
   });
 
   useEffect(() => {
@@ -376,7 +378,17 @@ export const Item03 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_postal_code" convertFullWidth />
+              <AdZipCodeInput
+                name="p_applicant_persons__0.office_postal_code"
+                callback={(values) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_prefecture_kanji', values.prefecture_kanji);
+                  formik.setFieldValue('p_applicant_persons__0.office_city_kanji', values.city_kanji);
+                  formik.setFieldValue('p_applicant_persons__0.office_district_kanji', values.district_kanji);
+                  formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', values.prefecture_kana);
+                  formik.setFieldValue('p_applicant_persons__0.office_city_kana', values.city_kana);
+                  formik.setFieldValue('p_applicant_persons__0.office_district_kana', values.district_kana);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__0.office_postal_code
             )
@@ -710,7 +722,20 @@ export const Item03 = () => {
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_postal_code" convertFullWidth />
+                  <AdZipCodeInput
+                    name="p_applicant_persons__0.transfer_office_postal_code"
+                    callback={(values) => {
+                      formik.setFieldValue(
+                        'p_applicant_persons__0.transfer_office_prefecture_kanji',
+                        values.prefecture_kanji
+                      );
+                      formik.setFieldValue('p_applicant_persons__0.transfer_office_city_kanji', values.city_kanji);
+                      formik.setFieldValue(
+                        'p_applicant_persons__0.transfer_office_district_kanji',
+                        values.district_kanji
+                      );
+                    }}
+                  />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_postal_code
                 )

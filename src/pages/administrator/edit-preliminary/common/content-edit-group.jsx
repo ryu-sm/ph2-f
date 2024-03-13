@@ -11,6 +11,7 @@ export const ContentEditGroup = ({
   isEditable,
   maxHeight,
   hiddenTitle,
+  hiddenLine,
   ...props
 }) => {
   return (
@@ -59,7 +60,11 @@ export const ContentEditGroup = ({
       <Stack
         direction={'row'}
         alignItems={'center'}
-        sx={{ width: 1, borderBottom: (theme) => `1px solid ${theme.palette.gray[100]}`, py: 3 }}
+        sx={{
+          width: 1,
+          borderBottom: (theme) => (!hiddenLine ? `1px solid ${theme.palette.gray[100]}` : 'none'),
+          py: 3,
+        }}
       >
         {!hiddenTitle && (
           <Typography variant="edit_content_title" color={'gray.100'} flex={1} fontWeight={600} textAlign={'center'}>

@@ -9,6 +9,7 @@ import {
   AdEditInput,
   AdNumericInput,
   AdSelectRadios,
+  AdZipCodeInput,
   DayPicker,
   MonthPicker,
 } from '@/components/administrator';
@@ -116,6 +117,7 @@ export const Item05 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab05Schema,
+    validateOnMount: true,
   });
 
   useEffect(() => {
@@ -650,7 +652,14 @@ export const Item05 = () => {
           label={'融資対象物件　郵便番号'}
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.property_postal_code" />
+              <AdZipCodeInput
+                name="p_application_headers.property_postal_code"
+                callback={(values) => {
+                  formik.setFieldValue('p_application_headers.property_prefecture_kanji', values.prefecture_kanji);
+                  formik.setFieldValue('p_application_headers.property_city_kanji', values.city_kanji);
+                  formik.setFieldValue('p_application_headers.property_district_kanji', values.district_kanji);
+                }}
+              />
             ) : (
               formik.values.p_application_headers?.property_postal_code
             )

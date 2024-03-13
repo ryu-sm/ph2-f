@@ -2,18 +2,22 @@ import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 import { formatJapanDate } from '@/utils';
 import { useEffect } from 'react';
-import { AdEditInput, AdSelectRadios, DayPicker } from '@/components/administrator';
+import { AdEditInput, AdSelectRadios, AdZipCodeInput, DayPicker } from '@/components/administrator';
 import { genderOptions, nationalityOptions } from './options';
 import { diffObj } from '@/utils';
 import { PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
-import { tab02Schema } from '../../fullSchema';
+import { tab02Schema, tab02SchemaI } from '../../fullSchema';
 import dayjs from 'dayjs';
+import { infoGroupTabAtom } from '@/store';
+import { useSetRecoilState } from 'recoil';
 
 export const Item02 = () => {
+  const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const {
     preliminaryInfo: { p_application_headers, p_applicant_persons__1 },
+    preliminarySnap: { changeJoinGuarantor, changeToIncomeTotalizer },
     setPreliminarySnap,
     handleSave,
     isEditable,
@@ -58,7 +62,11 @@ export const Item02 = () => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema: tab02Schema,
+    validationSchema: tab02SchemaI,
+    validateOnMount: true,
+    onSubmit: (values) => {
+      setInfoGroupTab(3);
+    },
   });
 
   useEffect(() => {
@@ -73,9 +81,22 @@ export const Item02 = () => {
     });
   }, [formik.values]);
 
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.errors]);
+
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup
+        isEditable={isEditable}
+        handleSave={() => {
+          if (changeToIncomeTotalizer) {
+            formik.handleSubmit();
+          } else {
+            handleSave(setUpdateData(formik.values));
+          }
+        }}
+      >
         <EditRow
           label={'お名前（姓）'}
           isRequired
@@ -207,7 +228,17 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.postal_code" />
+              <AdZipCodeInput
+                name="p_applicant_persons__1.postal_code"
+                callback={(values) => {
+                  formik.setFieldValue('p_applicant_persons__1.prefecture_kanji', values.prefecture_kanji);
+                  formik.setFieldValue('p_applicant_persons__1.city_kanji', values.city_kanji);
+                  formik.setFieldValue('p_applicant_persons__1.district_kanji', values.district_kanji);
+                  formik.setFieldValue('p_applicant_persons__1.prefecture_kana', values.prefecture_kana);
+                  formik.setFieldValue('p_applicant_persons__1.city_kana', values.city_kana);
+                  formik.setFieldValue('p_applicant_persons__1.district_kana', values.district_kana);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__1.postal_code
             )
@@ -317,7 +348,6 @@ export const Item02 = () => {
         />
         <EditRow
           label={'ご連絡先用メールアドレス'}
-          isRequired
           field={
             isEditable ? (
               <AdEditInput name="p_applicant_persons__1.email" convertFullWidth />

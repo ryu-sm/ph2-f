@@ -118,6 +118,7 @@ export const Item01 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab01Schema,
+    validateOnMount: true,
   });
 
   useEffect(() => {
@@ -159,6 +160,9 @@ export const Item01 = () => {
     }
   }, [bankMaster.length, formik.values.p_application_banks.length]);
 
+  useEffect(() => {
+    console.log(changeJoinGuarantor, changeToIncomeTotalizer);
+  }, [changeJoinGuarantor, changeToIncomeTotalizer]);
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup
@@ -258,31 +262,31 @@ export const Item01 = () => {
                 name={'p_application_headers.loan_target'}
                 options={loanTargetOptions}
                 onChange={(value) => {
-                  setPreliminarySnap((pre) => {
-                    return {
-                      ...pre,
-                      p_application_headers: {
-                        ...pre?.p_application_headers,
-                        required_funds_land_amount: '',
-                        required_funds_house_amount: '',
-                        required_funds_accessory_amount: '',
-                        required_funds_additional_amount: '',
-                        required_funds_refinance_loan_balance: '',
-                        required_funds_upgrade_amount: '',
-                        required_funds_loan_plus_amount: '',
-                        required_funds_total_amount: '',
-                        funding_saving_amount: '',
-                        funding_estate_sale_amount: '',
-                        funding_other_saving_amount: '',
-                        funding_relative_donation_amount: '',
-                        funding_loan_amount: '',
-                        funding_pair_loan_amount: '',
-                        funding_other_amount: '',
-                        funding_other_amount_detail: '',
-                        funding_total_amount: '',
-                      },
-                    };
-                  });
+                  // setPreliminarySnap((pre) => {
+                  //   return {
+                  //     ...pre,
+                  //     p_application_headers: {
+                  //       ...pre?.p_application_headers,
+                  //       required_funds_land_amount: '',
+                  //       required_funds_house_amount: '',
+                  //       required_funds_accessory_amount: '',
+                  //       required_funds_additional_amount: '',
+                  //       required_funds_refinance_loan_balance: '',
+                  //       required_funds_upgrade_amount: '',
+                  //       required_funds_loan_plus_amount: '',
+                  //       required_funds_total_amount: '',
+                  //       funding_saving_amount: '',
+                  //       funding_estate_sale_amount: '',
+                  //       funding_other_saving_amount: '',
+                  //       funding_relative_donation_amount: '',
+                  //       funding_loan_amount: '',
+                  //       funding_pair_loan_amount: '',
+                  //       funding_other_amount: '',
+                  //       funding_other_amount_detail: '',
+                  //       funding_total_amount: '',
+                  //     },
+                  //   };
+                  // });
                   if (value !== '6') {
                     formik.setFieldValue('p_application_headers.land_advance_plan', '');
                     formik.setFieldValue('p_borrowing_details__2.desired_borrowing_date', '');
@@ -330,11 +334,11 @@ export const Item01 = () => {
                     (p_application_headers.loan_type !== '3' || p_application_headers.loan_type !== '4')
                   ) {
                     setPreliminarySnap((pre) => {
-                      return { ...pre, changeToIncomeTotalizer: true, apNextStepId: 4 };
+                      return { ...pre, changeToIncomeTotalizer: true };
                     });
                   } else {
                     setPreliminarySnap((pre) => {
-                      return { ...pre, changeToIncomeTotalizer: false, apNextStepId: 2 };
+                      return { ...pre, changeToIncomeTotalizer: false };
                     });
                   }
                   if (value === '3' || value === '4') {
@@ -574,8 +578,7 @@ export const Item01 = () => {
                 name={'p_application_headers.join_guarantor_umu'}
                 options={hasJoinGuarantorOptions}
                 onChange={(value) => {
-                  if (value === '1' && formik.values.p_application_headers.join_guarantor_umu === '') {
-                    console.log('担保人变更');
+                  if (value === '1' && p_application_headers.join_guarantor_umu === '') {
                     setPreliminarySnap((pre) => {
                       return {
                         ...pre,

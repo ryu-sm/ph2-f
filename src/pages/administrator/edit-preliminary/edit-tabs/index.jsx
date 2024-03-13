@@ -13,22 +13,18 @@ import { IncomeTotalizerDetail } from '../income-totalizer-panel';
 
 export const EditTabs = ({}) => {
   const {
-    preliminaryInfo: { p_application_headers },
-    preliminarySnap: { hasIncomeTotalizer },
+    // preliminaryInfo: { p_application_headers },
+    preliminarySnap: { hasIncomeTotalizer, p_application_headers },
     checkUpdate,
     resetPreliminarySnap,
     refreshPreliminary,
   } = usePreliminaryContext();
   const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);
-  const setPreliminaryId = useSetRecoilState(preliminaryIdAtom);
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
-  const byIncomeTotalizer = useMemo(
-    () => p_application_headers.loan_type === '3' || p_application_headers.loan_type === '4',
-    [p_application_headers]
-  );
+  const setPreliminaryId = useSetRecoilState(preliminaryIdAtom);
 
   const byPairLoan = useMemo(
-    () => p_application_headers.loan_type === '2' && !!p_application_headers.pair_loan_id,
+    () => p_application_headers?.loan_type === '2' && !!p_application_headers?.pair_loan_id,
     [p_application_headers]
   );
 

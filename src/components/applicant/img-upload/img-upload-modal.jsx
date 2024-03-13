@@ -19,7 +19,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, maxFiles, setImages }) => 
           return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onloadend = () => {
-              resolve({ src: reader.result, name: file.name.includes('pdf') ? file.name : uuid4() });
+              resolve({ src: reader.result, name: file.name.includes('pdf') ? file.name : file.name, id: '' });
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
@@ -57,7 +57,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, maxFiles, setImages }) => 
     maxFiles: 1,
   });
   const handleTakePhoto = (data) => {
-    setImages([{ src: data, name: uuid4() }]);
+    setImages([{ src: data, name: `${uuid4()}.jpg`, id: '' }]);
     setShowCamera(false);
     onClose();
   };

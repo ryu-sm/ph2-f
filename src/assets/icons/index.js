@@ -124,3 +124,6 @@ export { AdExportDocsIcon } from './ad-export-docs';
 
 export { AdAddIcon } from './ad-add';
 export { AdSubtractIcon } from './ad-subtract';
+
+export { AdPulldownCheckIcon } from './ad-pulldown-check';
+export { AdPulldownCheckedIcon } from './ad-pulldown-checked';

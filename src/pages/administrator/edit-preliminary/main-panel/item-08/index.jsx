@@ -40,6 +40,7 @@ export const Item08 = () => {
 
   const formik = useFormik({
     initialValues,
+    validateOnMount: true,
   });
 
   useEffect(() => {

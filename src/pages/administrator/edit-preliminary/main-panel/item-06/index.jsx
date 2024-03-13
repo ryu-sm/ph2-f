@@ -1,18 +1,10 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 
-import { Fragment, useEffect, useMemo } from 'react';
-import {
-  AdEditInput,
-  AdEditOutLineInput,
-  AdNumericInput,
-  AdSelectCheckbox,
-  AdSelectRadios,
-  DayPicker,
-  MonthPicker,
-} from '@/components/administrator';
+import { Fragment, useEffect } from 'react';
+import { AdEditInput, AdNumericInput, AdSelectCheckbox, AdSelectRadios, MonthPicker } from '@/components/administrator';
 import {
   borrowerOptions,
   CurrBorrowingStatusOptions,
@@ -31,15 +23,13 @@ import {
   includeInExaminationOptions,
 } from './options';
 
-import dayjs from 'dayjs';
-import { useApUpdateApplyInfo } from '@/hooks';
 import { diffObj, formatJapanDate, formatMoney } from '@/utils';
-import { toast } from 'react-toastify';
-import { API_500_ERROR, PREFECTURES } from '@/constant';
+
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { AdPrimaryButton } from '@/components/administrator/button';
 import { Icons } from '@/assets';
+import { tab06Schema } from '../../fullSchema';
 
 export const Item06 = () => {
   const {
@@ -79,7 +69,8 @@ export const Item06 = () => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
+    validationSchema: tab06Schema,
+    validateOnMount: true,
   });
 
   useEffect(() => {

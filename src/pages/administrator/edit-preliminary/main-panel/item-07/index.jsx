@@ -56,6 +56,7 @@ export const Item07 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab07Schema,
+    validateOnMount: true,
   });
 
   useEffect(() => {
@@ -114,14 +115,11 @@ export const Item07 = () => {
       formik.values.p_application_headers.funding_estate_sale_amount ||
       formik.values.p_application_headers.funding_other_saving_amount
     ) {
-      formik.setFieldValue(
-        'p_application_headers.funding_self_amount',
-        `${
-          Number(formik.values.p_application_headers.funding_saving_amount) +
-          Number(formik.values.p_application_headers.funding_estate_sale_amount) +
-          Number(formik.values.p_application_headers.funding_other_saving_amount)
-        }`
-      );
+      const sum =
+        Number(formik.values.p_application_headers.funding_saving_amount) +
+        Number(formik.values.p_application_headers.funding_estate_sale_amount) +
+        Number(formik.values.p_application_headers.funding_other_saving_amount);
+      formik.setFieldValue('p_application_headers.funding_self_amount', `${sum ? sum : ''}`);
     } else {
       formik.setFieldValue('p_application_headers.funding_self_amount', '');
     }
