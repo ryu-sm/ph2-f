@@ -177,4 +177,13 @@ export const routeNames = {
     name: 'adMemoPage',
     path: '/manager/memo',
   },
+
+  adManagerFilesViewPage: {
+    name: 'adManagerFilesViewPage',
+    path: '/manager/files-view',
+  },
+  adSalesPersonFilesViewPage: {
+    name: 'adSalesPersonFilesViewPage',
+    path: '/sales-person/files-view',
+  },
 };

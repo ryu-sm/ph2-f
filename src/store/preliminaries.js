@@ -134,6 +134,7 @@ export const preliminaryInitialValues = {
   },
 
   p_application_headers: {
+    id: '',
     apply_no: '',
     created_at: '',
     apply_date: '',
@@ -255,6 +256,7 @@ export const preliminaryInitialValues = {
   },
 
   p_borrowing_details__1: {
+    id: '',
     desired_borrowing_date: '',
     desired_loan_amount: '',
     bonus_repayment_amount: '',
@@ -264,6 +266,7 @@ export const preliminaryInitialValues = {
   },
 
   p_borrowing_details__2: {
+    id: '',
     desired_borrowing_date: '',
     desired_loan_amount: '',
     bonus_repayment_amount: '',
@@ -272,6 +275,7 @@ export const preliminaryInitialValues = {
   p_application_banks: [],
 
   p_applicant_persons__0: {
+    id: '',
     rel_to_applicant_a_name: '',
     last_name_kanji: '',
     first_name_kanji: '',
@@ -345,6 +349,7 @@ export const preliminaryInitialValues = {
   },
 
   p_applicant_persons__1: {
+    id: '',
     rel_to_applicant_a_name: '',
     last_name_kanji: '',
     first_name_kanji: '',
@@ -422,6 +427,8 @@ export const preliminaryInitialValues = {
   p_residents: [],
 
   p_borrowings: [],
+
+  p_activities: [],
 };
 
 export const preliminarySelect = selector({
@@ -529,6 +536,7 @@ export const preliminarySelect = selector({
         ? res.data.p_join_guarantors
         : preliminaryInitialValues.p_join_guarantors,
       p_residents: tempArray,
+      p_activities: res.data?.p_activities ? res.data?.p_activities : [],
       p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : preliminaryInitialValues.p_borrowings,
       isMCJ: res.data.p_application_banks?.length > 1,
       hasIncomeTotalizer: ['3', '4'].includes(res.data.p_application_headers.loan_type),

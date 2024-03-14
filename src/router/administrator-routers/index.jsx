@@ -1,4 +1,5 @@
 import {
+  AdFilesViewPage,
   AdMemo,
   AdOrSpLoginPage,
   AdOrSpResetPasswordFinishedPage,
@@ -61,5 +62,13 @@ export const administratorRoutes = [
   {
     ...routeNames.adMemoPage,
     element: <AdMemo />,
+  },
+  {
+    ...routeNames.adManagerFilesViewPage,
+    element: <AdFilesViewPage />,
+  },
+  {
+    ...routeNames.adSalesPersonFilesViewPage,
+    element: <AdFilesViewPage />,
   },
 ];

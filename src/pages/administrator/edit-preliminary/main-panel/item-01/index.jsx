@@ -45,6 +45,7 @@ export const Item01 = () => {
       p_borrowing_details__1,
       p_borrowing_details__2,
       p_borrowings,
+      p_activities,
     },
     preliminarySnap: { changeJoinGuarantor, changeToIncomeTotalizer },
     setPreliminarySnap,
@@ -103,6 +104,7 @@ export const Item01 = () => {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
         land_advance_plan: values.p_application_headers.land_advance_plan,
+        loan_type: values.p_application_headers.loan_type,
       },
       p_application_banks: values.p_application_banks,
       p_borrowing_details__1: {
@@ -212,6 +214,12 @@ export const Item01 = () => {
         />
         <EditRow
           label={'お借入の目的'}
+          upConfig={{
+            key: `p_application_headers.loan_target.${p_application_headers?.id}`,
+            formatNumber: false,
+            options: loanTargetOptions_,
+            unit: '',
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -254,6 +262,12 @@ export const Item01 = () => {
         />
         <EditRow
           label={'資金の使いみち'}
+          upConfig={{
+            key: `p_application_headers.loan_target.${p_application_headers?.id}`,
+            formatNumber: false,
+            options: loanTargetOptions,
+            unit: '',
+          }}
           isLogicRequired
           hasPleft={isEditable}
           field={
@@ -304,6 +318,12 @@ export const Item01 = () => {
         {formik.values.p_application_headers.loan_target === '6' && (
           <EditRow
             label={'「土地先行プラン」を希望ですか？'}
+            upConfig={{
+              key: `p_application_headers.land_advance_plan.${p_application_headers?.id}`,
+              formatNumber: false,
+              options: landAadvancePlanOptions,
+              unit: '',
+            }}
             isLogicRequired
             hasPleft={isEditable}
             field={
@@ -380,6 +400,12 @@ export const Item01 = () => {
           <Stack>
             <EditRow
               label={'ペアローン　お名前（姓）'}
+              upConfig={{
+                key: `p_application_headers.pair_loan_last_name.${p_application_headers?.id}`,
+                formatNumber: false,
+                options: null,
+                unit: '',
+              }}
               isLogicRequired
               field={
                 isEditable ? (
@@ -392,6 +418,12 @@ export const Item01 = () => {
             />
             <EditRow
               label={'ペアローン　お名前（名）'}
+              upConfig={{
+                key: `p_application_headers.pair_loan_first_name.${p_application_headers?.id}`,
+                formatNumber: false,
+                options: null,
+                unit: '',
+              }}
               isLogicRequired
               field={
                 isEditable ? (

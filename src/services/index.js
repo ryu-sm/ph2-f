@@ -179,3 +179,11 @@ export const adGetPreliminary = async (p_application_header_id) => {
 export const apGetPublicHolidays = async (year) => {
   return await service.get(`https://date.nager.at/api/v2/publicholidays/${year}/jp`);
 };
+
+export const adGetUpdateHistory = async (p_application_header_id, key) => {
+  return await service.get(`/manager/edit_histories/${p_application_header_id}?update_history_key=${key}`);
+};
+
+export const adGetFilesView = async (p_application_header_id, category) => {
+  return await service.get(`/files-view/${p_application_header_id}?category=${category}`);
+};

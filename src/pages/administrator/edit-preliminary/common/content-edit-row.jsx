@@ -1,15 +1,33 @@
 import { useBoolean } from '@/hooks';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { Box, Stack, Typography } from '@mui/material';
 
 import { useMemo } from 'react';
+import { UpdateHistoryModal } from './update-history';
 // import { UpdateHistoryModal } from '../update-history';
 
-export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPleft, field, subField, error }) => {
+export const EditRow = ({
+  label,
+  isAddendum,
+  isRequired,
+  isLogicRequired,
+  hasPleft,
+  field,
+  subField,
+  upConfig,
+  error,
+}) => {
   const noticeIcon = useMemo(() => {
     return isRequired ? '○' : isLogicRequired ? '△' : '';
   }, [isRequired, isLogicRequired]);
 
-  const isUpdated = false;
+  const {
+    preliminaryInfo: { p_activities, p_application_headers },
+  } = usePreliminaryContext();
+
+  const isUpdated = useMemo(() => {
+    return p_activities.includes(upConfig?.key);
+  }, [p_activities, upConfig]);
 
   const updatedModal = useBoolean(false);
 
@@ -72,7 +90,14 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
         </Stack>
       </Stack>
 
-      {/* <UpdateHistoryModal open={open} onClose={handleCloseModal} /> */}
+      {isUpdated && (
+        <UpdateHistoryModal
+          open={updatedModal.value}
+          onClose={updatedModal.onFalse}
+          title={label}
+          upConfig={{ ...upConfig, p_application_header_id: p_application_headers?.id }}
+        />
+      )}
     </Stack>
   );
 };

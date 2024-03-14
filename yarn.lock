@@ -739,6 +739,32 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@react-pdf-viewer/core@3.12.0", "@react-pdf-viewer/core@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/core/-/core-3.12.0.tgz#40dc9bee5bce5281cd9ea62d958e4169b500fa14"
+  integrity sha512-8MsdlQJ4jaw3GT+zpCHS33nwnvzpY0ED6DEahZg9WngG++A5RMhk8LSlxdHelwaFFHFiXBjmOaj2Kpxh50VQRg==
+
+"@react-pdf-viewer/page-navigation@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/page-navigation/-/page-navigation-3.12.0.tgz#399f1cc06e5dd8b40d5e44e4c57bcb6c84bced62"
+  integrity sha512-tVEJ48Dd5kajV1nKkrPWijglJRNBiKBTyYDKVexhiRdTHUP1f6QQXiSyDgCUb0IGSZeJzOJb1h7ApKHe8OTtuw==
+  dependencies:
+    "@react-pdf-viewer/core" "3.12.0"
+
+"@react-pdf-viewer/scroll-mode@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/scroll-mode/-/scroll-mode-3.12.0.tgz#a875b9b58883b229d1757943c1420eb65aceaefd"
+  integrity sha512-okII7Xqhl6cMvl1izdEvlXNJ+vJVq/qdg53hJIDYVgBCWskLk/cpjUg/ZonBxseG9lIDP3w2VO1McT8Gn11OAg==
+  dependencies:
+    "@react-pdf-viewer/core" "3.12.0"
+
+"@react-pdf-viewer/zoom@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/zoom/-/zoom-3.12.0.tgz#4eaa0d28d5f92b10124c4374b684cbaefc51c1c2"
+  integrity sha512-V0GUTyPM77+LzhoKX+T3XI10/HfGdqRTbgeP7ID60FCzcwu6kXWqJn5tzabjDKLTlFv8mJmn0aa/ppkIU97nfA==
+  dependencies:
+    "@react-pdf-viewer/core" "3.12.0"
+
 "@remix-run/router@1.15.1":
   version "1.15.1"
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.15.1.tgz#221fd31a65186b9bc027b74573485fb3226dff7f"

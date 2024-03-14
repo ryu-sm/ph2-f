@@ -125,7 +125,7 @@ export const MainDetail = () => {
       {infoGroupTab === 6 && <Item06 />}
       {infoGroupTab === 7 && <Item07 />}
       {infoGroupTab === 8 && <Item08 />}
-      {/* {infoGroupTab === 9 && <Item09 />} */}
+      {infoGroupTab === 9 && <Item09 />}
 
       <Modal
         open={changeTab.value}

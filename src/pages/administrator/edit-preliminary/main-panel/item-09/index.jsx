@@ -15,7 +15,7 @@ import { UploadItem } from '../../common/upload-item';
 
 export const Item09 = () => {
   const {
-    preliminaryInfo: { p_uploaded_files, p_applicant_persons__0 },
+    preliminaryInfo: { p_uploaded_files, p_applicant_persons__0, p_borrowings },
     setPreliminarySnap,
     handleSave,
     isEditable,
@@ -53,6 +53,7 @@ export const Item09 = () => {
     p_applicant_persons__0: {
       identity_verification_type: p_applicant_persons__0.identity_verification_type,
     },
+    p_borrowings: p_borrowings,
   };
 
   const setUpdateData = (values) => {
@@ -60,6 +61,7 @@ export const Item09 = () => {
       p_uploaded_files: {
         ...values.p_uploaded_files,
       },
+      p_borrowings: values.p_borrowings,
     };
     return diffData;
   };
@@ -81,6 +83,7 @@ export const Item09 = () => {
           ...pre.p_uploaded_files,
           ...formik.values.p_uploaded_files,
         },
+        p_borrowings: formik.values.p_borrowings,
       };
     });
   }, [formik.values]);
@@ -209,7 +212,16 @@ export const Item09 = () => {
               <UploadItem name={'p_uploaded_files.p_applicant_persons__0__H__a'} subTitle="在留カード 〈表面〉" />
               <UploadItem name={'p_uploaded_files.p_applicant_persons__0__H__b'} subTitle="在留カード 〈裏面〉" />
             </ContentEditFileGroup>
-            <ContentEditFileGroup category={'I'}></ContentEditFileGroup>
+            <ContentEditFileGroup category={'I'}>
+              {formik.values.p_borrowings.map((item, index) => (
+                <UploadItem
+                  key={item.id}
+                  name={`p_borrowings[${index}].p_borrowings__I`}
+                  isMultiple={true}
+                  subTitle={`${index + 1}件目の借入`}
+                />
+              ))}
+            </ContentEditFileGroup>
             <ContentEditFileGroup category={'J'}>
               <UploadItem name="p_uploaded_files.J" />
             </ContentEditFileGroup>
