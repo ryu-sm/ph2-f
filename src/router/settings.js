@@ -100,7 +100,7 @@ export const routeNames = {
   },
   spLoginPage: {
     name: 'spLoginPage',
-    path: '/agent/login',
+    path: '/sale-person/login',
   },
   adResetPwdPage: {
     name: 'adResetPwdPage',
@@ -108,7 +108,7 @@ export const routeNames = {
   },
   spResetPwdPage: {
     name: 'spResetPwdPage',
-    path: '/agent/reset-password',
+    path: '/sale-person/reset-password',
   },
   adSendMailPage: {
     name: 'adSendMailPage',
@@ -116,7 +116,7 @@ export const routeNames = {
   },
   spSendMailPage: {
     name: 'spSendMailPage',
-    path: '/agent/send-mail',
+    path: '/sale-person/send-mail',
   },
   adEmailExpiredPage: {
     name: 'adEmailExpiredPage',
@@ -124,7 +124,7 @@ export const routeNames = {
   },
   spEmailExpiredPage: {
     name: 'spEmailExpiredPage',
-    path: '/agent/email-expired',
+    path: '/sale-person/email-expired',
   },
   adSetNewPwdPage: {
     name: 'adSetNewPwd',
@@ -132,7 +132,7 @@ export const routeNames = {
   },
   spSetNewPwdPage: {
     name: 'spSetNewPwd',
-    path: '/agent/set-new-password',
+    path: '/sale-person/set-new-password',
   },
   adFininshResetPwdPage: {
     name: 'adFinishResetPwd',
@@ -140,7 +140,7 @@ export const routeNames = {
   },
   spFinishResetPwdPage: {
     name: 'spFinishResetPwd',
-    path: '/agent/reset-password-finished',
+    path: '/sale-person/reset-password-finished',
   },
   adCasesReviewPage: {
     name: 'adCasesReview',
@@ -148,7 +148,7 @@ export const routeNames = {
   },
   spCasesReviewPage: {
     name: 'spCasesReview',
-    path: '/agent/cases-review',
+    path: '/sale-person/cases-review',
   },
   adCaseEditPage: {
     name: 'adCaseEdit',
@@ -156,6 +156,22 @@ export const routeNames = {
   },
   spCaseEditPage: {
     name: 'spCaseEdit',
-    path: 'agent/case-edit/:caseId',
+    path: '/sale-person/case-edit/:caseId',
+  },
+  adPreviewImage: {
+    name: 'adPreviewImage',
+    path: '/manager/preview-image',
+  },
+  spPreviewImage: {
+    name: 'spPreviewImage',
+    path: '/sale-person/preview-image',
+  },
+  adDocsUpload: {
+    name: 'adDocsUpload',
+    path: '/manager/docs-upload',
+  },
+  spDocsUpload: {
+    name: 'spDocsUpload',
+    path: '/sale-person/docs-upload',
   },
 };

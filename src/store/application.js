@@ -275,6 +275,8 @@ const applicationInitialValues = {
   p_application_headers__funding_other_amount: '',
   p_application_headers__funding_other_amount_detail: '',
   p_application_headers__funding_total_amount: '',
+
+  docs_list: [],
 };
 
 const localStorageEffect =

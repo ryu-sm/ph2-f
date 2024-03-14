@@ -1,9 +1,25 @@
 import { AdExportDocsIcon } from '@/assets/icons/ad-export-docs';
+import { useIsManager } from '@/hooks/use-is-manager';
+import { routeNames } from '@/router/settings';
+import { applicationAtom } from '@/store';
 import { useTheme } from '@emotion/react';
 import { Popover, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-export const DocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
+import { useLocation } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+export const DocsDisplayPopover = ({ open, onClose, anchorEl, isIncomeTotalizer }) => {
   const theme = useTheme();
+  const pathName = useLocation().pathname;
+  const isManager = useIsManager(pathName);
+
+  const handleClick = (item) => {
+    const path = `${isManager ? routeNames.adPreviewImage.path : routeNames.spPreviewImage.path}?category=${
+      isIncomeTotalizer ? 1 : 0
+    }&id=${item.label}`;
+    window.open(path);
+  };
+  const { docs_list: items } = useRecoilValue(applicationAtom);
+
   return (
     <Popover
       open={open}
@@ -32,7 +48,7 @@ export const DocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
         {items.map((item, index) => {
           return (
             <Stack
-              key={item.code}
+              key={item.label}
               direction={'row'}
               alignItems={'center'}
               justifyContent={'space-between'}
@@ -41,12 +57,15 @@ export const DocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
                 p: '10px',
                 borderBottom: index !== items.length - 1 ? `1px solid ${theme.palette.gray[80]}` : 'none',
               }}
+              onClick={() => handleClick(item)}
             >
               <Stack direction={'row'} alignItems={'center'} spacing={2}>
                 <Typography variant="edit_header_tools" color={'primary.main'}>
-                  {item.code}
+                  {item.label}
                 </Typography>
-                <Typography variant="edit_header_tools">{item.label}</Typography>
+                <Typography variant="edit_header_tools" whiteSpace={'nowrap'}>
+                  {item.title}
+                </Typography>
               </Stack>
               <AdExportDocsIcon />
             </Stack>
@@ -62,4 +81,5 @@ DocsDisplayPopover.propTypes = {
   onClose: PropTypes.func,
   anchorEl: PropTypes.instanceOf(Element),
   items: PropTypes.array,
+  isIncomeTotalizer: PropTypes.bool,
 };

@@ -80,7 +80,6 @@ export const DocsDownload = () => {
     name: `p_applicant_persons__0__I__0${index + 1}`,
     subTitle: `${index + 1}件目の借入`,
   }));
-  console.log(formik.values);
   return (
     <FormikProvider value={formik}>
       <Stack
@@ -105,14 +104,14 @@ export const DocsDownload = () => {
                     <UploadItem
                       name={
                         selectValue === 'driver_license'
-                          ? 'p_applicant_persons__1__A__01__a'
+                          ? 'p_applicant_persons__0__A__01__a'
                           : 'p_applicant_persons__0__A__03__a'
                       }
                     />
                     <UploadItem
                       name={
                         selectValue === 'driver_license'
-                          ? 'p_applicant_persons__1__A__01__b'
+                          ? 'p_applicant_persons__0__A__01__b'
                           : 'p_applicant_persons__0__A__03__b'
                       }
                     />

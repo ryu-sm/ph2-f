@@ -321,4 +321,11 @@ export const typography = {
     letterSpacing: 0.15,
     color: '#333333',
   },
+  doc_preview_title: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 1.5,
+    color: '#333333',
+  },
 };

@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardMedia, Divider } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
-export const ImgPreview = ({ open, file }) => {
+export const ImgPreview = ({ open, file, handleMouseOn, handleMouseLeave }) => {
   const isPdf = useMemo(() => {
     return file?.name?.split('.')[1] === 'pdf';
   }, [file]);
@@ -10,6 +10,10 @@ export const ImgPreview = ({ open, file }) => {
     <>
       {open && !isPdf && (
         <Card
+          onMouseOver={() => {
+            handleMouseOn(true);
+          }}
+          onMouseLeave={handleMouseLeave}
           sx={{
             zIndex: 9999,
             position: 'absolute',
@@ -64,4 +68,6 @@ export const ImgPreview = ({ open, file }) => {
 ImgPreview.propTypes = {
   open: PropTypes.bool,
   file: PropTypes.object,
+  handleMouseOn: PropTypes.func,
+  handleMouseLeave: PropTypes.func,
 };

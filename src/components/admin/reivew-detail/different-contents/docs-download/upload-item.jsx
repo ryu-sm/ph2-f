@@ -59,13 +59,16 @@ export const UploadItem = ({ isMultiple, name, subTitle, hasChangeLog }) => {
   const { value: imgPreviewOpen, onTrue: onImgPreviewOpen, onFalse: onImgPreviewClose } = useBoolean(false);
 
   const [hoverImg, setHoverImg] = useState({});
+  const [mouseEnterOnImg, setMouseEnterOnImg] = useState(false);
   const handleMouseEnter = (img) => {
     onImgPreviewOpen();
     setHoverImg(img);
   };
   const handleMouseLeave = () => {
-    onImgPreviewClose();
-    setHoverImg({});
+    if (!mouseEnterOnImg) {
+      onImgPreviewClose();
+      setHoverImg({});
+    }
   };
   const isDisabled = false;
 
@@ -101,7 +104,12 @@ export const UploadItem = ({ isMultiple, name, subTitle, hasChangeLog }) => {
                 >
                   {file.name}
                 </Typography>
-                <ImgPreview open={imgPreviewOpen} file={hoverImg} />
+                <ImgPreview
+                  open={imgPreviewOpen}
+                  file={hoverImg}
+                  handleMouseOn={setMouseEnterOnImg}
+                  handleMouseLeave={onImgPreviewClose}
+                />
               </Stack>
             ))}
           </Stack>
