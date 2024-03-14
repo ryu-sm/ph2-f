@@ -175,7 +175,7 @@ export const Item06 = () => {
                     field={
                       isEditable ? (
                         <AdSelectRadios
-                          name={`p_borrowings[${index}].borrower`}
+                          name={`p_borrowings[${index}].type`}
                           options={typeOptions}
                           onChange={() => {
                             if (formik.values.p_borrowings[index].type !== '')
