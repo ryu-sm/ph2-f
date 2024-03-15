@@ -50,6 +50,16 @@ export const AdFilesViewPage = () => {
     const temp = [];
     if (filesOrign) {
       if (category === 'I') {
+        filesOrign.forEach((item, index) => {
+          item?.p_borrowings__I?.map((f) => {
+            temp.push({
+              ...f,
+              title: FILES_CATEGORY[category],
+              subTitle: `${index + 1}件目の借入`,
+              sortKey: item.key,
+            });
+          });
+        });
       } else {
         const fileList = Object.keys(filesOrign).map((key) => ({
           key: key,
