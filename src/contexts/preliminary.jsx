@@ -1,5 +1,10 @@
 import { API_500_ERROR } from '@/constant';
-import { adUpdatePreliminary } from '@/services';
+import {
+  adUpdateApproverConfirmation,
+  adUpdatePreExaminationStatus,
+  adUpdatePreliminary,
+  adUpdateProvisionalResult,
+} from '@/services';
 import {
   preliminarySnapAtom,
   preliminarySelect,
@@ -70,6 +75,44 @@ export const PreliminaryProvider = ({ children }) => {
     }
   }, [result.contents]);
 
+  const handleChangeProvisionalResult = async (s_bank_id, provisional_result) => {
+    try {
+      await adUpdateProvisionalResult({
+        p_application_header_id: result.contents?.p_application_headers?.id,
+        provisional_result: provisional_result,
+        s_bank_id: s_bank_id,
+        R: preliminarySnap?.p_uploaded_files?.R,
+      });
+      refreshPreliminary();
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const handleChangeApproverConfirmation = async (approver_confirmation) => {
+    try {
+      await adUpdateApproverConfirmation({
+        p_application_header_id: result.contents?.p_application_headers?.id,
+        approver_confirmation: approver_confirmation,
+      });
+      refreshPreliminary();
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const handleChangePreExaminationStatus = async (pre_examination_status) => {
+    try {
+      await adUpdatePreExaminationStatus({
+        p_application_header_id: result.contents?.p_application_headers?.id,
+        pre_examination_status: pre_examination_status,
+      });
+      refreshPreliminary();
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
   return (
     <PreliminaryContext.Provider
       value={{
@@ -82,6 +125,9 @@ export const PreliminaryProvider = ({ children }) => {
         resetPreliminarySnap: resetPreliminarySnap,
         checkUpdate: checkUpdate,
         handleSave: handleSave,
+        handleChangeProvisionalResult: handleChangeProvisionalResult,
+        handleChangeApproverConfirmation: handleChangeApproverConfirmation,
+        handleChangePreExaminationStatus: handleChangePreExaminationStatus,
       }}
     >
       {children}

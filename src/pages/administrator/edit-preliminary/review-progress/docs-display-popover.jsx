@@ -61,7 +61,7 @@ export const AdDocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
       }
     });
     return temp;
-  }, [p_uploaded_files, p_borrowings, open, isManager]);
+  }, [p_uploaded_files, p_borrowings, isManager]);
 
   const handleClick = (item) => {
     const path = `${

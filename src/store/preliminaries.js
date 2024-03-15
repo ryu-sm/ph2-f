@@ -131,6 +131,7 @@ export const preliminaryInitialValues = {
     J: [],
     // STEP13
     S: [],
+    R: [],
   },
 
   p_application_headers: {
@@ -429,6 +430,14 @@ export const preliminaryInitialValues = {
   p_borrowings: [],
 
   p_activities: [],
+
+  p_result: {
+    pre_examination_status: '',
+    provisional_status: '',
+    provisional_result: '',
+    provisional_after_result: '',
+    approver_confirmation: '',
+  },
 };
 
 export const preliminarySelect = selector({
@@ -538,6 +547,10 @@ export const preliminarySelect = selector({
       p_residents: tempArray,
       p_activities: res.data?.p_activities ? res.data?.p_activities : [],
       p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : preliminaryInitialValues.p_borrowings,
+      p_result: {
+        ...preliminaryInitialValues.p_result,
+        ...res.data.p_result,
+      },
       isMCJ: res.data.p_application_banks?.length > 1,
       hasIncomeTotalizer: ['3', '4'].includes(res.data.p_application_headers.loan_type),
       hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',

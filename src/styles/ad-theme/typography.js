@@ -276,4 +276,18 @@ export const typography = {
     fontSize: '14px',
     color: '#E54E75',
   },
+  pdf_title: {
+    fontFamily: 'Hiragino Sans',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: 12,
+    lineHeight: '18px',
+  },
+  pdf_description: {
+    fontFamily: 'Hiragino Sans',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    fontSize: 14,
+    lineHeight: '21px',
+  },
 };

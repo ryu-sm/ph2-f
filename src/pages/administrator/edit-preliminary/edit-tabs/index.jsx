@@ -10,6 +10,7 @@ import { useBoolean } from '@/hooks';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { PairDetail } from '../pair-panel';
 import { IncomeTotalizerDetail } from '../income-totalizer-panel';
+import { ExaminationResultButtons } from '../common/examination-result-buttons';
 
 export const EditTabs = ({}) => {
   const {
@@ -20,7 +21,7 @@ export const EditTabs = ({}) => {
     refreshPreliminary,
   } = usePreliminaryContext();
   const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);
-  const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
   const setPreliminaryId = useSetRecoilState(preliminaryIdAtom);
 
   const byPairLoan = useMemo(
@@ -143,6 +144,8 @@ export const EditTabs = ({}) => {
       {mainTabStatus === 1 && <MainDetail />}
       {mainTabStatus === 2 && <IncomeTotalizerDetail />}
       {mainTabStatus === 3 && <PairDetail />}
+
+      {(mainTabStatus === 1 || mainTabStatus === 3) && infoGroupTab === 10 && <ExaminationResultButtons />}
 
       <Modal
         open={changeTab.value}

@@ -15,6 +15,7 @@ import { Item08 } from './item-08';
 import { Icons } from '@/assets';
 import { useBoolean } from '@/hooks';
 import { Item09 } from './item-09';
+import { Item10 } from './item-10';
 
 export const MainDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
@@ -126,6 +127,7 @@ export const MainDetail = () => {
       {infoGroupTab === 7 && <Item07 />}
       {infoGroupTab === 8 && <Item08 />}
       {infoGroupTab === 9 && <Item09 />}
+      {infoGroupTab === 10 && <Item10 />}
 
       <Modal
         open={changeTab.value}

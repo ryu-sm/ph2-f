@@ -127,3 +127,7 @@ export { AdSubtractIcon } from './ad-subtract';
 
 export { AdPulldownCheckIcon } from './ad-pulldown-check';
 export { AdPulldownCheckedIcon } from './ad-pulldown-checked';
+export { AdPlus } from './ad-plus';
+export { AdMinus } from './ad-minus';
+export { AdPDFDownload } from './ad-download';
+export { AdTrash } from './ad-trash';

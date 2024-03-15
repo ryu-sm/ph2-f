@@ -187,3 +187,15 @@ export const adGetUpdateHistory = async (p_application_header_id, key) => {
 export const adGetFilesView = async (p_application_header_id, category) => {
   return await service.get(`/files-view/${p_application_header_id}?category=${category}`);
 };
+
+export const adUpdateProvisionalResult = async (data) => {
+  return await service.put(`/manager/provisional_result`, data);
+};
+
+export const adUpdateApproverConfirmation = async (data) => {
+  return await service.put(`/manager/approver_confirmation`, data);
+};
+
+export const adUpdatePreExaminationStatus = async (data) => {
+  return await service.put(`/manager/pre_examination_status`, data);
+};

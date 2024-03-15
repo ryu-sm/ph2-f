@@ -34,8 +34,10 @@ export const AdReviewProgress = () => {
   const checkBgColor = (value) => {
     if (value < activeValue) {
       return 'gray.80';
-    } else if (value === activeValue) {
+    } else if (value === activeValue && activeValue !== 4) {
       return 'primary.main';
+    } else if (value === activeValue && activeValue === 4) {
+      return 'secondary.main';
     } else {
       return 'white';
     }
@@ -64,6 +66,9 @@ export const AdReviewProgress = () => {
   };
 
   const checkIsDisabled = (value, index) => {
+    if (value === 5 || 6) {
+      return true;
+    }
     if (value < activeValue) {
       return true;
     } else if (index === activeValue + 1) {
@@ -110,7 +115,7 @@ export const AdReviewProgress = () => {
             <Fragment key={item.value}>
               <Button
                 sx={{
-                  backgroundColor: checkBgColor(item.value),
+                  backgroundColor: checkBgColor(item.value, index),
                   color: checkTextColor(item.value, index),
                   border: checkBorder(item.value, index),
                   boxShadow: 'none',
