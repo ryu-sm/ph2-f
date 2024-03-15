@@ -7,13 +7,14 @@ import { authAtom } from '@/store';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 export const MainHeader = ({ isAdmin }) => {
   const theme = useTheme();
   const authInfo = useRecoilValue(authAtom);
   const pathName = useLocation().pathname;
   const isManager = useIsManager(pathName);
+  const navigate = useNavigate();
 
   const [activeButton, setActiveButton] = useState('preReview');
   const handleButtonClick = (buttonName) => {
@@ -29,8 +30,6 @@ export const MainHeader = ({ isAdmin }) => {
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
-
-  const itemLabels = ['監視ログダウンロード', 'パスワード変更', '管理画面をエクスポート', 'ログアウト'];
 
   const casesStatusList = [
     {
@@ -71,7 +70,15 @@ export const MainHeader = ({ isAdmin }) => {
             申込一覧
           </Typography>
           {isAdmin && (
-            <Stack direction={'row'} alignItems={'center'} sx={{ cursor: 'pointer' }} spacing={1}>
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              sx={{ cursor: 'pointer' }}
+              spacing={1}
+              onClick={() => {
+                navigate(`${isManager ? '/manager' : '/sale-person'}/docs-upload`);
+              }}
+            >
               <AdFileDownload sx={{ width: 14, height: 16 }} />
               <Typography variant="main_page_title" color="primary.main">
                 書類アップロード
@@ -122,7 +129,7 @@ export const MainHeader = ({ isAdmin }) => {
         </Stack>
       </Stack>
 
-      <SettingPopover open={open} anchorEl={anchorEl} onClose={handleClosePopover} itemLabels={itemLabels} />
+      <SettingPopover open={open} anchorEl={anchorEl} onClose={handleClosePopover} />
     </>
   );
 };

@@ -1,9 +1,10 @@
 import { AdExportExcelIcon } from '@/assets/icons/ad-export-excel';
+import { itemLabels } from '@/constant/setting-popover-items';
 import { useTheme } from '@emotion/react';
 import { Box, Button, Popover, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export const SettingPopover = ({ open, onClose, anchorEl, itemLabels }) => {
+export const SettingPopover = ({ open, onClose, anchorEl }) => {
   const theme = useTheme();
   return (
     <Popover
@@ -65,5 +66,4 @@ SettingPopover.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   anchorEl: PropTypes.instanceOf(Element),
-  itemLabels: PropTypes.array,
 };

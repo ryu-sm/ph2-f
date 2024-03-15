@@ -174,4 +174,8 @@ export const routeNames = {
     name: 'spDocsUpload',
     path: '/sale-person/docs-upload',
   },
+  spUploadNewDoc: {
+    name: 'spUploadNewDoc',
+    path: '/sale-person/upload-new-document',
+  },
 };

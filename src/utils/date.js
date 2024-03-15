@@ -92,3 +92,8 @@ export const dayOptions = [{ value: '', label: '日' }].concat(
     };
   })
 );
+
+export const convertUTC = (date) => {
+  const format = 'DD/MM/YY HH:mm';
+  return dayjs(date).format(format);
+};

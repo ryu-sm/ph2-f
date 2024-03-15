@@ -26,6 +26,9 @@ import { ResetPwdFinishedPage } from '@/pages/manager/reset-pwd-finished';
 import { routeNames } from '../settings';
 import { AdEditCasePage } from '@/pages/manager/edit-case/ad-edit-case';
 import { SpEditCasePage } from '@/pages/manager/edit-case/sp-edit-case';
+import { ImagePreviewPage } from '@/pages/manager/image-preview';
+import { DocsUpload } from '@/pages/manager/docs-upload';
+import { DocUploadNewDoc } from '@/pages/manager/docs-upload/doc-upload-new-doc';
 
 export const publicRoutes = [
   {
@@ -143,5 +146,25 @@ export const publicRoutes = [
   {
     ...routeNames.spCaseEditPage,
     element: <SpEditCasePage />,
+  },
+  {
+    ...routeNames.adPreviewImage,
+    element: <ImagePreviewPage />,
+  },
+  {
+    ...routeNames.spPreviewImage,
+    element: <ImagePreviewPage />,
+  },
+  {
+    ...routeNames.adDocsUpload,
+    element: <DocsUpload />,
+  },
+  {
+    ...routeNames.spDocsUpload,
+    element: <DocsUpload />,
+  },
+  {
+    ...routeNames.spUploadNewDoc,
+    element: <DocUploadNewDoc />,
   },
 ];
