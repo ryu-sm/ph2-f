@@ -227,3 +227,7 @@ export const adDeleteArchiveFile = async (id) => {
 export const adUpdateArchiveFile = async (id, data) => {
   return await service.put(`/c_archive_file/${id}`, data);
 };
+
+export const adUpdateArchiveFileNote = async (id, data) => {
+  return await service.put(`/c_archive_file/${id}/note`, data);
+};

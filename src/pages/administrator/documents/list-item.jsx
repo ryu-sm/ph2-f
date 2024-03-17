@@ -182,6 +182,7 @@ export const ListItem = ({ doc, refecth }) => {
           <NotePopover
             open={open}
             onClose={handleClosePopover}
+            refecth={refecth}
             anchorEl={anchorEl}
             value={doc['note']}
             id={doc['id']}

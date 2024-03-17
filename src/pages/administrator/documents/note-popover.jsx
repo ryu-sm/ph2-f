@@ -1,15 +1,21 @@
+import { API_500_ERROR } from '@/constant';
+import { adUpdateArchiveFileNote } from '@/services';
 import styled from '@emotion/styled';
 import CloseIcon from '@mui/icons-material/Close';
 import { Popover, Stack, TextareaAutosize, Typography } from '@mui/material';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-export const NotePopover = ({ open, onClose, anchorEl, value, id }) => {
+export const NotePopover = ({ open, onClose, anchorEl, value, id, refecth }) => {
   const [noteValue, setNoteValue] = useState(value);
-  const handleBlur = () => {
-    /**
-     * TODO 调用 archive_files/{id} 更新 {note: noteValue}
-            调用 archive_files get 刷新列表
-     */
+  const handleBlur = async () => {
+    if (noteValue === value || (noteValue === '' && value === '')) return onClose();
+    try {
+      await adUpdateArchiveFileNote(id, { note: noteValue });
+      await refecth();
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
     onClose();
   };
   return (
