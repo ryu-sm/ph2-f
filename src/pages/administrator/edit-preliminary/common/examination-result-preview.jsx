@@ -5,8 +5,10 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import { zoomPlugin } from '@react-pdf-viewer/zoom';
 import '@react-pdf-viewer/zoom/lib/styles/index.css';
 import { useIsManager } from '@/hooks';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 
 export const ResultPreviewPDF = ({ onRemove, file }) => {
+  const { handleDeleteProvisionalResult } = usePreliminaryContext();
   const isManager = useIsManager();
   const zoomPluginInstance = zoomPlugin();
   const { ZoomIn, ZoomOut } = zoomPluginInstance;
@@ -116,7 +118,7 @@ export const ResultPreviewPDF = ({ onRemove, file }) => {
                 color: 'gray.100',
               },
             }}
-            onClick={onRemove}
+            onClick={async () => handleDeleteProvisionalResult(file[0]?.id)}
           >
             <Icons.AdTrash sx={{ width: 18, height: 18 }} />
           </Button>

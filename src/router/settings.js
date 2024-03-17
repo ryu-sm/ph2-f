@@ -186,4 +186,27 @@ export const routeNames = {
     name: 'adSalesPersonFilesViewPage',
     path: '/sales-person/files-view',
   },
+
+  adManagerDocumentsPage: {
+    name: 'adManagerDocumentsPage',
+    path: '/manager/documents',
+  },
+  adSalesPersonDocumentsPage: {
+    name: 'adSalesPersonDocumentsPage',
+    path: '/sales-person/documents',
+  },
+
+  adManagerDocumentsDetailPage: {
+    name: 'adManagerDocumentsDetailPage',
+    path: '/manager/documents-detail',
+  },
+  adSalesPersonDocumentsDetailPage: {
+    name: 'adSalesPersonDocumentsDetailPage',
+    path: '/sales-person/documents-detail',
+  },
+
+  adSalesPersonNewDocumentsPage: {
+    name: 'adSalesPersonDocumentsPage',
+    path: '/sales-person/new-documents',
+  },
 };

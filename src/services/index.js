@@ -199,3 +199,31 @@ export const adUpdateApproverConfirmation = async (data) => {
 export const adUpdatePreExaminationStatus = async (data) => {
   return await service.put(`/manager/pre_examination_status`, data);
 };
+
+export const adDeleteProvisionalResult = async (data) => {
+  return await service.patch(`/manager/provisional_result`, data);
+};
+
+export const adAddArchiveFiles = async (data) => {
+  return await service.post('/sales-person/c_archive_files', data);
+};
+
+export const adGetSalesPersonDocs = async (s_sales_company_org_id) => {
+  return await service.get(`/c_archive_files/${s_sales_company_org_id}`);
+};
+
+export const adGetManagerDocs = async () => {
+  return await service.get(`/c_archive_files`);
+};
+
+export const adGetArchiveFile = async (id) => {
+  return await service.get(`/c_archive_file/${id}`);
+};
+
+export const adDeleteArchiveFile = async (id) => {
+  return await service.delete(`/c_archive_file/${id}`);
+};
+
+export const adUpdateArchiveFile = async (id, data) => {
+  return await service.put(`/c_archive_file/${id}`, data);
+};

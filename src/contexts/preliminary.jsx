@@ -1,5 +1,6 @@
 import { API_500_ERROR } from '@/constant';
 import {
+  adDeleteProvisionalResult,
   adUpdateApproverConfirmation,
   adUpdatePreExaminationStatus,
   adUpdatePreliminary,
@@ -113,6 +114,19 @@ export const PreliminaryProvider = ({ children }) => {
     }
   };
 
+  const handleDeleteProvisionalResult = async (p_uploaded_file_id) => {
+    try {
+      await adDeleteProvisionalResult({
+        p_application_header_id: result.contents?.p_application_headers?.id,
+        s_bank_id: result.contents?.p_result?.s_bank_id,
+        p_uploaded_file_id: p_uploaded_file_id,
+      });
+      refreshPreliminary();
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
   return (
     <PreliminaryContext.Provider
       value={{
@@ -128,6 +142,7 @@ export const PreliminaryProvider = ({ children }) => {
         handleChangeProvisionalResult: handleChangeProvisionalResult,
         handleChangeApproverConfirmation: handleChangeApproverConfirmation,
         handleChangePreExaminationStatus: handleChangePreExaminationStatus,
+        handleDeleteProvisionalResult: handleDeleteProvisionalResult,
       }}
     >
       {children}

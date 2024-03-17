@@ -1,6 +1,9 @@
 import {
+  AdDocumentsDetailPage,
+  AdDocumentsPage,
   AdFilesViewPage,
   AdMemo,
+  AdNewDocumentsPage,
   AdOrSpLoginPage,
   AdOrSpResetPasswordFinishedPage,
   AdOrSpResetPasswordPage,
@@ -70,5 +73,25 @@ export const administratorRoutes = [
   {
     ...routeNames.adSalesPersonFilesViewPage,
     element: <AdFilesViewPage />,
+  },
+  {
+    ...routeNames.adManagerDocumentsPage,
+    element: <AdDocumentsPage />,
+  },
+  {
+    ...routeNames.adSalesPersonDocumentsPage,
+    element: <AdDocumentsPage />,
+  },
+  {
+    ...routeNames.adManagerDocumentsDetailPage,
+    element: <AdDocumentsDetailPage />,
+  },
+  {
+    ...routeNames.adSalesPersonDocumentsDetailPage,
+    element: <AdDocumentsDetailPage />,
+  },
+  {
+    ...routeNames.adSalesPersonNewDocumentsPage,
+    element: <AdNewDocumentsPage />,
   },
 ];

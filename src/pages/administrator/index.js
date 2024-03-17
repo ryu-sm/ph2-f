@@ -6,3 +6,6 @@ export { DashboardPage } from './dashboard';
 export { AdMemo } from './memo';
 export { EditPreliminary } from './edit-preliminary';
 export { AdFilesViewPage } from './files-view';
+export { AdDocumentsPage } from './documents';
+export { AdNewDocumentsPage } from './new-documents';
+export { AdDocumentsDetailPage } from './documents-detail';

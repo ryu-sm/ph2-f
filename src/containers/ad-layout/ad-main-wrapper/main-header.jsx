@@ -81,7 +81,17 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
             <Typography variant="main_page_title" color="text.normal">
               申込一覧
             </Typography>
-            <Stack direction={'row'} alignItems={'center'} sx={{ cursor: 'pointer' }} spacing={1}>
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              sx={{ cursor: 'pointer' }}
+              spacing={1}
+              onClick={() =>
+                navigate(
+                  isManager ? routeNames.adManagerDocumentsPage.path : routeNames.adSalesPersonDocumentsPage.path
+                )
+              }
+            >
               <Icons.AdFileDownload sx={{ width: 14, height: 16 }} />
               <Typography variant="main_page_title" color="primary.main">
                 書類アップロード

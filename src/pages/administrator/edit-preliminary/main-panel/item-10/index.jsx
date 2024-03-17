@@ -61,7 +61,7 @@ export const Item10 = () => {
           {formik.values.p_uploaded_files.R.length > 0 ? (
             <ResultPreviewPDF
               file={formik.values.p_uploaded_files.R}
-              onRemove={() => formik.setFieldValue('p_uploaded_files.R', [])}
+              // onRemove={() => formik.setFieldValue('p_uploaded_files.R', [])}
             />
           ) : (
             <Stack flex={1} justifyContent={'center'} minHeight={550}>
