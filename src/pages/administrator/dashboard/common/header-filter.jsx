@@ -5,12 +5,14 @@ import { useBoolean, useDashboardContext, useIsManager } from '@/hooks';
 import { widthConfig } from './width-config';
 import { useRecoilValue } from 'recoil';
 import { dashboardTabStatusAtom } from '@/store';
-import { AdFilterModal } from './filter-modal';
+import { AdListFilterModal } from './filter-modal';
+import { useFormikContext } from 'formik';
 
 export const HeaderFilter = () => {
+  const formik = useFormikContext();
   const isManager = useIsManager();
   const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
-  const filetrModal = useBoolean(false);
+  const filterModal = useBoolean(false);
   const { sortBy, sortOrder, handleSort } = useDashboardContext();
   const filterArray = [
     { name: 'apply_no', label: '受付番号', limitWidth: widthConfig[1] },
@@ -67,8 +69,21 @@ export const HeaderFilter = () => {
       </Stack>
       <Box sx={{ width: 16, height: 16, position: 'relative', left: -8 }}>
         {dashboardTabStatus !== 2 && (
-          <Icons.AdListFilterIcon sx={{ cursor: 'pointer', width: 16, height: 16 }} onClick={filetrModal.onTrue} />
+          <Icons.AdListFilterIcon
+            sx={{ cursor: 'pointer', width: 16, height: 16 }}
+            onClick={() => {
+              formik.resetForm();
+              filterModal.onTrue();
+            }}
+          />
         )}
+        <AdListFilterModal
+          open={filterModal.value}
+          onClose={filterModal.onFalse}
+          onCleare={formik.resetForm}
+          handleSearch={formik.handleSubmit}
+          errors={formik.errors}
+        />
       </Box>
     </Stack>
   );

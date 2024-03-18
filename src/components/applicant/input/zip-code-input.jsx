@@ -124,7 +124,6 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
         if (!!refOne.current.value || !!refTwo.current.value) {
           await setValue(`${refOne.current.value}-${refTwo.current.value}`);
         }
-        const debounceTouched = debounce(() => setTouched(true), 100);
 
         if (e.target.name === 'firstCode') {
           setTouched(false);

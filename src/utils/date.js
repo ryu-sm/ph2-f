@@ -59,3 +59,23 @@ export const formatJapanDate = (date, showEpoch = false) => {
 export function formatApplyTime(time) {
   return time.split(':')[0] + '時';
 }
+
+export const monthOptions = [{ value: '', label: '月' }].concat(
+  Array.from({ length: 12 }, (_, index) => {
+    const month = String(index + 1).padStart(2, '0');
+    return {
+      value: month,
+      label: `${month}`,
+    };
+  })
+);
+
+export const dayOptions = [{ value: '', label: '日' }].concat(
+  Array.from({ length: 31 }, (_, index) => {
+    const day = String(index + 1);
+    return {
+      value: day,
+      label: `${day}`,
+    };
+  })
+);

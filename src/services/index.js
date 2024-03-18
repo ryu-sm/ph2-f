@@ -231,3 +231,11 @@ export const adUpdateArchiveFile = async (id, data) => {
 export const adUpdateArchiveFileNote = async (id, data) => {
   return await service.put(`/c_archive_file/${id}/note`, data);
 };
+
+export const adGetSalesCompanyOptionsCategory = async (category) => {
+  return await service.get(`/s_sales_company_options/${category}`);
+};
+
+export const adGetSalesPersonOptionsAll = async () => {
+  return await service.get(`/sales_person_options/all`);
+};

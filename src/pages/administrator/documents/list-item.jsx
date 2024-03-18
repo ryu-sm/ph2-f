@@ -144,7 +144,6 @@ export const ListItem = ({ doc, refecth }) => {
               sx={{
                 width: '80%',
                 borderBottom: (theme) => `1px solid ${theme.palette.gray[100]}`,
-                // marginLeft: 3,
               }}
               onClick={handleOpenPopover}
             >
