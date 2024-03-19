@@ -178,4 +178,20 @@ export const routeNames = {
     name: 'spUploadNewDoc',
     path: '/sale-person/upload-new-document',
   },
+  adMessageList: {
+    name: 'adMessageList',
+    path: '/manager/messages',
+  },
+  spMessageList: {
+    name: 'spMessageList',
+    path: '/sale-person/messages',
+  },
+  adMessageDetail: {
+    name: 'adMessageDetail',
+    path: '/manager/message-detail',
+  },
+  spMessageDetail: {
+    name: 'spMessageDetail',
+    path: '/sale-person/message-detail',
+  },
 };

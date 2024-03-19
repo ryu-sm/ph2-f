@@ -97,3 +97,8 @@ export const convertUTC = (date) => {
   const format = 'DD/MM/YY HH:mm';
   return dayjs(date).format(format);
 };
+
+export const convertMessageDate = (date) => {
+  const format = 'YYYY/MM/DD';
+  return dayjs(date).format(format);
+};

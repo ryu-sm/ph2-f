@@ -12,3 +12,12 @@ export { apRepaymentMethod01 };
 
 import apRepaymentMethod02 from './repayment-method-02.png';
 export { apRepaymentMethod02 };
+
+import userAvatar from './user.png';
+export { userAvatar };
+
+import apMilize from './ap-milize.png';
+export { apMilize };
+
+import apAgent from './ap-agent.png';
+export { apAgent };

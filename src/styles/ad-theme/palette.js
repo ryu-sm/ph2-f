@@ -2,7 +2,9 @@ export const palette = {
   primary: {
     main: '#6B70F0',
     60: '#979ccf',
+    50: '#E7EDFF',
     40: '#E4E7FF',
+    20: '#eef0ff',
   },
   secondary: {
     main: '#E54E75',

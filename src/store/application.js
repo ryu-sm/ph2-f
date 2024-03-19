@@ -1,3 +1,4 @@
+import { ROLE } from '@/constant';
 import { atom, selector } from 'recoil';
 
 const applicationInitialValues = {
@@ -277,6 +278,31 @@ const applicationInitialValues = {
   p_application_headers__funding_total_amount: '',
 
   docs_list: [],
+  messages: [
+    {
+      sender_id: 1,
+      senderType: ROLE.ADMIN,
+      viewed: [],
+      createdAt: String(Date.now()),
+      content: 'xxdefegexx',
+    },
+    {
+      sender_id: 2,
+      senderType: ROLE.USER,
+      viewed: [],
+      createdAt: String(Date.now()),
+      content: 'xxgegegexx',
+    },
+    {
+      sender_id: 3,
+      senderType: ROLE.AGENT,
+      viewed: [],
+      createdAt: String(Date.now()),
+      content: 'xxdefegexx',
+    },
+    { senderType: ROLE.USER, viewed: [], createdAt: '', content: 'xxxx', sender_id: 4 },
+    { senderType: ROLE.USER, viewed: [], createdAt: '', content: 'xxxx', sender_id: 5 },
+  ],
 };
 
 const localStorageEffect =

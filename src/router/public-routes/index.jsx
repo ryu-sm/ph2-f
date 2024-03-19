@@ -29,6 +29,8 @@ import { SpEditCasePage } from '@/pages/manager/edit-case/sp-edit-case';
 import { ImagePreviewPage } from '@/pages/manager/image-preview';
 import { DocsUpload } from '@/pages/manager/docs-upload';
 import { DocUploadNewDoc } from '@/pages/manager/docs-upload/doc-upload-new-doc';
+import { MessageListPage } from '@/pages/manager/message/message-list';
+import { MessageDetailPage } from '@/pages/manager/message/message-detail';
 
 export const publicRoutes = [
   {
@@ -166,5 +168,21 @@ export const publicRoutes = [
   {
     ...routeNames.spUploadNewDoc,
     element: <DocUploadNewDoc />,
+  },
+  {
+    ...routeNames.spMessageList,
+    element: <MessageListPage />,
+  },
+  {
+    ...routeNames.adMessageList,
+    element: <MessageListPage />,
+  },
+  {
+    ...routeNames.adMessageDetail,
+    element: <MessageDetailPage />,
+  },
+  {
+    ...routeNames.spMessageDetail,
+    element: <MessageDetailPage />,
   },
 ];
