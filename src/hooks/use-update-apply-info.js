@@ -8,7 +8,6 @@ export const useApUpdateApplyInfo = () => {
 
   const update = useCallback(async (applyNo, data) => {
     try {
-      console.log(data);
       await apUpdateApplyInfo(applyNo, { ...data });
       const res = await apApplication(applyNo);
       setApplicationInfo((pre) => {

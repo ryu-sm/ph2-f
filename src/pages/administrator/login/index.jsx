@@ -16,6 +16,8 @@ import { setToken } from '@/libs';
 import { jwtDecode } from 'jwt-decode';
 import { routeNames } from '@/router/settings';
 import { TERM_OF_SERVICE } from '@/configs';
+import { toast } from 'react-toastify';
+import { TOKEN_INVALID } from '@/constant';
 
 export const AdOrSpLoginPage = () => {
   const navigate = useNavigate();
@@ -31,7 +33,6 @@ export const AdOrSpLoginPage = () => {
     validationSchema,
 
     onSubmit: async (values) => {
-      console.log(values);
       try {
         if (isManager) {
           const res = await adManagerLogin(values);
@@ -90,8 +91,12 @@ export const AdOrSpLoginPage = () => {
   });
 
   useEffect(() => {
-    console.log(isManager);
-  }, [isManager]);
+    const TOKEN_INVALID_LOCAL = localStorage.getItem('TOKEN_INVALID');
+    if (TOKEN_INVALID_LOCAL) {
+      toast.error(TOKEN_INVALID);
+      localStorage.clear();
+    }
+  }, []);
 
   return (
     <AdAuthWrapper bgImage={`url(${adBackground})`}>

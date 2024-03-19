@@ -24,7 +24,6 @@ export const AdOrSpResetPasswordPage = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       try {
         const data = { password: values.password, token: token };
         if (isManager) {
@@ -54,10 +53,6 @@ export const AdOrSpResetPasswordPage = () => {
       setIsValidToken(false);
     }
   }, [token]);
-
-  useEffect(() => {
-    console.log(isManager);
-  }, [isManager]);
 
   return (
     <AdAuthWrapper bgImage={`url(${adBackground})`}>

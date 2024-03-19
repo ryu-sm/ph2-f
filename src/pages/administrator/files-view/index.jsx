@@ -35,7 +35,6 @@ export const AdFilesViewPage = () => {
   const fetch = useCallback(async () => {
     try {
       const res = await adGetFilesView(p_application_header_id, `${type}__${category}`);
-      console.log(res.data);
       setFilesOrigin(res.data);
     } catch (error) {
       console.log(error);
@@ -78,7 +77,6 @@ export const AdFilesViewPage = () => {
         });
       }
     }
-    console.log(temp);
     setCurrentImage(temp[0]);
     return temp;
   }, [filesOrign, category]);

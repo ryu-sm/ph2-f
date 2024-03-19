@@ -94,13 +94,6 @@ export const Item08 = () => {
 
   const salesPersonOptions = useSalesPersonOptions(formik.values.p_application_headers.sales_exhibition_hall_id);
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>

@@ -28,7 +28,6 @@ export const AdZipCodeInput = ({ callback, ...props }) => {
       if (/^\d{3}[-]\d{4}$/.test(value)) {
         try {
           const res = await axios.get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${value}`);
-          console.log(res.data.results);
           if (res.data.results.length > 0) {
             callback({
               prefecture_kanji: res.data.results[0].address1,
@@ -54,11 +53,7 @@ export const AdZipCodeInput = ({ callback, ...props }) => {
     },
     [field, props, setValue]
   );
-  // useEffect(() => {
-  //   if (/^\d{3}[-]\d{4}$/.test(meta.value)) {
-  //     console.log('ok');
-  //   }
-  // }, [meta.value]);
+
   return (
     <Stack
       direction={'row'}

@@ -43,9 +43,7 @@ export const AdOrSpResetPasswordVerifyEmailPage = () => {
       }
     },
   });
-  useEffect(() => {
-    console.log(isManager);
-  }, [isManager]);
+
   return (
     <AdAuthWrapper bgImage={`url(${adBackground})`}>
       {!sended ? (

@@ -19,7 +19,6 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
       axios
         .get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${meta.value}`)
         .then((res) => {
-          console.log(res.data.results);
           if (!!res.data.results) {
             callback({
               prefecture_kanji: res.data.results[0].address1,

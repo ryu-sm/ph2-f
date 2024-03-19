@@ -189,14 +189,6 @@ export const Item05 = () => {
     return conter.join('・');
   }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>

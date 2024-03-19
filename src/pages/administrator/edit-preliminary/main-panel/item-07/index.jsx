@@ -164,13 +164,6 @@ export const Item07 = () => {
     formik.values.p_application_headers.funding_other_amount,
   ]);
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>

@@ -83,12 +83,6 @@ export const Item06 = () => {
     });
   }, [formik.values]);
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>

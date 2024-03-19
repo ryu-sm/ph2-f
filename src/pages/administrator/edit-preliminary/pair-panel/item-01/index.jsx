@@ -295,7 +295,6 @@ export const Item01 = () => {
                 name={'p_application_headers.loan_type'}
                 options={loanTypeOptions}
                 onChange={(value) => {
-                  console.log(value);
                   if (
                     (value === '3' || value === '4') &&
                     (p_application_headers.loan_type !== '3' || p_application_headers.loan_type !== '4')

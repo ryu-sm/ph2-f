@@ -27,7 +27,6 @@ export const ApRegisterVerifyEmailPage = () => {
   const [sended, setSended] = useState(false);
   const [warningText, setWarningText] = useState('');
   const s_sales_company_org_id = getSalesCompanyOrgId();
-  console.log(s_sales_company_org_id);
   const formik = useFormik({
     initialValues: {
       email: '',

@@ -32,7 +32,7 @@ export const Item04 = () => {
         join_guarantor_umu: p_application_headers.join_guarantor_umu,
       },
     };
-    console.log(diffData);
+
     return diffData;
   };
 
@@ -50,12 +50,6 @@ export const Item04 = () => {
     });
   }, [formik.values]);
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
   return (
     <FormikProvider value={formik}>
       <FieldArray

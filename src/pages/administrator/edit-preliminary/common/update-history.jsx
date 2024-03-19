@@ -43,27 +43,12 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
     },
   ];
 
-  const createData = (date, company, person, content) => ({
-    date,
-    company,
-    person,
-    content,
-  });
-
-  const rows = [
-    createData('2022/01/01 10:00', '株式会社A', '田中 太郎', '入力内容A'),
-    createData('2022/01/01 10:00', '株式会社A', '田中 太郎', '入力内容A'),
-    createData('2022/01/01 10:00', '株式会社A', '田中 太郎', '入力内容A'),
-    createData('2022/01/01 10:00', '株式会社A', '田中 太郎', '入力内容A'),
-  ];
-
   const [data, setData] = useState([]);
 
   const fetch = useCallback(async () => {
     try {
       const res = await adGetUpdateHistory(upConfig.p_application_header_id, upConfig.key);
       setData(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }

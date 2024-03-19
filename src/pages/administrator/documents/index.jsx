@@ -88,7 +88,6 @@ export const AdDocumentsPage = () => {
       if (isManager && values.s_sales_person_id.length > 0) {
         temp = temp.filter((item) => values.s_sales_person_id.includes(item.s_sales_person_id));
       }
-      console.log(temp);
       setFilterData(temp);
     },
   });
@@ -177,7 +176,7 @@ export const AdDocumentsPage = () => {
       } else {
         res = await adGetSalesPersonDocs(authInfo.salesPerson.orgs[0]?.s_sales_company_org_id);
       }
-      console.log(res.data);
+
       setData(res.data);
       setFilterData(res.data);
     } catch (error) {
@@ -188,10 +187,6 @@ export const AdDocumentsPage = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
 
   return (
     <FormikProvider value={formik}>

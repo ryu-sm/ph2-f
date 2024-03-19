@@ -137,9 +137,6 @@ export const Item03 = () => {
     });
   }, [formik.values]);
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup

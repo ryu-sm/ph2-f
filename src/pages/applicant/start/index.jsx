@@ -12,10 +12,8 @@ import { jwtDecode } from 'jwt-decode';
 export const ApStartPage = () => {
   const navigate = useNavigate();
   const token = useCurrSearchParams().get('token');
-  console.log(token);
   useEffect(() => {
     if (token) {
-      console.log(token);
       const payload = jwtDecode(token);
       setSalesCompanyOrgId(payload?.s_sales_company_org_id);
     }

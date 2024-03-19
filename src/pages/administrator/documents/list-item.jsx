@@ -107,7 +107,6 @@ export const ListItem = ({ doc, refecth }) => {
   const handleDownload = async (id) => {
     try {
       const res = await adGetArchiveFile(id);
-      console.log(res.data);
       await downloadImageZipAsync(res.data, id);
     } catch (error) {
       toast.error(API_500_ERROR);

@@ -36,7 +36,6 @@ export const AdDocumentsDetailPage = () => {
     try {
       const res = await adGetArchiveFile(id);
       setImages(res.data);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }

@@ -67,9 +67,7 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
     rel_to_applicant_a_other: '',
     birthday: '',
   };
-  useEffect(() => {
-    console.log(meta.value);
-  }, []);
+
   return (
     <Stack direction={'row'} alignItems={'center'} spacing={'10px'}>
       <Button

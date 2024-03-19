@@ -98,9 +98,6 @@ export const SalesPersonList = () => {
     },
   });
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <Stack sx={{ height: '100%', marginX: 0, p: 0, flexGrow: 1 }} overflow={'auto'} mb={8}>

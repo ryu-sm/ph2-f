@@ -21,7 +21,6 @@ export const AdReviewProgress = () => {
   }, [pre_examination_status]);
 
   const [clickValue, setClickValue] = useState(null);
-  console.log(pre_examination_status);
 
   const reviewProgressLabel = [
     { label: '書類確認', value: 0 },
@@ -71,21 +70,18 @@ export const AdReviewProgress = () => {
   const checkIsDisabled = useCallback(
     (value) => {
       if (value === 5 || value === 6) {
-        console.log(1);
         return true;
       }
       if ((value === 3 || value === 4) && activeValue === 3) {
-        console.log(2);
         return false;
       }
       if (value < activeValue) {
-        console.log(3);
         return true;
       }
       if (value === activeValue + 1) {
         return false;
       }
-      console.log(4);
+
       return true;
     },
     [activeValue]

@@ -71,7 +71,7 @@ export const Item04 = () => {
         },
       }),
     };
-    console.log(diffData);
+
     return diffData;
   };
 
@@ -104,12 +104,6 @@ export const Item04 = () => {
     }
   }, [changeJoinGuarantor]);
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
   return (
     <FormikProvider value={formik}>
       <FieldArray

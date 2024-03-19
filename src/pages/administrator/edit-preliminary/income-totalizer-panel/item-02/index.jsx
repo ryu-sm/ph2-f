@@ -81,10 +81,6 @@ export const Item02 = () => {
     });
   }, [formik.values]);
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup

@@ -171,7 +171,7 @@ export const ApStep07Page = () => {
     isMCJ,
     set_addr_with_application_a: false,
   };
-  console.log(888, initialValues);
+
   const setUpdateData = (values) => {
     const diffData = {
       p_application_headers: {
@@ -206,7 +206,6 @@ export const ApStep07Page = () => {
     if (agentSended) {
       try {
         const res = await apApplicationFile(applyNo);
-        console.log(res);
         formik.setFieldValue('p_uploaded_files.G', res.data.G);
       } catch (error) {
         console.error(error);
@@ -283,10 +282,6 @@ export const ApStep07Page = () => {
       ),
     [birthdayMonth]
   );
-
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
 
   return (
     <FormikProvider value={formik}>

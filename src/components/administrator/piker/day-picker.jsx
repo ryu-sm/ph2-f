@@ -42,7 +42,7 @@ export const DayPicker = ({ content, maxDate, minDate, isBirthday, ...props }) =
     try {
       if (currentYear) fetchHolidays();
     } catch (error) {
-      console.log(111);
+      console.log(error);
     }
   }, [currentYear]);
 

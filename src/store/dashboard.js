@@ -16,7 +16,6 @@ export const preliminarieListSelect = selector({
     try {
       if (auth?.roleType === 3) {
         const res = await adManagerPreliminaries(tabStatus);
-        console.log(res.data);
         return res.data;
       } else {
         const res = await adSalesPersonPreliminaries(tabStatus);

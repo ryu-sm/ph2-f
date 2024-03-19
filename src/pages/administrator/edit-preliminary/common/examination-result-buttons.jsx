@@ -89,8 +89,7 @@ export const ExaminationResultButtons = () => {
       return item;
     });
   }, [p_result]);
-  console.log(p_uploaded_files);
-  console.log(provisionalResultItems);
+
   return (
     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ pt: 5 }}>
       <Stack direction={'row'} alignItems={'center'}>

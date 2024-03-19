@@ -63,7 +63,6 @@ export const AdMemo = () => {
       content: '',
     },
     onSubmit: async (values) => {
-      console.log(values);
       try {
         if (!values.id) {
           await adNewMemo({

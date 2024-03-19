@@ -1,5 +1,4 @@
 import { GlobalStyles, ThemeProvider, createTheme } from '@mui/material';
-import PropTypes from 'prop-types';
 import { typography } from './typography';
 import { palette } from './palette';
 import { componentOverrides } from './component';
@@ -11,6 +10,7 @@ export const AdThemeProvider = ({ children }) => {
     palette: palette,
   });
   theme.components = componentOverrides(theme);
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles
@@ -28,8 +28,4 @@ export const AdThemeProvider = ({ children }) => {
       {children}
     </ThemeProvider>
   );
-};
-
-AdThemeProvider.propTypes = {
-  children: PropTypes.node,
 };

@@ -45,7 +45,6 @@ export const ManagerList = () => {
       desired_borrowing_date_to: yup.string().matches(REGEX.YMD),
     }),
     onSubmit: (values) => {
-      console.log(formik.errors);
       let temp = [...preliminarieList];
       if (values.s_bank_id.length > 0) {
         temp = temp.filter((item) => {
@@ -105,10 +104,6 @@ export const ManagerList = () => {
       setData(temp);
     },
   });
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
 
   return (
     <FormikProvider value={formik}>

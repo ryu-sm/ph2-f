@@ -135,7 +135,6 @@ export const ApStep08Page = () => {
     if (agentSended) {
       try {
         const res = await apPborrowings(applyNo);
-        console.log(res);
         const temp = formik.values.p_borrowings.map((item) => {
           const sendedData = res.data.find((sended) => sended.id === item.id);
           if (sendedData) {
@@ -171,14 +170,6 @@ export const ApStep08Page = () => {
       navigate(`/step-id-${apPreStepId}`);
     }
   };
-
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
 
   return (
     <FormikProvider value={formik}>

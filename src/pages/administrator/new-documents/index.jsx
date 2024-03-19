@@ -74,7 +74,6 @@ export const AdNewDocumentsPage = () => {
       files: images,
     };
 
-    console.log(data);
     try {
       await adAddArchiveFiles(data);
       navigate(routeNames.adSalesPersonDocumentsPage.path);

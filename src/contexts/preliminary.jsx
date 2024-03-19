@@ -34,7 +34,6 @@ export const PreliminaryProvider = ({ children }) => {
       toast.error(API_500_ERROR);
     }
     if (result.state === 'hasValue') {
-      console.log('result.contents', result.contents);
       setPreliminarySnap(result.contents);
     }
   }, [result.state, preliminaryId]);
@@ -131,7 +130,6 @@ export const PreliminaryProvider = ({ children }) => {
     }
   };
 
-  console.log(JSON.stringify(result.contents));
   return (
     <PreliminaryContext.Provider
       value={{

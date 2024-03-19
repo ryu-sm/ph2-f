@@ -40,11 +40,11 @@ export const ApLoginPage = () => {
     onSubmit: async (values) => {
       try {
         const res = await apLogin({ email: values.email, password: values.password });
-        console.log(res);
+
         const { access_token } = res.data;
         setToken(access_token);
         const payload = jwtDecode(access_token);
-        console.log(payload);
+
         setAuthInfo((pre) => {
           return {
             ...pre,
@@ -191,6 +191,15 @@ export const ApLoginPage = () => {
       }
     },
   });
+
+  useEffect(() => {
+    const TOKEN_INVALID_LOCAL = localStorage.getItem('TOKEN_INVALID');
+    if (TOKEN_INVALID_LOCAL) {
+      toast.error(TOKEN_INVALID);
+      localStorage.clear();
+    }
+  }, []);
+
   return (
     <FormikProvider value={formik}>
       <ApLayout hasFooter>

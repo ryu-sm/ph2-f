@@ -1,5 +1,4 @@
 export const API_500_ERROR = 'サーバーとの通信に失敗しました。再度お試しください。';
-export const TOKEN_EXPIRED = 'トークンの有効期限が切れました。';
 export const TOKEN_INVALID = 'ログイン用のトークンが不正です。再度ログインする必要があります。';
 
 export const PREFECTURES = [
