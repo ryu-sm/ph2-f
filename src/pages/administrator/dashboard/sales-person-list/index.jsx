@@ -19,7 +19,7 @@ export const SalesPersonList = () => {
     if (status === 'hasValue') {
       setData(preliminarieList);
     }
-  }, [status]);
+  }, [status, preliminarieList]);
 
   const initialValues = {
     s_bank_id: [],
