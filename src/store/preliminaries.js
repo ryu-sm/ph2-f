@@ -446,7 +446,7 @@ export const preliminarySelect = selector({
     const id = get(preliminaryIdAtom);
     if (!id) return null;
     const res = await adGetPreliminary(id);
-    console.log(JSON.stringify(res.data.p_application_headers));
+
     if (res.error) {
       throw res.error;
     }

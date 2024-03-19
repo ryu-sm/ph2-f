@@ -1,11 +1,13 @@
 import { useTheme } from '@emotion/react';
 import { Button, Grid, Stack, Typography } from '@mui/material';
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useCallback, useMemo, useState } from 'react';
 import { Icons } from '@/assets';
 
 import { AdDocsDisplayPopover } from './docs-display-popover';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { AdSecondaryButton } from '@/components/administrator/button';
+import { UpdateModal } from './update-modal';
+import { useBoolean } from '@/hooks';
 
 export const AdReviewProgress = () => {
   const {
@@ -18,6 +20,7 @@ export const AdReviewProgress = () => {
     return pre_examination_status ? Number(pre_examination_status) : -1;
   }, [pre_examination_status]);
 
+  const [clickValue, setClickValue] = useState(null);
   console.log(pre_examination_status);
 
   const reviewProgressLabel = [
@@ -65,37 +68,34 @@ export const AdReviewProgress = () => {
     return 'gray.100';
   };
 
-  const checkIsDisabled = (value, index) => {
-    if (value === 5 || 6) {
+  const checkIsDisabled = useCallback(
+    (value) => {
+      if (value === 5 || value === 6) {
+        console.log(1);
+        return true;
+      }
+      if ((value === 3 || value === 4) && activeValue === 3) {
+        console.log(2);
+        return false;
+      }
+      if (value < activeValue) {
+        console.log(3);
+        return true;
+      }
+      if (value === activeValue + 1) {
+        return false;
+      }
+      console.log(4);
       return true;
-    }
-    if (value < activeValue) {
-      return true;
-    } else if (index === activeValue + 1) {
-      return false;
-    }
-    return true;
-  };
+    },
+    [activeValue]
+  );
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handlePopoverOpen = (e) => setAnchorEl(e.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
-
-  const items = [
-    {
-      code: 'A',
-      label: '本人確認書類',
-    },
-    {
-      code: 'B',
-      label: '健康保険証',
-    },
-    {
-      code: 'G',
-      label: '物件についての書類',
-    },
-  ];
+  const updateModal = useBoolean(false);
   return (
     <Grid
       container
@@ -122,7 +122,7 @@ export const AdReviewProgress = () => {
                   height: 32,
                   whiteSpace: 'nowrap',
                   '&:hover': {
-                    backgroundColor: 'white',
+                    backgroundColor: activeValue === 3 && item.value === 3 ? 'primary.main' : 'white',
                     opacity: 0.8,
                   },
                   '&:disabled': {
@@ -130,7 +130,11 @@ export const AdReviewProgress = () => {
                     color: checkTextColor(item.value, index),
                   },
                 }}
-                disabled={checkIsDisabled(item.value, index)}
+                disabled={checkIsDisabled(item.value)}
+                onClick={() => {
+                  setClickValue(item.value);
+                  updateModal.onTrue();
+                }}
               >
                 {item.label}
               </Button>
@@ -145,6 +149,12 @@ export const AdReviewProgress = () => {
               )}
             </Fragment>
           ))}
+          <UpdateModal
+            value={clickValue}
+            activeValue={activeValue}
+            open={updateModal.value}
+            onClose={updateModal.onFalse}
+          />
         </Stack>
       </Grid>
 
@@ -193,7 +203,7 @@ export const AdReviewProgress = () => {
             </Stack>
           </Button>
 
-          <AdDocsDisplayPopover open={open} onClose={handlePopoverClose} anchorEl={anchorEl} items={items} />
+          <AdDocsDisplayPopover open={open} onClose={handlePopoverClose} anchorEl={anchorEl} />
         </Stack>
       </Grid>
     </Grid>

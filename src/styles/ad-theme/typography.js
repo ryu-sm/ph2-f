@@ -230,6 +230,16 @@ export const typography = {
     whiteSpace: 'break-spaces',
   },
 
+  dailog_content: {
+    fontFamily: 'Hiragino Sans',
+    fontSize: 16,
+    fontWeight: 300,
+    lineHeight: '27px',
+    letterSpacing: 1,
+    textAlign: 'center',
+    whiteSpace: 'break-spaces',
+  },
+
   files_category: {
     fontFamily: 'Barlow',
     fontWeight: 500,

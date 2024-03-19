@@ -107,9 +107,13 @@ export const PreliminaryProvider = ({ children }) => {
       await adUpdatePreExaminationStatus({
         p_application_header_id: result.contents?.p_application_headers?.id,
         pre_examination_status: pre_examination_status,
+        preliminary: result.contents,
       });
       refreshPreliminary();
     } catch (error) {
+      if (error.status === 400) {
+        return error;
+      }
       toast.error(API_500_ERROR);
     }
   };
@@ -127,6 +131,7 @@ export const PreliminaryProvider = ({ children }) => {
     }
   };
 
+  console.log(JSON.stringify(result.contents));
   return (
     <PreliminaryContext.Provider
       value={{

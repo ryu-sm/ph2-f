@@ -105,7 +105,7 @@ export const AdDocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
               sx={{
                 cursor: 'pointer',
                 p: '10px',
-                borderBottom: index !== items.length - 1 ? `1px solid ${theme.palette.gray[80]}` : 'none',
+                borderBottom: index !== fileItems.length - 1 ? `1px solid ${theme.palette.gray[80]}` : 'none',
               }}
               onClick={() => handleClick(item)}
             >

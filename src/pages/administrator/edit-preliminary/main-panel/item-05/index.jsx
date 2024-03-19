@@ -703,18 +703,20 @@ export const Item05 = () => {
           }
           error={formik.errors?.p_application_headers?.property_district}
         />
-        <EditRow
-          label={'融資対象物件　マンション名・部屋番号'}
-          isLogicRequired
-          field={
-            isEditable ? (
-              <AdEditInput name="p_application_headers.property_apartment_and_room_no" convertFullWidth />
-            ) : (
-              formik.values.p_application_headers?.property_apartment_and_room_no
-            )
-          }
-          error={formik.errors?.p_application_headers?.property_apartment_and_room_no}
-        />
+        {['2', '3'].includes(p_application_headers.loan_target) && (
+          <EditRow
+            label={'融資対象物件　マンション名・部屋番号'}
+            isLogicRequired
+            field={
+              isEditable ? (
+                <AdEditInput name="p_application_headers.property_apartment_and_room_no" convertFullWidth />
+              ) : (
+                formik.values.p_application_headers?.property_apartment_and_room_no
+              )
+            }
+            error={formik.errors?.p_application_headers?.property_apartment_and_room_no}
+          />
+        )}
         <EditRow
           label={'融資対象物件　物件所在地住所（フリガナ）'}
           isAddendum

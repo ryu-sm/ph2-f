@@ -3,7 +3,7 @@ import { FormikProvider, useFormik } from 'formik';
 
 import { formatMoney } from '@/utils';
 import { useEffect } from 'react';
-import { AdNumericInput } from '@/components/administrator';
+import { AdEditInput, AdNumericInput } from '@/components/administrator';
 import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
@@ -432,6 +432,21 @@ export const Item07 = () => {
           }
           error={formik.errors?.p_application_headers?.funding_other_amount}
         />
+
+        {!!formik.values.p_application_headers.funding_other_amount && (
+          <EditRow
+            label={'その他'}
+            field={
+              isEditable ? (
+                <AdEditInput name="p_application_headers.funding_other_amount_detail" convertFullWidth />
+              ) : (
+                formik.values.p_application_headers.funding_other_amount_detail
+              )
+            }
+            error={formik.errors?.p_application_headers?.funding_other_amount_detail}
+          />
+        )}
+
         <EditRow
           label={'その他（借換）'}
           isAddendum
