@@ -56,7 +56,7 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
             {meta.value?.map((file, index) => {
               const isPdf = file.name.includes('pdf');
               return (
-                <Fragment key={`image-${file.name}`}>
+                <Stack key={`image-${file.name}`} spacing={1} sx={{ maxWidth: 136 }}>
                   <Box
                     sx={{
                       width: 136,
@@ -98,7 +98,7 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
                       {file.name}
                     </Typography>
                   )}
-                </Fragment>
+                </Stack>
               );
             })}
           </Stack>

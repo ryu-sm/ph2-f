@@ -2,13 +2,12 @@ import { useBoolean } from '@/hooks';
 import { ApWrapper } from './ap-wrapper';
 import { ApMenu } from './ap-header/ap-menu';
 import { ApHeader } from './ap-header';
-
 import { ApFooter } from './ap-footer';
 import { useMemo } from 'react';
 import { Stack } from '@mui/material';
 import { ApStepBar } from './ap-step-bar';
 
-export const ApLayout = ({ children, hasMenu, hasFooter, hasStepBar, pb }) => {
+export const ApLayout = ({ children, hasMenu, hasFooter, hasStepBar, bottomContent }) => {
   const menu = useBoolean();
   const pt = useMemo(() => {
     if (hasStepBar) return 26;
@@ -20,9 +19,13 @@ export const ApLayout = ({ children, hasMenu, hasFooter, hasStepBar, pb }) => {
         <ApMenu menu={menu} />
         <ApHeader hasMenu={hasMenu} menu={menu} />
         {hasStepBar && <ApStepBar />}
-        <Stack flex={1} sx={{ pb: pb || 0 }}>
-          {children}
+        <Stack flex={1} sx={{ pb: bottomContent ? 18 : 0 }}>
+          <Stack flex={1} sx={{ minHeight: 'calc(100dvh - 72px)' }}>
+            {children}
+          </Stack>
+          {bottomContent}
         </Stack>
+
         {hasFooter && <ApFooter hasMenu={hasMenu} />}
       </Stack>
     </ApWrapper>

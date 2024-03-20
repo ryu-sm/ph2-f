@@ -382,7 +382,7 @@ export const tab03Schema = yup.object({
     office_joining_date: yup.string().matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
 
     last_year_income: yup.string(),
-    before_last_year_bonus_income: yup.string(),
+    before_last_year_income: yup.string(),
     last_year_bonus_income: yup.string(),
     p_applicant_persons__1__last_year_bonus_income: yup.string(),
 
@@ -1123,7 +1123,7 @@ export const tab03SchemaI = yup.object({
     office_joining_date: yup.string().matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
 
     last_year_income: yup.string(),
-    before_last_year_bonus_income: yup.string(),
+    before_last_year_income: yup.string(),
     last_year_bonus_income: yup.string(),
     p_applicant_persons__1__last_year_bonus_income: yup.string(),
 

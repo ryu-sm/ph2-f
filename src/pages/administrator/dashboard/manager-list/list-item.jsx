@@ -80,7 +80,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     },
     {
       label: 'メモ表示',
-      onClick: () => navigator(`${routeNames.adMemoPage.path}?id=${item?.id}&&name=${item?.name_kanji}`),
+      onClick: () => navigator(`${routeNames.adManagerMemoPage.path}?id=${item?.id}&&name=${item?.name_kanji}`),
     },
     ...(item.loan_type === '2'
       ? [

@@ -17,7 +17,7 @@ import {
 import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
@@ -25,6 +25,7 @@ import { API_500_ERROR } from '@/constant';
 
 export const ApStep09Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
@@ -101,7 +102,7 @@ export const ApStep09Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -119,7 +120,7 @@ export const ApStep09Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
 
@@ -149,7 +150,16 @@ export const ApStep09Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`資金計画について\n教えてください。`}</ApPageTitle>
         <Stack flex={1}>
@@ -197,19 +207,7 @@ export const ApStep09Page = () => {
               </Stack>
               <Stack flex={1} sx={{ bgcolor: 'white' }}>
                 {p_application_headers.loan_target === '6' && (
-                  <ApItemGroup
-                    optional
-                    label={
-                      <Typography
-                        variant="form_item_label"
-                        sx={{ fontWeight: 13, color: 'text.main', whiteSpace: 'nowrap' }}
-                      >
-                        {'土地'}
-                      </Typography>
-                    }
-                    pb={3}
-                    px={2}
-                  >
+                  <ApItemGroup optional label={'土地'} labelFontSize={13} pb={3} px={2}>
                     <ApNumberInputField
                       name="p_application_headers.required_funds_land_amount"
                       placeholder={'0'}
@@ -289,19 +287,7 @@ export const ApStep09Page = () => {
                   />
                 </ApItemGroup>
                 {p_application_headers.loan_plus === '1' && (
-                  <ApItemGroup
-                    optional
-                    label={
-                      <Typography
-                        variant="form_item_label"
-                        sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}
-                      >
-                        {'住宅ローンプラス利用'}
-                      </Typography>
-                    }
-                    pb={3}
-                    px={2}
-                  >
+                  <ApItemGroup optional label={'住宅ローンプラス利用'} labelFontSize={13} pb={3} px={2}>
                     <ApNumberInputField
                       name="p_application_headers.required_funds_loan_plus_amount"
                       placeholder={'0'}
@@ -558,9 +544,6 @@ export const ApStep09Page = () => {
             </Stack>
           </Stack>
         </Stack>
-
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

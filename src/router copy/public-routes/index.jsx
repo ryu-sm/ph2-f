@@ -11,26 +11,26 @@ import {
 export const publicRoutes = [
   {
     ...routeNames.apStartPage,
-    Element: ApStartPage,
+    element: <ApStartPage />,
   },
   {
     ...routeNames.apRegisterVerifyEmailPage,
-    Element: ApRegisterVerifyEmailPage,
+    element: <ApRegisterVerifyEmailPage />,
   },
   {
     ...routeNames.apRegisterPage,
-    Element: ApRegisterPage,
+    element: <ApRegisterPage />,
   },
   {
     ...routeNames.apLoginPage,
-    Element: ApLoginPage,
+    element: <ApLoginPage />,
   },
   {
     ...routeNames.apResetPasswordVerifyEmailPage,
-    Element: ApResetPasswordVerifyEmailPage,
+    element: <ApResetPasswordVerifyEmailPage />,
   },
   {
     ...routeNames.apResetPasswordPage,
-    Element: ApResetPasswordPage,
+    element: <ApResetPasswordPage />,
   },
 ];

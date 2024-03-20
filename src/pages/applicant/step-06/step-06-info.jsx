@@ -34,7 +34,6 @@ export const ApStep06Info = ({ stepIndex }) => {
                     〈担保提供者の氏名（フリガナ）〉
                   </Typography>
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                    {'　'}
                     {p_join_guarantor.last_name_kana || p_join_guarantor.first_name_kana
                       ? `${p_join_guarantor.last_name_kana} ${p_join_guarantor.first_name_kana} 様`
                       : 'ー'}
@@ -42,26 +41,20 @@ export const ApStep06Info = ({ stepIndex }) => {
                 </Stack>
               )}
 
-              {p_join_guarantor.gender && (
-                <Typography variant="modal_label" color={'text.main'}>
-                  〈性別〉
-                  {p_join_guarantor.gender
-                    ? genderOptions.find((item) => item.value === p_join_guarantor.gender)?.label
-                    : 'ー'}
-                </Typography>
-              )}
-              {p_join_guarantor.rel_to_applicant_a_name && (
-                <Typography variant="modal_label" color={'text.main'}>
-                  〈続柄〉
-                  {p_join_guarantor.rel_to_applicant_a_name ? p_join_guarantor.rel_to_applicant_a_name : 'ー'}
-                </Typography>
-              )}
-              {p_join_guarantor.birthday && (
-                <Typography variant="modal_label" color={'text.main'}>
-                  〈生年月日〉
-                  {p_join_guarantor.birthday ? formatJapanDate(p_join_guarantor.birthday, true) : 'ー'}
-                </Typography>
-              )}
+              <Typography variant="modal_label" color={'text.main'}>
+                〈性別〉
+                {p_join_guarantor.gender
+                  ? genderOptions.find((item) => item.value === p_join_guarantor.gender)?.label
+                  : 'ー'}
+              </Typography>
+              <Typography variant="modal_label" color={'text.main'}>
+                〈続柄〉
+                {p_join_guarantor.rel_to_applicant_a_name ? p_join_guarantor.rel_to_applicant_a_name : 'ー'}
+              </Typography>
+              <Typography variant="modal_label" color={'text.main'}>
+                〈生年月日〉
+                {p_join_guarantor.birthday ? formatJapanDate(p_join_guarantor.birthday, true) : 'ー'}
+              </Typography>
               {p_join_guarantor.mobile_phone || p_join_guarantor.home_phone ? (
                 <Stack spacing={1} alignItems={'start'}>
                   <Typography variant="modal_label" color={'text.main'}>
@@ -71,13 +64,13 @@ export const ApStep06Info = ({ stepIndex }) => {
                     {p_join_guarantor.mobile_phone && (
                       <Typography variant="modal_label" color={'text.main'}>
                         〈携帯〉：
-                        {p_join_guarantor.mobile_phone ? p_join_guarantor.mobile_phone : 'ー'}
+                        {p_join_guarantor.mobile_phone}
                       </Typography>
                     )}
                     {p_join_guarantor.home_phone && (
                       <Typography variant="modal_label" color={'text.main'}>
                         〈自宅〉：
-                        {p_join_guarantor.home_phone ? p_join_guarantor.home_phone : 'ー'}
+                        {p_join_guarantor.home_phone}
                       </Typography>
                     )}
                   </Stack>

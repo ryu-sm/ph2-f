@@ -2,18 +2,19 @@ import { Icons } from '@/assets';
 import { AdSettingPopover } from '@/containers/ad-layout/ad-main-wrapper/setting-popover';
 import { useBoolean, useIsManager } from '@/hooks';
 import { routeNames } from '@/router/settings';
-import { authAtom, dashboardTabStatusAtom } from '@/store';
+import { applicationAtom, authAtom, dashboardTabStatusAtom } from '@/store';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { AdChangePasswordModal } from './chang-password';
 
 export const MainHeader = ({ leftContent, rightAddItems }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const authInfo = useRecoilValue(authAtom);
+  const resetApplication = useResetRecoilState(applicationAtom);
+  const [authInfo, setAuthInfo] = useRecoilState(authAtom);
   const [dashboardTabStatus, setDashboardTabStatus] = useRecoilState(dashboardTabStatusAtom);
   const isManager = useIsManager();
 
@@ -98,7 +99,23 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
               </Typography>
             </Stack>
             {!isManager && (
-              <Stack direction={'row'} alignItems={'center'} sx={{ cursor: 'pointer' }} spacing={1}>
+              <Stack
+                direction={'row'}
+                alignItems={'center'}
+                sx={{ cursor: 'pointer' }}
+                spacing={1}
+                onClick={() => {
+                  setAuthInfo((pre) => {
+                    return {
+                      ...pre,
+                      applyNo: null,
+                      agentSended: false,
+                    };
+                  });
+                  resetApplication();
+                  navigate(routeNames.adSalesPersonAgreementPage.path);
+                }}
+              >
                 <Icons.AdNewApply sx={{ width: 14, height: 16 }} />
                 <Typography variant="main_page_title" color="primary.main">
                   新規申込

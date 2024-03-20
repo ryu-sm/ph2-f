@@ -1,6 +1,6 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector, authAtom } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -39,13 +39,14 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 
 export const ApStep05Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
@@ -132,6 +133,7 @@ export const ApStep05Page = () => {
       office_employee_num: p_applicant_persons__1.office_employee_num,
       office_joining_date: p_applicant_persons__1.office_joining_date,
       last_year_income: p_applicant_persons__1.last_year_income,
+      before_last_year_income: p_applicant_persons__1.before_last_year_income,
       last_year_bonus_income: p_applicant_persons__1.last_year_bonus_income,
       income_sources: p_applicant_persons__1.income_sources,
       tax_return: p_applicant_persons__1.tax_return,
@@ -180,7 +182,7 @@ export const ApStep05Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -201,14 +203,27 @@ export const ApStep05Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
 
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+            />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`収入合算者のご職業について\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'ご職業'}>
@@ -434,7 +449,30 @@ export const ApStep05Page = () => {
                   )}
                 </Stack>
               </ApItemGroup>
-
+              {isMCJ && (
+                <ApItemGroup
+                  label={
+                    <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                      <Typography variant="form_item_label" color={'text.main'}>
+                        前々年度の年収
+                      </Typography>
+                      <Typography variant="note" color={'text.main'}>
+                        （MCJ固有項目）
+                      </Typography>
+                    </Stack>
+                  }
+                  pb={3}
+                  px={2}
+                >
+                  <ApNumberInputField
+                    name="p_applicant_persons__1.before_last_year_income"
+                    placeholder={'0'}
+                    unit={'万円'}
+                    width={156}
+                    maxLength={6}
+                  />
+                </ApItemGroup>
+              )}
               <ApItemGroup
                 label={
                   <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
@@ -695,12 +733,6 @@ export const ApStep05Page = () => {
             <ApRadioColumnGroup name="p_applicant_persons__1.nursing_leave" cancelable options={nursingLeaveOptions} />
           </ApItemGroup>
         )}
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter
-          left={handelLeft}
-          right={formik.handleSubmit}
-          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
-        />
       </ApLayout>
     </FormikProvider>
   );

@@ -40,12 +40,13 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { routeNames } from '@/router/settings';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 
 export const ApStep03Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
@@ -127,6 +128,7 @@ export const ApStep03Page = () => {
       office_employee_num: p_applicant_persons__0.office_employee_num,
       office_joining_date: p_applicant_persons__0.office_joining_date,
       last_year_income: p_applicant_persons__0.last_year_income,
+      before_last_year_income: p_applicant_persons__0.before_last_year_income,
       last_year_bonus_income: p_applicant_persons__0.last_year_bonus_income,
       income_sources: p_applicant_persons__0.income_sources,
       tax_return: p_applicant_persons__0.tax_return,
@@ -167,7 +169,7 @@ export const ApStep03Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -185,14 +187,23 @@ export const ApStep03Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
 
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`あなたのご職業について\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'ご職業'}>
@@ -418,6 +429,30 @@ export const ApStep03Page = () => {
                   )}
                 </Stack>
               </ApItemGroup>
+              {isMCJ && (
+                <ApItemGroup
+                  label={
+                    <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                      <Typography variant="form_item_label" color={'text.main'}>
+                        前々年度の年収
+                      </Typography>
+                      <Typography variant="note" color={'text.main'}>
+                        （MCJ固有項目）
+                      </Typography>
+                    </Stack>
+                  }
+                  pb={3}
+                  px={2}
+                >
+                  <ApNumberInputField
+                    name="p_applicant_persons__0.before_last_year_income"
+                    placeholder={'0'}
+                    unit={'万円'}
+                    width={156}
+                    maxLength={6}
+                  />
+                </ApItemGroup>
+              )}
 
               <ApItemGroup
                 label={
@@ -679,8 +714,6 @@ export const ApStep03Page = () => {
             <ApRadioColumnGroup name="p_applicant_persons__0.nursing_leave" options={nursingLeaveOptions} cancelable />
           </ApItemGroup>
         )}
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

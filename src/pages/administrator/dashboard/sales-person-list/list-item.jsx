@@ -14,6 +14,8 @@ import { toast } from 'react-toastify';
 import { useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
 
 import { widthConfig } from '../common/width-config';
+import { useNavigate } from 'react-router-dom';
+import { routeNames } from '@/router/settings';
 
 export const SpCaseItem = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -45,6 +47,7 @@ export const SpCaseItem = ({ item }) => {
 };
 
 const CaseItem = ({ item, isPairLoan, index }) => {
+  const navigator = useNavigate();
   const formik = useFormik({
     initialValues: {
       sales_area_id: item?.sales_area_id,
@@ -57,7 +60,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const letfLinkItems = [
     {
       label: '申込内容の修正・確認',
-      onClick: () => {},
+      onClick: () => {
+        navigator(`${routeNames.adSalesPersonEditPreliminaryPage.path}?id=${item.id}`);
+      },
     },
     {
       label: 'メッセージ確認',

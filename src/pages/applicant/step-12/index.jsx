@@ -24,13 +24,14 @@ import { inputOptions } from './options';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { routeNames } from '@/router/settings';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
 import { diffObj } from '@/utils';
 
 export const ApStep12Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const apNextStepId = useRecoilValue(apNextStepIdSelector);
   const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
@@ -96,7 +97,7 @@ export const ApStep12Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         console.log(error);
@@ -137,7 +138,7 @@ export const ApStep12Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
   const getOrgs = useCallback(async () => {
@@ -203,162 +204,168 @@ export const ApStep12Page = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        // pb={18}
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
-        <Stack flex={1} sx={{ minHeight: '100dvh' }}>
-          <ApPageTitle py={8}>{`提携先企業（住宅メーカー・\n不動産会社等）の\n担当者を教えてください`}</ApPageTitle>
-          {!formik.values.input_type && (
-            <Stack spacing={4} sx={{ px: 4, pb: 8 }}>
-              <Typography variant="note">{`本件住宅ローンの借入申込に関わる事務（個人情報の受け渡しを含む）は提携先企業が行います。\n\nまた、みらいバンクは審査終了や審査結果の連絡を提携先企業に対して行います。\n\n詳しくは、既に同意いただいている以下の書類をよくお読みください。`}</Typography>
-              <Stack
-                spacing={1}
-                direction={'row'}
-                alignItems={'center'}
-                component={Link}
-                href={CONSENT_URL}
-                target="_blank"
-              >
-                <Icons.ApPdfOutlineMainIcon sx={{ width: 20, height: 20 }} />
-                <Typography variant="help" lineHeight={'150%'}>
-                  {'個人情報の取扱いに関する同意書 兼 表明および確約書'}
-                </Typography>
-              </Stack>
-              <Stack
-                spacing={1}
-                direction={'row'}
-                alignItems={'center'}
-                component={Link}
-                href={CONSENT_URL}
-                target="_blank"
-              >
-                <Icons.ApPdfOutlineMainIcon sx={{ width: 20, height: 20 }} />
-                <Typography variant="help" lineHeight={'150%'}>
-                  {'銀行代理業にかかる確認書　兼　個人情報の取扱い等に関する同意書'}
-                </Typography>
-              </Stack>
+        <ApPageTitle py={8}>{`提携先企業（住宅メーカー・\n不動産会社等）の\n担当者を教えてください`}</ApPageTitle>
+        {!formik.values.input_type && (
+          <Stack spacing={4} sx={{ px: 4, pb: 8 }}>
+            <Typography variant="note">{`本件住宅ローンの借入申込に関わる事務（個人情報の受け渡しを含む）は提携先企業が行います。\n\nまた、みらいバンクは審査終了や審査結果の連絡を提携先企業に対して行います。\n\n詳しくは、既に同意いただいている以下の書類をよくお読みください。`}</Typography>
+            <Stack
+              spacing={1}
+              direction={'row'}
+              alignItems={'center'}
+              component={Link}
+              href={CONSENT_URL}
+              target="_blank"
+            >
+              <Icons.ApPdfOutlineMainIcon sx={{ width: 20, height: 20 }} />
+              <Typography variant="help" lineHeight={'150%'}>
+                {'個人情報の取扱いに関する同意書 兼 表明および確約書'}
+              </Typography>
             </Stack>
-          )}
-          <ApItemGroup label={'担当者の名刺はありますか？'} note={'※名刺添付で入力を省略できます'}>
-            <Stack spacing={3}>
-              <ApRadioRowGroup name="input_type" height={30} options={inputOptions} />
-              {formik.values.input_type === '1' && (
+            <Stack
+              spacing={1}
+              direction={'row'}
+              alignItems={'center'}
+              component={Link}
+              href={CONSENT_URL}
+              target="_blank"
+            >
+              <Icons.ApPdfOutlineMainIcon sx={{ width: 20, height: 20 }} />
+              <Typography variant="help" lineHeight={'150%'}>
+                {'銀行代理業にかかる確認書　兼　個人情報の取扱い等に関する同意書'}
+              </Typography>
+            </Stack>
+          </Stack>
+        )}
+        <ApItemGroup label={'担当者の名刺はありますか？'} note={'※名刺添付で入力を省略できます'}>
+          <Stack spacing={3}>
+            <ApRadioRowGroup name="input_type" height={30} options={inputOptions} />
+            {formik.values.input_type === '1' && (
+              <Stack
+                sx={{
+                  borderRadius: 2,
+                  border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                  bgcolor: 'primary.main',
+                  boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
+                }}
+              >
                 <Stack
                   sx={{
-                    borderRadius: 2,
-                    border: (theme) => `1px solid ${theme.palette.primary.main}`,
-                    bgcolor: 'primary.main',
-                    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
+                    bgcolor: 'white',
+                    borderRadius: '7px',
                   }}
                 >
-                  <Stack
-                    sx={{
-                      bgcolor: 'white',
-                      borderRadius: '7px',
-                    }}
+                  <ApItemGroup
+                    label={
+                      <Typography variant="notify" lineHeight={'130%'} color={'text.main'}>
+                        営業担当者の名刺をアップロードしてください。
+                      </Typography>
+                    }
+                    pb={3}
+                    px={2}
+                    borderTopRightRadius={'7px'}
+                    borderTopLeftRadius={'7px'}
                   >
-                    <ApItemGroup
-                      label={
-                        <Typography variant="notify" lineHeight={'130%'} color={'text.main'}>
-                          営業担当者の名刺をアップロードしてください。
-                        </Typography>
-                      }
-                      pb={3}
-                      px={2}
-                      borderTopRightRadius={'7px'}
-                      borderTopLeftRadius={'7px'}
-                    >
-                      <ApImgUpload name="p_uploaded_files.J" singleFile />
-                    </ApItemGroup>
-                  </Stack>
+                    <ApImgUpload name="p_uploaded_files.J" singleFile />
+                  </ApItemGroup>
                 </Stack>
-              )}
-              {formik.values.input_type === '2' && orgs.length > 0 && (
+              </Stack>
+            )}
+            {formik.values.input_type === '2' && orgs.length > 0 && (
+              <Stack
+                sx={{
+                  mt: 3,
+                  borderRadius: 2,
+                  border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                  bgcolor: 'primary.main',
+                  boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
+                }}
+              >
+                <Stack sx={{ px: 4, py: 1 }}>
+                  <Typography variant="form_item_label" color="white">
+                    担当者情報
+                  </Typography>
+                </Stack>
                 <Stack
                   sx={{
-                    mt: 3,
-                    borderRadius: 2,
-                    border: (theme) => `1px solid ${theme.palette.primary.main}`,
-                    bgcolor: 'primary.main',
-                    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
+                    bgcolor: 'white',
+                    borderRadius: '7px',
                   }}
                 >
-                  <Stack sx={{ px: 4, py: 1 }}>
-                    <Typography variant="form_item_label" color="white">
-                      担当者情報
-                    </Typography>
-                  </Stack>
-                  <Stack
-                    sx={{
-                      bgcolor: 'white',
-                      borderRadius: '7px',
-                    }}
-                  >
-                    <ApItemGroup
-                      label={
-                        <Typography variant="form_item_label" color={'text.main'}>
-                          提携先企業
-                          <Typography variant="note" color={'text.main'}>
-                            （不動産会社・住宅メーカー等）
-                          </Typography>
+                  <ApItemGroup
+                    label={
+                      <Typography variant="form_item_label" color={'text.main'}>
+                        提携先企業
+                        <Typography variant="note" color={'text.main'}>
+                          （不動産会社・住宅メーカー等）
                         </Typography>
-                      }
-                      pb={3}
-                      px={2}
-                    >
-                      <ApSelectField
-                        name="p_application_headers.sales_company_id"
-                        placeholder={'選択してください'}
-                        width={1}
-                        justifyContent={'start'}
-                        options={salesCompanyOptions}
-                        onChange={(e) => {
-                          formik.setFieldValue('p_application_headers.sales_area_id', '');
-                          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-                        }}
-                      />
-                    </ApItemGroup>
-                    <ApItemGroup label={'エリア'} pb={3} px={2}>
-                      <ApSelectField
-                        name="p_application_headers.sales_area_id"
-                        placeholder={'選択してください'}
-                        width={1}
-                        justifyContent={'start'}
-                        options={salesAreaOptions}
-                        onChange={(e) => {
-                          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-                        }}
-                      />
-                    </ApItemGroup>
-                    <ApItemGroup label={'展示場'} pb={3} px={2}>
-                      <ApSelectField
-                        name="p_application_headers.sales_exhibition_hall_id"
-                        placeholder={'選択してください'}
-                        width={1}
-                        justifyContent={'start'}
-                        options={exhibitionHallOptions}
-                      />
-                    </ApItemGroup>
-                    <ApItemGroup label={'担当者名'} pb={3} px={2}>
-                      <ApTextInputField
-                        name="p_application_headers.vendor_name"
-                        placeholder={'例：○○さん'}
-                        convertFullWidth
-                      />
-                    </ApItemGroup>
-                    <ApItemGroup label={'携帯電話番号'} pb={3} px={2}>
-                      <Stack spacing={'6px'}>
-                        <ApPhoneInputField name="p_application_headers.vendor_phone" />
-                        <ApStarHelp label={'半角数字でご入力ください。'} />
-                      </Stack>
-                    </ApItemGroup>
-                  </Stack>
+                      </Typography>
+                    }
+                    pb={3}
+                    px={2}
+                  >
+                    <ApSelectField
+                      name="p_application_headers.sales_company_id"
+                      placeholder={'選択してください'}
+                      width={1}
+                      justifyContent={'start'}
+                      options={salesCompanyOptions}
+                      onChange={(e) => {
+                        formik.setFieldValue('p_application_headers.sales_area_id', '');
+                        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+                      }}
+                    />
+                  </ApItemGroup>
+                  <ApItemGroup label={'エリア'} pb={3} px={2}>
+                    <ApSelectField
+                      name="p_application_headers.sales_area_id"
+                      placeholder={'選択してください'}
+                      width={1}
+                      justifyContent={'start'}
+                      options={salesAreaOptions}
+                      onChange={(e) => {
+                        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+                      }}
+                    />
+                  </ApItemGroup>
+                  <ApItemGroup label={'展示場'} pb={3} px={2}>
+                    <ApSelectField
+                      name="p_application_headers.sales_exhibition_hall_id"
+                      placeholder={'選択してください'}
+                      width={1}
+                      justifyContent={'start'}
+                      options={exhibitionHallOptions}
+                    />
+                  </ApItemGroup>
+                  <ApItemGroup label={'担当者名'} pb={3} px={2}>
+                    <ApTextInputField
+                      name="p_application_headers.vendor_name"
+                      placeholder={'例：○○さん'}
+                      convertFullWidth
+                    />
+                  </ApItemGroup>
+                  <ApItemGroup label={'携帯電話番号'} pb={3} px={2}>
+                    <Stack spacing={'6px'}>
+                      <ApPhoneInputField name="p_application_headers.vendor_phone" />
+                      <ApStarHelp label={'半角数字でご入力ください。'} />
+                    </Stack>
+                  </ApItemGroup>
                 </Stack>
-              )}
-            </Stack>
-          </ApItemGroup>
-        </Stack>
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+              </Stack>
+            )}
+          </Stack>
+        </ApItemGroup>
       </ApLayout>
     </FormikProvider>
   );

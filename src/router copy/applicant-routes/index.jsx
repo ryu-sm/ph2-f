@@ -28,96 +28,96 @@ import {
 export const applicantRoutes = [
   {
     ...routeNames.apConsentConfirmationPage,
-    Element: ApConsentConfirmationPage,
+    element: <ApConsentConfirmationPage />,
   },
   {
     ...routeNames.apAccountInformationPage,
-    Element: ApAccountInformationPage,
+    element: <ApAccountInformationPage />,
   },
   {
     ...routeNames.apUnsubcribedPage,
-    Element: ApUnsubcribedPage,
+    element: <ApUnsubcribedPage />,
   },
   {
     ...routeNames.apUpdatePasswordPage,
-    Element: ApUpdatePasswordPage,
+    element: <ApUpdatePasswordPage />,
   },
   {
     ...routeNames.apChangeEmailVerifyEmailPage,
-    Element: ApChangeEmailVerifyEmailPage,
+    element: <ApChangeEmailVerifyEmailPage />,
   },
   {
     ...routeNames.apChangeEmailPage,
-    Element: ApChangeEmailPage,
+    element: <ApChangeEmailPage />,
   },
   //
   {
     ...routeNames.apAgreementPage,
-    Element: ApAgreementPage,
+    element: <ApAgreementPage />,
   },
   {
     ...routeNames.apTopPage,
-    Element: ApTopPage,
+    element: <ApTopPage />,
   },
   {
     ...routeNames.apStep01Page,
-    Element: ApStep01Page,
+    element: <ApStep01Page />,
   },
   {
     ...routeNames.apStep02Page,
-    Element: ApStep02Page,
+    element: <ApStep02Page />,
   },
   {
     ...routeNames.apStep03Page,
-    Element: ApStep03Page,
+    element: <ApStep03Page />,
   },
 
   {
     ...routeNames.apStep04Page,
-    Element: ApStep04Page,
+    element: <ApStep04Page />,
   },
   {
     ...routeNames.apStep05Page,
-    Element: ApStep05Page,
+    element: <ApStep05Page />,
   },
   {
     ...routeNames.apStep06Page,
-    Element: ApStep06Page,
+    element: <ApStep06Page />,
   },
   {
     ...routeNames.apStep07Page,
-    Element: ApStep07Page,
+    element: <ApStep07Page />,
   },
   {
     ...routeNames.apStep08Page,
-    Element: ApStep08Page,
+    element: <ApStep08Page />,
   },
   {
     ...routeNames.apStep09Page,
-    Element: ApStep09Page,
+    element: <ApStep09Page />,
   },
   {
     ...routeNames.apStep10Page,
-    Element: ApStep10Page,
+    element: <ApStep10Page />,
   },
   {
     ...routeNames.apStep11Page,
-    Element: ApStep11Page,
+    element: <ApStep11Page />,
   },
   {
     ...routeNames.apStep12Page,
-    Element: ApStep12Page,
+    element: <ApStep12Page />,
   },
   {
     ...routeNames.apStep13Page,
-    Element: ApStep13Page,
+    element: <ApStep13Page />,
   },
   {
     ...routeNames.apStep14Page,
-    Element: ApStep14Page,
+    element: <ApStep14Page />,
   },
   {
     ...routeNames.apConfirmPage,
-    Element: ApConfirmPage,
+    element: <ApConfirmPage />,
   },
 ];

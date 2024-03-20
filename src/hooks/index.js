@@ -1,7 +1,6 @@
 export * from './use-curr-search-params';
 export * from './use-user-auth';
 export * from './use-boolen';
-export * from './use-public-holiday';
 export * from './use-update-apply-info';
 export * from './use-is-manager';
 export * from './use-sales-person-options';
@@ -9,3 +8,4 @@ export * from './use-sort-preliminaries';
 export * from './use-sales-exhibition-hall-options';
 export * from './update-popover-position';
 export * from './use-dashboard-context';
+export * from './use-is-sales-person';

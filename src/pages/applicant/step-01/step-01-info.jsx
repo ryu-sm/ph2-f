@@ -6,9 +6,7 @@ import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import {
   bonusRepaymentMonthOptions,
-  hasJoinGuarantorOptions,
   landAadvancePlanOptions,
-  loanPlusOptions,
   loanTargetOptions,
   loanTargetOptions_,
   loanTypeOptions,
@@ -53,21 +51,17 @@ export const ApStep01Info = ({ stepIndex }) => {
           : 'ー'}
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'お借入の目的'}>
-        {loan_target_ ? loanTargetOptions_.find((item) => item.value === loan_target_)?.label : 'ー'}
+        {loanTargetOptions_.find((item) => item.value === loan_target_)?.label}
       </ApConfirmItemGroup>
       {loan_target_ === '0' && (
         <ApConfirmItemGroup label={'資金の使いみち'}>
-          {p_application_headers.loan_target
-            ? loanTargetOptions.find((item) => item.value === p_application_headers.loan_target)?.label
-            : 'ー'}
+          {loanTargetOptions.find((item) => item.value === p_application_headers.loan_target)?.label}
         </ApConfirmItemGroup>
       )}
 
       {p_application_headers.loan_target === '6' && (
         <ApConfirmItemGroup label={'土地先行プランをご希望ですか？'}>
-          {p_application_headers.land_advance_plan
-            ? landAadvancePlanOptions.find((item) => item.value === p_application_headers.land_advance_plan)?.label
-            : 'ー'}
+          {landAadvancePlanOptions.find((item) => item.value === p_application_headers.land_advance_plan)?.label}
         </ApConfirmItemGroup>
       )}
 
@@ -166,16 +160,12 @@ export const ApStep01Info = ({ stepIndex }) => {
       )}
       <ApConfirmItemGroup label={'担保提供者がいらっしゃいますか？'}>
         <Typography variant="modal_label" color={'text.main'}>
-          {p_application_headers.join_guarantor_umu
-            ? hasJoinGuarantorOptions.find((item) => item.value === p_application_headers.join_guarantor_umu)?.label
-            : 'ー'}
+          {p_application_headers.join_guarantor_umu ? 'いる' : 'いない'}
         </Typography>
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'住信SBIネット銀行の「住宅ローンプラス」を申し込みますか？'}>
         <Typography variant="modal_label" color={'text.main'}>
-          {p_application_headers.loan_plus
-            ? loanPlusOptions.find((item) => item.value === p_application_headers.loan_plus)?.label
-            : 'ー'}
+          {p_application_headers.loan_plus ? '申し込む' : '申し込まない'}
         </Typography>
       </ApConfirmItemGroup>
       {!agentSended && (

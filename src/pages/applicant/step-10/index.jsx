@@ -20,7 +20,7 @@ import { Link, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apApplicationFile } from '@/services';
 import { diffObj } from '@/utils';
@@ -29,6 +29,7 @@ import { API_500_ERROR } from '@/constant';
 
 export const ApStep10Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
@@ -166,7 +167,7 @@ export const ApStep10Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -230,7 +231,7 @@ export const ApStep10Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
 
@@ -316,7 +317,16 @@ export const ApStep10Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle>{`本人確認書類など\n書類を添付しましょう`}</ApPageTitle>
         <Stack sx={{ px: 4, pb: 4 }}>
@@ -702,8 +712,6 @@ export const ApStep10Page = () => {
             </Stack>
           </Stack>
         </ApItemGroup>
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

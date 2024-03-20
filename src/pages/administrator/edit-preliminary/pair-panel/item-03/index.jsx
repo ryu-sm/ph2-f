@@ -95,7 +95,7 @@ export const Item03 = () => {
       office_establishment_date: p_applicant_persons__0?.office_establishment_date,
       office_capital_stock: p_applicant_persons__0?.office_capital_stock,
       main_income_source: p_applicant_persons__0?.main_income_source,
-      before_last_year_bonus_income: p_applicant_persons__0?.before_last_year_bonus_income,
+      before_last_year_income: p_applicant_persons__0?.before_last_year_income,
     },
   };
 
@@ -529,12 +529,12 @@ export const Item03 = () => {
               isRequired
               field={
                 isEditable ? (
-                  <AdNumericInput name="p_applicant_persons__0.before_last_year_bonus_income" maxLength={6} />
+                  <AdNumericInput name="p_applicant_persons__0.before_last_year_income" maxLength={6} />
                 ) : (
-                  formatMoney(formik.values.p_applicant_persons__0.before_last_year_bonus_income)
+                  formatMoney(formik.values.p_applicant_persons__0.before_last_year_income)
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.before_last_year_bonus_income}
+              error={formik.errors?.p_applicant_persons__0?.before_last_year_income}
             />
           </Stack>
         )}

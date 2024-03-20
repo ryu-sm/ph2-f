@@ -26,8 +26,10 @@ import { MCJ_CODE } from '@/configs';
 import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 import { apApplication } from '@/services';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApTopPage = () => {
+  const isSalesPerson = useIsSalesPerson();
   const applyNo = useRecoilValue(applyNoSelector);
   const appliedBanks = useRecoilValue(appliedBanksSelector);
   const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
@@ -45,13 +47,46 @@ export const ApTopPage = () => {
       setApplicationInfo((pre) => {
         return {
           ...pre,
-          ...res.data,
+          p_uploaded_files: {
+            ...pre.p_uploaded_files,
+            ...res.data.p_uploaded_files,
+          },
+          p_application_headers: {
+            ...pre.p_application_headers,
+            ...res.data.p_application_headers,
+          },
+          p_borrowing_details__1: {
+            ...pre.p_borrowing_details__1,
+            ...res.data.p_borrowing_details__1,
+          },
+          p_borrowing_details__2: {
+            ...pre.p_borrowing_details__2,
+            ...res.data.p_borrowing_details__2,
+          },
+          p_application_banks: res.data?.p_application_banks ? res.data?.p_application_banks : pre.p_application_banks,
+          p_applicant_persons__0: {
+            ...pre.p_applicant_persons__0,
+            ...res.data.p_applicant_persons__0,
+          },
+          p_applicant_persons__1: {
+            ...pre.p_applicant_persons__1,
+            ...res.data.p_applicant_persons__1,
+          },
+          p_join_guarantors: res.data?.p_join_guarantors ? res.data.p_join_guarantors : pre.p_join_guarantors,
+          p_residents: res.data?.p_residents ? res.data?.p_residents : pre.p_residents,
+          p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : pre.p_borrowings,
           apCurrStepId: 14,
-          isMCJ: res.data.p_application_banks?.lengt > 1,
-          hasIncomeTotalizer: Boolean(res.data.p_applicant_persons__1),
-          hasJoinGuarantor: Boolean(res.data.p_join_guarantors),
+          isMCJ: res.data.p_application_banks?.length > 1,
+          hasIncomeTotalizer:
+            res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4',
+          hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',
           changeJoinGuarantor: false,
           changeToIncomeTotalizer: false,
+          p_applicant_persons_a_agreement: true,
+          p_applicant_persons_b_agreement:
+            res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4'
+              ? true
+              : false,
         };
       });
     } catch (error) {
@@ -70,7 +105,7 @@ export const ApTopPage = () => {
         id: 1,
         stepTitle: 'お借入のご希望',
         stepIcon: <Icons.ApTopStepIdIcon01 />,
-        stepPath: routeNames.apStep01Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep01Page.path : routeNames.apStep01Page.path,
         buttonLabel: apCurrStepId === 1 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -78,7 +113,7 @@ export const ApTopPage = () => {
         id: 2,
         stepTitle: 'あなたの情報',
         stepIcon: <Icons.ApTopStepIdIcon02 />,
-        stepPath: routeNames.apStep02Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep02Page.path : routeNames.apStep02Page.path,
         buttonLabel: apCurrStepId < 2 ? '---' : apCurrStepId === 2 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -86,7 +121,7 @@ export const ApTopPage = () => {
         id: 3,
         stepTitle: 'あなたのご職業',
         stepIcon: <Icons.ApTopStepIdIcon03 />,
-        stepPath: routeNames.apStep03Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep03Page.path : routeNames.apStep03Page.path,
         buttonLabel: apCurrStepId < 3 ? '---' : apCurrStepId === 3 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -96,7 +131,7 @@ export const ApTopPage = () => {
               id: 4,
               stepTitle: '収入合算者',
               stepIcon: <Icons.ApTopStepIdIcon04 />,
-              stepPath: routeNames.apStep04Page.path,
+              stepPath: isSalesPerson ? routeNames.adSalesPersonStep04Page.path : routeNames.apStep04Page.path,
               buttonLabel: apCurrStepId < 4 ? '---' : apCurrStepId === 4 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -104,7 +139,7 @@ export const ApTopPage = () => {
               id: 5,
               stepTitle: '収入合算者の職業',
               stepIcon: <Icons.ApTopStepIdIcon05 />,
-              stepPath: routeNames.apStep05Page.path,
+              stepPath: isSalesPerson ? routeNames.adSalesPersonStep05Page.path : routeNames.apStep05Page.path,
               buttonLabel: apCurrStepId < 5 ? '---' : apCurrStepId === 5 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -116,7 +151,7 @@ export const ApTopPage = () => {
               id: 6,
               stepTitle: '担保提供者',
               stepIcon: <Icons.ApTopStepIdIcon06 />,
-              stepPath: routeNames.apStep06Page.path,
+              stepPath: isSalesPerson ? routeNames.adSalesPersonStep06Page.path : routeNames.apStep06Page.path,
               buttonLabel: apCurrStepId < 6 ? '---' : apCurrStepId === 6 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -126,7 +161,7 @@ export const ApTopPage = () => {
         id: 7,
         stepTitle: 'お住まい',
         stepIcon: <Icons.ApTopStepIdIcon07 />,
-        stepPath: routeNames.apStep07Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep07Page.path : routeNames.apStep07Page.path,
         buttonLabel: apCurrStepId < 7 ? '---' : apCurrStepId === 7 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -134,7 +169,7 @@ export const ApTopPage = () => {
         id: 8,
         stepTitle: '現在のお借入状況',
         stepIcon: <Icons.ApTopStepIdIcon08 />,
-        stepPath: routeNames.apStep08Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep08Page.path : routeNames.apStep08Page.path,
         buttonLabel: apCurrStepId < 8 ? '---' : apCurrStepId === 8 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -142,7 +177,7 @@ export const ApTopPage = () => {
         id: 9,
         stepTitle: '資金計画',
         stepIcon: <Icons.ApTopStepIdIcon09 />,
-        stepPath: routeNames.apStep09Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep09Page.path : routeNames.apStep09Page.path,
         buttonLabel: apCurrStepId < 9 ? '---' : apCurrStepId === 9 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -150,7 +185,7 @@ export const ApTopPage = () => {
         id: 10,
         stepTitle: '書類添付',
         stepIcon: <Icons.ApTopStepIdIcon10 />,
-        stepPath: routeNames.apStep10Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep10Page.path : routeNames.apStep10Page.path,
         buttonLabel: apCurrStepId < 10 ? '---' : apCurrStepId === 10 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -160,7 +195,7 @@ export const ApTopPage = () => {
               id: 11,
               stepTitle: '収入合算者の書類',
               stepIcon: <Icons.ApTopStepIdIcon11 />,
-              stepPath: routeNames.apStep11Page.path,
+              stepPath: isSalesPerson ? routeNames.adSalesPersonStep11Page.path : routeNames.apStep11Page.path,
               buttonLabel: apCurrStepId < 11 ? '---' : apCurrStepId === 11 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -170,7 +205,7 @@ export const ApTopPage = () => {
         id: 12,
         stepTitle: '担当者情報',
         stepIcon: <Icons.ApTopStepIdIcon12 />,
-        stepPath: routeNames.apStep12Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep12Page.path : routeNames.apStep12Page.path,
         buttonLabel: apCurrStepId < 12 ? '---' : apCurrStepId === 12 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -178,7 +213,7 @@ export const ApTopPage = () => {
         id: 13,
         stepTitle: '入力内容確認',
         stepIcon: <Icons.ApTopStepIdIcon13 />,
-        stepPath: routeNames.apStep13Page.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonStep13Page.path : routeNames.apStep13Page.path,
         buttonLabel: apCurrStepId < 13 ? '---' : apCurrStepId === 13 ? '入力する' : '修正する',
         show: !agentSended,
       },
@@ -186,7 +221,7 @@ export const ApTopPage = () => {
         id: 14,
         stepTitle: '仮審査申込',
         stepIcon: <Icons.ApTopStepIdIcon14 />,
-        stepPath: routeNames.apConfirmPage.path,
+        stepPath: isSalesPerson ? routeNames.adSalesPersonConfirmPage.path : routeNames.apConfirmPage.path,
         buttonLabel: apCurrStepId < 14 ? '---' : '申込内容確認',
         show: true,
       },

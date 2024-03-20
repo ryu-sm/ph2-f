@@ -116,7 +116,7 @@ export const ApStepBar = () => {
   );
 
   const stepIndex = useMemo(() => {
-    const pageStepID = parseInt(pathname.replace('/step-id-', ''));
+    const pageStepID = parseInt(pathname.split('/').slice(-1)[0].replace('step-id-', ''));
     return apSteps.findIndex((item) => item.id === pageStepID);
   }, [apSteps, pathname]);
 

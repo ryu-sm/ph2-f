@@ -23,7 +23,6 @@ export const routeNames = {
     name: 'apResetPasswordPage',
     path: '/reset-password',
   },
-
   apAgreementPage: {
     name: 'apAgreementPage',
     path: '/agreement',
@@ -209,82 +208,5 @@ export const routeNames = {
   adSalesPersonNewDocumentsPage: {
     name: 'adSalesPersonDocumentsPage',
     path: '/sales-person/new-documents',
-  },
-
-  //
-  adSalesPersonAgreementPage: {
-    name: 'adSalesPersonAgreementPage',
-    path: '/sales-person/agreement',
-  },
-  adSalesPersonTopPage: {
-    name: 'adSalesPersonTopPage',
-    path: '/sales-person/top',
-  },
-  adSalesPersonStep01Page: {
-    name: 'adSalesPersonStep01Page',
-    path: '/sales-person/step-id-1',
-  },
-  adSalesPersonStep02Page: {
-    name: 'adSalesPersonStep02Page',
-    path: '/sales-person/step-id-2',
-  },
-
-  adSalesPersonStep03Page: {
-    name: 'adSalesPersonStep03Page',
-    path: '/sales-person/step-id-3',
-  },
-
-  adSalesPersonStep04Page: {
-    name: 'adSalesPersonStep04Page',
-    path: '/sales-person/step-id-4',
-  },
-
-  adSalesPersonStep05Page: {
-    name: 'adSalesPersonStep05Page',
-    path: '/sales-person/step-id-5',
-  },
-  adSalesPersonStep06Page: {
-    name: 'adSalesPersonStep06Page',
-    path: '/sales-person/step-id-6',
-  },
-  adSalesPersonStep07Page: {
-    name: 'adSalesPersonStep07Page',
-    path: '/sales-person/step-id-7',
-  },
-  adSalesPersonStep07Page: {
-    name: 'adSalesPersonStep07Page',
-    path: '/sales-person/step-id-7',
-  },
-  adSalesPersonStep08Page: {
-    name: 'adSalesPersonStep08Page',
-    path: '/sales-person/step-id-8',
-  },
-  adSalesPersonStep09Page: {
-    name: 'adSalesPersonStep09Page',
-    path: '/sales-person/step-id-9',
-  },
-  adSalesPersonStep10Page: {
-    name: 'adSalesPersonStep10Page',
-    path: '/sales-person/step-id-10',
-  },
-  adSalesPersonStep11Page: {
-    name: 'adSalesPersonStep11Page',
-    path: '/sales-person/step-id-11',
-  },
-  adSalesPersonStep12Page: {
-    name: 'adSalesPersonStep12Page',
-    path: '/sales-person/step-id-12',
-  },
-  adSalesPersonStep13Page: {
-    name: 'adSalesPersonStep13Page',
-    path: '/sales-person/step-id-13',
-  },
-  adSalesPersonStep14Page: {
-    name: 'adSalesPersonStep14Page',
-    path: '/sales-person/step-id-14',
-  },
-  adSalesPersonConfirmPage: {
-    name: 'adSalesPersonConfirmPage',
-    path: '/sales-person/confirm',
   },
 };

@@ -346,7 +346,7 @@ export const preliminaryInitialValues = {
     office_establishment_date: '',
     office_capital_stock: '',
     main_income_source: '',
-    before_last_year_bonus_income: '',
+    before_last_year_income: '',
   },
 
   p_applicant_persons__1: {
@@ -420,7 +420,7 @@ export const preliminaryInitialValues = {
     office_establishment_date: '',
     office_capital_stock: '',
     main_income_source: '',
-    before_last_year_bonus_income: '',
+    before_last_year_income: '',
   },
 
   p_join_guarantors: [],

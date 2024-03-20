@@ -77,9 +77,11 @@ export const ApStep05Info = ({ stepIndex }) => {
       <ApConfirmItemGroup label={'勤務先名'}>
         {p_applicant_persons__1.office_name_kanji ? p_applicant_persons__1.office_name_kanji : 'ー'}
       </ApConfirmItemGroup>
-      <ApConfirmItemGroup label={'所属部課'}>
-        {p_applicant_persons__1.office_department ? p_applicant_persons__1.office_department : 'ー'}
-      </ApConfirmItemGroup>
+      {p_applicant_persons__1.office_occupation !== '5' && (
+        <ApConfirmItemGroup label={'所属部課'}>
+          {p_applicant_persons__1.office_department ? p_applicant_persons__1.office_department : 'ー'}
+        </ApConfirmItemGroup>
+      )}
       <ApConfirmItemGroup label={'勤務先の電話番号'}>
         {p_applicant_persons__1.office_phone ? p_applicant_persons__1.office_phone : 'ー'}
       </ApConfirmItemGroup>
@@ -128,6 +130,14 @@ export const ApStep05Info = ({ stepIndex }) => {
                 〈うち、ボーナス（MCJ固有項目）〉
                 {p_applicant_persons__1.last_year_bonus_income
                   ? `${Number(p_applicant_persons__1.last_year_bonus_income).toLocaleString()}万円`
+                  : 'ー'}
+              </Typography>
+            )}
+            {isMCJ && (
+              <Typography variant="modal_label" color={'text.main'}>
+                〈前々年度の年収（MCJ固有項目）〉
+                {p_applicant_persons__1.before_last_year_income
+                  ? `${Number(p_applicant_persons__1.before_last_year_income).toLocaleString()}万円`
                   : 'ー'}
               </Typography>
             )}

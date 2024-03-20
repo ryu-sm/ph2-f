@@ -43,7 +43,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { apPborrowings } from '@/services';
 import { diffObj } from '@/utils';
@@ -52,6 +52,7 @@ import { API_500_ERROR } from '@/constant';
 
 export const ApStep08Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
@@ -122,7 +123,7 @@ export const ApStep08Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -167,9 +168,13 @@ export const ApStep08Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
+
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.errors]);
 
   return (
     <FormikProvider value={formik}>

@@ -53,7 +53,7 @@ const Content = () => {
         {status === 'loading' && <LinearProgress />}
         {status === 'hasValue' && (
           <Stack>
-            <AdReviewProgress />
+            {isManager && <AdReviewProgress />}
             <EditTabs />
           </Stack>
         )}

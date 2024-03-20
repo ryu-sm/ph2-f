@@ -4,11 +4,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { agentSendedSelector, applicationAtom } from '@/store';
 import { Icons } from '@/assets';
 import { apSaveDraft } from '@/services';
-import { useBoolean } from '@/hooks';
+import { useBoolean, useIsSalesPerson } from '@/hooks';
 import { ApModalWrapper } from '../modal-wrapper';
 import { ApLighterButton } from './lighter-button';
 
 export const ApSaveDraftButton = ({ pageInfo }) => {
+  const isSalesPerson = useIsSalesPerson();
   const application = useRecoilValue(applicationAtom);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
@@ -89,17 +90,18 @@ export const ApSaveDraftButton = ({ pageInfo }) => {
   }, [application, pageInfo]);
 
   return (
-    <>
-      {!agentSended && (
-        <Stack
-          direction="row"
-          justifyContent="flex-end"
-          sx={{
-            position: 'sticky',
-            bottom: 0,
-            zIndex: 1,
-          }}
-        >
+    <Stack
+      direction="row"
+      justifyContent="flex-end"
+      sx={{
+        position: 'sticky',
+        height: 63,
+        bottom: 0,
+        zIndex: 1,
+      }}
+    >
+      {!agentSended && !isSalesPerson && (
+        <>
           <Button
             sx={{
               width: 78,
@@ -129,8 +131,8 @@ export const ApSaveDraftButton = ({ pageInfo }) => {
               とじる
             </ApLighterButton>
           </ApModalWrapper>
-        </Stack>
+        </>
       )}
-    </>
+    </Stack>
   );
 };

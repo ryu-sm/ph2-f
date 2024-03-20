@@ -40,11 +40,10 @@ export const ApStep02Info = ({ stepIndex }) => {
             ? nationalityOptions.find((item) => item.value === p_applicant_persons__0.nationality)?.label
             : 'ー'}
         </Stack>
-        {p_applicant_persons__0.nationality === '2' && (
+      </ApConfirmItemGroup>
+      {p_applicant_persons__0.nationality === '2' && (
+        <ApConfirmItemGroup label={'在留カードまたは特別永住者証明書を添付してください。'}>
           <Stack spacing={3}>
-            <Typography variant="label" color={'text.main'}>
-              〈在留カードまたは特別永住者証明書〉
-            </Typography>
             <Stack spacing={'6px'}>
               <Typography variant="label" color={'text.main'}>
                 〈表面〉
@@ -70,8 +69,8 @@ export const ApStep02Info = ({ stepIndex }) => {
               )}
             </Stack>
           </Stack>
-        )}
-      </ApConfirmItemGroup>
+        </ApConfirmItemGroup>
+      )}
 
       <ApConfirmItemGroup label={'電話番号'}>
         <Stack spacing={1} alignItems={'start'}>

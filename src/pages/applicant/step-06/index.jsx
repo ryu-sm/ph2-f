@@ -26,12 +26,13 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { toast } from 'react-toastify';
 
 export const ApStep06Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
@@ -82,7 +83,7 @@ export const ApStep06Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -105,14 +106,27 @@ export const ApStep06Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
 
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+            />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`担保提供者について\n教えてください。`}</ApPageTitle>
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
@@ -127,7 +141,7 @@ export const ApStep06Page = () => {
           name="p_join_guarantors"
           render={(arrayHelpers) => (
             <Fragment>
-              <Stack spacing={8} sx={{ px: 4 }}>
+              <Stack spacing={8} sx={{ px: 4, pb: 8 }}>
                 {formik.values.p_join_guarantors.map((item, index) => (
                   <Stack
                     key={index}
@@ -284,7 +298,7 @@ export const ApStep06Page = () => {
               </Stack>
 
               {formik.values.p_join_guarantors.length < 3 && (
-                <Stack spacing={2} alignItems={'center'} sx={{ py: 8 }}>
+                <Stack spacing={2} alignItems={'center'} sx={{ pb: 8 }}>
                   <ApStarHelp label={'担保提供者が複数いる場合は、追加してください。'} />
                   <ApPrimaryButton
                     height={40}
@@ -320,12 +334,6 @@ export const ApStep06Page = () => {
               )}
             </Fragment>
           )}
-        />
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter
-          left={handelLeft}
-          right={formik.handleSubmit}
-          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
         />
       </ApLayout>
     </FormikProvider>

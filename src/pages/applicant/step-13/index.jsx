@@ -29,10 +29,11 @@ import { FormikProvider, useFormik } from 'formik';
 import { Box, Stack, Typography } from '@mui/material';
 import { apAgentSend, apApplication } from '@/services';
 import { Icons } from '@/assets';
-import { useBoolean } from '@/hooks';
+import { useBoolean, useIsSalesPerson } from '@/hooks';
 
 export const ApStep13Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const apNextStepId = useRecoilValue(apNextStepIdSelector);
   const apPreStepId = useRecoilValue(apPreStepIdSelector);
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
@@ -132,7 +133,7 @@ export const ApStep13Page = () => {
         }
         const sendRes = await apAgentSend({
           ...application,
-          p_uploaded_files: application.p_uploaded_files,
+          p_uploaded_files: { ...application.p_uploaded_files, S: values.p_uploaded_files.S },
         });
         setAuthInfo((pre) => {
           return {
@@ -148,7 +149,7 @@ export const ApStep13Page = () => {
             ...infoRes.data,
           };
         });
-        navigate(`/step-id-${apNextStepId}`);
+        navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
       } catch (error) {
         console.log(error);
       }
@@ -156,7 +157,7 @@ export const ApStep13Page = () => {
   });
 
   const handelLeft = () => {
-    navigate(`/step-id-${apPreStepId}`);
+    navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
   };
 
   const errorMsg = useMemo(() => {
@@ -237,7 +238,11 @@ export const ApStep13Page = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ApLayout hasMenu hasStepBar pb={24}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={<ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={'仮審査を申し込む'} />}
+      >
         <ApPageTitle py={8}>{`最後に内容を確認し\nお申込を完了させましょう。`}</ApPageTitle>
         <ApConfirmGroup label={'はじめに'}>
           <ApConfirmItemGroup label={'同意日'}>
@@ -304,8 +309,6 @@ export const ApStep13Page = () => {
             </Box>
           </Stack>
         )}
-
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={'仮審査を申し込む'} />
       </ApLayout>
     </FormikProvider>
   );

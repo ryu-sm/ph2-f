@@ -9,6 +9,7 @@ export const ApErrorScroll = () => {
       const parseErrors = (basePre, errors) => {
         let pre = basePre;
         Object.entries(errors).forEach(([key, value]) => {
+          if (value === undefined) return;
           if (typeof value === 'string') {
             if (!!pre) {
               errorNames.push(`${pre}.${key}`);

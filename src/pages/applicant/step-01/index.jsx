@@ -44,7 +44,7 @@ import {
 import { validationSchema } from './validationSchema';
 import { useBankMaster } from '@/hooks/use-bank-master';
 import { Box, Stack, Typography } from '@mui/material';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { Icons } from '@/assets';
 import { MCJ_CODE, SBI_CODE } from '@/configs';
 import { useNavigate } from 'react-router-dom';
@@ -55,6 +55,7 @@ import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 
 export const ApStep01Page = () => {
+  const isSalesPerson = useIsSalesPerson();
   const navigate = useNavigate();
   const pairLoanModal = useBoolean(false);
   const delPairLoanModal = useBoolean(false);
@@ -171,7 +172,7 @@ export const ApStep01Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -187,7 +188,7 @@ export const ApStep01Page = () => {
 
   const handelLeft = () => {
     setLocalData(formik.values);
-    navigate(routeNames.apTopPage.path);
+    navigate(isSalesPerson ? routeNames.adSalesPersonTopPage.path : routeNames.apTopPage.path);
   };
 
   const bankMaster = useBankMaster();
@@ -249,7 +250,20 @@ export const ApStep01Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={changeToIncomeTotalizer || changeJoinGuarantor ? false : agentSended && '保存'}
+            />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`まずは、お借入のご希望を\nお聞かせください。`}</ApPageTitle>
         <ApItemGroup label={'入居予定年月'}>
@@ -814,12 +828,6 @@ export const ApStep01Page = () => {
         >
           <ApCheckboxButton name={'p_application_headers.loan_plus'} options={loanPlusOptions} />
         </ApItemGroup>
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter
-          left={handelLeft}
-          right={formik.handleSubmit}
-          rightLabel={changeToIncomeTotalizer || changeJoinGuarantor ? false : agentSended && '保存'}
-        />
       </ApLayout>
     </FormikProvider>
   );

@@ -1,11 +1,11 @@
 import { format } from 'kanjidate';
 import { dayjs, yup } from '@/libs';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormikProvider, useField, useFormik } from 'formik';
 import { Stack, Typography } from '@mui/material';
 import { ApSelectField } from './select-field';
-import { usePublicHolidays } from '@/hooks';
 import { defaultDate, getClassDate } from '@/utils';
+import axios from 'axios';
 
 export const ApSelectFieldYmd = ({ yearOptions, ...props }) => {
   const windowWidth = window.innerWidth;
@@ -36,7 +36,33 @@ export const ApSelectFieldYmd = ({ yearOptions, ...props }) => {
     },
   });
 
-  const publicHolidays = usePublicHolidays(initialValues.year, initialValues.month, initialValues.day);
+  const [publicHolidays, setPublicHolidays] = useState([]);
+
+  const getPublicHolidays = useCallback(async () => {
+    try {
+      if (!!formik.values.year && field.name.includes('desired_borrowing_date')) {
+        const res = await axios.get(`https://date.nager.at/api/v2/publicholidays/${formik.values.year}/jp`);
+
+        const temp = localStorage.getItem('publicHolidays');
+        if (!!temp) {
+          localStorage.setItem(
+            'publicHolidays',
+            JSON.stringify({ ...JSON.parse(temp), [formik.values.year]: res.data })
+          );
+        } else {
+          localStorage.setItem('publicHolidays', JSON.stringify({ [formik.values.year]: res.data }));
+        }
+
+        setPublicHolidays(res.data);
+      }
+    } catch (error) {
+      setPublicHolidays([]);
+    }
+  }, [formik.values.year, field.name]);
+
+  useEffect(() => {
+    getPublicHolidays();
+  }, [formik.values.year, field.name]);
 
   const dayOptions = useMemo(() => {
     return [

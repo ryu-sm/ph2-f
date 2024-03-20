@@ -26,7 +26,7 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { apApplicationFile } from '@/services';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
@@ -34,6 +34,7 @@ import { toast } from 'react-toastify';
 
 export const ApStep02Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const userEmail = useRecoilValue(userEmailSelector);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
@@ -93,7 +94,7 @@ export const ApStep02Page = () => {
       prefecture_kana: p_applicant_persons__0.prefecture_kana,
       city_kana: p_applicant_persons__0.city_kana,
       district_kana: p_applicant_persons__0.district_kana,
-      email: p_applicant_persons__0.email || userEmail,
+      email: isSalesPerson ? p_applicant_persons__0.email : p_applicant_persons__0.email || userEmail,
     },
     p_uploaded_files: {
       p_applicant_persons__0__H__a: p_uploaded_files.p_applicant_persons__0__H__a,
@@ -123,7 +124,7 @@ export const ApStep02Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -157,14 +158,23 @@ export const ApStep02Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
 
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`あなたについて\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'お名前'}>
@@ -187,7 +197,6 @@ export const ApStep02Page = () => {
         <ApItemGroup label={'生年月日'}>
           <Stack spacing={3}>
             <ApSelectFieldYmd name="p_applicant_persons__0.birthday" yearOptions={yearOptions} />
-            {/* <ApStarHelp label={'借入時満18歳以上満65歳以下・完済時満80歳未満の方がご利用いただけます。'} /> */}
           </Stack>
         </ApItemGroup>
         <ApItemGroup label={'現在の国籍'}>
@@ -328,8 +337,6 @@ export const ApStep02Page = () => {
             />
           </Stack>
         </ApItemGroup>
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

@@ -31,6 +31,9 @@ export const ApStep04Info = ({ stepIndex }) => {
           ? genderOptions.find((item) => item.value === p_applicant_persons__1.gender)?.label
           : 'ー'}
       </ApConfirmItemGroup>
+      <ApConfirmItemGroup label={'続柄'}>
+        {p_applicant_persons__1.rel_to_applicant_a_name ? p_applicant_persons__1.rel_to_applicant_a_name : 'ー'}
+      </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'生年月日'}>
         {p_applicant_persons__1.birthday ? formatJapanDate(p_applicant_persons__1.birthday, true) : 'ー'}
       </ApConfirmItemGroup>
@@ -40,11 +43,10 @@ export const ApStep04Info = ({ stepIndex }) => {
             ? nationalityOptions.find((item) => item.value === p_applicant_persons__1.nationality)?.label
             : 'ー'}
         </Stack>
-        {p_applicant_persons__1.nationality === '2' && (
+      </ApConfirmItemGroup>
+      {p_applicant_persons__1.nationality === '2' && (
+        <ApConfirmItemGroup label={'在留カードまたは特別永住者証明書を添付してください。'}>
           <Stack spacing={3}>
-            <Typography variant="label" color={'text.main'}>
-              〈在留カードまたは特別永住者証明書〉
-            </Typography>
             <Stack spacing={'6px'}>
               <Typography variant="label" color={'text.main'}>
                 〈表面〉
@@ -70,8 +72,8 @@ export const ApStep04Info = ({ stepIndex }) => {
               )}
             </Stack>
           </Stack>
-        )}
-      </ApConfirmItemGroup>
+        </ApConfirmItemGroup>
+      )}
 
       <ApConfirmItemGroup label={'電話番号'}>
         <Stack spacing={1} alignItems={'start'}>

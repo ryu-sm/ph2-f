@@ -53,13 +53,14 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 
 import { cloneDeep } from 'lodash';
 import { apApplicationFile } from '@/services';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 
 export const ApStep07Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
@@ -194,7 +195,7 @@ export const ApStep07Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -229,7 +230,7 @@ export const ApStep07Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
 
@@ -286,7 +287,16 @@ export const ApStep07Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`現在のお住まいと\nご購入物件について\n教えてください。`}</ApPageTitle>
         <ApItemGroup label={'現在のお住まいの居住年数'}>
@@ -300,7 +310,7 @@ export const ApStep07Page = () => {
             />
             <ApSelectField
               name="p_application_headers.curr_house_lived_month"
-              unit={'月'}
+              unit={'ヶ月'}
               placeholder={'--'}
               options={monthOptions}
               width={52}
@@ -1059,12 +1069,17 @@ export const ApStep07Page = () => {
         {isMCJ && (
           <Stack>
             <ApItemGroup optional label={'ご購入物件の土地権利'} note={'※該当する方のみお答えください。(MCJ固有項目)'}>
-              <ApRadioColumnGroup name="p_application_headers.property_land_type" options={propertyLandTypeOptions} />
+              <ApRadioColumnGroup
+                name="p_application_headers.property_land_type"
+                options={propertyLandTypeOptions}
+                cancelable
+              />
             </ApItemGroup>
             <ApItemGroup optional label={'買戻・保留地・仮換地'} note={'※該当する方のみお答えください。(MCJ固有項目)'}>
               <ApRadioColumnGroup
                 name="p_application_headers.property_purchase_type"
                 options={propertyPurchaseTypeOptions}
+                cancelable
               />
             </ApItemGroup>
             <ApItemGroup
@@ -1085,6 +1100,7 @@ export const ApStep07Page = () => {
                 <ApRadioColumnGroup
                   name="p_application_headers.property_planning_area"
                   options={propertyPlanningAreaOptions}
+                  cancelable
                 />
                 {formik.values.p_application_headers.property_planning_area === '99' && (
                   <Stack spacing={'6px'}>
@@ -1108,6 +1124,7 @@ export const ApStep07Page = () => {
                   <ApRadioColumnGroup
                     name="p_application_headers.property_rebuilding_reason"
                     options={propertyRebuildingReasonOptions}
+                    cancelable
                   />
                   {formik.values.p_application_headers.property_rebuilding_reason === '99' && (
                     <Stack spacing={'6px'}>
@@ -1124,15 +1141,19 @@ export const ApStep07Page = () => {
             )}
             <ApItemGroup
               optional
-              label={'フラット35S（優良住宅取得支援制度）対象項目'}
+              label={'フラット35S（優良住宅取得支援制度）対象項目①'}
               note={'※該当する方のみお答えください。(MCJ固有項目)'}
             >
               <ApRadioColumnGroup
                 name="p_application_headers.property_flat_35_plan"
                 options={propertyFlat35PlanOptions}
+                cancelable
                 onChange={(e) => {
-                  if (!e.target.value === '2') {
+                  if (!['2', '3'].includes(e.target.value)) {
                     formik.setFieldValue('p_application_headers.property_flat_35_tech', '');
+                  }
+                  if (formik.values.p_application_headers.property_maintenance_type == '1' && e.target.value === '2') {
+                    formik.setFieldValue('p_application_headers.property_flat_35_tech', '4');
                   }
                 }}
               />
@@ -1141,9 +1162,15 @@ export const ApStep07Page = () => {
               <ApRadioColumnGroup
                 name="p_application_headers.property_maintenance_type"
                 options={propertyMaintenanceTypeOptions}
+                cancelable
+                onChange={(e) => {
+                  if (formik.values.p_application_headers.property_flat_35_plan == '2' && e.target.value === '1') {
+                    formik.setFieldValue('p_application_headers.property_flat_35_tech', '4');
+                  }
+                }}
               />
             </ApItemGroup>
-            {formik.values.p_application_headers.property_flat_35_plan === '2' && (
+            {['2', '3'].includes(formik.values.p_application_headers.property_flat_35_plan) && (
               <ApItemGroup
                 optional
                 label={'フラット35S（優良住宅取得支援制度）対象項目②'}
@@ -1152,6 +1179,7 @@ export const ApStep07Page = () => {
                 <ApRadioColumnGroup
                   name="p_application_headers.property_flat_35_tech"
                   options={propertyFlat35TechOptions}
+                  cancelable
                 />
               </ApItemGroup>
             )}
@@ -1163,12 +1191,11 @@ export const ApStep07Page = () => {
               <ApRadioColumnGroup
                 name="p_application_headers.property_region_type"
                 options={propertyRegionTypeOptions}
+                cancelable
               />
             </ApItemGroup>
           </Stack>
         )}
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
       </ApLayout>
     </FormikProvider>
   );

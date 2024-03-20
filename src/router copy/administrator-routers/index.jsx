@@ -63,7 +63,7 @@ export const administratorRoutes = [
     element: <EditPreliminary />,
   },
   {
-    ...routeNames.adMemoPage,
+    ...routeNames.adManagerMemoPage,
     element: <AdMemo />,
   },
   {

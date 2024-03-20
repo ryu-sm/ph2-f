@@ -28,7 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
 import { CONFIRMATION_URL, CONSENT_URL } from '@/configs';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean } from '@/hooks';
+import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
 import { apApplicationFile } from '@/services';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
@@ -36,6 +36,7 @@ import { toast } from 'react-toastify';
 
 export const ApStep04Page = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
 
   const { applyNo, agentSended } = useRecoilValue(authAtom);
@@ -144,7 +145,7 @@ export const ApStep04Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          navigate(`/step-id-${apNextStepId}`);
+          navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -183,7 +184,7 @@ export const ApStep04Page = () => {
       navigate(routeNames.apTopPage.path);
     } else {
       setLocalData(formik.values);
-      navigate(`/step-id-${apPreStepId}`);
+      navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
   const [isReadedConsent, setIsReadedConsent] = useState(false);
@@ -210,7 +211,20 @@ export const ApStep04Page = () => {
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
-      <ApLayout hasMenu hasStepBar pb={18}>
+      <ApLayout
+        hasMenu
+        hasStepBar
+        bottomContent={
+          <>
+            <ApSaveDraftButton pageInfo={parseVaildData} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+            />
+          </>
+        }
+      >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`収入合算者について\n教えてください。`}</ApPageTitle>
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
@@ -441,12 +455,6 @@ export const ApStep04Page = () => {
             </ApItemGroup>
           </Stack>
         )}
-        <ApSaveDraftButton pageInfo={parseVaildData} />
-        <ApStepFooter
-          left={handelLeft}
-          right={formik.handleSubmit}
-          rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
-        />
       </ApLayout>
     </FormikProvider>
   );

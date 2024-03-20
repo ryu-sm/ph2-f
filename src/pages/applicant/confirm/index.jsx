@@ -26,9 +26,11 @@ import { routeNames } from '@/router/settings';
 import { useCallback, useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { apAgentSend, apApplication } from '@/services';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApConfirmPage = () => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
   const application = useRecoilValue(applicationAtom);
@@ -103,6 +105,8 @@ export const ApConfirmPage = () => {
     [apSteps]
   );
 
+  console.log(application.p_uploaded_files.S);
+
   return (
     <ApLayout hasMenu pb={13}>
       <Box sx={{ background: (theme) => theme.palette.background.gradation, pb: 6 }}>
@@ -169,17 +173,15 @@ export const ApConfirmPage = () => {
           <ApConfirmGroup label={'最後'}>
             <ApConfirmItemGroup label={'本人サイン'}>
               <Stack>
-                <Box
-                  component={'img'}
-                  src={application.p_uploaded_files.S[0].file.src}
-                  sx={{ width: 1, maxHeight: 280 }}
-                />
+                {/* <Box component={'img'} src={application.p_uploaded_files.S[0].src} sx={{ width: 1, maxHeight: 280 }} /> */}
               </Stack>
             </ApConfirmItemGroup>
           </ApConfirmGroup>
         )}
 
-        <ApStepFooter left={() => navigate(routeNames.apTopPage.path)} />
+        <ApStepFooter
+          left={() => navigate(isSalesPerson ? routeNames.adSalesPersonTopPage.path : routeNames.apTopPage.path)}
+        />
       </Box>
     </ApLayout>
   );

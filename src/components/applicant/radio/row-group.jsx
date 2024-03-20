@@ -61,7 +61,8 @@ export const ApRadioRowGroup = ({ options, disabled, height, ...props }) => {
                     minHeight: 48,
                     bgcolor: 'white',
                     borderRadius: '14px',
-                    border: (theme) => `1px solid ${theme.palette.primary[20]}`,
+                    border: (theme) =>
+                      `1px solid ${isError ? theme.palette.secondary.main : theme.palette.primary[20]}`,
                     boxShadow: '0px 0px 15px rgba(60, 72, 196, 0.1)',
                     '&:hover': {
                       bgcolor: 'white',

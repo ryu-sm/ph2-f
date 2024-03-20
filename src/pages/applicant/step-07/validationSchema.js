@@ -98,6 +98,23 @@ export const validationSchema = yup.object({
         }
       }),
     }),
+    property_flat_35_plan: yup.string(),
+    property_maintenance_type: yup.string(),
+    property_flat_35_tech: yup
+      .string()
+      .test(
+        'logic',
+        '「Aプラン＋長期優良住宅」を選択の場合は「耐久性・可変性」をご選択ください。',
+        (field_value, { options: { context } }) => {
+          if (
+            context.p_application_headers.property_flat_35_plan === '2' &&
+            context.p_application_headers.property_maintenance_type === '1'
+          ) {
+            return field_value === '4';
+          }
+          return true;
+        }
+      ),
   }),
   p_residents: yup.array(
     yup.object({

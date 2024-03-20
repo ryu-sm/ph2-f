@@ -12,13 +12,14 @@ import { useSetRecoilState } from 'recoil';
 import { applicationAtom } from '@/store';
 import { dayjs } from '@/libs';
 import { agreeOptions } from './options';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApAgreementPage = () => {
   const navigate = useNavigate();
   const [warningText, setWarningText] = useState('');
   const [isReadedConsent, setIsReadedConsent] = useState(false);
   const [isReadedConfirmation, setIsReadedConfirmation] = useState(false);
-
+  const isSalesPerson = useIsSalesPerson();
   const setApplicationInfo = useSetRecoilState(applicationAtom);
 
   const formik = useFormik({
@@ -41,7 +42,7 @@ export const ApAgreementPage = () => {
           },
         };
       });
-      navigate(routeNames.apTopPage.path);
+      navigate(isSalesPerson ? routeNames.adSalesPersonTopPage.path : routeNames.apTopPage.path);
     },
   });
 
@@ -52,7 +53,14 @@ export const ApAgreementPage = () => {
   }, [formik.errors.consent, formik.errors.confirmation]);
 
   return (
-    <ApLayout pb={18}>
+    <ApLayout
+      bottomContent={
+        <ApStepFooter
+          right={formik.handleSubmit}
+          rightDisable={formik.isSubmitting || !(formik.isValid && formik.dirty)}
+        />
+      }
+    >
       <FormikProvider value={formik}>
         <ApPageTitle error={warningText}>{`はじめに`}</ApPageTitle>
         <Stack alignItems={'center'} sx={{ pb: 6 }}>
@@ -102,10 +110,6 @@ export const ApAgreementPage = () => {
           </Stack>
         </ApItemGroup>
       </FormikProvider>
-      <ApStepFooter
-        right={formik.handleSubmit}
-        rightDisable={formik.isSubmitting || !(formik.isValid && formik.dirty)}
-      />
     </ApLayout>
   );
 };
