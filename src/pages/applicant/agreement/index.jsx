@@ -42,7 +42,7 @@ export const ApAgreementPage = () => {
           },
         };
       });
-      navigate(isSalesPerson ? routeNames.adSalesPersonTopPage.path : routeNames.apTopPage.path);
+      navigate(isSalesPerson ? routeNames.adSalesPersonStep01Page.path : routeNames.apTopPage.path);
     },
   });
 

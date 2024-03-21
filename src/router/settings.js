@@ -216,10 +216,10 @@ export const routeNames = {
     name: 'adSalesPersonAgreementPage',
     path: '/sales-person/agreement',
   },
-  adSalesPersonTopPage: {
-    name: 'adSalesPersonTopPage',
-    path: '/sales-person/top',
-  },
+  // adSalesPersonTopPage: {
+  //   name: 'adSalesPersonTopPage',
+  //   path: '/sales-person/top',
+  // },
   adSalesPersonStep01Page: {
     name: 'adSalesPersonStep01Page',
     path: '/sales-person/step-id-1',
@@ -279,12 +279,12 @@ export const routeNames = {
     name: 'adSalesPersonStep13Page',
     path: '/sales-person/step-id-13',
   },
-  adSalesPersonStep14Page: {
-    name: 'adSalesPersonStep14Page',
-    path: '/sales-person/step-id-14',
-  },
-  adSalesPersonConfirmPage: {
-    name: 'adSalesPersonConfirmPage',
-    path: '/sales-person/confirm',
-  },
+  // adSalesPersonStep14Page: {
+  //   name: 'adSalesPersonStep14Page',
+  //   path: '/sales-person/step-id-14',
+  // },
+  // adSalesPersonConfirmPage: {
+  //   name: 'adSalesPersonConfirmPage',
+  //   path: '/sales-person/confirm',
+  // },
 };

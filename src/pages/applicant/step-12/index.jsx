@@ -37,6 +37,7 @@ export const ApStep12Page = () => {
   const setApplicationInfo = useSetRecoilState(applicationAtom);
   const {
     user: { salesCompanyOrgId },
+    salesPerson,
   } = useRecoilValue(authAtom);
   const [orgs, setOrgs] = useState([]);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
@@ -166,6 +167,7 @@ export const ApStep12Page = () => {
   useEffect(() => {
     getOrgs();
   }, []);
+
   const salesCompanyOptions = useMemo(() => {
     return orgs.filter((item) => item.category === 'C');
   }, [orgs]);
@@ -207,7 +209,6 @@ export const ApStep12Page = () => {
       <ApLayout
         hasMenu
         hasStepBar
-        // pb={18}
         bottomContent={
           <>
             <ApSaveDraftButton pageInfo={parseVaildData} />

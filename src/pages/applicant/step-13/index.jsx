@@ -30,6 +30,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import { apAgentSend, apApplication } from '@/services';
 import { Icons } from '@/assets';
 import { useBoolean, useIsSalesPerson } from '@/hooks';
+import { routeNames } from '@/router/settings';
 
 export const ApStep13Page = () => {
   const navigate = useNavigate();
@@ -135,6 +136,9 @@ export const ApStep13Page = () => {
           ...application,
           p_uploaded_files: { ...application.p_uploaded_files, S: values.p_uploaded_files.S },
         });
+        if (isSalesPerson) {
+          return navigate(routeNames.adSalesPersonDashboardPage.path);
+        }
         setAuthInfo((pre) => {
           return {
             ...pre,
@@ -149,7 +153,7 @@ export const ApStep13Page = () => {
             ...infoRes.data,
           };
         });
-        navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
+        navigate(`/step-id-${apNextStepId}`);
       } catch (error) {
         console.log(error);
       }

@@ -1,6 +1,6 @@
 import { Icons } from '@/assets';
 import { Stack, Typography } from '@mui/material';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export const ProgressStatus = ({ status }) => {
   const currentStatusItem = useMemo(() => {
@@ -37,19 +37,24 @@ export const ProgressStatus = ({ status }) => {
       },
     ];
 
-    const currentStatusItem = basicList.find((item) => item.values.includes(status));
+    const currentItem = basicList.find((item) => item.values.includes(status));
 
-    return currentStatusItem;
+    return currentItem;
   }, [status]);
 
-  return (
-    currentStatusItem && (
-      <Stack direction={'row'} alignItems={'center'} spacing={'2px'}>
-        <Icons.AdStatusResultIcon fill={currentStatusItem?.fillColor} stroke={currentStatusItem?.strokeColor} />
-        <Typography variant="case_content_text" color={'gray.100'}>
-          {currentStatusItem?.label}
-        </Typography>
-      </Stack>
-    )
+  useEffect(() => {
+    console.log(status);
+    console.log(currentStatusItem);
+  }, []);
+
+  return currentStatusItem ? (
+    <Stack direction={'row'} alignItems={'center'} spacing={'2px'}>
+      <Icons.AdStatusResultIcon fill={currentStatusItem?.fillColor} stroke={currentStatusItem?.strokeColor} />
+      <Typography variant="case_content_text" color={'gray.100'}>
+        {currentStatusItem?.label}
+      </Typography>
+    </Stack>
+  ) : (
+    'ー'
   );
 };

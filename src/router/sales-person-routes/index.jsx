@@ -79,10 +79,10 @@ export const salesPersonApRoutes = [
     ...routeNames.adSalesPersonAgreementPage,
     Element: ApAgreementPage,
   },
-  {
-    ...routeNames.adSalesPersonTopPage,
-    Element: ApTopPage,
-  },
+  // {
+  //   ...routeNames.adSalesPersonTopPage,
+  //   Element: ApTopPage,
+  // },
   {
     ...routeNames.adSalesPersonStep01Page,
     Element: ApStep01Page,
@@ -136,14 +136,14 @@ export const salesPersonApRoutes = [
     ...routeNames.adSalesPersonStep13Page,
     Element: ApStep13Page,
   },
-  {
-    ...routeNames.adSalesPersonStep14Page,
-    Element: ApStep14Page,
-  },
-  {
-    ...routeNames.adSalesPersonConfirmPage,
-    Element: ApConfirmPage,
-  },
+  // {
+  //   ...routeNames.adSalesPersonStep14Page,
+  //   Element: ApStep14Page,
+  // },
+  // {
+  //   ...routeNames.adSalesPersonConfirmPage,
+  //   Element: ApConfirmPage,
+  // },
 ];
 
 export const salesPersonRoutes = [...salesPersonAdRoutes, ...salesPersonApRoutes];

@@ -1,14 +1,8 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApPageTitle } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
-import {
-  applicationAtom,
-  applyNoSelector,
-  hasIncomeTotalizerSelector,
-  hasJoinGuarantorSelector,
-  roleTypeSelector,
-} from '@/store';
+import { applicationAtom, applyNoSelector, hasIncomeTotalizerSelector, hasJoinGuarantorSelector } from '@/store';
 import { formatJapanDate } from '@/utils';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { ApStep01Info } from '../step-01/step-01-info';
 import { ApStep02Info } from '../step-02/step-02-info';
 import { ApStep03Info } from '../step-03/step-03-info';
@@ -25,19 +19,13 @@ import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useCallback, useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { apAgentSend, apApplication } from '@/services';
-import { useIsSalesPerson } from '@/hooks';
 
 export const ApConfirmPage = () => {
   const navigate = useNavigate();
-  const isSalesPerson = useIsSalesPerson();
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
   const application = useRecoilValue(applicationAtom);
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const roleType = useRecoilValue(roleTypeSelector);
   const applyNo = useRecoilValue(applyNoSelector);
-
   const apSteps = useMemo(
     () => [
       {
@@ -105,8 +93,6 @@ export const ApConfirmPage = () => {
     [apSteps]
   );
 
-  console.log(application.p_uploaded_files.S);
-
   return (
     <ApLayout hasMenu pb={13}>
       <Box sx={{ background: (theme) => theme.palette.background.gradation, pb: 6 }}>
@@ -169,19 +155,7 @@ export const ApConfirmPage = () => {
         {getIndex(11) >= 0 && <ApStep11Info stepIndex={String(getIndex(11) + 1).padStart(2, '0')} />}
         {getIndex(12) >= 0 && <ApStep12Info stepIndex={String(getIndex(12) + 1).padStart(2, '0')} />}
 
-        {roleType === 2 && (
-          <ApConfirmGroup label={'最後'}>
-            <ApConfirmItemGroup label={'本人サイン'}>
-              <Stack>
-                {/* <Box component={'img'} src={application.p_uploaded_files.S[0].src} sx={{ width: 1, maxHeight: 280 }} /> */}
-              </Stack>
-            </ApConfirmItemGroup>
-          </ApConfirmGroup>
-        )}
-
-        <ApStepFooter
-          left={() => navigate(isSalesPerson ? routeNames.adSalesPersonTopPage.path : routeNames.apTopPage.path)}
-        />
+        <ApStepFooter left={() => navigate(routeNames.apTopPage.path)} />
       </Box>
     </ApLayout>
   );

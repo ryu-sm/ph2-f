@@ -27,7 +27,7 @@ import {
 } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { applicationAtom, authAtom } from '@/store';
 import {
   bonusRepaymentMonthOptions,
@@ -61,6 +61,8 @@ export const ApStep01Page = () => {
   const delPairLoanModal = useBoolean(false);
   const updateModal = useBoolean(false);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
+  const resetApplication = useResetRecoilState(applicationAtom);
+  const setAuthInfo = useSetRecoilState(authAtom);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const {
     isMCJ,
@@ -187,8 +189,26 @@ export const ApStep01Page = () => {
   }, [formik.values]);
 
   const handelLeft = () => {
-    setLocalData(formik.values);
-    navigate(isSalesPerson ? routeNames.adSalesPersonTopPage.path : routeNames.apTopPage.path);
+    if (isSalesPerson) {
+      if (
+        window.confirm(
+          '管理ページへ遷移します。\nご入力いただいた情報をまだ保存していない場合、破棄しますが、宜しいでしょうか。'
+        )
+      ) {
+        setAuthInfo((pre) => {
+          return {
+            ...pre,
+            applyNo: null,
+            agentSended: false,
+          };
+        });
+        resetApplication();
+        navigate(routeNames.adSalesPersonDashboardPage.path);
+      }
+    } else {
+      setLocalData(formik.values);
+      navigate(routeNames.apTopPage.path);
+    }
   };
 
   const bankMaster = useBankMaster();

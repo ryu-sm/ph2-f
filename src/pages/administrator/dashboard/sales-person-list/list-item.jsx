@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
-import { Fragment, useCallback, useMemo } from 'react';
+import { Fragment, useCallback, useEffect, useMemo } from 'react';
 import { PopoverSelect } from '../common/popover-select';
 import { FieldItem } from '../common/field-item';
 import { formatApplyTime } from '@/utils';
@@ -16,6 +16,8 @@ import { useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
 import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
+import { editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
+import { useSetRecoilState } from 'recoil';
 
 export const SpCaseItem = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -47,6 +49,8 @@ export const SpCaseItem = ({ item }) => {
 };
 
 const CaseItem = ({ item, isPairLoan, index }) => {
+  const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
+  const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const navigator = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -61,6 +65,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     {
       label: '申込内容の修正・確認',
       onClick: () => {
+        setMainTabStatus(1);
+        setInfoGroupTab(1);
         navigator(`${routeNames.adSalesPersonEditPreliminaryPage.path}?id=${item.id}`);
       },
     },
@@ -82,46 +88,32 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     return basicList;
   }, []);
 
-  const reviewProgress = useMemo(() => {
-    const basicList = [
-      {
-        value: '0',
-        title: 'みらいバンク支店',
-        label: '書類確認中',
-        bgcolor: 'gray.20',
-      },
-      {
-        value: '1',
-        title: '申込人',
-        label: '書類不備対応中',
-        bgcolor: 'gray.20',
-      },
-      {
-        value: '4',
-        title: '住信SBIネット銀行',
-        label: '仮審査中',
-        bgcolor: 'gray.20',
-      },
-      {
-        value: '5',
-        title: 'みらいバンク支店',
-        label: '提携会社へ仮審査結果公開',
-        bgcolor: 'gray.20',
-      },
-    ];
-    return basicList.map((item) => {
-      if (item.value === item?.pre_examination_status && (item.value === '0' || item.value === '1')) {
-        return { ...item, bgcolor: '#C5D5FF' };
-      }
-      if (item.value === item?.pre_examination_status && item.value === '4') {
-        return { ...item, label: `仮審査中（${item?.provisional_status}/5）`, bgcolor: '#DF8550' };
-      }
-      if (item.value === item?.pre_examination_status && item.value === '5') {
-        return { ...item, bgcolor: '#ACEAB1' };
-      }
-      return item;
-    });
-  }, [item]);
+  const reviewProgress = [
+    {
+      value: '0',
+      title: 'みらいバンク支店',
+      label: '書類確認中',
+      bgcolor: ['0'].includes(item?.pre_examination_status) ? '#C5D5FF' : 'gray.20',
+    },
+    {
+      value: '1',
+      title: '申込人',
+      label: '書類不備対応中',
+      bgcolor: ['1', '2', '3'].includes(item?.pre_examination_status) ? '#C5D5FF' : 'gray.20',
+    },
+    {
+      value: '4',
+      title: '住信SBIネット銀行',
+      label: ['4'].includes(item?.pre_examination_status) ? `仮審査中（${item?.provisional_status}/5）` : '仮審査中',
+      bgcolor: ['4'].includes(item?.pre_examination_status) ? '#DF8550' : 'gray.20',
+    },
+    {
+      value: '5',
+      title: 'みらいバンク支店',
+      label: '提携会社へ仮審査結果公開',
+      bgcolor: ['5', '6'].includes(item?.pre_examination_status) ? '#ACEAB1' : 'gray.20',
+    },
+  ];
 
   const provisionalresultOptions = [
     { value: '0', label: '承認' },

@@ -18,8 +18,8 @@ export const DashboardProvider = ({ children }) => {
   }, [result.state, dashboardTabStatus]);
 
   const [preliminarieList, setPreliminarieList] = useState([]);
-  const [sortBy, setSortBy] = useState(null);
-  const [sortOrder, setSortOrder] = useState('');
+  const [sortBy, setSortBy] = useState('created_at');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   const handleSort = (column) => {
     if (column === sortBy) {
@@ -31,8 +31,8 @@ export const DashboardProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setSortBy(null);
-    setSortOrder('');
+    setSortBy('created_at');
+    setSortOrder('desc');
   }, [dashboardTabStatus]);
 
   useEffect(() => {

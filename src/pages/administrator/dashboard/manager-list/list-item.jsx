@@ -20,8 +20,8 @@ import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { UpAfterResultModal } from './after-result-modal';
-import { dashboardTabStatusAtom } from '@/store';
-import { useRecoilValue } from 'recoil';
+import { dashboardTabStatusAtom, editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 export const AdCaseItem = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -54,6 +54,8 @@ export const AdCaseItem = ({ item }) => {
 
 const CaseItem = ({ item, isPairLoan, index }) => {
   const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
+  const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
+  const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const { refreshPreliminarieList } = useDashboardContext();
   const navigator = useNavigate();
   const pairLoanModal = useBoolean(false);
@@ -71,6 +73,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     {
       label: '申込内容の修正・確認',
       onClick: () => {
+        setMainTabStatus(1);
+        setInfoGroupTab(1);
         navigator(`${routeNames.adManagerEditPreliminaryPage.path}?id=${item.id}`);
       },
     },
@@ -364,7 +368,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           <FieldItem
             maxWidth={widthConfig[7]}
             minWidth={widthConfig[7]}
-            value={<ProgressStatus code={item.pre_examination_status} />}
+            value={<ProgressStatus status={item.pre_examination_status} />}
             isText={false}
           />
           <FieldItem

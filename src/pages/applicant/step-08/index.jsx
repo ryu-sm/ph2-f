@@ -514,7 +514,8 @@ export const ApStep08Page = () => {
                                       <ApRadioColumnGroup
                                         name={`p_borrowings[${index}].scheduled_loan_payoff`}
                                         options={
-                                          ['2', '5', '6', '7', '99'].includes(formik.values.p_borrowings[index].type)
+                                          ['2', '5', '6', '7', '99'].includes(formik.values.p_borrowings[index].type) &&
+                                          p_application_headers.loan_plus === '1'
                                             ? scheduledLoanPayoffOptions
                                             : scheduledLoanPayoffOptions.slice(0, 2)
                                         }

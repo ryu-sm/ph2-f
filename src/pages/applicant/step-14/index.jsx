@@ -1,6 +1,5 @@
 import { ApPageTitle } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { applyNoSelector } from '@/store';
 import { Stack, Typography } from '@mui/material';
@@ -9,7 +8,6 @@ import { useRecoilValue } from 'recoil';
 
 export const ApStep14Page = () => {
   const navigate = useNavigate();
-  const isSalesPerson = useIsSalesPerson();
   const applyNo = useRecoilValue(applyNoSelector);
 
   return (
@@ -61,10 +59,7 @@ export const ApStep14Page = () => {
         </Typography>
       </Stack>
 
-      <ApStepFooter
-        right={() => navigate(isSalesPerson ? routeNames.adSalesPersonTopPage.path : routeNames.apTopPage.path)}
-        rightLabel={'TOPへ'}
-      />
+      <ApStepFooter right={() => navigate(routeNames.apTopPage.path)} rightLabel={'TOPへ'} />
     </ApLayout>
   );
 };

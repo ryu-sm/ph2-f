@@ -2,11 +2,10 @@ import { Icons } from '@/assets';
 import { Box, Stack } from '@mui/material';
 import { ApHeaderMenuIcon } from '@/assets/icons';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { applicationAtom, applyNoSelector, authAtom } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useIsSalesPerson } from '@/hooks';
-// import { applicantRoutes } from '@/router/applicant-routes';
 
 export const ApHeader = ({ hasMenu, menu }) => {
   const navigate = useNavigate();
@@ -14,7 +13,6 @@ export const ApHeader = ({ hasMenu, menu }) => {
   const resetApplication = useResetRecoilState(applicationAtom);
   const { isLogined, roleType, applyNo } = useRecoilValue(authAtom);
   const setAuthInfo = useSetRecoilState(authAtom);
-  // const applyNo = useRecoilValue(applyNoSelector);
   const { pathname } = useLocation();
   const publicPath = [
     routeNames.apStartPage,
@@ -37,7 +35,7 @@ export const ApHeader = ({ hasMenu, menu }) => {
     >
       <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
         <Box
-          sx={{ px: 4, py: 3, cursor: 'pointer' }}
+          sx={{ px: 4, py: 3, cursor: isSalesPerson ? 'auto' : 'pointer' }}
           onClick={() => {
             if (isLogined) {
               if (roleType === 1) {
@@ -53,9 +51,6 @@ export const ApHeader = ({ hasMenu, menu }) => {
                     navigate(routeNames.apTopPage.path);
                   }
                 }
-              }
-              if (roleType === 2) {
-                navigate(routeNames.adSalesPersonTopPage.path);
               }
             } else {
               if (roleType === 1) {
