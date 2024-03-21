@@ -16,7 +16,14 @@ export const ApHeader = ({ hasMenu, menu }) => {
   const setAuthInfo = useSetRecoilState(authAtom);
   // const applyNo = useRecoilValue(applyNoSelector);
   const { pathname } = useLocation();
-
+  const publicPath = [
+    routeNames.apStartPage,
+    routeNames.apRegisterVerifyEmailPage,
+    routeNames.apRegisterPage,
+    routeNames.apLoginPage,
+    routeNames.apResetPasswordVerifyEmailPage,
+    routeNames.apResetPasswordPage,
+  ];
   return (
     <Box
       sx={{
@@ -34,12 +41,9 @@ export const ApHeader = ({ hasMenu, menu }) => {
           onClick={() => {
             if (isLogined) {
               if (roleType === 1) {
-                // if (
-                //   applicantRoutes.find((item) => item.path === pathname).path &&
-                //   pathname !== routeNames.apAgreementPage.path
-                // ) {
-                //   navigate(routeNames.apTopPage.path);
-                // }
+                if (!publicPath.find((item) => item.path === pathname)) {
+                  navigate(routeNames.apTopPage.path);
+                }
                 if (applyNo) {
                   if (
                     window.confirm(
@@ -49,16 +53,12 @@ export const ApHeader = ({ hasMenu, menu }) => {
                     navigate(routeNames.apTopPage.path);
                   }
                 }
-              } else {
-                // TODO
-
-                navigate(routeNames.apStartPage.path);
+              }
+              if (roleType === 2) {
+                navigate(routeNames.adSalesPersonTopPage.path);
               }
             } else {
               if (roleType === 1) {
-                navigate(routeNames.apStartPage.path);
-              } else {
-                // TODO
                 navigate(routeNames.apStartPage.path);
               }
             }
