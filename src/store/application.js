@@ -77,6 +77,7 @@ export const applicationInitialValues = {
     // STEP01
     move_scheduled_date: '',
     loan_target: '',
+    loan_target_type: '0',
     land_advance_plan: '',
     loan_type: '',
     pair_loan_last_name: '',

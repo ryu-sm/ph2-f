@@ -116,6 +116,7 @@ export const ApStep01Page = () => {
     p_application_headers: {
       move_scheduled_date: p_application_headers.move_scheduled_date,
       loan_target: p_application_headers.loan_target,
+      loan_target_type: p_application_headers.loan_target_type,
       land_advance_plan: p_application_headers.land_advance_plan,
       loan_type: p_application_headers.loan_type,
       pair_loan_last_name: p_application_headers.pair_loan_last_name,
@@ -138,8 +139,6 @@ export const ApStep01Page = () => {
       desired_loan_amount: p_borrowing_details__2.desired_loan_amount,
       bonus_repayment_amount: p_borrowing_details__2.bonus_repayment_amount,
     },
-    // 補助フィールド
-    loan_target_: '0',
   };
 
   const setUpdateData = (values) => {
@@ -184,7 +183,6 @@ export const ApStep01Page = () => {
 
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
-    delete dataCopy.loan_target_;
     return dataCopy;
   }, [formik.values]);
 
@@ -237,11 +235,6 @@ export const ApStep01Page = () => {
       setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
     } else {
       setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
-    }
-    if (['1', '2', '3', '4', '5', '6', ''].includes(p_application_headers.loan_target)) {
-      formik.setFieldValue('loan_target_', '0');
-    } else {
-      formik.setFieldValue('loan_target_', p_application_headers.loan_target);
     }
   }, [p_application_banks, p_application_headers.loan_type, p_application_headers.join_guarantor_umu, bankMaster]);
 
@@ -312,7 +305,7 @@ export const ApStep01Page = () => {
         )}
         <ApItemGroup label={'お借入の目的'}>
           <ApRadioColumnGroup
-            name={'loan_target_'}
+            name={'p_application_headers.loan_target_type'}
             options={loanTargetOptions_}
             onChange={(e) => {
               switch (e.target.value) {
@@ -352,7 +345,7 @@ export const ApStep01Page = () => {
           />
         </ApItemGroup>
 
-        {formik.values.loan_target_ === '0' && (
+        {formik.values.p_application_headers.loan_target_type === '0' && (
           <ApItemGroup label={'資金の使いみち'}>
             <ApRadioColumnGroup
               name={'p_application_headers.loan_target'}

@@ -15,7 +15,6 @@ import {
 import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
-import { useMemo } from 'react';
 import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep01Info = ({ stepIndex }) => {
@@ -25,14 +24,6 @@ export const ApStep01Info = ({ stepIndex }) => {
     useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
   const bankMaster = useBankMaster();
-
-  const loan_target_ = useMemo(() => {
-    if (['1', '2', '3', '4', '5', '6', ''].includes(p_application_headers.loan_target)) {
-      return '0';
-    } else {
-      return p_application_headers.loan_target;
-    }
-  }, [p_application_headers.loan_target]);
 
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={'：お借入のご希望'}>
@@ -53,9 +44,9 @@ export const ApStep01Info = ({ stepIndex }) => {
           : 'ー'}
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'お借入の目的'}>
-        {loanTargetOptions_.find((item) => item.value === loan_target_)?.label}
+        {loanTargetOptions_.find((item) => item.value === p_application_headers.loan_target_type)?.label}
       </ApConfirmItemGroup>
-      {loan_target_ === '0' && (
+      {p_application_headers.loan_target_type === '0' && (
         <ApConfirmItemGroup label={'資金の使いみち'}>
           {loanTargetOptions.find((item) => item.value === p_application_headers.loan_target)?.label}
         </ApConfirmItemGroup>

@@ -143,6 +143,7 @@ export const preliminaryInitialValues = {
     loan_target: '',
     land_advance_plan: '',
     loan_type: '',
+    loan_target_type: '0',
     pair_loan_id: '',
     pair_loan_last_name: '',
     pair_loan_first_name: '',

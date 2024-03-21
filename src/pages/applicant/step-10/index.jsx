@@ -551,6 +551,24 @@ export const ApStep10Page = () => {
           <Stack>
             <ApItemGroup label={'収入に関する書類'}>
               <Stack spacing={3}>
+                <ApStarHelp
+                  label={
+                    <Typography variant="note" color={'text.main'}>
+                      {`枚数が多い場合はPDFファイルを\n`}
+                      <Typography
+                        component={Link}
+                        variant="note"
+                        color={'text.main'}
+                        href={`mailto:ssnbmbk_info@ssnbagent.netbk.co.jp`}
+                        sx={{ textDecorationLine: 'none' }}
+                      >
+                        ssnbmbk_info@ssnbagent.netbk.co.jp
+                      </Typography>
+                      へメール送付してください。
+                    </Typography>
+                  }
+                />
+                <ApStarHelp label={'3期分無い場合は、直近のみで結構です。'} />
                 <Stack
                   spacing={'6px'}
                   sx={{ p: 4, bgcolor: 'white', borderRadius: 2, boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)' }}
@@ -706,6 +724,9 @@ export const ApStep10Page = () => {
           <Stack spacing={3}>
             {plan === 'B' && !['1', '5', '10'].includes(p_applicant_persons__0.office_occupation) && (
               <ApStarHelp label={'契約社員・派遣社員・嘱託の方は雇用契約書を添付してください。'} />
+            )}
+            {plan === 'A' && !['1', '6', '7', '8'].includes(p_applicant_persons__0.office_occupation) && (
+              <ApStarHelp label={'昨年または今年転職された方は雇用契約書を添付してください。'} />
             )}
             <Stack sx={{ p: 4, bgcolor: 'white', borderRadius: 2, boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)' }}>
               <ApImgUpload name="p_uploaded_files.p_applicant_persons__0__K" />
