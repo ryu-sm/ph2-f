@@ -1,9 +1,10 @@
 import { yup } from '@/libs';
-import { convertToHalfWidth } from '@/utils';
+import { convertToHalfWidth, convertToFullWidth } from '@/utils';
 import { Stack, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { FormikProvider, useField, useFormik } from 'formik';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { debounce } from 'lodash';
 
 export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...props }) => {
   const [field, meta, helpers] = useField(props);
@@ -23,6 +24,9 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
               prefecture_kanji: res.data.results[0].address1,
               city_kanji: res.data.results[0].address2,
               district_kanji: res.data.results[0].address3,
+              prefecture_kana: convertToFullWidth(res.data.results[0].kana1),
+              city_kana: convertToFullWidth(res.data.results[0].kana2),
+              district_kana: convertToFullWidth(res.data.results[0].kana3),
             });
           } else {
             setAddrError(true);
@@ -113,24 +117,35 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
     [handleBackInput, handleNextInput, setValue]
   );
 
-  const handleBlur = useCallback(async () => {
-    if (!!refOne.current && !!refTwo.current) {
-      if (!!refOne.current.value || !!refTwo.current.value)
-        await setValue(`${convertToHalfWidth(refOne.current.value)}-${convertToHalfWidth(refTwo.current.value)}`);
-    }
-    setTouched(true);
-  }, [setTouched, setValue]);
+  const handleBlur = useCallback(
+    async (e) => {
+      if (!!refOne.current && !!refTwo.current) {
+        if (!!refOne.current.value || !!refTwo.current.value) {
+          await setValue(`${refOne.current.value}-${refTwo.current.value}`);
+        }
+
+        if (e.target.name === 'firstCode') {
+          setTouched(false);
+        } else {
+          setTouched(true);
+        }
+        if (e.target.name === 'firstCode' && currentIndex.current === 0) {
+          setTouched(true);
+        }
+      }
+    },
+    [setValue, setTouched]
+  );
 
   const handleFocusInput = useCallback(
-    (e, name) => {
+    async (e, name) => {
       if (e.key !== 'Backspace' && name === 'firstCode' && refOne.current?.value.length === 3) {
+        setTouched(false);
         handleNextInput();
       }
       if (e.key === 'Backspace' && refTwo.current?.value === '') handleBackInput();
-      setAddrError(false);
-      setTouched(false);
     },
-    [handleBackInput, handleNextInput]
+    [handleBackInput, handleNextInput, setTouched]
   );
 
   return (
@@ -145,6 +160,8 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
             {zipCodeInputs.map((input, index) => (
               <Stack key={index} spacing={1} direction={'row'} alignItems={'center'}>
                 <TextField
+                  autoComplete="off"
+                  type="tel"
                   placeholder={'0'.repeat(input.maxLength).toString()}
                   inputRef={input.ref}
                   name={input.name}
@@ -163,11 +180,10 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
                         '&&&& fieldset': { border: 'none' },
                       }),
                   }}
-                  inputMode={{ type: 'number' }}
                   onInput={(e) => {
                     e.target.value = convertToHalfWidth(e.target.value);
-                    e.target.value = e.target.value.substring(0, input.maxLength);
                     e.target.value = e.target.value.replace(/[^\d]+/g, '');
+                    e.target.value = e.target.value.substring(0, input.maxLength);
                     return e;
                   }}
                   onChange={handleKeyPress}
@@ -178,7 +194,7 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
                     currentIndex.current = index;
                   }}
                   onBlur={handleBlur}
-                  error={isError || addrError}
+                  error={isError}
                 />
                 {index !== zipCodeInputs.length - 1 && (
                   <Typography variant="note" color={'text.main'}>

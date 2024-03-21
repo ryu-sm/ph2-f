@@ -9,36 +9,10 @@ import { debounce } from 'lodash';
 export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
-
+  const oldValue = meta.value;
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const isSuccess = useMemo(() => !isError && !!meta.value && meta.value !== '', [isError, meta.value]);
   const [addrError, setAddrError] = useState(false);
-
-  useEffect(() => {
-    if (!meta.error && !!meta.value && meta.value.length === 8) {
-      axios
-        .get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${meta.value}`)
-        .then((res) => {
-          if (!!res.data.results) {
-            callback({
-              prefecture_kanji: res.data.results[0].address1,
-              city_kanji: res.data.results[0].address2,
-              district_kanji: res.data.results[0].address3,
-              prefecture_kana: convertToFullWidth(res.data.results[0].kana1),
-              city_kana: convertToFullWidth(res.data.results[0].kana2),
-              district_kana: convertToFullWidth(res.data.results[0].kana3),
-            });
-          } else {
-            setAddrError(true);
-            errorCallback();
-          }
-        })
-        .catch(() => {
-          setAddrError(true);
-          errorCallback();
-        });
-    }
-  }, [meta.value, meta.error, meta.touched]);
 
   const initialValues = useMemo(() => {
     const [firstCode = '', secondCode = ''] = meta.value ? meta.value.split('-') : ['', ''];
@@ -131,6 +105,25 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
         }
         if (e.target.name === 'firstCode' && currentIndex.current === 0) {
           setTouched(true);
+        }
+      }
+      const newValue = `${refOne.current.value}-${refTwo.current.value}`;
+
+      if (/^\d{3}[-]\d{4}$/.test(newValue) && newValue !== oldValue) {
+        try {
+          const res = await axios.get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${newValue}`);
+          if (res.data.results.length > 0) {
+            callback({
+              prefecture_kanji: res.data.results[0].address1,
+              city_kanji: res.data.results[0].address2,
+              district_kanji: res.data.results[0].address3,
+              prefecture_kana: convertToFullWidth(res.data.results[0].kana1),
+              city_kana: convertToFullWidth(res.data.results[0].kana2),
+              district_kana: convertToFullWidth(res.data.results[0].kana3),
+            });
+          }
+        } catch (error) {
+          console.log(error);
         }
       }
     },

@@ -10,7 +10,7 @@ import axios from 'axios';
 export const AdZipCodeInput = ({ callback, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setError } = helpers;
-
+  const oldValue = meta.value;
   const inputRef = useRef(null);
 
   const handleAutoFocus = () => {
@@ -25,7 +25,7 @@ export const AdZipCodeInput = ({ callback, ...props }) => {
       props.onBlur && props.onBlur(e);
       let value = e.target.value?.toString().trim();
       await setValue(value);
-      if (/^\d{3}[-]\d{4}$/.test(value)) {
+      if (/^\d{3}[-]\d{4}$/.test(value) && value !== oldValue) {
         try {
           const res = await axios.get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${value}`);
           if (res.data.results.length > 0) {
