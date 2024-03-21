@@ -84,6 +84,7 @@ export const ApStep01Page = () => {
           ...pre.p_application_headers,
           move_scheduled_date: values.p_application_headers.move_scheduled_date,
           loan_target: values.p_application_headers.loan_target,
+          loan_target_type: values.p_application_headers.loan_target_type,
           land_advance_plan: values.p_application_headers.land_advance_plan,
           loan_type: values.p_application_headers.loan_type,
           pair_loan_last_name: values.p_application_headers.pair_loan_last_name,

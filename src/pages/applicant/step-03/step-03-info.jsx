@@ -1,6 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
 import { agentSendedSelector, applicationAtom, isMcjSelector } from '@/store';
-import { formatJapanDate } from '@/utils';
+import { formatJapanDate, formatMoney } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
@@ -106,7 +106,7 @@ export const ApStep03Info = ({ stepIndex }) => {
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'従業員数'}>
         {p_applicant_persons__0.office_employee_num
-          ? Number(p_applicant_persons__0.office_employee_num).toLocaleString()
+          ? formatMoney(p_applicant_persons__0.office_employee_num, '名')
           : 'ー'}
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'入社年月'}>
@@ -123,48 +123,117 @@ export const ApStep03Info = ({ stepIndex }) => {
           <Stack spacing={1} alignItems={'start'}>
             <Typography variant="modal_label" color={'text.main'}>
               〈前年度年収〉
-              {p_applicant_persons__0.last_year_income
-                ? `${Number(p_applicant_persons__0.last_year_income).toLocaleString()}万円`
-                : 'ー'}
             </Typography>
-            {isMCJ && (
+            <Stack alignItems={'start'} pl={4}>
               <Typography variant="modal_label" color={'text.main'}>
-                〈うち、ボーナス（MCJ固有項目）〉
-                {p_applicant_persons__0.last_year_bonus_income
-                  ? `${Number(p_applicant_persons__0.last_year_bonus_income).toLocaleString()}万円`
+                {p_applicant_persons__0.last_year_income
+                  ? `${Number(p_applicant_persons__0.last_year_income).toLocaleString()}万円`
                   : 'ー'}
               </Typography>
+            </Stack>
+
+            {isMCJ && (
+              <Stack alignItems={'start'}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  〈うち、ボーナス（MCJ固有項目）〉
+                </Typography>
+                <Stack alignItems={'start'} pl={4}>
+                  <Typography variant="modal_label" color={'text.main'}>
+                    {p_applicant_persons__0.last_year_bonus_income
+                      ? `${Number(p_applicant_persons__0.last_year_bonus_income).toLocaleString()}万円`
+                      : 'ー'}
+                  </Typography>
+                </Stack>
+              </Stack>
             )}
             {isMCJ && (
+              <Stack alignItems={'start'}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  〈前々年度の年収（MCJ固有項目）〉
+                </Typography>
+                <Stack alignItems={'start'} pl={4}>
+                  <Typography variant="modal_label" color={'text.main'}>
+                    {p_applicant_persons__0.before_last_year_income
+                      ? `${Number(p_applicant_persons__0.before_last_year_income).toLocaleString()}万円`
+                      : 'ー'}
+                  </Typography>
+                </Stack>
+              </Stack>
+            )}
+            <Stack alignItems={'flex-start'}>
               <Typography variant="modal_label" color={'text.main'}>
-                〈前々年度の年収（MCJ固有項目）〉
-                {p_applicant_persons__0.before_last_year_income
-                  ? `${Number(p_applicant_persons__0.before_last_year_income).toLocaleString()}万円`
+                〈収入源〉
+              </Typography>
+              <Stack alignItems={'flex-start'} pl={4}>
+                {p_applicant_persons__0.income_sources.includes('1') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    給与（固定給）
+                  </Typography>
+                )}
+                {p_applicant_persons__0.income_sources.includes('2') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    給与（歩合給）
+                  </Typography>
+                )}
+                {p_applicant_persons__0.income_sources.includes('3') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    給与（年俸制）
+                  </Typography>
+                )}
+                {p_applicant_persons__0.income_sources.includes('4') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    事業収入
+                  </Typography>
+                )}
+                {p_applicant_persons__0.income_sources.includes('5') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    不動産収入
+                  </Typography>
+                )}
+                {p_applicant_persons__0.income_sources.length === 0 && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    ー
+                  </Typography>
+                )}
+              </Stack>
+            </Stack>
+            <Stack alignItems={'start'}>
+              <Typography variant="modal_label" color={'text.main'}>
+                〈確定申告をしていますか？〉
+              </Typography>
+              <Stack alignItems={'start'} pl={4}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  {p_applicant_persons__0.tax_return
+                    ? taxReturnOptions.find((item) => item.value === p_applicant_persons__0.tax_return)?.label
+                    : 'ー'}
+                </Typography>
+              </Stack>
+            </Stack>
+            <Stack alignItems={'start'}>
+              <Typography variant="modal_label" color={'text.main'}>
+                〈確定申告の理由〉
+                {p_applicant_persons__0.tax_return_reasons
+                  ? p_applicant_persons__0.tax_return_reasons
+                      .map((value) => taxReturnReasonsOptions.find((item) => item.value === value)?.label)
+                      .join('、')
                   : 'ー'}
               </Typography>
-            )}
-            <Typography variant="modal_label" color={'text.main'}>
-              〈収入源〉
-              {p_applicant_persons__0.income_sources
-                ? p_applicant_persons__0.income_sources
-                    .map((value) => incomeOptions.find((item) => item.value === value)?.label)
-                    .join('、')
-                : 'ー'}
-            </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
-              〈確定申告をしていますか？〉
-              {p_applicant_persons__0.tax_return
-                ? taxReturnOptions.find((item) => item.value === p_applicant_persons__0.tax_return)?.label
-                : 'ー'}
-            </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
-              〈確定申告の理由〉
-              {p_applicant_persons__0.tax_return_reasons
-                ? p_applicant_persons__0.tax_return_reasons
-                    .map((value) => taxReturnReasonsOptions.find((item) => item.value === value)?.label)
-                    .join('、')
-                : 'ー'}
-            </Typography>
+              <Stack alignItems={'start'} pl={4}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  〈確定申告の理由〉
+                  {p_applicant_persons__0.tax_return_reasons
+                    ? p_applicant_persons__0.tax_return_reasons
+                        .map((value) => taxReturnReasonsOptions.find((item) => item.value === value)?.label)
+                        .join('、')
+                    : 'ー'}
+                </Typography>
+              </Stack>
+            </Stack>
+
+            <Stack alignItems={'start'}>
+              <Stack alignItems={'start'} pl={4}></Stack>
+            </Stack>
+
             {p_applicant_persons__0.tax_return_reasons.includes('99') && (
               <Typography variant="modal_label" color={'text.main'}>
                 〈その他の詳細〉

@@ -90,6 +90,7 @@ export const ApStep05Page = () => {
           office_joining_date: values.p_applicant_persons__1.office_joining_date,
           last_year_income: values.p_applicant_persons__1.last_year_income,
           last_year_bonus_income: values.p_applicant_persons__1.last_year_bonus_income,
+          before_last_year_income: values.p_applicant_persons__1.before_last_year_income,
           income_sources: values.p_applicant_persons__1.income_sources,
           tax_return: values.p_applicant_persons__1.tax_return,
           tax_return_reasons: values.p_applicant_persons__1.tax_return_reasons,
