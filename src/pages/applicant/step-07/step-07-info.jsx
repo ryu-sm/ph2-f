@@ -14,6 +14,7 @@ import {
   loanFromJapanHouseFinanceAgencyOptions,
   nationalityOptions,
   newHouseAcquireReasonOptions,
+  newHouseSelfResidentOptions,
   propertyBusinessTypeOptions,
   propertyFlat35PlanOptions,
   propertyFlat35TechOptions,
@@ -35,12 +36,12 @@ export const ApStep07Info = ({ stepIndex }) => {
     <ApConfirmGroup stepIndex={stepIndex} label={`：お住まい`}>
       <ApConfirmItemGroup label={'現在のお住まいの居住年数'}>
         <Stack spacing={1} alignItems={'start'}>
-          {p_application_headers.curr_house_lived_year && p_application_headers.curr_house_lived_month && (
+          {p_application_headers.curr_house_lived_year && p_application_headers.curr_house_lived_month ? (
             <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-              {formatJapanDate(
-                `${p_application_headers.curr_house_lived_year}/${p_application_headers.curr_house_lived_month}`
-              )}
+              {`${p_application_headers.curr_house_lived_year}年${p_application_headers.curr_house_lived_month}ヶ月`}
             </Typography>
+          ) : (
+            'ー'
           )}
         </Stack>
       </ApConfirmItemGroup>
@@ -203,7 +204,11 @@ export const ApStep07Info = ({ stepIndex }) => {
           <ApConfirmItemGroup label={'新しい住居に、あなたは居住しますか？'}>
             {p_application_headers.new_house_self_resident ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {p_application_headers.new_house_self_resident}
+                {
+                  newHouseSelfResidentOptions.find(
+                    (item) => item.value === p_application_headers.new_house_self_resident
+                  ).label
+                }
               </Typography>
             ) : (
               'ー'
@@ -235,17 +240,17 @@ export const ApStep07Info = ({ stepIndex }) => {
             {[
               p_application_headers.new_house_planned_resident_overview.spouse && '配偶者',
               p_application_headers.new_house_planned_resident_overview.children &&
-                `子ども${p_application_headers.new_house_planned_resident_overview.children}人`,
+                `子ども（${p_application_headers.new_house_planned_resident_overview.children}人）`,
               p_application_headers.new_house_planned_resident_overview.father && '父',
               p_application_headers.new_house_planned_resident_overview.mother && '母',
               p_application_headers.new_house_planned_resident_overview.brothers_sisters &&
-                `兄弟姉妹${p_application_headers.new_house_planned_resident_overview.brothers_sisters}人`,
+                `兄弟姉妹（${p_application_headers.new_house_planned_resident_overview.brothers_sisters}人）`,
               p_application_headers.new_house_planned_resident_overview.fiance && '婚約者',
               p_application_headers.new_house_planned_resident_overview.others &&
-                `その他${p_application_headers.new_house_planned_resident_overview.others}人`,
+                `その他（${p_application_headers.new_house_planned_resident_overview.others}人）`,
             ]
               .filter((item) => !!item)
-              .join(',')}
+              .join('\n')}
           </Typography>
         ) : (
           'ー'

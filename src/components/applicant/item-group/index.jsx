@@ -52,6 +52,7 @@ const Label = ({
         px: 4,
         bgcolor: (theme) => theme.palette.primary[40],
         width: 1,
+        minHeight: 29,
         borderTopRightRadius: borderTopRightRadius || 0,
         borderTopLeftRadius: borderTopLeftRadius || 0,
       }}

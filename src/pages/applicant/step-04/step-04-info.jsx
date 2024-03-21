@@ -104,9 +104,7 @@ export const ApStep04Info = ({ stepIndex }) => {
           'ー'
         )}
       </ApConfirmItemGroup>
-      <ApConfirmItemGroup label={'ご連絡先用メールアドレス'}>
-        {p_applicant_persons__1.email ? p_applicant_persons__1.email : 'ー'}
-      </ApConfirmItemGroup>
+
       {!agentSended && (
         <Stack alignItems={'center'} sx={{ py: 3 }}>
           <ApLighterButton

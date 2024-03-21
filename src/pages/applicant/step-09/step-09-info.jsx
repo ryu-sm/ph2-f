@@ -192,17 +192,24 @@ export const ApStep09Info = ({ stepIndex }) => {
 
             <ApItemGroup
               label={
-                <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
-                  <Typography variant="form_item_label" sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}>
-                    {['7', '8'].includes(p_application_headers.loan_target)
-                      ? 'その他（有価証券等）'
-                      : '有価証券売却など'}
-                  </Typography>
-                  {p_application_headers.loan_type === '2' && (
-                    <Typography variant="note" color={'text.main'}>
-                      ※お二人分
+                <Stack spacing={1}>
+                  <Stack>
+                    <Typography
+                      variant="form_item_label"
+                      sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}
+                    >
+                      {['7', '8'].includes(p_application_headers.loan_target)
+                        ? 'その他（有価証券等）'
+                        : '有価証券売却など'}
                     </Typography>
-                  )}
+                  </Stack>
+                  <Stack>
+                    {p_application_headers.loan_type === '2' && (
+                      <Typography variant="note" color={'text.main'}>
+                        ※お二人分
+                      </Typography>
+                    )}
+                  </Stack>
                 </Stack>
               }
               pb={3}
@@ -218,7 +225,7 @@ export const ApStep09Info = ({ stepIndex }) => {
 
             <ApItemGroup
               label={
-                <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                <Stack spacing={1}>
                   <Typography variant="form_item_label" sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}>
                     親族からの贈与
                   </Typography>
@@ -258,13 +265,34 @@ export const ApStep09Info = ({ stepIndex }) => {
                 </Typography>
               </ApItemGroup>
             )}
-            <ApItemGroup label={'その他'} labelFontSize={13} pb={3} px={2}>
+            <ApItemGroup
+              label={
+                <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                  <Typography variant="form_item_label" sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}>
+                    その他
+                  </Typography>
+                  {p_application_headers.loan_type === '2' && (
+                    <Typography variant="note" color={'text.main'}>
+                      ※お二人分
+                    </Typography>
+                  )}
+                </Stack>
+              }
+              labelFontSize={13}
+              pb={3}
+              px={2}
+            >
               <Typography variant="modal_label" color={'text.main'} textAlign={'end'}>
                 {p_application_headers.funding_other_amount
                   ? Number(p_application_headers.funding_other_amount).toLocaleString()
                   : 'ー'}
                 万円
               </Typography>
+              {p_application_headers.funding_other_amount && (
+                <Typography variant="modal_label" color={'text.main'} textAlign={'end'}>
+                  {p_application_headers.funding_other_amount_detail || 'ー'}
+                </Typography>
+              )}
             </ApItemGroup>
           </Stack>
         </Stack>

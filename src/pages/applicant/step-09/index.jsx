@@ -308,7 +308,7 @@ export const ApStep09Page = () => {
               <Stack flex={1} sx={{ bgcolor: 'white' }}>
                 <ApItemGroup
                   label={
-                    <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                    <Stack spacing={1} direction={'row'} alignItems={'flex-end'} sx={{ py: 0 }}>
                       <Typography
                         variant="form_item_label"
                         sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}
@@ -364,7 +364,7 @@ export const ApStep09Page = () => {
 
                 <ApItemGroup
                   label={
-                    <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                    <Stack spacing={1}>
                       <Typography
                         variant="form_item_label"
                         sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}
@@ -394,7 +394,7 @@ export const ApStep09Page = () => {
 
                 <ApItemGroup
                   label={
-                    <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                    <Stack spacing={1}>
                       <Typography
                         variant="form_item_label"
                         sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}
@@ -440,7 +440,26 @@ export const ApStep09Page = () => {
                     />
                   </ApItemGroup>
                 )}
-                <ApItemGroup label={'その他'} labelFontSize={13} pb={3} px={2}>
+                <ApItemGroup
+                  label={
+                    <Stack spacing={1} direction={'row'} alignItems={'flex-end'}>
+                      <Typography
+                        variant="form_item_label"
+                        sx={{ fontSize: 13, color: 'text.main', whiteSpace: 'nowrap' }}
+                      >
+                        その他
+                      </Typography>
+                      {p_application_headers.loan_type === '2' && (
+                        <Typography variant="note" color={'text.main'}>
+                          ※お二人分
+                        </Typography>
+                      )}
+                    </Stack>
+                  }
+                  labelFontSize={13}
+                  pb={3}
+                  px={2}
+                >
                   <Stack spacing={3}>
                     <ApNumberInputField
                       name="p_application_headers.funding_other_amount"
