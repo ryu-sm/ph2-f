@@ -15,42 +15,42 @@ import {
 export const managerRoutes = [
   {
     ...routeNames.adManagerLoginPage,
-    element: <AdOrSpLoginPage />,
+    Element: AdOrSpLoginPage,
   },
   {
     ...routeNames.adManagerResetPasswordVerifyEmailPage,
-    element: <AdOrSpResetPasswordVerifyEmailPage />,
+    Element: AdOrSpResetPasswordVerifyEmailPage,
   },
   {
     ...routeNames.adManagerResetPasswordPage,
-    element: <AdOrSpResetPasswordPage />,
+    Element: AdOrSpResetPasswordPage,
   },
   {
     ...routeNames.adManagerResetPasswordFinishedPage,
-    element: <AdOrSpResetPasswordFinishedPage />,
+    Element: AdOrSpResetPasswordFinishedPage,
   },
   {
     ...routeNames.adManagerDashboardPage,
-    element: <DashboardPage />,
+    Element: DashboardPage,
   },
   {
     ...routeNames.adManagerEditPreliminaryPage,
-    element: <EditPreliminary />,
+    Element: EditPreliminary,
   },
   {
     ...routeNames.adManagerMemoPage,
-    element: <AdMemo />,
+    Element: AdMemo,
   },
   {
     ...routeNames.adManagerFilesViewPage,
-    element: <AdFilesViewPage />,
+    Element: AdFilesViewPage,
   },
   {
     ...routeNames.adManagerDocumentsPage,
-    element: <AdDocumentsPage />,
+    Element: AdDocumentsPage,
   },
   {
     ...routeNames.adManagerDocumentsDetailPage,
-    element: <AdDocumentsDetailPage />,
+    Element: AdDocumentsDetailPage,
   },
 ];
