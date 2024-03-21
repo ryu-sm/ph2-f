@@ -16,9 +16,11 @@ import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useMemo } from 'react';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep01Info = ({ stepIndex }) => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const { p_application_headers, p_application_banks, p_borrowing_details__1, p_borrowing_details__2 } =
     useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
@@ -174,7 +176,9 @@ export const ApStep01Info = ({ stepIndex }) => {
             height={40}
             width={200}
             sx={{ border: '1px solid', borderColor: (theme) => theme.palette.primary.main }}
-            onClick={() => navigate(routeNames.apStep01Page.path)}
+            onClick={() =>
+              navigate(isSalesPerson ? routeNames.adSalesPersonStep01Page.path : routeNames.apStep01Page.path)
+            }
           >
             <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
               <Icons.ApEditorIcon />

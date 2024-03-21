@@ -17,9 +17,11 @@ import {
   taxReturnOptions,
   taxReturnReasonsOptions,
 } from './options';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep05Info = ({ stepIndex }) => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const { p_applicant_persons__1 } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
   const isMCJ = useRecoilValue(isMcjSelector);
@@ -276,7 +278,9 @@ export const ApStep05Info = ({ stepIndex }) => {
             height={40}
             width={200}
             sx={{ border: '1px solid', borderColor: (theme) => theme.palette.primary.main }}
-            onClick={() => navigate(routeNames.apStep05Page.path)}
+            onClick={() =>
+              navigate(isSalesPerson ? routeNames.adSalesPersonStep05Page.path : routeNames.apStep05Page.path)
+            }
           >
             <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
               <Icons.ApEditorIcon />

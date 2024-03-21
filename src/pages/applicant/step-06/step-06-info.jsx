@@ -8,9 +8,11 @@ import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { genderOptions } from './options';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep06Info = ({ stepIndex }) => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const { p_join_guarantors } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
 
@@ -110,7 +112,9 @@ export const ApStep06Info = ({ stepIndex }) => {
             height={40}
             width={200}
             sx={{ border: '1px solid', borderColor: (theme) => theme.palette.primary.main }}
-            onClick={() => navigate(routeNames.apStep06Page.path)}
+            onClick={() =>
+              navigate(isSalesPerson ? routeNames.adSalesPersonStep06Page.path : routeNames.apStep06Page.path)
+            }
           >
             <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
               <Icons.ApEditorIcon />

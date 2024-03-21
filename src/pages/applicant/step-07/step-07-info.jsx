@@ -24,9 +24,11 @@ import {
   propertyRebuildingReasonOptions,
   propertyRegionTypeOptions,
 } from './options';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep07Info = ({ stepIndex }) => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const { isMCJ, p_uploaded_files, p_residents, p_application_headers } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
   return (
@@ -569,7 +571,9 @@ export const ApStep07Info = ({ stepIndex }) => {
             height={40}
             width={200}
             sx={{ border: '1px solid', borderColor: (theme) => theme.palette.primary.main }}
-            onClick={() => navigate(routeNames.apStep07Page.path)}
+            onClick={() =>
+              navigate(isSalesPerson ? routeNames.adSalesPersonStep07Page.path : routeNames.apStep07Page.path)
+            }
           >
             <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
               <Icons.ApEditorIcon />

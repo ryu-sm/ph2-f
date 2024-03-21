@@ -21,9 +21,11 @@ import {
   scheduledLoanPayoffOptions,
   typeOptions,
 } from './options';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep08Info = ({ stepIndex }) => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const { isMCJ, hasIncomeTotalizer, p_application_headers, p_borrowings } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
 
@@ -308,7 +310,9 @@ export const ApStep08Info = ({ stepIndex }) => {
             height={40}
             width={200}
             sx={{ border: '1px solid', borderColor: (theme) => theme.palette.primary.main }}
-            onClick={() => navigate(routeNames.apStep08Page.path)}
+            onClick={() =>
+              navigate(isSalesPerson ? routeNames.adSalesPersonStep08Page.path : routeNames.apStep08Page.path)
+            }
           >
             <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
               <Icons.ApEditorIcon />

@@ -7,9 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useCallback, useEffect, useState } from 'react';
 import { apGetSalesCompanyOrgs } from '@/services';
+import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep12Info = ({ stepIndex }) => {
   const navigate = useNavigate();
+  const isSalesPerson = useIsSalesPerson();
   const { p_uploaded_files, p_application_headers } = useRecoilValue(applicationAtom);
   const agentSended = useRecoilValue(agentSendedSelector);
   const {
@@ -89,7 +91,9 @@ export const ApStep12Info = ({ stepIndex }) => {
             height={40}
             width={200}
             sx={{ border: '1px solid', borderColor: (theme) => theme.palette.primary.main }}
-            onClick={() => navigate(routeNames.apStep12Page.path)}
+            onClick={() =>
+              navigate(isSalesPerson ? routeNames.adSalesPersonStep12Page.path : routeNames.apStep12Page.path)
+            }
           >
             <Stack spacing={'6px'} direction={'row'} alignItems={'center'}>
               <Icons.ApEditorIcon />
