@@ -1,6 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
 import { agentSendedSelector, applicationAtom, isMcjSelector } from '@/store';
-import { formatJapanDate } from '@/utils';
+import { formatJapanDate, formatMoney } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
@@ -115,7 +115,7 @@ export const ApStep07Info = ({ stepIndex }) => {
               <ApConfirmItemGroup label={'売却予定時期'}>
                 {p_application_headers.curr_house_shell_scheduled_date ? (
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                    {formatJapanDate(p_application_headers.curr_house_shell_scheduled_date)}
+                    {formatJapanDate(p_application_headers.curr_house_shell_scheduled_date, true)}
                   </Typography>
                 ) : (
                   'ー'
@@ -124,7 +124,7 @@ export const ApStep07Info = ({ stepIndex }) => {
               <ApConfirmItemGroup label={'売却予定価格'}>
                 {p_application_headers.curr_house_shell_scheduled_price ? (
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                    {Number(p_application_headers.curr_house_shell_scheduled_price).toLocaleString()}
+                    {formatMoney(p_application_headers.curr_house_shell_scheduled_price)}
                   </Typography>
                 ) : (
                   'ー'
@@ -152,7 +152,7 @@ export const ApStep07Info = ({ stepIndex }) => {
         <ApConfirmItemGroup label={'現在のお住まいの床面積(MCJ固有項目)'}>
           {p_application_headers.curr_house_floor_area ? (
             <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-              {p_application_headers.curr_house_floor_area}
+              {`${p_application_headers.curr_house_floor_area}㎡`}
             </Typography>
           ) : (
             'ー'
@@ -272,9 +272,9 @@ export const ApStep07Info = ({ stepIndex }) => {
       {isMCJ && p_application_headers.new_house_self_resident === '0' && (
         <Stack>
           <ApConfirmItemGroup label={'入居予定者の氏名'}>
-            {p_residents.last_name_kanji && p_residents.first_name_kanji ? (
+            {p_residents[0].last_name_kanji && p_residents[0].first_name_kanji ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {`${p_residents.last_name_kanji}${p_residents.first_name_kanji}`}
+                {`${p_residents[0].last_name_kanji}${p_residents[0].first_name_kanji}`}
               </Typography>
             ) : (
               'ー'
@@ -282,18 +282,18 @@ export const ApStep07Info = ({ stepIndex }) => {
           </ApConfirmItemGroup>
 
           <ApConfirmItemGroup label={'入居予定者の氏名（フリガナ）'}>
-            {p_residents.last_name_kana && p_residents.first_name_kana ? (
+            {p_residents[0].last_name_kana && p_residents[0].first_name_kana ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {`${p_residents.last_name_kana}${p_residents.first_name_kana}`}
+                {`${p_residents[0].last_name_kana}${p_residents[0].first_name_kana}`}
               </Typography>
             ) : (
               'ー'
             )}
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={'続柄'}>
-            {p_residents.rel_to_applicant_a_name ? (
+            {p_residents[0].rel_to_applicant_a_name ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {p_residents.rel_to_applicant_a_name}
+                {p_residents[0].rel_to_applicant_a_name}
               </Typography>
             ) : (
               'ー'
@@ -301,18 +301,18 @@ export const ApStep07Info = ({ stepIndex }) => {
           </ApConfirmItemGroup>
 
           <ApConfirmItemGroup label={'国籍'}>
-            {p_residents.nationality ? (
+            {p_residents[0].nationality ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {nationalityOptions.find((item) => item.value === p_residents.nationality).label}
+                {nationalityOptions.find((item) => item.value === p_residents[0].nationality).label}
               </Typography>
             ) : (
               'ー'
             )}
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={'生年月日'}>
-            {p_residents.birthday ? (
+            {p_residents[0].birthday ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {formatJapanDate(p_residents.nationality)}
+                {formatJapanDate(p_residents[0].nationality)}
               </Typography>
             ) : (
               'ー'
@@ -320,11 +320,11 @@ export const ApStep07Info = ({ stepIndex }) => {
           </ApConfirmItemGroup>
 
           <ApConfirmItemGroup label={'住宅金融支援機構（旧：公庫）からの融資の有無'}>
-            {p_residents.loan_from_japan_house_finance_agency ? (
+            {p_residents[0].loan_from_japan_house_finance_agency ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 {
                   loanFromJapanHouseFinanceAgencyOptions.find(
-                    (item) => item.value === p_residents.loan_from_japan_house_finance_agency
+                    (item) => item.value === p_residents[0].loan_from_japan_house_finance_agency
                   ).label
                 }
               </Typography>
@@ -334,25 +334,25 @@ export const ApStep07Info = ({ stepIndex }) => {
           </ApConfirmItemGroup>
 
           <ApConfirmItemGroup label={'電話番号'}>
-            {p_residents.contact_phone ? (
+            {p_residents[0].contact_phone ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {p_residents.contact_phone}
+                {p_residents[0].contact_phone}
               </Typography>
             ) : (
               'ー'
             )}
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={'住所'}>
-            {p_residents.postal_code ? (
+            {p_residents[0].postal_code ? (
               <Stack spacing={1} alignItems={'start'}>
                 <Typography variant="modal_label" color={'text.main'}>
-                  {`〒${p_residents.postal_code}`}
+                  {`〒${p_residents[0].postal_code}`}
                 </Typography>
                 <Typography variant="modal_label" color={'text.main'}>
-                  {`${p_residents.prefecture_kanji}${p_residents.city_kanji}${p_residents.district_kanji}`}
+                  {`${p_residents[0].prefecture_kanji}${p_residents[0].city_kanji}${p_residents[0].district_kanji}`}
                 </Typography>
                 <Typography variant="modal_label" color={'text.main'}>
-                  {p_residents.other_address_kanji}
+                  {p_residents[0].other_address_kanji}
                 </Typography>
               </Stack>
             ) : (
@@ -363,12 +363,24 @@ export const ApStep07Info = ({ stepIndex }) => {
       )}
 
       <ApConfirmItemGroup label={'新しい住居（融資対象物件）の事業性'}>
-        {p_application_headers.property_business_type.length ? (
-          <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-            {p_application_headers.property_business_type
-              .map((item) => propertyBusinessTypeOptions.find((i) => i.value === item).label)
-              .join(',')}
-          </Typography>
+        {p_application_headers.property_business_type.length > 0 ? (
+          <Stack>
+            {p_application_headers.property_business_type.includes('1') && (
+              <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                賃貸
+              </Typography>
+            )}
+            {p_application_headers.property_business_type.includes('2') && (
+              <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                事務所・店舗
+              </Typography>
+            )}
+            {p_application_headers.property_business_type.includes('3') && (
+              <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                太陽光発電による売電
+              </Typography>
+            )}
+          </Stack>
         ) : (
           'ー'
         )}
@@ -385,15 +397,17 @@ export const ApStep07Info = ({ stepIndex }) => {
           'ー'
         )}
       </ApConfirmItemGroup>
-      <ApConfirmItemGroup label={'マンション名・部屋番号'}>
-        {p_application_headers.property_apartment_and_room_no ? (
-          <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-            {p_application_headers.property_apartment_and_room_no}
-          </Typography>
-        ) : (
-          'ー'
-        )}
-      </ApConfirmItemGroup>
+      {['3', '4'].includes(p_application_headers.loan_target) && (
+        <ApConfirmItemGroup label={'マンション名・部屋番号'}>
+          {p_application_headers.property_apartment_and_room_no ? (
+            <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+              {p_application_headers.property_apartment_and_room_no}
+            </Typography>
+          ) : (
+            'ー'
+          )}
+        </ApConfirmItemGroup>
+      )}
 
       {['3', '4'].includes(p_application_headers.loan_target) ? (
         <ApConfirmItemGroup label={'ご購入物件の面積'}>
@@ -521,54 +535,60 @@ export const ApStep07Info = ({ stepIndex }) => {
               )}
             </ApConfirmItemGroup>
           )}
+          <ApConfirmItemGroup label={'フラット35S（優良住宅取得支援制度）対象項目'}>
+            {p_application_headers.property_flat_35_plan ? (
+              <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                {
+                  propertyFlat35PlanOptions.find((item) => item.value === p_application_headers.property_flat_35_plan)
+                    .label
+                }
+              </Typography>
+            ) : (
+              'ー'
+            )}
+          </ApConfirmItemGroup>
+          <ApConfirmItemGroup label={'維持保全型'}>
+            {p_application_headers.property_maintenance_type ? (
+              <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                {
+                  propertyMaintenanceTypeOptions.find(
+                    (item) => item.value === p_application_headers.property_maintenance_type
+                  ).label
+                }
+              </Typography>
+            ) : (
+              'ー'
+            )}
+          </ApConfirmItemGroup>
+          {p_application_headers.property_flat_35_plan === '2' && (
+            <ApConfirmItemGroup label={'フラット35S（優良住宅取得支援制度）対象項目②'}>
+              {p_application_headers.property_flat_35_tech ? (
+                <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                  {
+                    propertyFlat35TechOptions.find((item) => item.value === p_application_headers.property_flat_35_tech)
+                      .label
+                  }
+                </Typography>
+              ) : (
+                'ー'
+              )}
+            </ApConfirmItemGroup>
+          )}
+
+          <ApConfirmItemGroup label={'地域連携型・地方移住支援型'}>
+            {p_application_headers.property_region_type ? (
+              <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                {
+                  propertyRegionTypeOptions.find((item) => item.value === p_application_headers.property_region_type)
+                    .label
+                }
+              </Typography>
+            ) : (
+              'ー'
+            )}
+          </ApConfirmItemGroup>
         </Stack>
       )}
-      <ApConfirmItemGroup label={'フラット35S（優良住宅取得支援制度）対象項目'}>
-        {p_application_headers.property_flat_35_plan ? (
-          <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-            {propertyFlat35PlanOptions.find((item) => item.value === p_application_headers.property_flat_35_plan).label}
-          </Typography>
-        ) : (
-          'ー'
-        )}
-      </ApConfirmItemGroup>
-      <ApConfirmItemGroup label={'維持保全型'}>
-        {p_application_headers.property_maintenance_type ? (
-          <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-            {
-              propertyMaintenanceTypeOptions.find(
-                (item) => item.value === p_application_headers.property_maintenance_type
-              ).label
-            }
-          </Typography>
-        ) : (
-          'ー'
-        )}
-      </ApConfirmItemGroup>
-      {p_application_headers.property_flat_35_plan === '2' && (
-        <ApConfirmItemGroup label={'フラット35S（優良住宅取得支援制度）対象項目②'}>
-          {p_application_headers.property_flat_35_tech ? (
-            <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-              {
-                propertyFlat35TechOptions.find((item) => item.value === p_application_headers.property_flat_35_tech)
-                  .label
-              }
-            </Typography>
-          ) : (
-            'ー'
-          )}
-        </ApConfirmItemGroup>
-      )}
-
-      <ApConfirmItemGroup label={'地域連携型・地方移住支援型'}>
-        {p_application_headers.property_region_type ? (
-          <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-            {propertyRegionTypeOptions.find((item) => item.value === p_application_headers.property_region_type).label}
-          </Typography>
-        ) : (
-          'ー'
-        )}
-      </ApConfirmItemGroup>
 
       {!agentSended && (
         <Stack alignItems={'center'} sx={{ py: 3 }}>

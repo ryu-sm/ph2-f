@@ -212,33 +212,64 @@ export const ApStep03Info = ({ stepIndex }) => {
             <Stack alignItems={'start'}>
               <Typography variant="modal_label" color={'text.main'}>
                 〈確定申告の理由〉
-                {p_applicant_persons__0.tax_return_reasons
-                  ? p_applicant_persons__0.tax_return_reasons
-                      .map((value) => taxReturnReasonsOptions.find((item) => item.value === value)?.label)
-                      .join('、')
-                  : 'ー'}
               </Typography>
               <Stack alignItems={'start'} pl={4}>
-                <Typography variant="modal_label" color={'text.main'}>
-                  〈確定申告の理由〉
-                  {p_applicant_persons__0.tax_return_reasons
-                    ? p_applicant_persons__0.tax_return_reasons
-                        .map((value) => taxReturnReasonsOptions.find((item) => item.value === value)?.label)
-                        .join('、')
-                    : 'ー'}
-                </Typography>
+                {p_applicant_persons__0.tax_return_reasons.includes('1') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    2カ所以上からの給与
+                  </Typography>
+                )}
+                {p_applicant_persons__0.tax_return_reasons.includes('2') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    事業収入
+                  </Typography>
+                )}
+                {p_applicant_persons__0.tax_return_reasons.includes('3') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    不動産収入
+                  </Typography>
+                )}
+                {p_applicant_persons__0.tax_return_reasons.includes('4') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    医療費・寄附金控除
+                  </Typography>
+                )}
+                {p_applicant_persons__0.tax_return_reasons.includes('5') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    株・配当
+                  </Typography>
+                )}
+                {p_applicant_persons__0.tax_return_reasons.includes('6') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    給与収入が2000万円超
+                  </Typography>
+                )}
+                {p_applicant_persons__0.tax_return_reasons.includes('99') && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    その他
+                  </Typography>
+                )}
+                {p_applicant_persons__0.tax_return_reasons.length === 0 && (
+                  <Typography variant="modal_label" color={'text.main'}>
+                    ー
+                  </Typography>
+                )}
               </Stack>
             </Stack>
 
-            <Stack alignItems={'start'}>
-              <Stack alignItems={'start'} pl={4}></Stack>
-            </Stack>
-
             {p_applicant_persons__0.tax_return_reasons.includes('99') && (
-              <Typography variant="modal_label" color={'text.main'}>
-                〈その他の詳細〉
-                {p_applicant_persons__0.tax_return_reason_other ? p_applicant_persons__0.tax_return_reason_other : 'ー'}
-              </Typography>
+              <Stack alignItems={'start'}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  〈その他の詳細〉
+                </Typography>
+                <Stack alignItems={'start'} pl={4}>
+                  <Typography variant="modal_label" color={'text.main'}>
+                    {p_applicant_persons__0.tax_return_reason_other
+                      ? p_applicant_persons__0.tax_return_reason_other
+                      : 'ー'}
+                  </Typography>
+                </Stack>
+              </Stack>
             )}
           </Stack>
         ) : (
@@ -249,48 +280,63 @@ export const ApStep03Info = ({ stepIndex }) => {
         {p_applicant_persons__0.transfer_office ? (
           p_applicant_persons__0.transfer_office === '1' ? (
             <Stack spacing={1} alignItems={'start'}>
-              {p_applicant_persons__0.transfer_office_name_kanji && (
+              <Stack alignItems={'start'}>
                 <Typography variant="modal_label" color={'text.main'}>
                   〈出向（派遣）勤務先名〉
-                  {p_applicant_persons__0.transfer_office_name_kanji
-                    ? p_applicant_persons__0.transfer_office_name_kanji
-                    : 'ー'}
                 </Typography>
-              )}
-
-              {p_applicant_persons__0.transfer_office_name_kana && (
+                <Stack alignItems={'start'} pl={4}>
+                  <Typography variant="modal_label" color={'text.main'}>
+                    {p_applicant_persons__0.transfer_office_name_kanji
+                      ? p_applicant_persons__0.transfer_office_name_kanji
+                      : 'ー'}
+                  </Typography>
+                </Stack>
+              </Stack>
+              <Stack alignItems={'start'}>
                 <Typography variant="modal_label" color={'text.main'}>
                   〈出向（派遣）勤務先名（フリガナ）〉
-                  {p_applicant_persons__0.transfer_office_name_kana
-                    ? p_applicant_persons__0.transfer_office_name_kana
-                    : 'ー'}
                 </Typography>
-              )}
-
-              {p_applicant_persons__0.transfer_office_phone && (
+                <Stack alignItems={'start'} pl={4}>
+                  <Typography variant="modal_label" color={'text.main'}>
+                    {p_applicant_persons__0.transfer_office_name_kana
+                      ? p_applicant_persons__0.transfer_office_name_kana
+                      : 'ー'}
+                  </Typography>
+                </Stack>
+              </Stack>
+              <Stack alignItems={'start'}>
                 <Typography variant="modal_label" color={'text.main'}>
                   〈出向（派遣）先 電話番号〉
-                  {p_applicant_persons__0.transfer_office_phone ? p_applicant_persons__0.transfer_office_phone : 'ー'}
                 </Typography>
-              )}
-              <Typography variant="sp_value_text" color="b_333">
-                〈出向（派遣）先　住所〉
-                {p_applicant_persons__0.transfer_office_postal_code ? (
-                  <Stack spacing={1} alignItems={'start'} sx={{ px: 4, pt: 1 }}>
-                    <Typography variant="modal_label" color={'text.main'}>
-                      {`〒${p_applicant_persons__0.transfer_office_postal_code}`}
-                    </Typography>
-                    <Typography variant="modal_label" color={'text.main'}>
-                      {`${p_applicant_persons__0.transfer_office_prefecture_kanji}${p_applicant_persons__0.transfer_office_city_kanji}${p_applicant_persons__0.transfer_office_district_kanji}`}
-                    </Typography>
-                    <Typography variant="modal_label" color={'text.main'}>
-                      {p_applicant_persons__0.transfer_office_other_address_kanji}
-                    </Typography>
-                  </Stack>
-                ) : (
-                  'ー'
-                )}
-              </Typography>
+                <Stack alignItems={'start'} pl={4}>
+                  <Typography variant="modal_label" color={'text.main'}>
+                    {p_applicant_persons__0.transfer_office_phone ? p_applicant_persons__0.transfer_office_phone : 'ー'}
+                  </Typography>
+                </Stack>
+              </Stack>
+              <Stack alignItems={'start'}>
+                <Typography variant="sp_value_text" color="b_333">
+                  〈出向（派遣）先　住所〉
+                </Typography>
+                <Stack alignItems={'start'} pl={4}>
+                  {p_applicant_persons__0.transfer_office_postal_code ? (
+                    <Stack spacing={1} alignItems={'start'} sx={{ pt: 1 }}>
+                      <Typography variant="modal_label" color={'text.main'}>
+                        {`〒${p_applicant_persons__0.transfer_office_postal_code}`}
+                      </Typography>
+                      <Typography variant="modal_label" color={'text.main'}>
+                        {`${p_applicant_persons__0.transfer_office_prefecture_kanji}${p_applicant_persons__0.transfer_office_city_kanji}${p_applicant_persons__0.transfer_office_district_kanji}`}
+                      </Typography>
+                      <Typography variant="modal_label" color={'text.main'}>
+                        {p_applicant_persons__0.transfer_office_other_address_kanji}
+                      </Typography>
+                    </Stack>
+                  ) : (
+                    'ー'
+                  )}
+                </Stack>
+              </Stack>
+              <Typography variant="sp_value_text" color="b_333"></Typography>
             </Stack>
           ) : (
             'いいえ'

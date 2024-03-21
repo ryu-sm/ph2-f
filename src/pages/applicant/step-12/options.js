@@ -3,7 +3,7 @@ import { dayjs } from '@/libs';
 
 export const inputOptions = [
   { value: '1', label: 'はい' },
-  { value: '2', label: `いいえ\n（自分で入力）` },
+  { value: '0', label: `いいえ\n（自分で入力）` },
 ];
 
 export const nationalityOptions = [

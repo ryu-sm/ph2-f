@@ -59,6 +59,7 @@ export const ApStep12Page = () => {
           sales_exhibition_hall_id: values.p_application_headers.sales_exhibition_hall_id,
           vendor_name: values.p_application_headers.vendor_name,
           vendor_phone: values.p_application_headers.vendor_phone,
+          vendor_business_card: values.p_application_headers.vendor_business_card,
         },
       };
     });
@@ -73,8 +74,8 @@ export const ApStep12Page = () => {
       sales_exhibition_hall_id: p_application_headers.sales_exhibition_hall_id,
       vendor_name: p_application_headers.vendor_name,
       vendor_phone: p_application_headers.vendor_phone,
+      vendor_business_card: p_application_headers.vendor_business_card,
     },
-    input_type: '',
   };
 
   const setUpdateData = (values) => {
@@ -130,7 +131,6 @@ export const ApStep12Page = () => {
 
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
-    delete dataCopy.input_type;
     return dataCopy;
   }, [formik.values]);
 
@@ -186,24 +186,6 @@ export const ApStep12Page = () => {
     );
   }, [orgs, formik.values.p_application_headers.sales_area_id]);
 
-  useEffect(() => {
-    if (
-      p_application_headers.sales_company_id ||
-      p_application_headers.sales_area_id ||
-      p_application_headers.sales_exhibition_hall_id ||
-      p_application_headers.vendor_name ||
-      p_application_headers.vendor_phone
-    ) {
-      formik.setFieldValue('input_type', '2');
-    }
-  }, [
-    p_application_headers.sales_company_id,
-    p_application_headers.sales_area_id,
-    p_application_headers.sales_exhibition_hall_id,
-    p_application_headers.vendor_name,
-    p_application_headers.vendor_phone,
-  ]);
-
   return (
     <FormikProvider value={formik}>
       <ApLayout
@@ -218,7 +200,7 @@ export const ApStep12Page = () => {
       >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`提携先企業（住宅メーカー・\n不動産会社等）の\n担当者を教えてください`}</ApPageTitle>
-        {!formik.values.input_type && (
+        {!formik.values.p_application_headers.vendor_business_card && (
           <Stack spacing={4} sx={{ px: 4, pb: 8 }}>
             <Typography variant="note">{`本件住宅ローンの借入申込に関わる事務（個人情報の受け渡しを含む）は提携先企業が行います。\n\nまた、みらいバンクは審査終了や審査結果の連絡を提携先企業に対して行います。\n\n詳しくは、既に同意いただいている以下の書類をよくお読みください。`}</Typography>
             <Stack
@@ -251,8 +233,8 @@ export const ApStep12Page = () => {
         )}
         <ApItemGroup label={'担当者の名刺はありますか？'} note={'※名刺添付で入力を省略できます'}>
           <Stack spacing={3}>
-            <ApRadioRowGroup name="input_type" height={30} options={inputOptions} />
-            {formik.values.input_type === '1' && (
+            <ApRadioRowGroup name="p_application_headers.vendor_business_card" height={30} options={inputOptions} />
+            {formik.values.p_application_headers.vendor_business_card === '1' && (
               <Stack
                 sx={{
                   borderRadius: 2,
@@ -283,7 +265,7 @@ export const ApStep12Page = () => {
                 </Stack>
               </Stack>
             )}
-            {formik.values.input_type === '2' && orgs.length > 0 && (
+            {formik.values.p_application_headers.vendor_business_card === '0' && orgs.length > 0 && (
               <Stack
                 sx={{
                   mt: 3,

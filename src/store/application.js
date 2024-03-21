@@ -172,6 +172,7 @@ export const applicationInitialValues = {
     sales_exhibition_hall_id: '',
     vendor_name: '',
     vendor_phone: '',
+    vendor_business_card: '',
   },
   // STEP01
   p_borrowing_details__1: {

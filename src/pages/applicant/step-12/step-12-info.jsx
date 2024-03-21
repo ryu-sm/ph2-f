@@ -40,7 +40,7 @@ export const ApStep12Info = ({ stepIndex }) => {
 
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={`：担当者情報`}>
-      {p_uploaded_files.J?.length > 0 ? (
+      {p_application_headers.vendor_business_card === '1' ? (
         <ApConfirmItemGroup label={'担当者の名刺'}>
           {p_uploaded_files.J.length ? (
             <ApImgItem files={p_uploaded_files.J} />

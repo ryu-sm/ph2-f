@@ -77,10 +77,10 @@ export const ApStep02Info = ({ stepIndex }) => {
       <ApConfirmItemGroup label={'電話番号'}>
         <Stack spacing={1} alignItems={'start'}>
           <Typography variant="modal_label" color={'text.main'}>
-            {p_applicant_persons__0.mobile_phone ? `〈携帯〉${p_applicant_persons__0.mobile_phone}` : 'ー'}
+            {p_applicant_persons__0.mobile_phone ? `〈携帯〉${p_applicant_persons__0.mobile_phone}` : '〈携帯〉ー'}
           </Typography>
           <Typography variant="modal_label" color={'text.main'}>
-            {p_applicant_persons__0.home_phone ? `〈自宅〉${p_applicant_persons__0.home_phone}` : 'ー'}
+            {p_applicant_persons__0.home_phone ? `〈自宅〉${p_applicant_persons__0.home_phone}` : '〈自宅〉ー'}
           </Typography>
         </Stack>
       </ApConfirmItemGroup>

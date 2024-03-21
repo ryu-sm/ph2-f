@@ -1,7 +1,7 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
 import { useBankMaster } from '@/hooks/use-bank-master';
 import { agentSendedSelector, applicationAtom, hasIncomeTotalizerSelector, isMcjSelector } from '@/store';
-import { formatJapanDate } from '@/utils';
+import { formatJapanDate, formatMoney } from '@/utils';
 import { Box, Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
@@ -198,23 +198,23 @@ export const ApStep08Info = ({ stepIndex }) => {
               </Typography>
             )}
 
-            {p_borrowing.scheduled_loan_payoff && !p_borrowing.type === '4' && (
+            {p_borrowing.scheduled_loan_payoff && (
               <Stack>
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈今回のお借入までに完済の予定はありますか？〉
                 </Typography>
-                {p_borrowing.scheduled_loan_payoff && (
+                <Stack alignItems={'start'} pl={4}>
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                     {p_borrowing.scheduled_loan_payoff
                       ? scheduledLoanPayoffOptions.find((item) => item.value === p_borrowing.scheduled_loan_payoff)
                           .label
                       : 'ー'}
                   </Typography>
-                )}
+                </Stack>
               </Stack>
             )}
 
-            {p_borrowing.scheduled_loan_payoff_date && (
+            {p_borrowing.scheduled_loan_payoff === '1' && (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 〈完済（予定）年月〉
                 {p_borrowing.scheduled_loan_payoff_date
@@ -231,15 +231,39 @@ export const ApStep08Info = ({ stepIndex }) => {
           <Stack>
             <ApConfirmItemGroup label={'完済原資'}>
               <Stack spacing={1} alignItems={'start'}>
-                <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                  〈完済原資の種類〉
-                  {p_application_headers.refund_source_type
-                    ? p_application_headers.refund_source_type
-                        .map((item) => refundSourceTypeOptions.find((i) => i.value === item).label)
-                        .filter((item) => !!item)
-                        .join(',')
-                    : 'ー'}
-                </Typography>
+                <Stack>
+                  <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                    〈完済原資の種類〉
+                  </Typography>
+                  <Stack alignItems={'start'} pl={4}>
+                    {p_application_headers.refund_source_type.includes('1') && (
+                      <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                        預貯金
+                      </Typography>
+                    )}
+                    {p_application_headers.refund_source_type.includes('2') && (
+                      <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                        贈与金
+                      </Typography>
+                    )}
+                    {p_application_headers.refund_source_type.includes('3') && (
+                      <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                        住宅売却代金
+                      </Typography>
+                    )}
+                    {p_application_headers.refund_source_type.includes('99') && (
+                      <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                        その他
+                      </Typography>
+                    )}
+                    {p_application_headers.refund_source_type.length === 0 && (
+                      <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                        ー
+                      </Typography>
+                    )}
+                  </Stack>
+                </Stack>
+
                 {p_application_headers.refund_source_type.includes('99') && (
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                     〈その他の方は詳細〉
@@ -255,7 +279,7 @@ export const ApStep08Info = ({ stepIndex }) => {
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈完済原資の金額〉
                   {p_application_headers.refund_source_amount
-                    ? Number(p_application_headers.refund_source_amount).toLocaleString()
+                    ? formatMoney(p_application_headers.refund_source_amount)
                     : 'ー'}
                 </Typography>
               </Stack>
