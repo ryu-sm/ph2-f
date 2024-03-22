@@ -154,7 +154,7 @@ export const ApConfirmPage = () => {
 
   return (
     <ApLayout hasMenu pb={13}>
-      <Box sx={{ background: (theme) => theme.palette.background.gradation, pb: 6 }}>
+      <Box sx={{ background: (theme) => theme.palette.background.gradation, pb: 14 }}>
         <ApPageTitle py={8}>{`住宅ローン仮審査\n申込内容`}</ApPageTitle>
         <Stack alignItems={'center'} sx={{ pb: 8 }}>
           <Stack
