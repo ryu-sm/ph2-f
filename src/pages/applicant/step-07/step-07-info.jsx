@@ -312,7 +312,7 @@ export const ApStep07Info = ({ stepIndex }) => {
           <ApConfirmItemGroup label={'生年月日'}>
             {p_residents[0].birthday ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {formatJapanDate(p_residents[0].nationality)}
+                {formatJapanDate(p_residents[0].birthday)}
               </Typography>
             ) : (
               'ー'
