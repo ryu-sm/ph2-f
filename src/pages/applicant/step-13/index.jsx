@@ -217,16 +217,16 @@ export const ApStep13Page = () => {
         application.p_uploaded_files.p_applicant_persons__0__H__a.length === 0 ||
         application.p_uploaded_files.p_applicant_persons__0__H__b.length === 0
       ) {
-        tempMsg.push('〈現在の国籍〉在留カードを添付してください');
+        tempMsg.push('〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
       }
     }
     if (application.p_applicant_persons__1.nationality === '2') {
       if (application.hasIncomeTotalizer) {
         if (
-          application.p_uploaded_files.p_applicant_persons__0__H__a.length === 0 ||
-          application.p_uploaded_files.p_applicant_persons__0__H__b.length === 0
+          application.p_uploaded_files.p_applicant_persons__1__H__a.length === 0 ||
+          application.p_uploaded_files.p_applicant_persons__1__H__b.length === 0
         ) {
-          tempMsg.push('収入合算者の〈現在の国籍〉在留カードを添付してください');
+          tempMsg.push('収入合算者の〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
         }
       }
     }
@@ -238,7 +238,7 @@ export const ApStep13Page = () => {
     }
 
     return tempMsg;
-  }, [formik.values.p_uploaded_files, application]);
+  }, [application]);
 
   return (
     <FormikProvider value={formik}>

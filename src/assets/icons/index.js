@@ -131,3 +131,9 @@ export { AdPlus } from './ad-plus';
 export { AdMinus } from './ad-minus';
 export { AdPDFDownload } from './ad-download';
 export { AdTrash } from './ad-trash';
+export { ApChatBubbleIcon } from './ap-chat-bubble';
+
+export { ApArrowCircleDownIcon } from './ap-arrow-circle-down';
+export { ApSendMessageIcon } from './ap-send-message';
+export { ApChatOtherIcon } from './ap-chat-other';
+export { ApChatUserIcon } from './ap-chat-user';

@@ -1,10 +1,45 @@
 import { Icons, apSmileChat } from '@/assets';
 import { useBoolean } from '@/hooks';
+import { apGetMessages, updateMessages } from '@/services';
+import { authAtom } from '@/store';
 import { Avatar, Button, Stack, Typography } from '@mui/material';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { ApChatModal } from './chat-modal';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApChat = () => {
   const modal = useBoolean(false);
+  const authInfo = useRecoilValue(authAtom);
+  const [messages, setMessages] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const res = await apGetMessages();
+      setMessages(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const hasUnViewed = useMemo(() => {
+    return messages.map((item) => !item['viewed'].includes(authInfo?.user?.id)).filter(Boolean);
+  }, [messages]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleClose = async (messages_ids) => {
+    try {
+      await updateMessages({ messages_ids });
+      await fetchData();
+      modal.onFalse();
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
 
   return (
     <Fragment>
@@ -23,6 +58,7 @@ export const ApChat = () => {
           borderRight: '6px solid #F1F6FD',
           borderRadius: '20px 20px 0px 0px',
         }}
+        onClick={modal.onTrue}
       >
         <Stack spacing={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>
           <Avatar
@@ -41,6 +77,39 @@ export const ApChat = () => {
           </Typography>
         </Stack>
       </Button>
+      {hasUnViewed.length > 0 && (
+        <>
+          <Stack
+            sx={{
+              position: 'fixed',
+              bottom: 48,
+              left: '50%',
+              transform: 'translate(-50%, 0)',
+              zIndex: 1,
+              bgcolor: 'secondary.main',
+              py: 1,
+              borderRadius: '6px',
+              width: 200,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="chat_new_message" color={'white'}>
+              新着メッセージが届いています！
+            </Typography>
+          </Stack>
+          <Stack
+            sx={{
+              position: 'fixed',
+              bottom: 40,
+              left: '50%',
+              transform: 'translate(-50%, 0)',
+            }}
+          >
+            <Icons.ApChatBubbleIcon />
+          </Stack>
+        </>
+      )}
+      <ApChatModal open={modal.value} onClose={handleClose} />
     </Fragment>
   );
 };

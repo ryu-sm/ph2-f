@@ -239,3 +239,15 @@ export const adGetSalesCompanyOptionsCategory = async (category) => {
 export const adGetSalesPersonOptionsAll = async () => {
   return await service.get(`/sales_person_options/all`);
 };
+
+export const apGetMessages = async () => {
+  return await service.get(`/user/messages`);
+};
+
+export const insertNewMessage = async (data) => {
+  return await service.post(`/message`, data);
+};
+
+export const updateMessages = async (data) => {
+  return await service.put(`/messages`, data);
+};

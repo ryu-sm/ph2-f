@@ -6,6 +6,7 @@ export const componentOverrides = (theme) => {
         root: {
           p: 0,
           minHeight: 40,
+          minWidth: 40,
           borderRadius: '14px',
           fontFamily: 'Hiragino Sans',
           fontStyle: 'normal',

@@ -13,6 +13,8 @@ export const ApTextInputField = ({
   label,
   autoTrim = true,
   sx,
+  multiline = false,
+  maxRows = 1,
   ...props
 }) => {
   const [field, meta, helpers] = useField(props);
@@ -56,6 +58,13 @@ export const ApTextInputField = ({
     [field, props, setValue]
   );
 
+  const handleKeydown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      props.onKeyDown && props.onKeyDown();
+    }
+  };
+
   return (
     <Stack spacing={1}>
       {label && (
@@ -70,6 +79,8 @@ export const ApTextInputField = ({
           placeholder={placeholder}
           value={meta.value}
           error={isError}
+          multiline={multiline}
+          maxRows={maxRows}
           sx={{
             '& .MuiInputBase-input': { textAlign: align || 'left' },
             '&&&& fieldset': { border: '1px solid', borderColor: 'primary.40' },
@@ -82,6 +93,7 @@ export const ApTextInputField = ({
           onBlur={handelBlue}
           onFocus={handleFocus}
           onChange={handleChange}
+          onKeyDown={handleKeydown}
         />
         {isError && (
           <Typography variant="note" sx={{ fontWeight: 500, color: (theme) => theme.palette.secondary.main }}>

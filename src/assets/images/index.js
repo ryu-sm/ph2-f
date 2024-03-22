@@ -24,3 +24,8 @@ export { adBackground };
 
 import adLogoCompany from './logo-company.png';
 export { adLogoCompany };
+
+import apMilize from './ap-milize.png';
+export { apMilize };
+import apAgent from './ap-agent.png';
+export { apAgent };

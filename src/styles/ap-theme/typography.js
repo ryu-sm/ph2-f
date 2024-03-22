@@ -124,4 +124,27 @@ export const typography = {
     lineHeight: '100%',
     letterSpacing: 0.6,
   },
+  chat_new_message: {
+    fontFamily: 'Noto Sans JP',
+    fontWeight: 700,
+    fontSize: 12,
+    lineHeight: '12px',
+    letterSpacing: 0.6,
+  },
+  chat_message: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 300,
+    fontSize: 14,
+    lineHeight: '170%',
+    letterSpacing: 0.6,
+    whiteSpace: 'break-spaces',
+    wordBreak: 'break-all',
+  },
+  chat_title: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 300,
+    fontSize: 12,
+    lineHeight: '100%',
+    letterSpacing: 0.6,
+  },
 };
