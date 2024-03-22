@@ -108,12 +108,7 @@ export const ApLoginPage = () => {
               changeJoinGuarantor: false,
               changeToIncomeTotalizer: false,
               p_applicant_persons_a_agreement: true,
-              p_applicant_persons_b_agreement:
-                (res.data.p_application_headers.loan_type === '3' ||
-                  res.data.p_application_headers.loan_type === '4') &&
-                apCurrStepId > 4
-                  ? true
-                  : false,
+              p_applicant_persons_b_agreement: res.data.p_applicant_persons_b_agreement,
             };
           });
 
