@@ -25,7 +25,7 @@ import {
 import { MCJ_CODE } from '@/configs';
 import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
-import { apApplication } from '@/services';
+import { apApplication, apApplicationFile } from '@/services';
 import { useIsSalesPerson } from '@/hooks';
 
 export const ApTopPage = () => {
@@ -44,12 +44,13 @@ export const ApTopPage = () => {
   const refreshApplyInfo = useCallback(async () => {
     try {
       const res = await apApplication(applyNo);
+      const fileRes = await apApplicationFile(applyNo);
       setApplicationInfo((pre) => {
         return {
           ...pre,
           p_uploaded_files: {
             ...pre.p_uploaded_files,
-            ...res.data.p_uploaded_files,
+            ...fileRes.data,
           },
           p_application_headers: {
             ...pre.p_application_headers,
@@ -97,7 +98,7 @@ export const ApTopPage = () => {
     if (agentSended) {
       refreshApplyInfo();
     }
-  }, [agentSended, applyNo]);
+  }, []);
 
   const topItems = useMemo(
     () => [
