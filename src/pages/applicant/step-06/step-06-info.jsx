@@ -35,42 +35,44 @@ export const ApStep06Info = ({ stepIndex }) => {
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                     〈担保提供者の氏名（フリガナ）〉
                   </Typography>
-                  <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                    {p_join_guarantor.last_name_kana || p_join_guarantor.first_name_kana
-                      ? `${p_join_guarantor.last_name_kana} ${p_join_guarantor.first_name_kana} 様`
-                      : 'ー'}
-                  </Typography>
+                  <Stack alignItems={'start'} pl={4}>
+                    <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
+                      {p_join_guarantor.last_name_kana || p_join_guarantor.first_name_kana
+                        ? `${p_join_guarantor.last_name_kana} ${p_join_guarantor.first_name_kana} 様`
+                        : 'ー'}
+                    </Typography>
+                  </Stack>
                 </Stack>
               )}
 
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 〈性別〉
                 {p_join_guarantor.gender
                   ? genderOptions.find((item) => item.value === p_join_guarantor.gender)?.label
                   : 'ー'}
               </Typography>
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 〈続柄〉
                 {p_join_guarantor.rel_to_applicant_a_name ? p_join_guarantor.rel_to_applicant_a_name : 'ー'}
               </Typography>
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 〈生年月日〉
                 {p_join_guarantor.birthday ? formatJapanDate(p_join_guarantor.birthday, true) : 'ー'}
               </Typography>
               {p_join_guarantor.mobile_phone || p_join_guarantor.home_phone ? (
                 <Stack spacing={1} alignItems={'start'}>
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     〈電話番号〉
                   </Typography>
                   <Stack spacing={1} alignItems={'start'} sx={{ px: 4 }}>
                     {p_join_guarantor.mobile_phone && (
-                      <Typography variant="modal_label" color={'text.main'}>
+                      <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                         〈携帯〉：
                         {p_join_guarantor.mobile_phone}
                       </Typography>
                     )}
                     {p_join_guarantor.home_phone && (
-                      <Typography variant="modal_label" color={'text.main'}>
+                      <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                         〈自宅〉：
                         {p_join_guarantor.home_phone}
                       </Typography>
@@ -78,7 +80,7 @@ export const ApStep06Info = ({ stepIndex }) => {
                   </Stack>
                 </Stack>
               ) : (
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   〈電話番号〉ー
                 </Typography>
               )}
@@ -87,13 +89,13 @@ export const ApStep06Info = ({ stepIndex }) => {
                 〈担保提供者の住所〉
                 {p_join_guarantor.postal_code ? (
                   <Stack spacing={1} alignItems={'start'} sx={{ px: 4, pt: 1 }}>
-                    <Typography variant="modal_label" color={'text.main'}>
+                    <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                       {`〒${p_join_guarantor.postal_code}`}
                     </Typography>
-                    <Typography variant="modal_label" color={'text.main'}>
+                    <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                       {`${p_join_guarantor.prefecture_kanji}${p_join_guarantor.city_kanji}${p_join_guarantor.district_kanji}`}
                     </Typography>
-                    <Typography variant="modal_label" color={'text.main'}>
+                    <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                       {p_join_guarantor.other_address_kanji}
                     </Typography>
                   </Stack>

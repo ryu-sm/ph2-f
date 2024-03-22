@@ -36,7 +36,7 @@ export const ApStep01Info = ({ stepIndex }) => {
         {p_application_banks.length > 0
           ? p_application_banks.map((bankID) => {
               return (
-                <Typography key={bankID} variant="modal_label" color={'text.main'}>
+                <Typography key={bankID} variant="modal_label" textAlign={'start'} color={'text.main'}>
                   {bankMaster.find((item) => item.value == bankID)?.label}
                 </Typography>
               );
@@ -64,17 +64,17 @@ export const ApStep01Info = ({ stepIndex }) => {
           : 'ー'}
         {p_application_headers.loan_type === '2' && (
           <Stack direction={'row'}>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {`〈お名前〉`}
               {p_application_headers.pair_loan_last_name && p_application_headers.pair_loan_first_name ? (
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   {`${p_application_headers.pair_loan_last_name} ${p_application_headers.pair_loan_first_name}`}
                 </Typography>
               ) : (
                 'ー'
               )}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {'〈続柄〉'}
               {p_application_headers.pair_loan_rel_name ? p_application_headers.pair_loan_rel_name : 'ー'}
             </Typography>
@@ -85,38 +85,38 @@ export const ApStep01Info = ({ stepIndex }) => {
         label={p_application_headers.land_advance_plan === '1' ? `お借入内容 1回目の融資` : 'お借入内容'}
       >
         <Stack spacing={3} alignItems={'start'}>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             〈お借入希望日〉
             {p_borrowing_details__1.desired_borrowing_date
               ? formatJapanDate(p_borrowing_details__1.desired_borrowing_date, true)
               : 'ー'}
           </Typography>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             〈お借入希望額〉
             {p_borrowing_details__1.desired_loan_amount
               ? Number(p_borrowing_details__1.desired_loan_amount).toLocaleString()
               : 'ー'}
             万円
           </Typography>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             〈うち、ボーナス返済分〉
             {p_borrowing_details__1.bonus_repayment_amount
               ? Number(p_borrowing_details__1.bonus_repayment_amount).toLocaleString()
               : 'ー'}
             万円
           </Typography>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             〈ボーナス返済月〉
             {p_borrowing_details__1.bonus_repayment_month
               ? bonusRepaymentMonthOptions.find((item) => item.value === p_borrowing_details__1.bonus_repayment_month)
                   ?.label
               : 'ー'}
           </Typography>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             〈お借入期間〉
             {p_borrowing_details__1.loan_term_year ? p_borrowing_details__1.loan_term_year : 'ー'}年
           </Typography>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             〈返済方法〉
             {p_borrowing_details__1.repayment_method
               ? repaymentMethodOptions.find((item) => item.value === p_borrowing_details__1.repayment_method)?.label
@@ -128,20 +128,20 @@ export const ApStep01Info = ({ stepIndex }) => {
       {p_application_headers.land_advance_plan === '1' && (
         <ApConfirmItemGroup label={'お借入内容 2回目の融資'}>
           <Stack spacing={3} alignItems={'start'}>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈お借入希望日〉
               {p_borrowing_details__2.desired_borrowing_date
                 ? formatJapanDate(p_borrowing_details__2.desired_borrowing_date, true)
                 : 'ー'}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈お借入希望額〉
               {p_borrowing_details__2.desired_loan_amount
                 ? Number(p_borrowing_details__2.desired_loan_amount).toLocaleString()
                 : 'ー'}
               万円
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈うち、ボーナス返済分〉
               {p_borrowing_details__2.bonus_repayment_amount
                 ? Number(p_borrowing_details__2.bonus_repayment_amount).toLocaleString()
@@ -152,12 +152,12 @@ export const ApStep01Info = ({ stepIndex }) => {
         </ApConfirmItemGroup>
       )}
       <ApConfirmItemGroup label={'担保提供者がいらっしゃいますか？'}>
-        <Typography variant="modal_label" color={'text.main'}>
+        <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
           {p_application_headers.join_guarantor_umu ? 'いる' : 'いない'}
         </Typography>
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'住信SBIネット銀行の「住宅ローンプラス」を申し込みますか？'}>
-        <Typography variant="modal_label" color={'text.main'}>
+        <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
           {p_application_headers.loan_plus ? '申し込む' : '申し込まない'}
         </Typography>
       </ApConfirmItemGroup>

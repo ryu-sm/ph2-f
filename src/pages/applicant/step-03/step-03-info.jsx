@@ -30,13 +30,13 @@ export const ApStep03Info = ({ stepIndex }) => {
     <ApConfirmGroup stepIndex={stepIndex} label={`：あなたのご職業`}>
       <ApConfirmItemGroup label={'ご職業'}>
         <Stack spacing={1} alignItems={'start'}>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             {p_applicant_persons__0.office_occupation
               ? occupationOptions.find((item) => item.value === p_applicant_persons__0.office_occupation)?.label
               : 'ー'}
           </Typography>
           {p_applicant_persons__0.office_occupation === '99' && (
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈その他の詳細〉
               {p_applicant_persons__0.office_occupation_other ? p_applicant_persons__0.office_occupation_other : 'ー'}
             </Typography>
@@ -45,13 +45,13 @@ export const ApStep03Info = ({ stepIndex }) => {
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'業種'}>
         <Stack spacing={1} alignItems={'start'}>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             {p_applicant_persons__0.office_industry
               ? industryOptions.find((item) => item.value === p_applicant_persons__0.office_industry)?.label
               : 'ー'}
           </Typography>
           {p_applicant_persons__0.office_industry === '99' && (
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈その他の詳細〉
               {p_applicant_persons__0.office_industry_other ? p_applicant_persons__0.office_industry_other : 'ー'}
             </Typography>
@@ -60,14 +60,14 @@ export const ApStep03Info = ({ stepIndex }) => {
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'職種'}>
         <Stack spacing={1} alignItems={'start'}>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             {p_applicant_persons__0.office_occupation_detail
               ? occupationDetailOptions.find((item) => item.value === p_applicant_persons__0.office_occupation_detail)
                   ?.label
               : 'ー'}
           </Typography>
           {p_applicant_persons__0.office_occupation_detail === '99' && (
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈その他の詳細〉
               {p_applicant_persons__0.office_occupation_detail_other
                 ? p_applicant_persons__0.office_occupation_detail_other
@@ -90,13 +90,13 @@ export const ApStep03Info = ({ stepIndex }) => {
       <ApConfirmItemGroup label={'勤務先の住所'}>
         {p_applicant_persons__0.office_postal_code ? (
           <Stack spacing={1} alignItems={'start'}>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {`〒${p_applicant_persons__0.office_postal_code}`}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {`${p_applicant_persons__0.office_prefecture_kanji}${p_applicant_persons__0.office_city_kanji}${p_applicant_persons__0.office_district_kanji}`}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {p_applicant_persons__0.office_other_address_kanji}
             </Typography>
           </Stack>
@@ -121,11 +121,11 @@ export const ApStep03Info = ({ stepIndex }) => {
         p_applicant_persons__0.tax_return ||
         p_applicant_persons__0.tax_return_reasons.length ? (
           <Stack spacing={1} alignItems={'start'}>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈前年度年収〉
             </Typography>
             <Stack alignItems={'start'} pl={4}>
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 {p_applicant_persons__0.last_year_income
                   ? `${Number(p_applicant_persons__0.last_year_income).toLocaleString()}万円`
                   : 'ー'}
@@ -134,11 +134,11 @@ export const ApStep03Info = ({ stepIndex }) => {
 
             {isMCJ && (
               <Stack alignItems={'start'}>
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   〈うち、ボーナス（MCJ固有項目）〉
                 </Typography>
                 <Stack alignItems={'start'} pl={4}>
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     {p_applicant_persons__0.last_year_bonus_income
                       ? `${Number(p_applicant_persons__0.last_year_bonus_income).toLocaleString()}万円`
                       : 'ー'}
@@ -148,11 +148,11 @@ export const ApStep03Info = ({ stepIndex }) => {
             )}
             {isMCJ && (
               <Stack alignItems={'start'}>
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   〈前々年度の年収（MCJ固有項目）〉
                 </Typography>
                 <Stack alignItems={'start'} pl={4}>
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     {p_applicant_persons__0.before_last_year_income
                       ? `${Number(p_applicant_persons__0.before_last_year_income).toLocaleString()}万円`
                       : 'ー'}
@@ -161,48 +161,48 @@ export const ApStep03Info = ({ stepIndex }) => {
               </Stack>
             )}
             <Stack alignItems={'flex-start'}>
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 〈収入源〉
               </Typography>
               <Stack alignItems={'flex-start'} pl={4}>
                 {p_applicant_persons__0.income_sources.includes('1') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     給与（固定給）
                   </Typography>
                 )}
                 {p_applicant_persons__0.income_sources.includes('2') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     給与（歩合給）
                   </Typography>
                 )}
                 {p_applicant_persons__0.income_sources.includes('3') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     給与（年俸制）
                   </Typography>
                 )}
                 {p_applicant_persons__0.income_sources.includes('4') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     事業収入
                   </Typography>
                 )}
                 {p_applicant_persons__0.income_sources.includes('5') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     不動産収入
                   </Typography>
                 )}
                 {p_applicant_persons__0.income_sources.length === 0 && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     ー
                   </Typography>
                 )}
               </Stack>
             </Stack>
             <Stack alignItems={'start'}>
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 〈確定申告をしていますか？〉
               </Typography>
               <Stack alignItems={'start'} pl={4}>
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   {p_applicant_persons__0.tax_return
                     ? taxReturnOptions.find((item) => item.value === p_applicant_persons__0.tax_return)?.label
                     : 'ー'}
@@ -210,47 +210,47 @@ export const ApStep03Info = ({ stepIndex }) => {
               </Stack>
             </Stack>
             <Stack alignItems={'start'}>
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 〈確定申告の理由〉
               </Typography>
               <Stack alignItems={'start'} pl={4}>
                 {p_applicant_persons__0.tax_return_reasons.includes('1') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     2カ所以上からの給与
                   </Typography>
                 )}
                 {p_applicant_persons__0.tax_return_reasons.includes('2') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     事業収入
                   </Typography>
                 )}
                 {p_applicant_persons__0.tax_return_reasons.includes('3') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     不動産収入
                   </Typography>
                 )}
                 {p_applicant_persons__0.tax_return_reasons.includes('4') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     医療費・寄附金控除
                   </Typography>
                 )}
                 {p_applicant_persons__0.tax_return_reasons.includes('5') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     株・配当
                   </Typography>
                 )}
                 {p_applicant_persons__0.tax_return_reasons.includes('6') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     給与収入が2000万円超
                   </Typography>
                 )}
                 {p_applicant_persons__0.tax_return_reasons.includes('99') && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     その他
                   </Typography>
                 )}
                 {p_applicant_persons__0.tax_return_reasons.length === 0 && (
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     ー
                   </Typography>
                 )}
@@ -259,11 +259,11 @@ export const ApStep03Info = ({ stepIndex }) => {
 
             {p_applicant_persons__0.tax_return_reasons.includes('99') && (
               <Stack alignItems={'start'}>
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   〈その他の詳細〉
                 </Typography>
                 <Stack alignItems={'start'} pl={4}>
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     {p_applicant_persons__0.tax_return_reason_other
                       ? p_applicant_persons__0.tax_return_reason_other
                       : 'ー'}
@@ -281,11 +281,11 @@ export const ApStep03Info = ({ stepIndex }) => {
           p_applicant_persons__0.transfer_office === '1' ? (
             <Stack spacing={1} alignItems={'start'}>
               <Stack alignItems={'start'}>
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   〈出向（派遣）勤務先名〉
                 </Typography>
                 <Stack alignItems={'start'} pl={4}>
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     {p_applicant_persons__0.transfer_office_name_kanji
                       ? p_applicant_persons__0.transfer_office_name_kanji
                       : 'ー'}
@@ -293,11 +293,11 @@ export const ApStep03Info = ({ stepIndex }) => {
                 </Stack>
               </Stack>
               <Stack alignItems={'start'}>
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   〈出向（派遣）勤務先名（フリガナ）〉
                 </Typography>
                 <Stack alignItems={'start'} pl={4}>
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     {p_applicant_persons__0.transfer_office_name_kana
                       ? p_applicant_persons__0.transfer_office_name_kana
                       : 'ー'}
@@ -305,11 +305,11 @@ export const ApStep03Info = ({ stepIndex }) => {
                 </Stack>
               </Stack>
               <Stack alignItems={'start'}>
-                <Typography variant="modal_label" color={'text.main'}>
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                   〈出向（派遣）先 電話番号〉
                 </Typography>
                 <Stack alignItems={'start'} pl={4}>
-                  <Typography variant="modal_label" color={'text.main'}>
+                  <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                     {p_applicant_persons__0.transfer_office_phone ? p_applicant_persons__0.transfer_office_phone : 'ー'}
                   </Typography>
                 </Stack>
@@ -321,13 +321,13 @@ export const ApStep03Info = ({ stepIndex }) => {
                 <Stack alignItems={'start'} pl={4}>
                   {p_applicant_persons__0.transfer_office_postal_code ? (
                     <Stack spacing={1} alignItems={'start'} sx={{ pt: 1 }}>
-                      <Typography variant="modal_label" color={'text.main'}>
+                      <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                         {`〒${p_applicant_persons__0.transfer_office_postal_code}`}
                       </Typography>
-                      <Typography variant="modal_label" color={'text.main'}>
+                      <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                         {`${p_applicant_persons__0.transfer_office_prefecture_kanji}${p_applicant_persons__0.transfer_office_city_kanji}${p_applicant_persons__0.transfer_office_district_kanji}`}
                       </Typography>
-                      <Typography variant="modal_label" color={'text.main'}>
+                      <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                         {p_applicant_persons__0.transfer_office_other_address_kanji}
                       </Typography>
                     </Stack>
@@ -348,20 +348,20 @@ export const ApStep03Info = ({ stepIndex }) => {
       <ApConfirmItemGroup label={'産休・育休の取得状況'}>
         {p_applicant_persons__0.maternity_paternity_leave ? (
           <Stack spacing={1} alignItems={'start'}>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {p_applicant_persons__0.maternity_paternity_leave
                 ? maternityPaternityLeaveOptions.find(
                     (item) => item.value === p_applicant_persons__0.maternity_paternity_leave
                   )?.label
                 : 'ー'}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈取得開始時期〉
               {p_applicant_persons__0.maternity_paternity_leave_start_date
                 ? formatJapanDate(p_applicant_persons__0.maternity_paternity_leave_start_date)
                 : 'ー'}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈取得終了時期〉
               {p_applicant_persons__0.maternity_paternity_leave_end_date
                 ? formatJapanDate(p_applicant_persons__0.maternity_paternity_leave_end_date)
@@ -376,7 +376,7 @@ export const ApStep03Info = ({ stepIndex }) => {
         <ApConfirmItemGroup label={'介護休暇の取得状況（MCJ固有項目）'}>
           {p_applicant_persons__0.nursing_leave ? (
             <Stack spacing={1} alignItems={'start'}>
-              <Typography variant="modal_label" color={'text.main'}>
+              <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
                 {p_applicant_persons__0.nursing_leave
                   ? nursingLeaveOptions.find((item) => item.value === p_applicant_persons__0.nursing_leave)?.label
                   : 'ー'}

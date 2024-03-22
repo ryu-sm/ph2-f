@@ -76,10 +76,10 @@ export const ApStep02Info = ({ stepIndex }) => {
 
       <ApConfirmItemGroup label={'電話番号'}>
         <Stack spacing={1} alignItems={'start'}>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             {p_applicant_persons__0.mobile_phone ? `〈携帯〉${p_applicant_persons__0.mobile_phone}` : '〈携帯〉ー'}
           </Typography>
-          <Typography variant="modal_label" color={'text.main'}>
+          <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
             {p_applicant_persons__0.home_phone ? `〈自宅〉${p_applicant_persons__0.home_phone}` : '〈自宅〉ー'}
           </Typography>
         </Stack>
@@ -87,13 +87,13 @@ export const ApStep02Info = ({ stepIndex }) => {
       <ApConfirmItemGroup label={'現住所'}>
         {p_applicant_persons__0.postal_code ? (
           <Stack spacing={1} alignItems={'start'}>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {`〒${p_applicant_persons__0.postal_code}`}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {`${p_applicant_persons__0.prefecture_kanji}${p_applicant_persons__0.city_kanji}${p_applicant_persons__0.district_kanji}`}
             </Typography>
-            <Typography variant="modal_label" color={'text.main'}>
+            <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               {p_applicant_persons__0.other_address_kanji}
             </Typography>
           </Stack>
