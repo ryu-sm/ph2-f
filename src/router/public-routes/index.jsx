@@ -1,3 +1,4 @@
+import { PdfPreviewPage } from '@/pages/administrator/pdf-preview';
 import { routeNames } from '../settings';
 import {
   ApLoginPage,
@@ -32,5 +33,13 @@ export const publicRoutes = [
   {
     ...routeNames.apResetPasswordPage,
     Element: ApResetPasswordPage,
+  },
+  {
+    ...routeNames.adDocmentPdfPreviewPage,
+    Element: PdfPreviewPage,
+  },
+  {
+    ...routeNames.spDocmentPdfPreviewPage,
+    Element: PdfPreviewPage,
   },
 ];

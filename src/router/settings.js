@@ -275,4 +275,12 @@ export const routeNames = {
     name: 'adSalesPersonStep13Page',
     path: '/sales-person/step-id-13',
   },
+  adDocmentPdfPreviewPage: {
+    name: 'adDocmentPdfPreviewPage',
+    path: '/manager/docment-pdf-preview',
+  },
+  spDocmentPdfPreviewPage: {
+    name: 'spDocmentPdfPreviewPage',
+    path: '/sales-person/docment-pdf-preview',
+  },
 };

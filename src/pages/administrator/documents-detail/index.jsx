@@ -1,16 +1,16 @@
 import { Icons } from '@/assets';
+import { API_500_ERROR } from '@/constant';
 import { AdMainWrapper } from '@/containers';
+import { useBoolean, useCurrSearchParams, useIsManager } from '@/hooks';
+import { routeNames } from '@/router/settings';
+import { adGetArchiveFile, adUpdateArchiveFile } from '@/services';
+import { downloadImageAsync } from '@/utils';
 import { Button, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { ImgPreview } from './img-preview';
-import { useBoolean, useCurrSearchParams, useIsManager } from '@/hooks';
-import { API_500_ERROR } from '@/constant';
-import { adGetArchiveFile, adUpdateArchiveFile } from '@/services';
 import { useNavigate } from 'react-router-dom';
-import { routeNames } from '@/router/settings';
-import { downloadImageAsync } from '@/utils';
+import { toast } from 'react-toastify';
 import { DeleteModal } from './delete-modal';
+import { ImgPreview } from './img-preview';
 
 export const AdDocumentsDetailPage = () => {
   const isManager = useIsManager();
@@ -53,6 +53,16 @@ export const AdDocumentsDetailPage = () => {
     } catch (error) {
       toast.error(API_500_ERROR);
     }
+  };
+
+  const isPdf = (uploadFile) => {
+    return uploadFile?.name?.split('.')[1] === 'pdf';
+  };
+
+  const handleFileClick = (file) => {
+    localStorage.setItem('fileData', file.src);
+    localStorage.setItem('fileName', file.name);
+    window.open(`http://localhost:5173/${isManager ? 'manager' : 'sales-person'}/docment-pdf-preview`);
   };
 
   return (
@@ -170,10 +180,12 @@ export const AdDocumentsDetailPage = () => {
                       whiteSpace: 'nowrap',
                       textOverflow: 'ellipsis',
                       px: '10px',
+                      cursor: isPdf(item) ? 'pointer' : 'default',
                     }}
                     variant="files_upload_filename"
                     onMouseEnter={() => handleMouseEnter(item)}
                     onMouseLeave={() => handleMouseLeave()}
+                    onClick={isPdf(item) ? () => handleFileClick(item) : null}
                   >
                     {item.name}
                   </Typography>
