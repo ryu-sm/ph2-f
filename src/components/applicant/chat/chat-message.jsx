@@ -5,27 +5,40 @@ import { Icons, apAgent, apMilize } from '@/assets';
 export const ChatMessage = ({ messageInfo, unViewed }) => {
   if (messageInfo.sender_type === '1') {
     return (
-      <Stack direction={'row-reverse'}>
+      <Stack>
         <Stack
+          justifyContent={'center'}
+          alignItems={'center'}
           sx={{
-            position: 'relative',
-            bgcolor: 'primary.main',
-            px: 3,
-            py: 2,
-            maxWidth: 271,
-            borderRadius: 2,
-            mx: 5,
+            py: 4,
           }}
         >
-          <Typography
-            variant="chat_message"
-            color={'white'}
-            dangerouslySetInnerHTML={{
-              __html: messageInfo.content,
+          <Typography variant="chat_title" color={'gray.250'}>
+            {formatTimeMessage(messageInfo.created_at)}
+          </Typography>
+        </Stack>
+        <Stack direction={'row-reverse'}>
+          <Stack
+            sx={{
+              position: 'relative',
+              bgcolor: 'primary.main',
+              px: 3,
+              py: 2,
+              maxWidth: 271,
+              borderRadius: 2,
+              mx: 5,
             }}
-          />
-          <Stack sx={{ position: 'absolute', bottom: '-6px', right: '-12px' }}>
-            <Icons.ApChatUserIcon />
+          >
+            <Typography
+              variant="chat_message"
+              color={'white'}
+              dangerouslySetInnerHTML={{
+                __html: messageInfo.content,
+              }}
+            />
+            <Stack sx={{ position: 'absolute', bottom: '-6px', right: '-12px' }}>
+              <Icons.ApChatUserIcon />
+            </Stack>
           </Stack>
         </Stack>
       </Stack>
@@ -46,11 +59,15 @@ export const ChatMessage = ({ messageInfo, unViewed }) => {
           />
           <Stack
             sx={{
-              width: '100%',
               px: 3,
             }}
           >
-            <Typography variant="chat_new_message" color="secondary.main" sx={{ whiteSpace: 'nowrap' }}>
+            <Typography
+              variant="chat_new_message"
+              color="secondary.main"
+              textAlign={'center'}
+              sx={{ whiteSpace: 'nowrap' }}
+            >
               ここから未読メッセージ
             </Typography>
           </Stack>
@@ -69,11 +86,11 @@ export const ChatMessage = ({ messageInfo, unViewed }) => {
         justifyContent={'center'}
         alignItems={'center'}
         sx={{
-          pt: 4,
+          py: 4,
         }}
       >
         <Typography variant="chat_title" color={'gray.250'}>
-          {formatTimeMessage(messageInfo.createdAt)}
+          {formatTimeMessage(messageInfo.created_at)}
         </Typography>
       </Stack>
 
@@ -120,26 +137,28 @@ export const ChatMessage = ({ messageInfo, unViewed }) => {
       </Stack>
 
       {messageInfo.content && (
-        <Stack
-          direction={'row'}
-          sx={{
-            position: 'relative',
-            bgcolor: 'primary.20',
-            px: 3,
-            py: 2,
-            maxWidth: 271,
-            borderRadius: 2,
-            mx: 5,
-          }}
-        >
-          <Typography
-            variant="chat_message"
-            dangerouslySetInnerHTML={{
-              __html: messageInfo.content,
+        <Stack direction={'row'}>
+          <Stack
+            direction={'row'}
+            sx={{
+              position: 'relative',
+              bgcolor: '#EEF0FF',
+              px: 3,
+              py: 2,
+              maxWidth: 271,
+              borderRadius: 2,
+              mx: 5,
             }}
-          />
-          <Stack sx={{ position: 'absolute', bottom: '-6px', left: '-13px' }}>
-            <Icons.ApChatOtherIcon />
+          >
+            <Typography
+              variant="chat_message"
+              dangerouslySetInnerHTML={{
+                __html: messageInfo.content,
+              }}
+            />
+            <Stack sx={{ position: 'absolute', bottom: '-6px', left: '-13px' }}>
+              <Icons.ApChatOtherIcon />
+            </Stack>
           </Stack>
         </Stack>
       )}

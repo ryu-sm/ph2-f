@@ -275,6 +275,7 @@ export const routeNames = {
     name: 'adSalesPersonStep13Page',
     path: '/sales-person/step-id-13',
   },
+  //
   adDocmentPdfPreviewPage: {
     name: 'adDocmentPdfPreviewPage',
     path: '/manager/docment-pdf-preview',
@@ -282,5 +283,25 @@ export const routeNames = {
   spDocmentPdfPreviewPage: {
     name: 'spDocmentPdfPreviewPage',
     path: '/sales-person/docment-pdf-preview',
+  },
+
+  //
+  adManagerMessagesPage: {
+    name: 'adManagerMessagesPage',
+    path: '/manager/messages',
+  },
+  adSalesPersonMessagesPage: {
+    name: 'adSalesPersonMessagesPage',
+    path: '/sales-person/messages',
+  },
+
+  //
+  adManagerMessagesDetailPage: {
+    name: 'adManagerMessagesDetailPage',
+    path: '/manager/messages-detail',
+  },
+  adSalesPersonMessagesDetailPage: {
+    name: 'adSalesPersonMessagesDetailPage',
+    path: '/sales-person/messages-detail',
   },
 };

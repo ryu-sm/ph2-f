@@ -191,7 +191,16 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
               }}
             />
           )}
-          <Icons.AdMessageIcon sx={{ cursor: 'pointer', width: 18, height: 14 }} />
+          {!pathname.includes('messages') && (
+            <Icons.AdMessageIcon
+              sx={{ cursor: 'pointer', width: 18, height: 14 }}
+              onClick={() => {
+                isManager
+                  ? navigate(routeNames.adManagerMessagesPage.path)
+                  : navigate(routeNames.adSalesPersonMessagesPage.path);
+              }}
+            />
+          )}
           {rightAddItems}
           <Divider orientation="vertical" variant="middle" flexItem />
           <Typography variant="main_page_auth_info">

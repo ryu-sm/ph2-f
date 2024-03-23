@@ -9,3 +9,5 @@ export { AdFilesViewPage } from './files-view';
 export { AdDocumentsPage } from './documents';
 export { AdNewDocumentsPage } from './new-documents';
 export { AdDocumentsDetailPage } from './documents-detail';
+export { AdMessagesPages } from './messages';
+export { AdMessagesDetailPage } from './message-detail';

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Stack, Typography } from '@mui/material';
+import { Badge, Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { Fragment, useCallback, useMemo, useState } from 'react';
 import { PopoverSelect } from '../common/popover-select';
 import { ProgressStatus } from '../common/progress-status';
@@ -439,32 +439,61 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
         <Stack direction={'row'} justifyContent={'space-between'} p={1}>
           <Stack direction={'row'} spacing={'10px'} alignItems={'center'}>
-            {letfLinkItems.map((item, index) => (
+            {letfLinkItems.map((linkItem, index) => (
               <Fragment key={index}>
-                <Button
-                  onClick={item.onClick}
-                  variant="text"
-                  sx={{
-                    mr: '10px',
-                    '&.MuiButtonBase-root:hover': {
-                      bgcolor: 'white',
-                      opacity: 1,
-                      textDecoration: 'underline',
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="case_content_text_edit"
-                    color={'primary.main'}
+                {index === 1 ? (
+                  <Button
+                    onClick={linkItem.onClick}
+                    variant="text"
                     sx={{
-                      '&.MuiTypography-root:hover': {
-                        color: 'blue.100',
+                      mr: '10px',
+                      '&.MuiButtonBase-root:hover': {
+                        bgcolor: 'white',
+                        opacity: 1,
+                        textDecoration: 'underline',
                       },
                     }}
                   >
-                    {item.label}
-                  </Typography>
-                </Button>
+                    <Badge badgeContent={Number(item?.unviewed)} color="error">
+                      <Typography
+                        variant="case_content_text_edit"
+                        color={'primary.main'}
+                        sx={{
+                          '&.MuiTypography-root:hover': {
+                            color: 'blue.100',
+                          },
+                        }}
+                      >
+                        {linkItem.label}
+                      </Typography>
+                    </Badge>
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={linkItem.onClick}
+                    variant="text"
+                    sx={{
+                      mr: '10px',
+                      '&.MuiButtonBase-root:hover': {
+                        bgcolor: 'white',
+                        opacity: 1,
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="case_content_text_edit"
+                      color={'primary.main'}
+                      sx={{
+                        '&.MuiTypography-root:hover': {
+                          color: 'blue.100',
+                        },
+                      }}
+                    >
+                      {linkItem.label}
+                    </Typography>
+                  </Button>
+                )}
                 {index !== letfLinkItems.length - 1 && (
                   <Icons.AdSlashIcon sx={{ color: 'gray.60', width: 12, height: 12 }} />
                 )}

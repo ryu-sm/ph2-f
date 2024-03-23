@@ -251,3 +251,19 @@ export const insertNewMessage = async (data) => {
 export const updateMessages = async (data) => {
   return await service.put(`/messages`, data);
 };
+
+export const adGetManagerMessages = async () => {
+  return await service.get(`/manager/messages`);
+};
+
+export const adGetSalesPersonMessages = async () => {
+  return await service.get(`/sales-person/messages`);
+};
+
+export const adGetMessage = async (id, type) => {
+  return await service.get(`/message?id=${id}&type=${type}`);
+};
+
+export const adDeleteMessage = async (id) => {
+  return await service.delete(`/message/${id}`);
+};

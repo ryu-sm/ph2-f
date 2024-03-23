@@ -1,11 +1,7 @@
 import { AdListFilterIcon } from '@/assets/icons/ad-list-filter';
-// import { SortListButton } from '@/components/admin/case-list-filter/sort-list-button';
-// import { AdDocsWrapper } from '@/containers/ad-layout/ad-doc-wrapper';
 import { AdMainWrapper } from '@/containers';
 import { Button, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-// import { DocItem } from './doc-item';
-// import { Fragment } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useBoolean, useIsManager } from '@/hooks';
@@ -21,7 +17,6 @@ import { useRecoilValue } from 'recoil';
 import { authAtom } from '@/store';
 import { DocsFilter } from './docs-filter';
 import { FormikProvider, useFormik } from 'formik';
-// import { DocsFilter } from './docs-filter';
 import { REGEX } from '@/constant';
 import { yup } from '@/libs';
 

@@ -21,18 +21,17 @@ export const ApChatModal = ({ open, onClose }) => {
     try {
       const res = await apGetMessages();
       setMessages(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [open]);
 
   const firstUnViewedIndex = useMemo(() => {
     return messages.findIndex((item) => !item?.viewed?.includes(user?.id));
-  }, [messages.length]);
+  }, [messages.length, open]);
 
   const pApplicationHeaderIdIndex = useMemo(() => {
     return messages.findIndex((item) => !!item?.p_application_header_id);
@@ -52,8 +51,6 @@ export const ApChatModal = ({ open, onClose }) => {
         content: formatApMessage(values.message),
       };
 
-      console.log(data);
-
       try {
         await insertNewMessage(data);
         await fetchData();
@@ -63,10 +60,6 @@ export const ApChatModal = ({ open, onClose }) => {
       }
     },
   });
-
-  useEffect(() => {
-    console.log(initialValues);
-  }, []);
 
   const bottomRef = useRef(null);
 

@@ -8,3 +8,4 @@ export * from './area-input';
 export * from './zip-code-input';
 export * from './filter-input';
 export * from './filter-numeric-input';
+export * from './link-insert-input';

@@ -42,11 +42,6 @@ export const ProgressStatus = ({ status }) => {
     return currentItem;
   }, [status]);
 
-  useEffect(() => {
-    console.log(status);
-    console.log(currentStatusItem);
-  }, []);
-
   return currentStatusItem ? (
     <Stack direction={'row'} alignItems={'center'} spacing={'2px'}>
       <Icons.AdStatusResultIcon fill={currentStatusItem?.fillColor} stroke={currentStatusItem?.strokeColor} />

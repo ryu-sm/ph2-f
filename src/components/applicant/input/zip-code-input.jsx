@@ -121,9 +121,11 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
               city_kana: convertToFullWidth(res.data.results[0].kana2),
               district_kana: convertToFullWidth(res.data.results[0].kana3),
             });
+          } else {
+            setAddrError(true);
           }
         } catch (error) {
-          console.log(error);
+          setAddrError(true);
         }
       }
     },

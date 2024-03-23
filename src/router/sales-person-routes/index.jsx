@@ -3,6 +3,8 @@ import {
   AdDocumentsDetailPage,
   AdDocumentsPage,
   AdFilesViewPage,
+  AdMessagesDetailPage,
+  AdMessagesPages,
   AdNewDocumentsPage,
   AdOrSpLoginPage,
   AdOrSpResetPasswordFinishedPage,
@@ -71,6 +73,14 @@ export const salesPersonAdRoutes = [
   {
     ...routeNames.adSalesPersonNewDocumentsPage,
     Element: AdNewDocumentsPage,
+  },
+  {
+    ...routeNames.adSalesPersonMessagesPage,
+    Element: AdMessagesPages,
+  },
+  {
+    ...routeNames.adSalesPersonMessagesDetailPage,
+    Element: AdMessagesDetailPage,
   },
 ];
 

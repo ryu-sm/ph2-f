@@ -4,6 +4,8 @@ import {
   AdDocumentsPage,
   AdFilesViewPage,
   AdMemo,
+  AdMessagesDetailPage,
+  AdMessagesPages,
   AdOrSpLoginPage,
   AdOrSpResetPasswordFinishedPage,
   AdOrSpResetPasswordPage,
@@ -52,5 +54,13 @@ export const managerRoutes = [
   {
     ...routeNames.adManagerDocumentsDetailPage,
     Element: AdDocumentsDetailPage,
+  },
+  {
+    ...routeNames.adManagerMessagesPage,
+    Element: AdMessagesPages,
+  },
+  {
+    ...routeNames.adManagerMessagesDetailPage,
+    Element: AdMessagesDetailPage,
   },
 ];

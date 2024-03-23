@@ -137,3 +137,5 @@ export { ApArrowCircleDownIcon } from './ap-arrow-circle-down';
 export { ApSendMessageIcon } from './ap-send-message';
 export { ApChatOtherIcon } from './ap-chat-other';
 export { ApChatUserIcon } from './ap-chat-user';
+export { AdLinkIcon } from './ad-link-icon';
+export { AdTrashIcon } from './ad-trash-icon';

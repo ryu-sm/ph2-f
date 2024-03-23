@@ -29,3 +29,5 @@ import apMilize from './ap-milize.png';
 export { apMilize };
 import apAgent from './ap-agent.png';
 export { apAgent };
+import userAvatar from './user.png';
+export { userAvatar };
