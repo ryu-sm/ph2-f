@@ -8,13 +8,25 @@ import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { AdSecondaryButton } from '@/components/administrator/button';
 import { UpdateModal } from './update-modal';
 import { useBoolean } from '@/hooks';
+import { adGetRowData } from '@/services';
+import { downloadExcelAsync } from '@/utils';
 
 export const AdReviewProgress = () => {
   const {
     preliminaryInfo: {
-      p_application_headers: { pre_examination_status },
+      p_application_headers: { pre_examination_status, id, apply_no },
     },
   } = usePreliminaryContext();
+
+  const downloadRowData = async () => {
+    try {
+      const res = await adGetRowData(id);
+      await downloadExcelAsync(res.data.src, `${apply_no}_申込内容のローデータ.xlsx`);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const activeValue = useMemo(() => {
     return pre_examination_status ? Number(pre_examination_status) : -1;
@@ -164,6 +176,7 @@ export const AdReviewProgress = () => {
               color: theme.palette.gray[100],
               border: `1px solid ${theme.palette.gray[80]}`,
             }}
+            onClick={downloadRowData}
           >
             ダウンロード
           </AdSecondaryButton>

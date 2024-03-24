@@ -36,3 +36,19 @@ export const downloadImageZipAsync = async (files, zipName) => {
     saveAs(content, `${zipName}.zip`);
   });
 };
+
+export const downloadExcelAsync = async (excelUrl, excelName = 'data.xlsx') => {
+  const response = await fetch(excelUrl);
+  const blob = await response.blob();
+
+  const blobUrl = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = blobUrl;
+  a.download = excelName;
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(blobUrl);
+};

@@ -4,6 +4,7 @@ import {
   apNextStepIdSelector,
   apPreStepIdSelector,
   applicationAtom,
+  applicationInitialValues,
   authAtom,
   hasIncomeTotalizerSelector,
   hasJoinGuarantorSelector,
@@ -133,8 +134,37 @@ export const ApStep13Page = () => {
           return;
         }
         const sendRes = await apAgentSend({
-          ...application,
-          p_uploaded_files: { ...application.p_uploaded_files, S: values.p_uploaded_files.S },
+          ...applicationInitialValues,
+
+          p_uploaded_files: {
+            ...applicationInitialValues.p_uploaded_files,
+            ...application.p_uploaded_files,
+            S: values.p_uploaded_files.S,
+          },
+          p_application_headers: {
+            ...applicationInitialValues.p_application_headers,
+            ...application.p_application_headers,
+          },
+          p_borrowing_details__1: {
+            ...applicationInitialValues.p_borrowing_details__1,
+            ...application.p_borrowing_details__1,
+          },
+          p_borrowing_details__2: {
+            ...applicationInitialValues.p_borrowing_details__2,
+            ...application.p_borrowing_details__2,
+          },
+          p_application_banks: application.p_application_banks,
+          p_applicant_persons__0: {
+            ...applicationInitialValues.p_applicant_persons__0,
+            ...application.p_applicant_persons__0,
+          },
+          p_applicant_persons__1: {
+            ...applicationInitialValues.p_applicant_persons__1,
+            ...application.p_applicant_persons__1,
+          },
+          p_join_guarantors: application.p_join_guarantors,
+          p_residents: application.p_residents,
+          p_borrowings: application.p_borrowings,
         });
         if (isSalesPerson) {
           return navigate(routeNames.adSalesPersonDashboardPage.path);

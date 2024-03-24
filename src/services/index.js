@@ -267,3 +267,7 @@ export const adGetMessage = async (id, type) => {
 export const adDeleteMessage = async (id) => {
   return await service.delete(`/message/${id}`);
 };
+
+export const adGetRowData = async (p_application_header_id) => {
+  return await service.get(`/row_data/${p_application_header_id}`);
+};
