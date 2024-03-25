@@ -46,7 +46,10 @@ export const validationSchema = yup.object({
           return field;
         }
       }),
-    curr_house_shell_scheduled_date: yup.string().matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
+    curr_house_shell_scheduled_date: yup
+      .string()
+      .matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
+      .label('売却予定時期'),
     curr_house_shell_scheduled_price: yup
       .string()
       .test('divisible-by-10', YUP_MESSAGES.ENTER_UNITS_100000YEN, (field_value) => {
