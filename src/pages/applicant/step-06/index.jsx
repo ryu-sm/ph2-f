@@ -241,7 +241,7 @@ export const ApStep06Page = () => {
                           <ApStarHelp label={'半角数字でご入力ください。'} />
                         </Stack>
                       </ApItemGroup>
-                      <ApItemGroup label={'担保提供者の現住所'} pb={3} px={2}>
+                      <ApItemGroup label={'担保提供者の住所'} pb={3} px={2}>
                         <Stack spacing={4}>
                           <ApZipCodeInputField
                             name={`p_join_guarantors[${index}].postal_code`}
