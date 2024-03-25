@@ -75,6 +75,7 @@ export const ApStep09Page = () => {
       required_funds_total_amount: p_application_headers.required_funds_total_amount,
       funding_saving_amount: p_application_headers.funding_saving_amount,
       funding_estate_sale_amount: p_application_headers.funding_estate_sale_amount,
+      funding_self_amount: p_application_headers.funding_self_amount,
       funding_other_saving_amount: p_application_headers.funding_other_saving_amount,
       funding_relative_donation_amount: p_application_headers.funding_relative_donation_amount,
       funding_loan_amount: p_application_headers.funding_loan_amount,
@@ -146,6 +147,26 @@ export const ApStep09Page = () => {
     formik.setFieldValue('p_application_headers.required_funds_total_amount', String(required_funds_total_amount));
     formik.setFieldValue('p_application_headers.funding_total_amount', String(funding_total_amount));
   }, [formik.values]);
+
+  useEffect(() => {
+    if (
+      formik.values.p_application_headers.funding_saving_amount ||
+      formik.values.p_application_headers.funding_estate_sale_amount ||
+      formik.values.p_application_headers.funding_other_saving_amount
+    ) {
+      const sum =
+        Number(formik.values.p_application_headers.funding_saving_amount) +
+        Number(formik.values.p_application_headers.funding_estate_sale_amount) +
+        Number(formik.values.p_application_headers.funding_other_saving_amount);
+      formik.setFieldValue('p_application_headers.funding_self_amount', `${sum ? sum : ''}`);
+    } else {
+      formik.setFieldValue('p_application_headers.funding_self_amount', '');
+    }
+  }, [
+    formik.values.p_application_headers.funding_saving_amount,
+    formik.values.p_application_headers.funding_estate_sale_amount,
+    formik.values.p_application_headers.funding_other_saving_amount,
+  ]);
 
   return (
     <FormikProvider value={formik}>

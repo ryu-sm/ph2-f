@@ -127,6 +127,9 @@ export const Item04 = () => {
               >
                 <EditRow
                   label={'担保提供者の氏名（姓）'}
+                  upConfig={{
+                    key: `p_join_guarantors.last_name_kanji.${item?.id}`,
+                  }}
                   isRequired
                   field={
                     isEditable ? (
@@ -142,6 +145,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'担保提供者の氏名（名）'}
+                  upConfig={{
+                    key: `p_join_guarantors.first_name_kanji.${item?.id}`,
+                  }}
                   isRequired
                   field={
                     isEditable ? (
@@ -157,6 +163,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'担保提供者の氏名（姓）（フリガナ）'}
+                  upConfig={{
+                    key: `p_join_guarantors.last_name_kana.${item?.id}`,
+                  }}
                   isRequired
                   field={
                     isEditable ? (
@@ -172,6 +181,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'担保提供者の氏名（名）（フリガナ）'}
+                  upConfig={{
+                    key: `p_join_guarantors.first_name_kana.${item?.id}`,
+                  }}
                   isRequired
                   field={
                     isEditable ? (
@@ -187,6 +199,10 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'性別'}
+                  upConfig={{
+                    key: `p_join_guarantors.gender.${item?.id}`,
+                    options: genderOptions,
+                  }}
                   hasPleft={isEditable}
                   field={
                     isEditable ? (
@@ -201,6 +217,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'続柄'}
+                  upConfig={{
+                    key: `p_join_guarantors.rel_to_applicant_a_name.${item?.id}`,
+                  }}
                   field={
                     isEditable ? (
                       <AdEditInput name={`p_join_guarantors[${index}].rel_to_applicant_a_name`} convertFullWidth />
@@ -243,6 +262,10 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'生年月日'}
+                  upConfig={{
+                    key: `p_join_guarantors.birthday.${item?.id}`,
+                    formatJaDate: true,
+                  }}
                   isRequired
                   hasPleft={isEditable}
                   field={
@@ -263,6 +286,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'電話番号携帯'}
+                  upConfig={{
+                    key: `p_join_guarantors.mobile_phone.${item?.id}`,
+                  }}
                   field={
                     isEditable ? (
                       <AdEditInput name={`p_join_guarantors[${index}].mobile_phone`} convertHalfWidth />
@@ -277,6 +303,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'電話番号自宅'}
+                  upConfig={{
+                    key: `p_join_guarantors.home_phone.${item?.id}`,
+                  }}
                   field={
                     isEditable ? (
                       <AdEditInput name={`p_join_guarantors[${index}].home_phone`} convertHalfWidth />
@@ -291,6 +320,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'緊急連絡先'}
+                  upConfig={{
+                    key: `p_join_guarantors.emergency_contact.${item?.id}`,
+                  }}
                   isAddendum
                   field={
                     isEditable ? (
@@ -306,6 +338,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'郵便番号'}
+                  upConfig={{
+                    key: `p_join_guarantors.postal_code.${item?.id}`,
+                  }}
                   field={
                     isEditable ? (
                       <AdZipCodeInput
@@ -330,6 +365,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'都道府県'}
+                  upConfig={{
+                    key: `p_join_guarantors.prefecture_kanji.${item?.id}`,
+                  }}
                   isRequired
                   hasPleft={isEditable}
                   field={
@@ -346,6 +384,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'市区郡'}
+                  upConfig={{
+                    key: `p_join_guarantors.city_kanji.${item?.id}`,
+                  }}
                   isRequired
                   field={
                     isEditable ? (
@@ -361,6 +402,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'町村丁目'}
+                  upConfig={{
+                    key: `p_join_guarantors.district_kanji.${item?.id}`,
+                  }}
                   isRequired
                   field={
                     isEditable ? (
@@ -376,6 +420,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'丁目以下・建物名・部屋番号'}
+                  upConfig={{
+                    key: `p_join_guarantors.other_address_kanji.${item?.id}`,
+                  }}
                   isRequired
                   field={
                     isEditable ? (
@@ -391,6 +438,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'都道府県（フリガナ）'}
+                  upConfig={{
+                    key: `p_join_guarantors.prefecture_kana.${item?.id}`,
+                  }}
                   isAddendum
                   field={
                     isEditable ? (
@@ -406,6 +456,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'市区郡（フリガナ）'}
+                  upConfig={{
+                    key: `p_join_guarantors.city_kana.${item?.id}`,
+                  }}
                   isAddendum
                   field={
                     isEditable ? (
@@ -421,6 +474,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'町村丁目（フリガナ）'}
+                  upConfig={{
+                    key: `p_join_guarantors.district_kana.${item?.id}`,
+                  }}
                   isAddendum
                   field={
                     isEditable ? (
@@ -436,6 +492,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'丁目以下・建物名・部屋番号（フリガナ）'}
+                  upConfig={{
+                    key: `p_join_guarantors.other_address_kana.${item?.id}`,
+                  }}
                   isAddendum
                   field={
                     isEditable ? (
@@ -451,6 +510,9 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'メールアドレス'}
+                  upConfig={{
+                    key: `p_join_guarantors.email.${item?.id}`,
+                  }}
                   isAddendum
                   field={
                     isEditable ? (

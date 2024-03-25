@@ -76,6 +76,9 @@ export const Item02 = () => {
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'お名前（姓）'}
+          upConfig={{
+            key: `p_applicant_persons.last_name_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -88,6 +91,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'お名前（名）'}
+          upConfig={{
+            key: `p_applicant_persons.first_name_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -100,6 +106,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'お名前（姓）（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.last_name_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -112,6 +121,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'お名前（名）（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.first_name_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -124,6 +136,10 @@ export const Item02 = () => {
         />
         <EditRow
           label={'性別'}
+          upConfig={{
+            key: `p_applicant_persons.gender.${p_applicant_persons__0?.id}`,
+            options: genderOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -137,6 +153,10 @@ export const Item02 = () => {
         />
         <EditRow
           label={'生年月日'}
+          upConfig={{
+            key: `p_applicant_persons.birthday.${p_applicant_persons__0?.id}`,
+            formatJaDate: true,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -154,6 +174,10 @@ export const Item02 = () => {
         />
         <EditRow
           label={'現在の国籍'}
+          upConfig={{
+            key: `p_applicant_persons.nationality.${p_applicant_persons__0?.id}`,
+            options: nationalityOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -166,6 +190,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'電話番号携帯'}
+          upConfig={{
+            key: `p_applicant_persons.mobile_phone.${p_applicant_persons__0?.id}`,
+          }}
           isLogicRequired
           field={
             isEditable ? (
@@ -178,6 +205,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'電話番号自宅'}
+          upConfig={{
+            key: `p_applicant_persons.home_phone.${p_applicant_persons__0?.id}`,
+          }}
           isLogicRequired
           field={
             isEditable ? (
@@ -190,6 +220,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'緊急連絡先'}
+          upConfig={{
+            key: `p_applicant_persons.emergency_contact.${p_applicant_persons__0?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -202,6 +235,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'郵便番号'}
+          upConfig={{
+            key: `p_applicant_persons.postal_code.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -224,6 +260,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'都道府県'}
+          upConfig={{
+            key: `p_applicant_persons.prefecture_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -237,6 +276,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'市区郡'}
+          upConfig={{
+            key: `p_applicant_persons.city_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -249,6 +291,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'町村丁目'}
+          upConfig={{
+            key: `p_applicant_persons.district_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -261,6 +306,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号'}
+          upConfig={{
+            key: `p_applicant_persons.other_address_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -273,6 +321,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'都道府県（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.prefecture_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           isAddendum
           field={
@@ -286,6 +337,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'市区郡（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.city_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           isAddendum
           field={
@@ -299,6 +353,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'町村丁目（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.district_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           isAddendum
           field={
@@ -312,6 +369,9 @@ export const Item02 = () => {
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.other_address_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           isAddendum
           field={
@@ -325,10 +385,13 @@ export const Item02 = () => {
         />
         <EditRow
           label={'ご連絡先用メールアドレス'}
+          upConfig={{
+            key: `p_applicant_persons.email.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.email" convertFullWidth />
+              <AdEditInput name="p_applicant_persons__0.email" />
             ) : (
               formik.values.p_applicant_persons__0.email
             )

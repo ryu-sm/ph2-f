@@ -184,7 +184,7 @@ export const preliminaryInitialValues = {
       fiance_umu: false,
       others_umu: false,
     },
-    property_business_type: '',
+    property_business_type: [],
     property_postal_code: '',
     property_prefecture: '',
     property_city: '',

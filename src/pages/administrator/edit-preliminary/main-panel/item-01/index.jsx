@@ -74,6 +74,7 @@ export const Item01 = () => {
       loan_target: p_application_headers?.loan_target,
       land_advance_plan: p_application_headers?.land_advance_plan,
       loan_type: p_application_headers?.loan_type,
+      loan_target_type: p_application_headers?.loan_target_type,
       pair_loan_last_name: p_application_headers?.pair_loan_last_name,
       pair_loan_first_name: p_application_headers?.pair_loan_first_name,
       pair_loan_rel_name: p_application_headers?.pair_loan_rel_name,
@@ -96,7 +97,7 @@ export const Item01 = () => {
       bonus_repayment_amount: p_borrowing_details__2?.bonus_repayment_amount,
     },
     // 補助フィールド
-    loan_target_: '0',
+    // loan_target_: '0',
   };
 
   const setUpdateData = (values) => {
@@ -146,13 +147,13 @@ export const Item01 = () => {
 
   const bankMaster = useBankMaster();
 
-  useEffect(() => {
-    if (['1', '2', '3', '4', '5', '6', ''].includes(p_application_headers.loan_target)) {
-      formik.setFieldValue('loan_target_', '0');
-    } else {
-      formik.setFieldValue('loan_target_', p_application_headers.loan_target);
-    }
-  }, [p_application_headers.loan_target]);
+  // useEffect(() => {
+  //   if (['1', '2', '3', '4', '5', '6', ''].includes(p_application_headers.loan_target)) {
+  //     formik.setFieldValue('loan_target_', '0');
+  //   } else {
+  //     formik.setFieldValue('loan_target_', p_application_headers.loan_target);
+  //   }
+  // }, [p_application_headers.loan_target]);
 
   useEffect(() => {
     if (formik.values.p_application_banks.includes(bankMaster.find((item) => item.code === MCJ_CODE)?.value)) {
@@ -183,6 +184,10 @@ export const Item01 = () => {
         <EditRow label={'同意日'} field={formatJapanDate(formik.values.p_application_headers.apply_date, true)} />
         <EditRow
           label={'入居予定年月'}
+          upConfig={{
+            key: `p_application_headers.move_scheduled_date.${p_application_headers?.id}`,
+            formatJaDate: true,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -212,114 +217,115 @@ export const Item01 = () => {
         <EditRow
           label={'お借入の目的'}
           upConfig={{
-            key: `p_application_headers.loan_target.${p_application_headers?.id}`,
-            formatNumber: false,
+            key: `p_application_headers.loan_target_type.${p_application_headers?.id}`,
             options: loanTargetOptions_,
-            unit: '',
           }}
           isRequired
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name="loan_target_" options={loanTargetOptions_} />
-            ) : (
-              loanTargetOptions_.find((item) => item.value === formik.values.loan_target_)?.label
-            )
-          }
-          error={formik.errors?.loan_target_}
-          onChange={(value) => {
-            switch (value) {
-              case '0':
-                formik.setFieldValue('p_application_headers.loan_target', '');
-                break;
-              case '7':
-                setPreliminarySnap((pre) => {
-                  return {
-                    ...pre,
-                    p_application_headers: {
-                      ...pre?.p_application_headers,
-                      new_house_acquire_reason: '',
-                      new_house_acquire_reason_other: '',
-                    },
-                  };
-                });
-                formik.setFieldValue('p_application_headers.loan_target', '7');
-                break;
-              case '8':
-                formik.setFieldValue('p_application_headers.loan_target', '8');
-                break;
-            }
-            if (value !== '0') {
-              formik.setFieldValue('p_application_headers.land_advance_plan', '');
-              formik.setFieldValue('p_borrowing_details__2._desired_borrowing_date', '');
-              formik.setFieldValue('p_borrowing_details__2.desired_loan_amount', '');
-              formik.setFieldValue('p_borrowing_details__2.bonus_repayment_amount', '');
-            }
-          }}
-        />
-        <EditRow
-          label={'資金の使いみち'}
-          upConfig={{
-            key: `p_application_headers.loan_target.${p_application_headers?.id}`,
-            formatNumber: false,
-            options: loanTargetOptions,
-            unit: '',
-          }}
-          isLogicRequired
-          hasPleft={isEditable}
-          field={
-            isEditable ? (
               <AdSelectRadios
-                name={'p_application_headers.loan_target'}
-                options={loanTargetOptions}
+                name="p_application_headers.loan_target_type"
+                options={loanTargetOptions_}
                 onChange={(value) => {
-                  // setPreliminarySnap((pre) => {
-                  //   return {
-                  //     ...pre,
-                  //     p_application_headers: {
-                  //       ...pre?.p_application_headers,
-                  //       required_funds_land_amount: '',
-                  //       required_funds_house_amount: '',
-                  //       required_funds_accessory_amount: '',
-                  //       required_funds_additional_amount: '',
-                  //       required_funds_refinance_loan_balance: '',
-                  //       required_funds_upgrade_amount: '',
-                  //       required_funds_loan_plus_amount: '',
-                  //       required_funds_total_amount: '',
-                  //       funding_saving_amount: '',
-                  //       funding_estate_sale_amount: '',
-                  //       funding_other_saving_amount: '',
-                  //       funding_relative_donation_amount: '',
-                  //       funding_loan_amount: '',
-                  //       funding_pair_loan_amount: '',
-                  //       funding_other_amount: '',
-                  //       funding_other_amount_detail: '',
-                  //       funding_total_amount: '',
-                  //     },
-                  //   };
-                  // });
-                  if (value !== '6') {
+                  console.log(value);
+                  switch (value) {
+                    case '0':
+                      formik.setFieldValue('p_application_headers.loan_target', '');
+                      break;
+                    case '7':
+                      setPreliminarySnap((pre) => {
+                        return {
+                          ...pre,
+                          p_application_headers: {
+                            ...pre?.p_application_headers,
+                            new_house_acquire_reason: '',
+                            new_house_acquire_reason_other: '',
+                          },
+                        };
+                      });
+                      formik.setFieldValue('p_application_headers.loan_target', '7');
+                      break;
+                    case '8':
+                      formik.setFieldValue('p_application_headers.loan_target', '8');
+                      break;
+                  }
+                  if (value !== '0') {
                     formik.setFieldValue('p_application_headers.land_advance_plan', '');
-                    formik.setFieldValue('p_borrowing_details__2.desired_borrowing_date', '');
+                    formik.setFieldValue('p_borrowing_details__2._desired_borrowing_date', '');
                     formik.setFieldValue('p_borrowing_details__2.desired_loan_amount', '');
                     formik.setFieldValue('p_borrowing_details__2.bonus_repayment_amount', '');
                   }
                 }}
               />
             ) : (
-              loanTargetOptions.find((item) => item.value === formik.values.p_application_headers.loan_target)?.label
+              loanTargetOptions_.find((item) => item.value === formik.values.p_application_headers.loan_target_type)
+                ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.loan_target}
+          error={formik.errors?.p_application_headers?.loan_target_type}
         />
+        {formik.values.p_application_headers.loan_target_type == '0' && (
+          <EditRow
+            label={'資金の使いみち'}
+            upConfig={{
+              key: `p_application_headers.loan_target.${p_application_headers?.id}`,
+              options: loanTargetOptions,
+            }}
+            isLogicRequired
+            hasPleft={isEditable}
+            field={
+              isEditable ? (
+                <AdSelectRadios
+                  name={'p_application_headers.loan_target'}
+                  options={loanTargetOptions}
+                  onChange={(value) => {
+                    // setPreliminarySnap((pre) => {
+                    //   return {
+                    //     ...pre,
+                    //     p_application_headers: {
+                    //       ...pre?.p_application_headers,
+                    //       required_funds_land_amount: '',
+                    //       required_funds_house_amount: '',
+                    //       required_funds_accessory_amount: '',
+                    //       required_funds_additional_amount: '',
+                    //       required_funds_refinance_loan_balance: '',
+                    //       required_funds_upgrade_amount: '',
+                    //       required_funds_loan_plus_amount: '',
+                    //       required_funds_total_amount: '',
+                    //       funding_saving_amount: '',
+                    //       funding_estate_sale_amount: '',
+                    //       funding_other_saving_amount: '',
+                    //       funding_relative_donation_amount: '',
+                    //       funding_loan_amount: '',
+                    //       funding_pair_loan_amount: '',
+                    //       funding_other_amount: '',
+                    //       funding_other_amount_detail: '',
+                    //       funding_total_amount: '',
+                    //     },
+                    //   };
+                    // });
+                    if (value !== '6') {
+                      formik.setFieldValue('p_application_headers.land_advance_plan', '');
+                      formik.setFieldValue('p_borrowing_details__2.desired_borrowing_date', '');
+                      formik.setFieldValue('p_borrowing_details__2.desired_loan_amount', '');
+                      formik.setFieldValue('p_borrowing_details__2.bonus_repayment_amount', '');
+                    }
+                  }}
+                />
+              ) : (
+                loanTargetOptions.find((item) => item.value === formik.values.p_application_headers.loan_target)?.label
+              )
+            }
+            error={formik.errors?.p_application_headers?.loan_target}
+          />
+        )}
         {formik.values.p_application_headers.loan_target === '6' && (
           <EditRow
             label={'「土地先行プラン」を希望ですか？'}
             upConfig={{
               key: `p_application_headers.land_advance_plan.${p_application_headers?.id}`,
-              formatNumber: false,
               options: landAadvancePlanOptions,
-              unit: '',
             }}
             isLogicRequired
             hasPleft={isEditable}
@@ -337,6 +343,10 @@ export const Item01 = () => {
         )}
         <EditRow
           label={'お借入形態'}
+          upConfig={{
+            key: `p_application_headers.loan_type.${p_application_headers?.id}`,
+            options: loanTypeOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -347,7 +357,8 @@ export const Item01 = () => {
                 onChange={(value) => {
                   if (
                     (value === '3' || value === '4') &&
-                    (p_application_headers.loan_type !== '3' || p_application_headers.loan_type !== '4')
+                    p_application_headers.loan_type !== '3' &&
+                    p_application_headers.loan_type !== '4'
                   ) {
                     setPreliminarySnap((pre) => {
                       return { ...pre, changeToIncomeTotalizer: true };
@@ -398,9 +409,6 @@ export const Item01 = () => {
               label={'ペアローン　お名前（姓）'}
               upConfig={{
                 key: `p_application_headers.pair_loan_last_name.${p_application_headers?.id}`,
-                formatNumber: false,
-                options: null,
-                unit: '',
               }}
               isLogicRequired
               field={
@@ -416,9 +424,6 @@ export const Item01 = () => {
               label={'ペアローン　お名前（名）'}
               upConfig={{
                 key: `p_application_headers.pair_loan_first_name.${p_application_headers?.id}`,
-                formatNumber: false,
-                options: null,
-                unit: '',
               }}
               isLogicRequired
               field={
@@ -432,6 +437,9 @@ export const Item01 = () => {
             />
             <EditRow
               label={'ペアローン　続柄'}
+              upConfig={{
+                key: `p_application_headers.pair_loan_rel_name.${p_application_headers?.id}`,
+              }}
               isLogicRequired
               isAddendum
               field={
@@ -455,6 +463,10 @@ export const Item01 = () => {
         )}
         <EditRow
           label={'お借入希望日'}
+          upConfig={{
+            key: `p_borrowing_details.desired_borrowing_date.${p_borrowing_details__1?.id}`,
+            formatJaDate: true,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -472,6 +484,11 @@ export const Item01 = () => {
         />
         <EditRow
           label={'お借入希望額'}
+          upConfig={{
+            key: `p_borrowing_details.desired_loan_amount.${p_borrowing_details__1?.id}`,
+            formatNumber: true,
+            unit: '万円',
+          }}
           isRequired
           field={
             isEditable ? (
@@ -484,6 +501,11 @@ export const Item01 = () => {
         />
         <EditRow
           label={'お借入内容　うち、ボーナス返済分'}
+          upConfig={{
+            key: `p_borrowing_details.bonus_repayment_amount.${p_borrowing_details__1?.id}`,
+            formatNumber: true,
+            unit: '万円',
+          }}
           isLogicRequired
           field={
             isEditable ? (
@@ -508,6 +530,10 @@ export const Item01 = () => {
         />
         <EditRow
           label={'ボーナス返済月'}
+          upConfig={{
+            key: `p_borrowing_details.bonus_repayment_month.${p_borrowing_details__1?.id}`,
+            options: bonusRepaymentMonthOptions,
+          }}
           isLogicRequired
           hasPleft={isEditable}
           field={
@@ -526,6 +552,10 @@ export const Item01 = () => {
         />
         <EditRow
           label={'お借入内容　お借入期間（年）'}
+          upConfig={{
+            key: `p_borrowing_details.loan_term_year.${p_borrowing_details__1?.id}`,
+            options: yearNumOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -539,6 +569,10 @@ export const Item01 = () => {
         />
         <EditRow
           label={'お借入内容　返済方法'}
+          upConfig={{
+            key: `p_borrowing_details.repayment_method.${p_borrowing_details__1?.id}`,
+            options: repaymentMethodOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -556,6 +590,10 @@ export const Item01 = () => {
           <Stack>
             <EditRow
               label={'お借入希望日（2回目融資）'}
+              upConfig={{
+                key: `p_borrowing_details.desired_borrowing_date.${p_borrowing_details__2?.id}`,
+                options: repaymentMethodOptions,
+              }}
               isRequired
               hasPleft={isEditable}
               field={
@@ -573,6 +611,11 @@ export const Item01 = () => {
             />
             <EditRow
               label={'お借入希望額（2回目融資）'}
+              upConfig={{
+                key: `p_borrowing_details.desired_loan_amount.${p_borrowing_details__2?.id}`,
+                formatNumber: true,
+                unit: '万円',
+              }}
               isRequired
               field={
                 isEditable ? (
@@ -585,6 +628,11 @@ export const Item01 = () => {
             />
             <EditRow
               label={'うち、ボーナス返済分（2回目融資）'}
+              upConfig={{
+                key: `p_borrowing_details.bonus_repayment_amount.${p_borrowing_details__2?.id}`,
+                formatNumber: true,
+                unit: '万円',
+              }}
               field={
                 isEditable ? (
                   <AdNumericInput name="p_borrowing_details__2.bonus_repayment_amount" maxLength={6} unit={'万円'} />
@@ -598,6 +646,10 @@ export const Item01 = () => {
         )}
         <EditRow
           label={'担保提供者がいる方のみ、チェックをつけてください。'}
+          upConfig={{
+            key: `p_application_headers.join_guarantor_umu.${p_application_headers?.id}`,
+            options: hasJoinGuarantorOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -627,6 +679,10 @@ export const Item01 = () => {
         />
         <EditRow
           label={'住信SBIネット銀行の「住宅ローンプラス」の申し込みの有無'}
+          upConfig={{
+            key: `p_application_headers.loan_plus.${p_application_headers?.id}`,
+            options: loanPlusOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (

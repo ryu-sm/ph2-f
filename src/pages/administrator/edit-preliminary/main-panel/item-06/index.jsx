@@ -91,6 +91,10 @@ export const Item06 = () => {
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'あなたや連帯保証人予定者に、現在お借入はありますか？'}
+          upConfig={{
+            key: `p_application_headers.curr_borrowing_status.${p_application_headers?.id}`,
+            options: CurrBorrowingStatusOptions,
+          }}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -166,6 +170,10 @@ export const Item06 = () => {
                   )}
                   <EditRow
                     label={'お借入の種類は？'}
+                    upConfig={{
+                      key: `p_borrowings.type.${item?.id}`,
+                      options: CurrBorrowingStatusOptions,
+                    }}
                     field={
                       isEditable ? (
                         <AdSelectRadios
@@ -209,6 +217,9 @@ export const Item06 = () => {
 
                   <EditRow
                     label={'借入先（金融機関）'}
+                    upConfig={{
+                      key: `p_borrowings.lender.${item?.id}`,
+                    }}
                     field={
                       isEditable ? <AdEditInput name={`p_borrowings[${index}].lender`} convertFullWidth /> : item.lender
                     }
@@ -218,6 +229,10 @@ export const Item06 = () => {
                     <Stack>
                       <EditRow
                         label={'お借入の目的'}
+                        upConfig={{
+                          key: `p_borrowings.loan_purpose.${item?.id}`,
+                          options: loanPurposeOptions,
+                        }}
                         field={
                           isEditable ? (
                             <AdSelectRadios name={`p_borrowings[${index}].loan_purpose`} options={loanPurposeOptions} />
@@ -233,6 +248,9 @@ export const Item06 = () => {
                       {formik.values.p_borrowings[index].loan_purpose === '99' && (
                         <EditRow
                           label={'お借入の目的（その他）'}
+                          upConfig={{
+                            key: `p_borrowings.loan_purpose_other.${item?.id}`,
+                          }}
                           field={
                             isEditable ? (
                               <AdEditInput name={`p_borrowings[${index}].loan_purpose_other`} convertFullWidth />
@@ -253,6 +271,10 @@ export const Item06 = () => {
                     <Stack>
                       <EditRow
                         label={'お借入の目的'}
+                        upConfig={{
+                          key: `p_borrowings.loan_business_target.${item?.id}`,
+                          options: loanBusinessTargetOptions,
+                        }}
                         field={
                           isEditable ? (
                             <AdSelectRadios
@@ -271,6 +293,9 @@ export const Item06 = () => {
                       {formik.values.p_borrowings[index].loan_business_target === '99' && (
                         <EditRow
                           label={'お借入の目的（その他）'}
+                          upConfig={{
+                            key: `p_borrowings.loan_business_target_other.${item?.id}`,
+                          }}
                           field={
                             isEditable ? (
                               <AdEditInput
@@ -291,6 +316,10 @@ export const Item06 = () => {
                   )}
                   <EditRow
                     label={'住宅金融支援機構からの借入'}
+                    upConfig={{
+                      key: `p_borrowings.borrowing_from_house_finance_agency.${item?.id}`,
+                      options: houseFinanceAgency,
+                    }}
                     field={
                       isEditable ? (
                         <AdSelectRadios
@@ -309,6 +338,10 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={'借入区分'}
+                    upConfig={{
+                      key: `p_borrowings.category.${item?.id}`,
+                      options: categoryOptions,
+                    }}
                     field={
                       isEditable ? (
                         <AdSelectRadios name={`p_borrowings[${index}].category`} options={categoryOptions} />
@@ -320,6 +353,10 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={formik.values.p_borrowings[index].type === '2' ? '当初カード契約年月' : '当初借入年月'}
+                    upConfig={{
+                      key: `p_borrowings.loan_start_date.${item?.id}`,
+                      formatJaDate: true,
+                    }}
                     field={
                       isEditable ? (
                         <MonthPicker
@@ -337,6 +374,11 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={formik.values.p_borrowings[index].type === '2' ? '借入限度額' : '当初借入額'}
+                    upConfig={{
+                      key: `p_borrowings.loan_amount.${item?.id}`,
+                      formatNumber: true,
+                      unit: '万円',
+                    }}
                     isLogicRequired
                     field={
                       isEditable ? (
@@ -351,6 +393,11 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={'現在の残高'}
+                    upConfig={{
+                      key: `p_borrowings.curr_loan_balance_amount.${item?.id}`,
+                      formatNumber: true,
+                      unit: '万円',
+                    }}
                     field={
                       isEditable ? (
                         <AdNumericInput name={`p_borrowings[${index}].curr_loan_balance_amount`} unit={'万円'} />
@@ -365,6 +412,11 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={'年間返済額'}
+                    upConfig={{
+                      key: `p_borrowings.annual_repayment_amount.${item?.id}`,
+                      formatNumber: true,
+                      unit: '万円',
+                    }}
                     field={
                       isEditable ? (
                         <AdNumericInput name={`p_borrowings[${index}].annual_repayment_amount`} unit={'万円'} />
@@ -380,6 +432,10 @@ export const Item06 = () => {
                   {formik.values.p_borrowings[index].type === '2' ? (
                     <EditRow
                       label={'カード有効期限'}
+                      upConfig={{
+                        key: `p_borrowings.card_expiry_date.${item?.id}`,
+                        formatJaDate: true,
+                      }}
                       field={
                         isEditable ? (
                           <MonthPicker
@@ -398,6 +454,10 @@ export const Item06 = () => {
                   ) : (
                     <EditRow
                       label={'契約期限、最終期限／最終返済年月'}
+                      upConfig={{
+                        key: `p_borrowings.loan_end_date.${item?.id}`,
+                        formatJaDate: true,
+                      }}
                       field={
                         isEditable ? (
                           <MonthPicker
@@ -417,6 +477,11 @@ export const Item06 = () => {
                     <Stack>
                       <EditRow
                         label={'賃貸戸（室）数'}
+                        upConfig={{
+                          key: `p_borrowings.rental_room_num.${item?.id}`,
+                          formatNumber: true,
+                          unit: '戸（室）',
+                        }}
                         field={
                           isEditable ? (
                             <AdNumericInput
@@ -435,6 +500,10 @@ export const Item06 = () => {
                       />
                       <EditRow
                         label={'共同住宅'}
+                        upConfig={{
+                          key: `p_borrowings.common_housing.${item?.id}`,
+                          options: commonHousingOptions,
+                        }}
                         field={
                           isEditable ? (
                             <AdSelectRadios
@@ -455,6 +524,10 @@ export const Item06 = () => {
                   {!['1', '2'].includes(formik.values.p_borrowings[index].type) && (
                     <EditRow
                       label={'不動産担保設定'}
+                      upConfig={{
+                        key: `p_borrowings.estate_setting.${item?.id}`,
+                        options: estateSettingOptions,
+                      }}
                       field={
                         isEditable ? (
                           <AdSelectRadios
@@ -475,6 +548,10 @@ export const Item06 = () => {
                     <Stack>
                       <EditRow
                         label={'今回のお借入までに完済の予定はありますか？'}
+                        upConfig={{
+                          key: `p_borrowings.scheduled_loan_payoff.${item?.id}`,
+                          options: scheduledLoanPayoffOptions,
+                        }}
                         field={
                           isEditable ? (
                             <AdSelectRadios
@@ -497,6 +574,10 @@ export const Item06 = () => {
                       {formik.values.p_borrowings[index].scheduled_loan_payoff === '1' && (
                         <EditRow
                           label={'完済（予定）年月'}
+                          upConfig={{
+                            key: `p_borrowings.scheduled_loan_payoff_date.${item?.id}`,
+                            formatJaDate: true,
+                          }}
                           field={
                             isEditable ? (
                               <MonthPicker
@@ -518,6 +599,10 @@ export const Item06 = () => {
 
                   <EditRow
                     label={'審査に含める/含めない'}
+                    upConfig={{
+                      key: `p_borrowings.include_in_examination.${item?.id}`,
+                      options: includeInExaminationOptions,
+                    }}
                     isAddendum
                     field={
                       isEditable ? (
@@ -541,6 +626,12 @@ export const Item06 = () => {
                 <Stack>
                   <EditRow
                     label={'完済原資の種類'}
+                    upConfig={{
+                      key: `p_application_headers.refund_source_type.${p_application_headers?.id}`,
+                      options: refundSourceTypeOptions,
+                      mapOptions: true,
+                      join: '・',
+                    }}
                     field={
                       isEditable ? (
                         <AdSelectCheckbox
@@ -562,6 +653,9 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={'完済原資の内容'}
+                    upConfig={{
+                      key: `p_application_headers.refund_source_content.${p_application_headers?.id}`,
+                    }}
                     field={
                       isEditable ? (
                         <AdEditInput name="p_application_headers.refund_source_content" convertFullWidth />
@@ -573,6 +667,11 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={'完済原資の金額'}
+                    upConfig={{
+                      key: `p_application_headers.refund_source_amount.${p_application_headers?.id}`,
+                      formatNumber: true,
+                      unit: '万円',
+                    }}
                     field={
                       isEditable ? (
                         <AdNumericInput name="p_application_headers.refund_source_amount" maxLength={6} unit={'万円'} />
@@ -584,6 +683,11 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={'今回の住宅取得後も継続する支払地代'}
+                    upConfig={{
+                      key: `p_application_headers.rent_to_be_paid_land.${p_application_headers?.id}`,
+                      formatNumber: true,
+                      unit: '円',
+                    }}
                     field={
                       isEditable ? (
                         <AdNumericInput name="p_application_headers.rent_to_be_paid_land" maxLength={10} unit={'円'} />
@@ -595,6 +699,11 @@ export const Item06 = () => {
                   />
                   <EditRow
                     label={'今回の住宅取得後も継続する支払家賃'}
+                    upConfig={{
+                      key: `p_application_headers.rent_to_be_paid_house.${p_application_headers?.id}`,
+                      formatNumber: true,
+                      unit: '円',
+                    }}
                     field={
                       isEditable ? (
                         <AdNumericInput name="p_application_headers.rent_to_be_paid_house" maxLength={10} unit={'円'} />

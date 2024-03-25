@@ -8,6 +8,7 @@ import {
   AdAreaInput,
   AdEditInput,
   AdNumericInput,
+  AdSelectCheckbox,
   AdSelectRadios,
   AdZipCodeInput,
   DayPicker,
@@ -111,6 +112,7 @@ export const Item05 = () => {
       },
       p_residents: values.p_residents,
     };
+    console.log(diffData);
     return diffData;
   };
 
@@ -197,6 +199,11 @@ export const Item05 = () => {
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'現在居住　居住年数（年）'}
+          upConfig={{
+            key: `p_application_headers.curr_house_lived_year.${p_application_headers?.id}`,
+            formatNumber: true,
+            unit: '年',
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -215,6 +222,11 @@ export const Item05 = () => {
         />
         <EditRow
           label={'現在居住　居住年数（ヶ月）'}
+          upConfig={{
+            key: `p_application_headers.curr_house_lived_month.${p_application_headers?.id}`,
+            formatNumber: true,
+            unit: 'ヶ月',
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -233,6 +245,10 @@ export const Item05 = () => {
         />
         <EditRow
           label={'現在のお住まいの種類'}
+          upConfig={{
+            key: `p_application_headers.curr_house_residence_type.${p_application_headers?.id}`,
+            options: currHouseResidenceTypeOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -265,10 +281,14 @@ export const Item05 = () => {
         {isMCJ && (
           <EditRow
             label={'現在のお住まいの床面積 (MCJ固有項目)'}
+            upConfig={{
+              key: `p_application_headers.curr_house_floor_area.${p_application_headers?.id}`,
+              formatNumber: true,
+              unit: 'm²',
+            }}
             field={
               isEditable ? (
-                // TODO
-                <AdEditInput name="p_application_headers.curr_house_floor_area" convertHalfWidth />
+                <AdAreaInput name="p_application_headers.curr_house_floor_area" unit={'m²'} />
               ) : (
                 formik.values.p_application_headers.curr_house_floor_area
               )
@@ -280,6 +300,9 @@ export const Item05 = () => {
           <Stack>
             <EditRow
               label={'所有者の氏名'}
+              upConfig={{
+                key: `p_application_headers.curr_house_owner_name.${p_application_headers?.id}`,
+              }}
               field={
                 isEditable ? (
                   <AdEditInput name="p_application_headers.curr_house_owner_name" convertFullWidth />
@@ -291,6 +314,9 @@ export const Item05 = () => {
             />
             <EditRow
               label={'続柄'}
+              upConfig={{
+                key: `p_application_headers.curr_house_owner_rel.${p_application_headers?.id}`,
+              }}
               field={
                 isEditable ? (
                   <AdEditInput name="p_application_headers.curr_house_owner_rel" convertFullWidth />
@@ -306,6 +332,10 @@ export const Item05 = () => {
           <Stack>
             <EditRow
               label={'持家　処分方法'}
+              upConfig={{
+                key: `p_application_headers.curr_house_schedule_disposal_type.${p_application_headers?.id}`,
+                options: currHouseScheduleDisposalTypeOptions,
+              }}
               isLogicRequired
               hasPleft={isEditable}
               field={
@@ -325,6 +355,9 @@ export const Item05 = () => {
             {formik.values.p_application_headers.curr_house_schedule_disposal_type === '99' && (
               <EditRow
                 label={'持家　処分方法（その他）'}
+                upConfig={{
+                  key: `p_application_headers.curr_house_schedule_disposal_type_other.${p_application_headers?.id}`,
+                }}
                 isLogicRequired
                 field={
                   isEditable ? (
@@ -344,6 +377,11 @@ export const Item05 = () => {
               <Stack>
                 <EditRow
                   label={'持家　売却予定価格'}
+                  upConfig={{
+                    key: `p_application_headers.curr_house_shell_scheduled_price.${p_application_headers?.id}`,
+                    formatNumber: true,
+                    unit: '万円',
+                  }}
                   field={
                     isEditable ? (
                       <AdNumericInput name="p_application_headers.curr_house_shell_scheduled_price" unit={'万円'} />
@@ -355,6 +393,10 @@ export const Item05 = () => {
                 />
                 <EditRow
                   label={'持家　売却予定時期'}
+                  upConfig={{
+                    key: `p_application_headers.curr_house_shell_scheduled_date.${p_application_headers?.id}`,
+                    formatJaDate: true,
+                  }}
                   hasPleft={isEditable}
                   field={
                     isEditable ? (
@@ -370,6 +412,10 @@ export const Item05 = () => {
                 />
                 <EditRow
                   label={'持家　ローン残高'}
+                  upConfig={{
+                    key: `p_application_headers.curr_house_loan_balance_type.${p_application_headers?.id}`,
+                    options: currHouseLoanBalanceTypeOptions,
+                  }}
                   hasPleft={isEditable}
                   field={
                     isEditable ? (
@@ -392,6 +438,9 @@ export const Item05 = () => {
 
         <EditRow
           label={'物件情報が掲載されたURL'}
+          upConfig={{
+            key: `p_application_headers.property_publish_url.${p_application_headers?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_application_headers.property_publish_url" convertHalfWidth />
@@ -403,6 +452,10 @@ export const Item05 = () => {
         />
         <EditRow
           label={'新しい住居を必要とする理由'}
+          upConfig={{
+            key: `p_application_headers.new_house_acquire_reason.${p_application_headers?.id}`,
+            options: newHouseAcquireReasonOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -421,6 +474,9 @@ export const Item05 = () => {
         {formik.values.p_application_headers.new_house_acquire_reason === '99' && (
           <EditRow
             label={'新しい住居を必要とする理由（その他）'}
+            upConfig={{
+              key: `p_application_headers.new_house_acquire_reason_other.${p_application_headers?.id}`,
+            }}
             hasPleft={isEditable}
             field={
               isEditable ? (
@@ -434,6 +490,10 @@ export const Item05 = () => {
         )}
         <EditRow
           label={'新しい住居に、あなたは居住しますか？'}
+          upConfig={{
+            key: `p_application_headers.new_house_self_resident.${p_application_headers?.id}`,
+            options: newHouseSelfResidentOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -460,6 +520,9 @@ export const Item05 = () => {
         {formik.values.p_application_headers.new_house_self_resident === '0' && (
           <EditRow
             label={'新しい住居に、居住しない理由'}
+            upConfig={{
+              key: `p_application_headers.new_house_self_not_resident_reason.${p_application_headers?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
@@ -493,11 +556,15 @@ export const Item05 = () => {
               />
               <Stack>
                 {formik.values.p_residents
-                  .sort((a, b) => b.rel_to_applicant_a - a.rel_to_applicant_a)
+                  // .sort((a, b) => b.rel_to_applicant_a - a.rel_to_applicant_a)
                   .map((item, index) => (
                     <Stack key={index}>
                       <EditRow
                         label={`入居家族${index + 1} 現在申込人との同居有無`}
+                        upConfig={{
+                          key: `p_residents.one_roof.${item?.id}`,
+                          options: oneRoofOptions,
+                        }}
                         isAddendum
                         hasPleft={isEditable}
                         field={
@@ -513,6 +580,9 @@ export const Item05 = () => {
                       />
                       <EditRow
                         label={`入居家族${index + 1} 姓　漢字`}
+                        upConfig={{
+                          key: `p_residents.last_name_kanji.${item?.id}`,
+                        }}
                         isLogicRequired
                         field={
                           isEditable ? (
@@ -528,6 +598,9 @@ export const Item05 = () => {
                       />
                       <EditRow
                         label={`入居家族${index + 1} 名　漢字`}
+                        upConfig={{
+                          key: `p_residents.first_name_kanji.${item?.id}`,
+                        }}
                         isLogicRequired
                         field={
                           isEditable ? (
@@ -543,6 +616,9 @@ export const Item05 = () => {
                       />
                       <EditRow
                         label={`入居家族${index + 1} 姓　カナ`}
+                        upConfig={{
+                          key: `p_residents.last_name_kana.${item?.id}`,
+                        }}
                         isLogicRequired
                         field={
                           isEditable ? (
@@ -558,6 +634,9 @@ export const Item05 = () => {
                       />
                       <EditRow
                         label={`入居家族${index + 1} 名　カナ`}
+                        upConfig={{
+                          key: `p_residents.first_name_kana.${item?.id}`,
+                        }}
                         isLogicRequired
                         field={
                           isEditable ? (
@@ -573,6 +652,10 @@ export const Item05 = () => {
                       />
                       <EditRow
                         label={`入居家族${index + 1} 性別`}
+                        upConfig={{
+                          key: `p_residents.gender.${item?.id}`,
+                          options: genderOptions,
+                        }}
                         isAddendum
                         hasPleft={isEditable}
                         field={
@@ -586,6 +669,9 @@ export const Item05 = () => {
                       />
                       <EditRow
                         label={`入居家族${index + 1} 続柄`}
+                        upConfig={{
+                          key: `p_residents.rel_to_applicant_a.${item?.id}`,
+                        }}
                         isLogicRequired
                         hasPleft={isEditable}
                         field={
@@ -605,6 +691,10 @@ export const Item05 = () => {
                       />
                       <EditRow
                         label={`入居家族${index + 1} 生年月日`}
+                        upConfig={{
+                          key: `p_residents.birthday.${item?.id}`,
+                          formatJaDate: true,
+                        }}
                         hasPleft={isEditable}
                         field={
                           isEditable ? (
@@ -625,10 +715,16 @@ export const Item05 = () => {
         />
         <EditRow
           label={'新しい住居（融資対象物件）の事業性'}
+          upConfig={{
+            key: `p_application_headers.property_business_type.${p_application_headers?.id}`,
+            options: propertyBusinessTypeOptions,
+            mapOptions: true,
+            join: '・',
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios
+              <AdSelectCheckbox
                 name="p_application_headers.property_business_type"
                 options={propertyBusinessTypeOptions}
               />
@@ -642,6 +738,9 @@ export const Item05 = () => {
         />
         <EditRow
           label={'融資対象物件　郵便番号'}
+          upConfig={{
+            key: `p_application_headers.property_postal_code.${p_application_headers?.id}`,
+          }}
           field={
             isEditable ? (
               <AdZipCodeInput
@@ -660,6 +759,9 @@ export const Item05 = () => {
         />
         <EditRow
           label={'融資対象物件　都道府県'}
+          upConfig={{
+            key: `p_application_headers.property_prefecture.${p_application_headers?.id}`,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -673,6 +775,9 @@ export const Item05 = () => {
         />
         <EditRow
           label={'融資対象物件　市区町村郡'}
+          upConfig={{
+            key: `p_application_headers.property_city.${p_application_headers?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -685,6 +790,9 @@ export const Item05 = () => {
         />
         <EditRow
           label={'融資対象物件　以下地番'}
+          upConfig={{
+            key: `p_application_headers.property_district.${p_application_headers?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -698,6 +806,9 @@ export const Item05 = () => {
         {['2', '3'].includes(p_application_headers.loan_target) && (
           <EditRow
             label={'融資対象物件　マンション名・部屋番号'}
+            upConfig={{
+              key: `p_application_headers.property_apartment_and_room_no.${p_application_headers?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
@@ -711,6 +822,9 @@ export const Item05 = () => {
         )}
         <EditRow
           label={'融資対象物件　物件所在地住所（フリガナ）'}
+          upConfig={{
+            key: `p_application_headers.property_address_kana.${p_application_headers?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -725,6 +839,11 @@ export const Item05 = () => {
           <Stack>
             <EditRow
               label={'融資対象物件　土地の敷地面積'}
+              upConfig={{
+                key: `p_application_headers.property_land_area.${p_application_headers?.id}`,
+                formatNumber: true,
+                unit: 'm²',
+              }}
               field={
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_land_area" unit={'m²'} />
@@ -736,6 +855,11 @@ export const Item05 = () => {
             />
             <EditRow
               label={'融資対象物件　建物の延べ床面積'}
+              upConfig={{
+                key: `p_application_headers.property_floor_area.${p_application_headers?.id}`,
+                formatNumber: true,
+                unit: 'm²',
+              }}
               field={
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_floor_area" unit={'m²'} />
@@ -750,6 +874,11 @@ export const Item05 = () => {
           <Stack>
             <EditRow
               label={'融資対象物件　専有面積'}
+              upConfig={{
+                key: `p_application_headers.property_private_area.${p_application_headers?.id}`,
+                formatNumber: true,
+                unit: 'm²',
+              }}
               field={
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_private_area" unit={'m²'} />
@@ -761,6 +890,11 @@ export const Item05 = () => {
             />
             <EditRow
               label={'融資対象物件　マンション全体の延べ床面積'}
+              upConfig={{
+                key: `p_application_headers.property_total_floor_area.${p_application_headers?.id}`,
+                formatNumber: true,
+                unit: 'm²',
+              }}
               field={
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_total_floor_area" unit={'m²'} />
@@ -775,6 +909,10 @@ export const Item05 = () => {
 
         <EditRow
           label={'担保物件種類'}
+          upConfig={{
+            key: `p_application_headers.property_type.${p_application_headers?.id}`,
+            options: propertyTypeOptions,
+          }}
           isRequired
           isAddendum
           hasPleft={isEditable}
@@ -790,6 +928,10 @@ export const Item05 = () => {
         />
         <EditRow
           label={'土地取得時期'}
+          upConfig={{
+            key: `p_application_headers.property_land_acquire_date.${p_application_headers?.id}`,
+            formatJaDate: true,
+          }}
           isAddendum
           hasPleft={isEditable}
           field={
@@ -803,6 +945,10 @@ export const Item05 = () => {
         />
         <EditRow
           label={'共有区分'}
+          upConfig={{
+            key: `p_application_headers.property_joint_ownership_type.${p_application_headers?.id}`,
+            options: propertyJointOwnershipTypeOptions,
+          }}
           isAddendum
           hasPleft={isEditable}
           field={
@@ -821,6 +967,11 @@ export const Item05 = () => {
         />
         <EditRow
           label={'建物割合分子'}
+          upConfig={{
+            key: `p_application_headers.property_building_ratio_numerator.${p_application_headers?.id}`,
+            formatNumber: true,
+            unit: 'm²',
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -837,6 +988,11 @@ export const Item05 = () => {
         />
         <EditRow
           label={'建物割合分母'}
+          upConfig={{
+            key: `p_application_headers.property_building_ratio_denominator.${p_application_headers?.id}`,
+            formatNumber: true,
+            unit: 'm²',
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -853,6 +1009,11 @@ export const Item05 = () => {
         />
         <EditRow
           label={'土地割合分子'}
+          upConfig={{
+            key: `p_application_headers.property_land_ratio_numerator.${p_application_headers?.id}`,
+            formatNumber: true,
+            unit: 'm²',
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -865,6 +1026,11 @@ export const Item05 = () => {
         />
         <EditRow
           label={'土地割合分母'}
+          upConfig={{
+            key: `p_application_headers.property_land_ratio_denominator.${p_application_headers?.id}`,
+            formatNumber: true,
+            unit: 'm²',
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -879,6 +1045,10 @@ export const Item05 = () => {
           <Stack>
             <EditRow
               label={'購入物件の土地権利'}
+              upConfig={{
+                key: `p_application_headers.property_land_type.${p_application_headers?.id}`,
+                options: propertyLandTypeOptions,
+              }}
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -893,6 +1063,10 @@ export const Item05 = () => {
             />
             <EditRow
               label={'買戻・保留地・仮換地'}
+              upConfig={{
+                key: `p_application_headers.property_purchase_type.${p_application_headers?.id}`,
+                options: propertyPurchaseTypeOptions,
+              }}
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -910,6 +1084,10 @@ export const Item05 = () => {
             />
             <EditRow
               label={'都市計画区域等'}
+              upConfig={{
+                key: `p_application_headers.property_planning_area.${p_application_headers?.id}`,
+                options: propertyPlanningAreaOptions,
+              }}
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -928,6 +1106,9 @@ export const Item05 = () => {
             {formik.values.p_application_headers.property_planning_area === '99' && (
               <EditRow
                 label={'都市計画区域（その他）'}
+                upConfig={{
+                  key: `p_application_headers.property_planning_area_other.${p_application_headers?.id}`,
+                }}
                 field={
                   isEditable ? (
                     <AdEditInput name="p_application_headers.property_planning_area_other" convertFullWidth />
@@ -942,6 +1123,10 @@ export const Item05 = () => {
               <Stack>
                 <EditRow
                   label={'再建築理由'}
+                  upConfig={{
+                    key: `p_application_headers.property_rebuilding_reason.${p_application_headers?.id}`,
+                    options: propertyRebuildingReasonOptions,
+                  }}
                   hasPleft={isEditable}
                   field={
                     isEditable ? (
@@ -960,6 +1145,9 @@ export const Item05 = () => {
                 {formik.values.p_application_headers.property_rebuilding_reason === '99' && (
                   <EditRow
                     label={'再建築理由（その他）'}
+                    upConfig={{
+                      key: `p_application_headers.property_rebuilding_reason_other.${p_application_headers?.id}`,
+                    }}
                     hasPleft={isEditable}
                     field={
                       isEditable ? (
@@ -976,6 +1164,10 @@ export const Item05 = () => {
 
             <EditRow
               label={'フラット35S適用プラン'}
+              upConfig={{
+                key: `p_application_headers.property_flat_35_plan.${p_application_headers?.id}`,
+                options: propertyFlat35PlanOptions,
+              }}
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -998,6 +1190,10 @@ export const Item05 = () => {
             />
             <EditRow
               label={'維持保全型'}
+              upConfig={{
+                key: `p_application_headers.property_maintenance_type.${p_application_headers?.id}`,
+                options: propertyMaintenanceTypeOptions,
+              }}
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -1016,6 +1212,10 @@ export const Item05 = () => {
             {formik.values.p_application_headers.property_flat_35_plan === '2' && (
               <EditRow
                 label={'フラット35S（優良住宅取得支援制度）'}
+                upConfig={{
+                  key: `p_application_headers.property_flat_35_tech.${p_application_headers?.id}`,
+                  options: propertyFlat35TechOptions,
+                }}
                 hasPleft={isEditable}
                 field={
                   isEditable ? (
@@ -1034,6 +1234,10 @@ export const Item05 = () => {
             )}
             <EditRow
               label={'地域連携型・地方移住支援型'}
+              upConfig={{
+                key: `p_application_headers.property_region_type.${p_application_headers?.id}`,
+                options: propertyRegionTypeOptions,
+              }}
               hasPleft={isEditable}
               field={
                 isEditable ? (

@@ -1,5 +1,5 @@
 import { adGetUpdateHistory } from '@/services';
-import { formatMoney } from '@/utils';
+import { formatJapanDate, formatMoney } from '@/utils';
 import { useTheme } from '@emotion/react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
@@ -70,10 +70,24 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
   };
 
   const parseContent = (content) => {
-    if (upConfig.options) return upConfig.options.find((item) => item.value === content)?.label;
-    if (upConfig.formatNumber) {
+    if (upConfig?.mapOptions) {
+      return upConfig.options
+        .map((item) => (content.includes(item.value) ? item.label : null))
+        .filter((item) => item)
+        .join(upConfig.join);
+    }
+    if (upConfig?.options) return upConfig.options.find((item) => item.value === content)?.label;
+    if (upConfig?.formatNumber) {
       return `${formatMoney(content, upConfig.unit)}`;
     }
+    if (upConfig?.formatJaDate) {
+      return formatJapanDate(content, true);
+    }
+    if (upConfig?.formatDate) {
+      return formatJapanDate(content);
+    }
+
+    return content;
   };
 
   useEffect(() => {

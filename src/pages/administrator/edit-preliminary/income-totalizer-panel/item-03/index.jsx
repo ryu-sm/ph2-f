@@ -151,6 +151,10 @@ export const Item03 = () => {
       >
         <EditRow
           label={'ご職業'}
+          upConfig={{
+            key: `p_applicant_persons.office_occupation.${p_applicant_persons__1?.id}`,
+            options: occupationOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -177,6 +181,9 @@ export const Item03 = () => {
         {formik.values.p_applicant_persons__1.office_occupation === '99' && (
           <EditRow
             label={'勤務先　職業（その他）'}
+            upConfig={{
+              key: `p_applicant_persons.office_occupation_other.${p_applicant_persons__1?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
@@ -190,6 +197,10 @@ export const Item03 = () => {
         )}
         <EditRow
           label={'業種'}
+          upConfig={{
+            key: `p_applicant_persons.office_industry.${p_applicant_persons__1?.id}`,
+            options: industryOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -211,6 +222,9 @@ export const Item03 = () => {
         {formik.values.p_applicant_persons__1.office_industry === '99' && (
           <EditRow
             label={'勤務先　業種（その他）'}
+            upConfig={{
+              key: `p_applicant_persons.office_industry_other.${p_applicant_persons__1?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
@@ -224,6 +238,10 @@ export const Item03 = () => {
         )}
         <EditRow
           label={'職種'}
+          upConfig={{
+            key: `p_applicant_persons.office_occupation_detail.${p_applicant_persons__1?.id}`,
+            options: occupationDetailOptions,
+          }}
           hasPleft={isEditable}
           isRequired
           field={
@@ -248,6 +266,9 @@ export const Item03 = () => {
         {formik.values.p_applicant_persons__1.office_occupation_detail === '99' && (
           <EditRow
             label={'勤務先　職種（その他）'}
+            upConfig={{
+              key: `p_applicant_persons.office_occupation_detail_other.${p_applicant_persons__1?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
@@ -261,6 +282,10 @@ export const Item03 = () => {
         )}
         <EditRow
           label={'雇用形態'}
+          upConfig={{
+            key: `p_applicant_persons.office_employment_type.${p_applicant_persons__1?.id}`,
+            options: employmentTypeOptions,
+          }}
           isRequired
           isAddendum
           hasPleft={isEditable}
@@ -277,6 +302,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'勤務先名'}
+          upConfig={{
+            key: `p_applicant_persons.office_name_kanji.${p_applicant_persons__1?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -289,6 +317,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'勤務先名（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_name_kana.${p_applicant_persons__1?.id}`,
+          }}
           isRequired
           isAddendum
           field={
@@ -302,6 +333,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'所属部課'}
+          upConfig={{
+            key: `p_applicant_persons.office_department.${p_applicant_persons__1?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_applicant_persons__1.office_department" convertFullWidth />
@@ -313,6 +347,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'役職'}
+          upConfig={{
+            key: `p_applicant_persons.office_role.${p_applicant_persons__1?.id}`,
+            options: roleOptions,
+          }}
           isAddendum
           hasPleft={isEditable}
           field={
@@ -326,6 +364,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'勤務先の電話番号'}
+          upConfig={{
+            key: `p_applicant_persons.office_phone.${p_applicant_persons__1?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -338,6 +379,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'勤務先本社所在地'}
+          upConfig={{
+            key: `p_applicant_persons.office_head_location.${p_applicant_persons__1?.id}`,
+          }}
           isRequired
           isAddendum
           field={
@@ -351,6 +395,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'勤務先上場区分'}
+          upConfig={{
+            key: `p_applicant_persons.office_listed_division.${p_applicant_persons__1?.id}`,
+            options: listedDivisionOptions,
+          }}
           isAddendum
           hasPleft={isEditable}
           field={
@@ -366,6 +414,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'勤務先設立年月日'}
+          upConfig={{
+            key: `p_applicant_persons.office_establishment_date.${p_applicant_persons__1?.id}`,
+            formatDate: true,
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -378,6 +430,11 @@ export const Item03 = () => {
         />
         <EditRow
           label={'勤務先資本金'}
+          upConfig={{
+            key: `p_applicant_persons.office_capital_stock.${p_applicant_persons__1?.id}`,
+            formatNumber: true,
+            unit: '万円',
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -390,6 +447,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'郵便番号'}
+          upConfig={{
+            key: `p_applicant_persons.office_postal_code.${p_applicant_persons__1?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
@@ -412,6 +472,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'都道府県'}
+          upConfig={{
+            key: `p_applicant_persons.office_prefecture_kanji.${p_applicant_persons__1?.id}`,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -425,6 +488,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'市区郡'}
+          upConfig={{
+            key: `p_applicant_persons.office_city_kanji.${p_applicant_persons__1?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_applicant_persons__1.office_city_kanji" convertFullWidth />
@@ -436,6 +502,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'町村丁目'}
+          upConfig={{
+            key: `p_applicant_persons.office_district_kanji.${p_applicant_persons__1?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_applicant_persons__1.office_district_kanji" convertFullWidth />
@@ -447,6 +516,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号'}
+          upConfig={{
+            key: `p_applicant_persons.office_other_address_kanji.${p_applicant_persons__1?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_applicant_persons__1.office_other_address_kanji" convertFullWidth />
@@ -458,6 +530,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'都道府県（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_prefecture_kana.${p_applicant_persons__1?.id}`,
+          }}
           isRequired
           isAddendum
           field={
@@ -471,6 +546,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'市区郡（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_city_kana.${p_applicant_persons__1?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -483,6 +561,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'町村丁目（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_district_kana.${p_applicant_persons__1?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -495,6 +576,9 @@ export const Item03 = () => {
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_other_address_kana.${p_applicant_persons__1?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -507,10 +591,15 @@ export const Item03 = () => {
         />
         <EditRow
           label={'従業員数'}
+          upConfig={{
+            key: `p_applicant_persons.office_employee_num.${p_applicant_persons__1?.id}`,
+            formatNumber: true,
+            unit: '名',
+          }}
           isRequired
           field={
             isEditable ? (
-              <AdNumericInput name="p_applicant_persons__1.office_employee_num" maxLength={9} unit={' 名'} />
+              <AdNumericInput name="p_applicant_persons__1.office_employee_num" maxLength={9} unit={'名'} />
             ) : (
               formatMoney(formik.values.p_applicant_persons__1.office_employee_num, '名')
             )
@@ -519,6 +608,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'入社年月'}
+          upConfig={{
+            key: `p_applicant_persons.office_joining_date.${p_applicant_persons__1?.id}`,
+            formatJaDate: true,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -531,6 +624,11 @@ export const Item03 = () => {
         />
         <EditRow
           label={'前年度年収'}
+          upConfig={{
+            key: `p_applicant_persons.last_year_income.${p_applicant_persons__1?.id}`,
+            formatNumber: true,
+            unit: '万円',
+          }}
           isRequired
           field={
             isEditable ? (
@@ -545,6 +643,11 @@ export const Item03 = () => {
           <Stack>
             <EditRow
               label={'うち、ボーナス'}
+              upConfig={{
+                key: `p_applicant_persons.last_year_bonus_income.${p_applicant_persons__1?.id}`,
+                formatNumber: true,
+                unit: '万円',
+              }}
               isRequired
               field={
                 isEditable ? (
@@ -557,6 +660,11 @@ export const Item03 = () => {
             />
             <EditRow
               label={'前々年度年収 （MCJ固有項目）'}
+              upConfig={{
+                key: `p_applicant_persons.before_last_year_income.${p_applicant_persons__1?.id}`,
+                formatNumber: true,
+                unit: '万円',
+              }}
               isRequired
               field={
                 isEditable ? (
@@ -571,6 +679,12 @@ export const Item03 = () => {
         )}
         <EditRow
           label={'収入源'}
+          upConfig={{
+            key: `p_applicant_persons.income_sources.${p_applicant_persons__1?.id}`,
+            options: incomeOptions,
+            mapOptions: true,
+            join: '・',
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -588,6 +702,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'収入源（銀行送信用）'}
+          upConfig={{
+            key: `p_applicant_persons.main_income_source.${p_applicant_persons__1?.id}`,
+            options: incomeOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -602,6 +720,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'確定申告をしていますか？'}
+          upConfig={{
+            key: `p_applicant_persons.tax_return.${p_applicant_persons__1?.id}`,
+            options: taxReturnOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -625,6 +747,12 @@ export const Item03 = () => {
           <Stack>
             <EditRow
               label={'確定申告の理由'}
+              upConfig={{
+                key: `p_applicant_persons.tax_return_reasons.${p_applicant_persons__1?.id}`,
+                options: taxReturnReasonsOptions,
+                mapOptions: true,
+                join: '・',
+              }}
               isLogicRequired
               hasPleft={isEditable}
               field={
@@ -652,6 +780,9 @@ export const Item03 = () => {
             {formik.values.p_applicant_persons__1.tax_return_reasons.includes('99') && (
               <EditRow
                 label={'確定申告の理由　その他'}
+                upConfig={{
+                  key: `p_applicant_persons.tax_return_reason_other.${p_applicant_persons__1?.id}`,
+                }}
                 isLogicRequired
                 field={
                   isEditable ? (
@@ -667,6 +798,10 @@ export const Item03 = () => {
         )}
         <EditRow
           label={'現在、出向（派遣）していますか？'}
+          upConfig={{
+            key: `p_applicant_persons.transfer_office.${p_applicant_persons__1?.id}`,
+            options: transferOfficeOptions,
+          }}
           isLogicRequired
           hasPleft={isEditable}
           field={
@@ -698,6 +833,9 @@ export const Item03 = () => {
           <Stack>
             <EditRow
               label={'出向（派遣）勤務先名'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_name_kanji.${p_applicant_persons__1?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
@@ -710,6 +848,9 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）勤務先名（フリガナ）'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_name_kana.${p_applicant_persons__1?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
@@ -722,6 +863,9 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）先 電話番号'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_phone.${p_applicant_persons__1?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
@@ -734,6 +878,9 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）先 郵便番号'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_postal_code.${p_applicant_persons__1?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
@@ -759,6 +906,9 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）先 都道府県'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_prefecture_kanji.${p_applicant_persons__1?.id}`,
+              }}
               isLogicRequired
               hasPleft={isEditable}
               field={
@@ -777,6 +927,9 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）先 市区郡'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_city_kanji.${p_applicant_persons__1?.id}`,
+              }}
               isRequired
               field={
                 isEditable ? (
@@ -789,6 +942,9 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）先 町村丁目'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_district_kanji.${p_applicant_persons__1?.id}`,
+              }}
               isRequired
               field={
                 isEditable ? (
@@ -801,6 +957,9 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）先 丁目以下・建物名・部屋番号'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_other_address_kanji.${p_applicant_persons__1?.id}`,
+              }}
               isRequired
               field={
                 isEditable ? (
@@ -815,6 +974,10 @@ export const Item03 = () => {
         )}
         <EditRow
           label={'産休・育休の取得状況'}
+          upConfig={{
+            key: `p_applicant_persons.maternity_paternity_leave.${p_applicant_persons__1?.id}`,
+            options: maternityPaternityLeaveOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -836,6 +999,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'取得開始時期'}
+          upConfig={{
+            key: `p_applicant_persons.maternity_paternity_leave_start_date.${p_applicant_persons__1?.id}`,
+            formatJaDate: true,
+          }}
           hasPleft={isEditable}
           isLogicRequired
           field={
@@ -856,6 +1023,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'取得終了時期'}
+          upConfig={{
+            key: `p_applicant_persons.maternity_paternity_leave_end_date.${p_applicant_persons__1?.id}`,
+            formatJaDate: true,
+          }}
           isLogicRequired
           hasPleft={isEditable}
           field={
@@ -877,6 +1048,10 @@ export const Item03 = () => {
         />
         <EditRow
           label={'介護休暇の取得状況'}
+          upConfig={{
+            key: `p_applicant_persons.nursing_leave.${p_applicant_persons__1?.id}`,
+            options: nursingLeaveOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (

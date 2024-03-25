@@ -99,6 +99,10 @@ export const Item08 = () => {
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
         <EditRow
           label={'提携会社'}
+          upConfig={{
+            key: `p_application_headers.sales_company_id.${p_application_headers?.id}`,
+            options: salesCompanyOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -119,6 +123,10 @@ export const Item08 = () => {
         />
         <EditRow
           label={'エリア'}
+          upConfig={{
+            key: `p_application_headers.sales_area_id.${p_application_headers?.id}`,
+            options: salesAreaOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -137,6 +145,10 @@ export const Item08 = () => {
         />
         <EditRow
           label={'営業所・展示場'}
+          upConfig={{
+            key: `p_application_headers.sales_exhibition_hall_id.${p_application_headers?.id}`,
+            options: exhibitionHallOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -151,6 +163,10 @@ export const Item08 = () => {
         />
         <EditRow
           label={'担当者名 (情報共有者)'}
+          upConfig={{
+            key: `p_application_headers.s_sales_person_id.${p_application_headers?.id}`,
+            options: salesPersonOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -164,6 +180,9 @@ export const Item08 = () => {
         />
         <EditRow
           label={'担当者名'}
+          upConfig={{
+            key: `p_application_headers.vendor_name.${p_application_headers?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_application_headers.vendor_name" convertFullWidth />
@@ -175,6 +194,9 @@ export const Item08 = () => {
         />
         <EditRow
           label={'携帯電話番号'}
+          upConfig={{
+            key: `p_application_headers.vendor_phone.${p_application_headers?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_application_headers.vendor_phone" convertHalfWidth />
