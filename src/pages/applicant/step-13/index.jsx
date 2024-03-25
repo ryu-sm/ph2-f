@@ -275,7 +275,14 @@ export const ApStep13Page = () => {
       <ApLayout
         hasMenu
         hasStepBar
-        bottomContent={<ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={'仮審査を申し込む'} />}
+        bottomContent={
+          <ApStepFooter
+            left={handelLeft}
+            right={formik.handleSubmit}
+            rightDisable={formik.isSubmitting}
+            rightLabel={'仮審査を申し込む'}
+          />
+        }
       >
         <ApPageTitle py={8}>{`最後に内容を確認し\nお申込を完了させましょう。`}</ApPageTitle>
         <ApConfirmGroup label={'はじめに'}>
