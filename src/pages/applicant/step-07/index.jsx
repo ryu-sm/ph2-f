@@ -284,6 +284,10 @@ export const ApStep07Page = () => {
     [birthdayMonth]
   );
 
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.errors]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -674,6 +678,8 @@ export const ApStep07Page = () => {
                   onChange={(e) => {
                     if (!e.target.checked) {
                       formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.children', '');
+                    } else {
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.children', '1');
                     }
                   }}
                 />
@@ -728,6 +734,11 @@ export const ApStep07Page = () => {
                         'p_application_headers.new_house_planned_resident_overview.brothers_sisters',
                         ''
                       );
+                    } else {
+                      formik.setFieldValue(
+                        'p_application_headers.new_house_planned_resident_overview.brothers_sisters',
+                        '1'
+                      );
                     }
                   }}
                 />
@@ -771,6 +782,8 @@ export const ApStep07Page = () => {
                   onChange={(e) => {
                     if (!e.target.checked) {
                       formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.others', '');
+                    } else {
+                      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.others', '1');
                     }
                   }}
                 />

@@ -10,3 +10,17 @@
   line-height: 28px;
   color: '#333333';
 }
+
+.custom-input-border-style {
+  padding-left: 4px;
+  min-width: 12px;
+  min-height: 24px;
+  max-width: '100%';
+  border: 1px solid rgb(200, 205, 207);
+  border-radius: 4px;
+  font-family: 'Hiragino Sans';
+  font-size: 12;
+  font-weight: 300;
+  line-height: 28px;
+  color: '#333333';
+}

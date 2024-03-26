@@ -6,7 +6,7 @@ import AutosizeInput from 'react-input-autosize';
 import './autosize-style.css';
 import { useRef } from 'react';
 
-export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = true, ...props }) => {
+export const AdEditInput = ({ convertFullWidth, convertHalfWidth, showBorder, autoTrim = true, ml, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setError } = helpers;
 
@@ -48,12 +48,12 @@ export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = tru
     <Stack
       direction={'row'}
       alignItems={'center'}
-      sx={{ width: 1, py: 1, pl: '36px', ml: -10 }}
+      sx={{ width: 1, py: 1, pl: '36px', ml: ml || -10 }}
       onClick={handleAutoFocus}
     >
       <AutosizeInput
         ref={inputRef}
-        inputClassName="custom-input-style"
+        inputClassName={showBorder ? 'custom-input-border-style' : 'custom-input-style'}
         name={field.name}
         value={meta.value}
         onChange={handleChange}

@@ -191,6 +191,10 @@ export const Item05 = () => {
     if (temp.fiance_umu) conter.push(`婚約者`);
     if (temp.others_umu) conter.push(`その他（${temp.others}人）`);
 
+    if (!temp.others_umu) {
+      formik.setFieldValue('p_application_headers.new_house_planned_resident_overview.others_rel', '');
+    }
+
     return conter.join('・');
   }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
 
@@ -544,12 +548,22 @@ export const Item05 = () => {
                 hasPleft={isEditable}
                 field={
                   isEditable ? (
-                    <PlannedResidentSelect
-                      name="p_application_headers.new_house_planned_resident_overview"
-                      arrayHelpers={arrayHelpers}
-                    />
+                    <Stack direction={'row'}>
+                      <PlannedResidentSelect
+                        name="p_application_headers.new_house_planned_resident_overview"
+                        arrayHelpers={arrayHelpers}
+                      />
+                      {formik.values.p_application_headers.new_house_planned_resident_overview.others_umu && (
+                        <AdEditInput
+                          name={`p_application_headers.new_house_planned_resident_overview.others_rel`}
+                          ml={-5}
+                          showBorder
+                          convertFullWidth
+                        />
+                      )}
+                    </Stack>
                   ) : (
-                    conter
+                    `${conter}　${formik.values.p_application_headers.new_house_planned_resident_overview.others_rel}`
                   )
                 }
                 // error={formik.errors?.p_application_headers?.new_house_planned_resident_overview}
@@ -571,7 +585,7 @@ export const Item05 = () => {
                           isEditable ? (
                             <AdSelectRadios name={`p_residents[${index}].one_roof`} options={oneRoofOptions} />
                           ) : (
-                            oneRoofOptions.find((item) => item.value === item.one_roof)?.label
+                            oneRoofOptions.find((op) => op.value === item.one_roof)?.label
                           )
                         }
                         error={
@@ -666,7 +680,7 @@ export const Item05 = () => {
                           isEditable ? (
                             <AdSelectRadios name={`p_residents[${index}].gender`} options={genderOptions} />
                           ) : (
-                            genderOptions.find((item) => item.value === item.gender)?.label
+                            genderOptions.find((op) => op.value === item.gender)?.label
                           )
                         }
                         error={formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.gender}
@@ -674,18 +688,42 @@ export const Item05 = () => {
                       <EditRow
                         label={`入居家族${index + 1} 続柄`}
                         upConfig={{
-                          key: `p_residents.rel_to_applicant_a.${item?.id}`,
+                          key: `p_residents.rel_to_applicant_a_name.${item?.id}`,
                         }}
                         isLogicRequired
-                        hasPleft={isEditable}
+                        // hasPleft={isEditable}
                         field={
                           isEditable ? (
-                            <AdSelectRadios
-                              name={`p_residents[${index}].rel_to_applicant_a`}
-                              options={relToApplicantAOptions}
-                            />
+                            <AdEditInput name={`p_residents[${index}].rel_to_applicant_a_name`} convertFullWidth />
                           ) : (
-                            genderOptions.find((item) => item.value === item.rel_to_applicant_a)?.label
+                            item.first_name_kana
+                          )
+                        }
+                        subField={
+                          isEditable ? (
+                            <Stack direction={'row'}>
+                              <AdSelectRadios
+                                name={`p_residents[${index}].rel_to_applicant_a`}
+                                options={relToApplicantAOptions}
+                                onChange={(value) => {
+                                  if (value !== '99') {
+                                    formik.setFieldValue(`p_residents[${index}].rel_to_applicant_a_other`, '');
+                                  }
+                                }}
+                              />
+                              {item.rel_to_applicant_a === '99' && (
+                                <AdEditInput
+                                  name={`p_residents[${index}].rel_to_applicant_a_other`}
+                                  ml={-5}
+                                  showBorder
+                                  convertFullWidth
+                                />
+                              )}
+                            </Stack>
+                          ) : (
+                            `${relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label}　${
+                              item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''
+                            }`
                           )
                         }
                         error={
@@ -840,7 +878,7 @@ export const Item05 = () => {
           }
           error={formik.errors?.p_application_headers?.property_address_kana}
         />
-        {['2', '3'].includes(p_application_headers.loan_target) ? (
+        {!['2', '3'].includes(p_application_headers.loan_target) ? (
           <Stack>
             <EditRow
               label={'融資対象物件　土地の敷地面積'}
@@ -1057,7 +1095,11 @@ export const Item05 = () => {
               hasPleft={isEditable}
               field={
                 isEditable ? (
-                  <AdSelectRadios name="p_application_headers.property_land_type" options={propertyLandTypeOptions} />
+                  <AdSelectRadios
+                    name="p_application_headers.property_land_type"
+                    options={propertyLandTypeOptions}
+                    cancelable
+                  />
                 ) : (
                   propertyLandTypeOptions.find(
                     (item) => item.value === formik.values.p_application_headers.property_land_type
@@ -1078,6 +1120,7 @@ export const Item05 = () => {
                   <AdSelectRadios
                     name="p_application_headers.property_purchase_type"
                     options={propertyPurchaseTypeOptions}
+                    cancelable
                   />
                 ) : (
                   propertyPurchaseTypeOptions.find(
@@ -1099,6 +1142,7 @@ export const Item05 = () => {
                   <AdSelectRadios
                     name="p_application_headers.property_planning_area"
                     options={propertyPlanningAreaOptions}
+                    cancelable
                   />
                 ) : (
                   propertyPlanningAreaOptions.find(
@@ -1138,6 +1182,7 @@ export const Item05 = () => {
                       <AdSelectRadios
                         name="p_application_headers.property_rebuilding_reason"
                         options={propertyRebuildingReasonOptions}
+                        cancelable
                       />
                     ) : (
                       propertyRebuildingReasonOptions.find(
@@ -1179,6 +1224,7 @@ export const Item05 = () => {
                   <AdSelectRadios
                     name="p_application_headers.property_flat_35_plan"
                     options={propertyFlat35PlanOptions}
+                    cancelable
                     onChange={(value) => {
                       if (!value === '2') {
                         formik.setFieldValue('p_application_headers.property_flat_35_tech', '');
@@ -1205,6 +1251,7 @@ export const Item05 = () => {
                   <AdSelectRadios
                     name="p_application_headers.property_maintenance_type"
                     options={propertyMaintenanceTypeOptions}
+                    cancelable
                   />
                 ) : (
                   propertyMaintenanceTypeOptions.find(
@@ -1227,6 +1274,7 @@ export const Item05 = () => {
                     <AdSelectRadios
                       name="p_application_headers.property_flat_35_tech"
                       options={propertyFlat35TechOptions}
+                      cancelable
                     />
                   ) : (
                     propertyFlat35TechOptions.find(
@@ -1249,6 +1297,7 @@ export const Item05 = () => {
                   <AdSelectRadios
                     name="p_application_headers.property_region_type"
                     options={propertyRegionTypeOptions}
+                    cancelable
                   />
                 ) : (
                   propertyRegionTypeOptions.find(

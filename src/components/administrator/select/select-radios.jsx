@@ -7,7 +7,7 @@ import { useField } from 'formik';
 
 import { useCallback, useState } from 'react';
 
-export const AdSelectRadios = ({ options, unit, ...props }) => {
+export const AdSelectRadios = ({ options, unit, cancelable, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
@@ -15,9 +15,13 @@ export const AdSelectRadios = ({ options, unit, ...props }) => {
   const handleChange = useCallback(
     async (value) => {
       props.onChange && props.onChange(value);
+      if (cancelable && value === meta.value) {
+        await setValue('');
+        return;
+      }
       await setValue(value);
     },
-    [props, setValue]
+    [props, setValue, cancelable, meta.value]
   );
   const handlePopoverOpen = (e) => {
     setAnchorEl(e.currentTarget);

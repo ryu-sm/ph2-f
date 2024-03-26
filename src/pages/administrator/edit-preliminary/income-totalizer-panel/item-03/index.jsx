@@ -642,7 +642,7 @@ export const Item03 = () => {
         {isMCJ && (
           <Stack>
             <EditRow
-              label={'うち、ボーナス'}
+              label={'うち、ボーナス（MCJ固有項目）'}
               upConfig={{
                 key: `p_applicant_persons.last_year_bonus_income.${p_applicant_persons__1?.id}`,
                 formatNumber: true,
@@ -984,6 +984,7 @@ export const Item03 = () => {
               <AdSelectRadios
                 name="p_applicant_persons__1.maternity_paternity_leave"
                 options={maternityPaternityLeaveOptions}
+                cancelable
                 onChange={() => {
                   formik.setFieldValue('p_applicant_persons__1.maternity_paternity_leave_start_date', '');
                   formik.setFieldValue('p_applicant_persons__1.maternity_paternity_leave_end_date', '');
@@ -1055,7 +1056,7 @@ export const Item03 = () => {
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__1.nursing_leave" options={nursingLeaveOptions} />
+              <AdSelectRadios name="p_applicant_persons__1.nursing_leave" options={nursingLeaveOptions} cancelable />
             ) : (
               nursingLeaveOptions.find((item) => item.value === formik.values.p_applicant_persons__1.nursing_leave)
                 ?.label

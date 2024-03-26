@@ -35,6 +35,7 @@ export const AdFilesViewPage = () => {
   const fetch = useCallback(async () => {
     try {
       const res = await adGetFilesView(p_application_header_id, `${type}__${category}`);
+      console.log(res.data);
       setFilesOrigin(res.data);
     } catch (error) {
       console.log(error);
@@ -43,7 +44,7 @@ export const AdFilesViewPage = () => {
 
   useEffect(() => {
     fetch();
-  }, [p_application_header_id, category]);
+  }, []);
 
   const fileItems = useMemo(() => {
     const temp = [];
@@ -130,15 +131,17 @@ export const AdFilesViewPage = () => {
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
 
-  Events.scrollEvent.register('end', function (to, element) {
-    console.log('end', to, element);
-  });
+  // Events.scrollEvent.register('end', function (to, element) {
+  //   console.log('end', to, element);
+  // });
   const AllFiles = ({ fileItems }) => {
     return (
       <Stack
         id="scroll-images"
         direction="row"
+        justifyContent={'center'}
         sx={{
+          width: 1,
           overflowX: 'auto',
           whiteSpace: 'nowrap',
         }}
@@ -267,7 +270,7 @@ export const AdFilesViewPage = () => {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                sx={{ width: '50%', height: '100%', ml: 8 }}
+                sx={{ width: '50%', height: '100%', ml: 8, overflowX: 'hidden' }}
               >
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                   <Viewer
@@ -276,6 +279,7 @@ export const AdFilesViewPage = () => {
                     scrollMode={ScrollMode.Page}
                   />
                 </Worker>
+
                 <Stack>
                   <IconButton onClick={jumpToPreviousPage}>
                     <KeyboardArrowUp />

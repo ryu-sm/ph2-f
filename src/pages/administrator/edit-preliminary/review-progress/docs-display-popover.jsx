@@ -38,7 +38,7 @@ export const AdDocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
       { label: 'D', title: '非上場企業の役員の方の書類' },
       { label: 'E', title: '雇用契約に関する書類' },
       { label: 'F', title: '親族経営の会社等にご勤務の方に関する書類' },
-      { label: 'G', title: '物件についての書類' },
+      // { label: 'G', title: '物件についての書類' },
       { label: 'H', title: '在留カード' },
       { label: 'K', title: 'その他' },
     ];
@@ -47,9 +47,24 @@ export const AdDocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
       key: key,
       value: p_uploaded_files[key],
     }));
-    const basic = isManager ? basic0 : basic1;
-    const prefix = isManager ? '__0__' : '__1__';
+    const basic = mainTab === 1 ? basic0 : basic1;
+    const prefix = mainTab === 1 ? '__0__' : '__1__';
     basic.forEach((item) => {
+      if (item.label === 'G') {
+        if (fileList.some(({ key, value }) => key.includes(`${item.label}`) && value.length > 0)) {
+          temp.push(item);
+        }
+      }
+      if (item.label === 'J') {
+        if (fileList.some(({ key, value }) => key.includes(`${item.label}`) && value.length > 0)) {
+          temp.push(item);
+        }
+      }
+      if (item.label === 'S') {
+        if (fileList.some(({ key, value }) => key.includes(`${item.label}`) && value.length > 0)) {
+          temp.push(item);
+        }
+      }
       if (item.label === 'I') {
         if (p_borrowings.some((item) => item['p_borrowings__I'].length > 0)) {
           temp.push(item);
@@ -60,9 +75,10 @@ export const AdDocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
         }
       }
     });
+    console.log(temp);
     return temp;
-  }, [p_uploaded_files, p_borrowings, isManager]);
-
+  }, [p_uploaded_files, p_borrowings, mainTab]);
+  console.log(mainTab);
   const handleClick = (item) => {
     const path = `${
       isManager ? routeNames.adManagerFilesViewPage.path : routeNames.adSalesPersonFilesViewPage.path

@@ -62,6 +62,7 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
     first_name_kanji: '',
     last_name_kana: '',
     first_name_kana: '',
+    rel_to_applicant_a_name: '',
     gender: '',
     rel_to_applicant_a: '',
     rel_to_applicant_a_other: '',
@@ -91,7 +92,9 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
       >
         <AdArrowDown sx={{ width: 8, height: 8, color: 'gray.80' }} />
       </Button>
-      <Typography variant="edit_content">{conter}</Typography>
+      <Typography variant="edit_content" whiteSpace={'nowrap'}>
+        {conter}
+      </Typography>
 
       <Popover
         open={open}

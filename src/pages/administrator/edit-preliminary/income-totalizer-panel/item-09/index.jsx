@@ -353,17 +353,6 @@ export const Item09 = () => {
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（3期前）"
               />
             </ContentEditFileGroup>
-            <ContentEditFileGroup category={'G'}>
-              <UploadItem
-                isDisabled={!isEditable}
-                upConfig={{
-                  key: `p_uploaded_files.G`,
-                }}
-                name="p_uploaded_files.G"
-                isMultiple={true}
-                subTitle="チラシ・パンフレット"
-              />
-            </ContentEditFileGroup>
             <ContentEditFileGroup category={'H'}>
               <UploadItem
                 isDisabled={!isEditable}
