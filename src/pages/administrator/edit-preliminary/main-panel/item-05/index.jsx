@@ -584,6 +584,7 @@ export const Item05 = () => {
                           key: `p_residents.last_name_kanji.${item?.id}`,
                         }}
                         isLogicRequired
+                        isAddendum
                         field={
                           isEditable ? (
                             <AdEditInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
@@ -602,6 +603,7 @@ export const Item05 = () => {
                           key: `p_residents.first_name_kanji.${item?.id}`,
                         }}
                         isLogicRequired
+                        isAddendum
                         field={
                           isEditable ? (
                             <AdEditInput name={`p_residents[${index}].first_name_kanji`} convertFullWidth />
@@ -620,6 +622,7 @@ export const Item05 = () => {
                           key: `p_residents.last_name_kana.${item?.id}`,
                         }}
                         isLogicRequired
+                        isAddendum
                         field={
                           isEditable ? (
                             <AdEditInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
@@ -638,6 +641,7 @@ export const Item05 = () => {
                           key: `p_residents.first_name_kana.${item?.id}`,
                         }}
                         isLogicRequired
+                        isAddendum
                         field={
                           isEditable ? (
                             <AdEditInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
@@ -695,6 +699,7 @@ export const Item05 = () => {
                           key: `p_residents.birthday.${item?.id}`,
                           formatJaDate: true,
                         }}
+                        isAddendum
                         hasPleft={isEditable}
                         field={
                           isEditable ? (

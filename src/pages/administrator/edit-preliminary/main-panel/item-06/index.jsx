@@ -314,43 +314,49 @@ export const Item06 = () => {
                       )}
                     </Stack>
                   )}
-                  <EditRow
-                    label={'住宅金融支援機構からの借入'}
-                    upConfig={{
-                      key: `p_borrowings.borrowing_from_house_finance_agency.${item?.id}`,
-                      options: houseFinanceAgency,
-                    }}
-                    field={
-                      isEditable ? (
-                        <AdSelectRadios
-                          name={`p_borrowings[${index}].borrowing_from_house_finance_agency`}
-                          options={houseFinanceAgency}
-                        />
-                      ) : (
-                        houseFinanceAgency.find((item) => item.value === item.borrowing_from_house_finance_agency)
-                          ?.label
-                      )
-                    }
-                    error={
-                      formik.errors?.p_borrowings?.length > index &&
-                      formik.errors?.p_borrowings[index]?.borrowing_from_house_finance_agency
-                    }
-                  />
-                  <EditRow
-                    label={'借入区分'}
-                    upConfig={{
-                      key: `p_borrowings.category.${item?.id}`,
-                      options: categoryOptions,
-                    }}
-                    field={
-                      isEditable ? (
-                        <AdSelectRadios name={`p_borrowings[${index}].category`} options={categoryOptions} />
-                      ) : (
-                        categoryOptions.find((item) => item.value === item.category)?.label
-                      )
-                    }
-                    error={formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.category}
-                  />
+                  {formik.values.p_borrowings[index].type === '1' && (
+                    <EditRow
+                      label={'住宅金融支援機構からの借入'}
+                      upConfig={{
+                        key: `p_borrowings.borrowing_from_house_finance_agency.${item?.id}`,
+                        options: houseFinanceAgency,
+                      }}
+                      field={
+                        isEditable ? (
+                          <AdSelectRadios
+                            name={`p_borrowings[${index}].borrowing_from_house_finance_agency`}
+                            options={houseFinanceAgency}
+                          />
+                        ) : (
+                          houseFinanceAgency.find((item) => item.value === item.borrowing_from_house_finance_agency)
+                            ?.label
+                        )
+                      }
+                      error={
+                        formik.errors?.p_borrowings?.length > index &&
+                        formik.errors?.p_borrowings[index]?.borrowing_from_house_finance_agency
+                      }
+                    />
+                  )}
+                  {formik.values.p_borrowings[index].type === '2' && (
+                    <EditRow
+                      label={'借入区分'}
+                      upConfig={{
+                        key: `p_borrowings.category.${item?.id}`,
+                        options: categoryOptions,
+                      }}
+                      field={
+                        isEditable ? (
+                          <AdSelectRadios name={`p_borrowings[${index}].category`} options={categoryOptions} />
+                        ) : (
+                          categoryOptions.find((item) => item.value === item.category)?.label
+                        )
+                      }
+                      error={
+                        formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.category
+                      }
+                    />
+                  )}
                   <EditRow
                     label={formik.values.p_borrowings[index].type === '2' ? '当初カード契約年月' : '当初借入年月'}
                     upConfig={{

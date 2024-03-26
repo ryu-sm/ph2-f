@@ -639,7 +639,7 @@ export const ApStep01Page = () => {
                       }
                       align="right"
                       width={140}
-                      maxLength={6}
+                      maxLength={5}
                     />
                     {formik.errors?.p_borrowing_details__1?.desired_loan_amount !==
                       YUP_MESSAGES.TEMPORARY_DESIRED_LOAN_AMOUNT &&
@@ -756,7 +756,7 @@ export const ApStep01Page = () => {
                         }
                         align="right"
                         width={140}
-                        maxLength={6}
+                        maxLength={5}
                       />
                       {formik.errors?.p_borrowing_details__2?.desired_loan_amount !==
                         YUP_MESSAGES.TEMPORARY_DESIRED_LOAN_AMOUNT &&
