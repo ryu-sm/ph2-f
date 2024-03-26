@@ -531,7 +531,7 @@ export const Item04 = () => {
               </ContentEditGroup>
             ))}
 
-            {formik.values.p_join_guarantors.length < 4 && (
+            {formik.values.p_join_guarantors.length < 3 && (
               <Stack sx={{ py: 4 }}>
                 <AdPrimaryButton
                   width={120}
