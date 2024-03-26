@@ -1028,23 +1028,25 @@ export const Item03 = () => {
           }
           error={formik.errors?.p_applicant_persons__0?.maternity_paternity_leave_end_date}
         />
-        <EditRow
-          label={'介護休暇の取得状況'}
-          upConfig={{
-            key: `p_applicant_persons.nursing_leave.${p_applicant_persons__0?.id}`,
-            options: nursingLeaveOptions,
-          }}
-          hasPleft={isEditable}
-          field={
-            isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__0.nursing_leave" options={nursingLeaveOptions} />
-            ) : (
-              nursingLeaveOptions.find((item) => item.value === formik.values.p_applicant_persons__0.nursing_leave)
-                ?.label
-            )
-          }
-          error={formik.errors?.p_applicant_persons__0?.nursing_leave}
-        />
+        {isMCJ && (
+          <EditRow
+            label={'介護休暇の取得状況'}
+            upConfig={{
+              key: `p_applicant_persons.nursing_leave.${p_applicant_persons__0?.id}`,
+              options: nursingLeaveOptions,
+            }}
+            hasPleft={isEditable}
+            field={
+              isEditable ? (
+                <AdSelectRadios name="p_applicant_persons__0.nursing_leave" options={nursingLeaveOptions} />
+              ) : (
+                nursingLeaveOptions.find((item) => item.value === formik.values.p_applicant_persons__0.nursing_leave)
+                  ?.label
+              )
+            }
+            error={formik.errors?.p_applicant_persons__0?.nursing_leave}
+          />
+        )}
       </ContentEditGroup>
     </FormikProvider>
   );
