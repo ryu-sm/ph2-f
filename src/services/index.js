@@ -181,7 +181,11 @@ export const apGetPublicHolidays = async (year) => {
 };
 
 export const adGetUpdateHistory = async (p_application_header_id, key) => {
-  return await service.get(`/manager/edit_histories/${p_application_header_id}?update_history_key=${key}`);
+  return await service.get(`/edit_histories/${p_application_header_id}?update_history_key=${key}`);
+};
+
+export const adGetFilesUpdateHistory = async (p_application_header_id, key) => {
+  return await service.get(`/edit_histories/files/${p_application_header_id}?update_history_key=${key}`);
 };
 
 export const adGetFilesView = async (p_application_header_id, category) => {

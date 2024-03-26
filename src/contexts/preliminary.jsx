@@ -130,7 +130,7 @@ export const PreliminaryProvider = ({ children }) => {
     }
   };
 
-  console.log(JSON.stringify(result.contents));
+  // console.log(JSON.stringify(result.contents));
 
   return (
     <PreliminaryContext.Provider

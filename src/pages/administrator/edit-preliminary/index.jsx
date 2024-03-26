@@ -2,7 +2,7 @@ import { AdMainWrapper } from '@/containers';
 import { useCurrSearchParams, useIsManager } from '@/hooks';
 
 import { preliminaryIdAtom } from '@/store';
-import { Button, LinearProgress, Stack, Typography } from '@mui/material';
+import { LinearProgress, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo } from 'react';
 
 import { useSetRecoilState } from 'recoil';
@@ -11,9 +11,12 @@ import { EditTabs } from './edit-tabs';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { PreliminaryProvider } from '@/contexts/preliminary';
 import { AdPrimaryButton } from '@/components/administrator/button';
+import { useNavigate } from 'react-router-dom';
+import { routeNames } from '@/router/settings';
 
 const Content = () => {
   const isManager = useIsManager();
+  const navigator = useNavigate();
   // 设定ID
   const p_application_header_id = useCurrSearchParams().get('id');
   const setPreliminaryId = useSetRecoilState(preliminaryIdAtom);
@@ -44,8 +47,24 @@ const Content = () => {
       }
       rightAddItems={
         <Stack spacing={3} direction={'row'} alignContent={'center'}>
-          <AdPrimaryButton width={65}>メモ</AdPrimaryButton>
-          <AdPrimaryButton width={115}>メッセージ画面へ</AdPrimaryButton>
+          {isManager && (
+            <AdPrimaryButton
+              width={65}
+              onClick={() =>
+                navigator(
+                  `${routeNames.adManagerMemoPage.path}?id=${p_application_header_id}&&name=${preliminaryInfo?.p_applicant_persons__0?.last_name_kanji} ${preliminaryInfo?.p_applicant_persons__0?.first_name_kanji}`
+                )
+              }
+            >
+              メモ
+            </AdPrimaryButton>
+          )}
+          <AdPrimaryButton
+            width={115}
+            onClick={() => navigator(`/manager/messages-detail?id=${p_application_header_id}&type=1`)}
+          >
+            メッセージ画面へ
+          </AdPrimaryButton>
         </Stack>
       }
     >

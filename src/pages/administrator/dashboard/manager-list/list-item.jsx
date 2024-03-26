@@ -80,7 +80,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     },
     {
       label: 'メッセージ確認',
-      onClick: () => {},
+      onClick: () => {
+        navigator(`/manager/messages-detail?id=${item.id}&type=1`);
+      },
     },
     {
       label: 'メモ表示',

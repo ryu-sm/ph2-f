@@ -11,8 +11,11 @@ import { AdMemoItem } from './list-item';
 import { AdMemoModal } from './memo-modal';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { routeNames } from '@/router/settings';
 
 export const AdMemo = () => {
+  const navigate = useNavigate();
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState('');
   const modal = useBoolean(false);
@@ -143,6 +146,7 @@ export const AdMemo = () => {
               opacity: 0.8,
             },
           }}
+          onClick={() => navigate(`${routeNames.adManagerEditPreliminaryPage.path}?id=${p_application_header_id}`)}
         >
           <Typography variant="login_button" fontWeight={400} color="primary.main">
             申込内容の修正・確認
@@ -150,7 +154,7 @@ export const AdMemo = () => {
         </Button>
       }
     >
-      <Stack sx={{ height: '100%', flexGrow: 1 }} overflow={'auto'} mt={11} mb={8}>
+      <Stack sx={{ height: '100%', flexGrow: 1 }} overflow={'auto'} mb={8}>
         <AdMemoHeader sortBy={sortBy} sortOrder={sortOrder} handleSort={handleSort} />
         <Stack>
           {memos.map((item) => (

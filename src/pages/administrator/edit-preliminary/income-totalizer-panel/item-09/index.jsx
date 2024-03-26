@@ -124,9 +124,9 @@ export const Item09 = () => {
     setPreliminarySnap((pre) => {
       return {
         ...pre,
-        p_application_headers: {
-          ...pre.p_application_headers,
-          ...formik.values.p_application_headers,
+        p_applicant_persons__1: {
+          ...pre.p_applicant_persons__1,
+          ...formik.values.p_applicant_persons__1,
         },
         p_uploaded_files: {
           ...pre.p_uploaded_files,
@@ -167,47 +167,116 @@ export const Item09 = () => {
 
                 {formik.values.p_applicant_persons__1.identity_verification_type === '1' && (
                   <Stack spacing={2}>
-                    <UploadItem name="p_uploaded_files.p_applicant_persons__1__A__01__a" />
-                    <UploadItem name="p_uploaded_files.p_applicant_persons__1__A__01__b" />
+                    <UploadItem
+                      isDisabled={!isEditable}
+                      upConfig={{
+                        title: '運転免許書〈表面〉',
+                        key: `p_uploaded_files.p_applicant_persons__1__A__01__a`,
+                      }}
+                      name="p_uploaded_files.p_applicant_persons__1__A__01__a"
+                    />
+                    <UploadItem
+                      isDisabled={!isEditable}
+                      upConfig={{
+                        title: '運転免許書〈裏面〉',
+                        key: `p_uploaded_files.p_applicant_persons__1__A__01__b`,
+                      }}
+                      name="p_uploaded_files.p_applicant_persons__1__A__01__b"
+                    />
                   </Stack>
                 )}
                 {formik.values.p_applicant_persons__1.identity_verification_type === '2' && (
-                  <UploadItem name="p_uploaded_files.p_applicant_persons__1__A__02" />
+                  <UploadItem
+                    isDisabled={!isEditable}
+                    upConfig={{
+                      title: 'マイナンバーカード〈表面〉',
+                      key: `p_uploaded_files.p_applicant_persons__1__A__02`,
+                    }}
+                    name="p_uploaded_files.p_applicant_persons__1__A__02"
+                  />
                 )}
                 {formik.values.p_applicant_persons__1.identity_verification_type === '3' && (
                   <Stack spacing={2}>
-                    <UploadItem name="p_uploaded_files.p_applicant_persons__1__A__03__a" />
-                    <UploadItem name="p_uploaded_files.p_applicant_persons__1__A__03__b" />
+                    <UploadItem
+                      isDisabled={!isEditable}
+                      upConfig={{
+                        title: '住民基本台帳カード〈表面〉',
+                        key: `p_uploaded_files.p_applicant_persons__1__A__03__a`,
+                      }}
+                      name="p_uploaded_files.p_applicant_persons__1__A__03__a"
+                    />
+                    <UploadItem
+                      isDisabled={!isEditable}
+                      upConfig={{
+                        title: '住民基本台帳カード〈裏面〉',
+                        key: `p_uploaded_files.p_applicant_persons__1__A__03__b`,
+                      }}
+                      name="p_uploaded_files.p_applicant_persons__1__A__03__b"
+                    />
                   </Stack>
                 )}
               </Stack>
             </ContentEditFileGroup>
             <ContentEditFileGroup category={'B'}>
-              <UploadItem name="p_uploaded_files.p_applicant_persons__1__B__a" subTitle="健康保険証〈表面〉" />
-              <UploadItem name="p_uploaded_files.p_applicant_persons__1__B__b" subTitle="健康保険証〈裏面〉" />
+              <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__B__a`,
+                }}
+                name="p_uploaded_files.p_applicant_persons__1__B__a"
+                subTitle="健康保険証〈表面〉"
+              />
+              <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__B__b`,
+                }}
+                name="p_uploaded_files.p_applicant_persons__1__B__b"
+                subTitle="健康保険証〈裏面〉"
+              />
             </ContentEditFileGroup>
             <ContentEditFileGroup category={'C'}>
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__C__01`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__C__01"
                 isMultiple={true}
                 subTitle="源泉徴収票（前年度分）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__C__02`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__C__02"
                 isMultiple={true}
                 subTitle="源泉徴収票（前々年度分）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__C__03`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__C__03"
                 isMultiple={true}
                 subTitle="確定申告書（1期前）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__C__04`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__C__04"
                 isMultiple={true}
                 subTitle="確定申告書（2期前）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__C__05`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__C__05"
                 isMultiple={true}
                 subTitle="確定申告書（3期前）"
@@ -215,52 +284,113 @@ export const Item09 = () => {
             </ContentEditFileGroup>
             <ContentEditFileGroup category={'D'}>
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__D__01`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__D__01"
                 isMultiple={true}
                 subTitle="会社の決算報告書（1期前）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__D__02`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__D__02"
                 isMultiple={true}
                 subTitle="会社の決算報告書（2期前）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__D__03`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__D__03"
                 isMultiple={true}
                 subTitle="会社の決算報告書（3期前）"
               />
             </ContentEditFileGroup>
             <ContentEditFileGroup category={'E'}>
-              <UploadItem name="p_uploaded_files.p_applicant_persons__1__E" isMultiple={true} subTitle="雇用契約書" />
+              <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__E`,
+                }}
+                name="p_uploaded_files.p_applicant_persons__1__E"
+                isMultiple={true}
+                subTitle="雇用契約書"
+              />
             </ContentEditFileGroup>
           </Stack>
           <Stack flex={1} spacing={4}>
             <ContentEditFileGroup category={'F'}>
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__F__01`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__F__01"
                 isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（1期前）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__F__02`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__F__02"
                 isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（2期前）"
               />
               <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__F__03`,
+                }}
                 name="p_uploaded_files.p_applicant_persons__1__F__03"
                 isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（3期前）"
               />
             </ContentEditFileGroup>
             <ContentEditFileGroup category={'G'}>
-              <UploadItem name="G" isMultiple={true} subTitle="チラシ・パンフレット" />
+              <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.G`,
+                }}
+                name="p_uploaded_files.G"
+                isMultiple={true}
+                subTitle="チラシ・パンフレット"
+              />
             </ContentEditFileGroup>
             <ContentEditFileGroup category={'H'}>
-              <UploadItem name={'p_uploaded_files.p_applicant_persons__1__H__a'} subTitle="在留カード 〈表面〉" />
-              <UploadItem name={'p_uploaded_files.p_applicant_persons__1__H__b'} subTitle="在留カード 〈裏面〉" />
+              <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__H__a`,
+                }}
+                name={'p_uploaded_files.p_applicant_persons__1__H__a'}
+                subTitle="在留カード 〈表面〉"
+              />
+              <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__H__b`,
+                }}
+                name={'p_uploaded_files.p_applicant_persons__1__H__b'}
+                subTitle="在留カード 〈裏面〉"
+              />
             </ContentEditFileGroup>
             <ContentEditFileGroup category={'K'}>
-              <UploadItem name="p_uploaded_files.p_applicant_persons__1__K" />
+              <UploadItem
+                isDisabled={!isEditable}
+                upConfig={{
+                  key: `p_uploaded_files.p_applicant_persons__1__K`,
+                }}
+                isMultiple={true}
+                name="p_uploaded_files.p_applicant_persons__1__K"
+              />
             </ContentEditFileGroup>
           </Stack>
         </Stack>

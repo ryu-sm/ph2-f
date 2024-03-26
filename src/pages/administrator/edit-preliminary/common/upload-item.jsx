@@ -2,13 +2,15 @@ import { useBoolean } from '@/hooks';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useField } from 'formik';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import { ImgPreview } from './img-preview';
 import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
+import { FilesUpdateHistoryModal } from './files-update-history';
 
-export const UploadItem = ({ isMultiple, name, subTitle, hasChangeLog }) => {
+export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig }) => {
   const [field, meta, helpers] = useField(name);
   const { setValue } = helpers;
   const { touched, error } = meta;
@@ -43,6 +45,18 @@ export const UploadItem = ({ isMultiple, name, subTitle, hasChangeLog }) => {
     [setValue, meta.value, isMultiple]
   );
 
+  const {
+    preliminaryInfo: { files_p_activities, p_activities, p_application_headers },
+  } = usePreliminaryContext();
+
+  const isUpdated = useMemo(() => {
+    return files_p_activities.includes(upConfig?.key);
+  }, [files_p_activities, upConfig]);
+
+  const isUpdatedBorrowings = useMemo(() => {
+    return p_activities.includes(upConfig?.key);
+  }, [p_activities, upConfig]);
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: isMultiple,
@@ -66,7 +80,6 @@ export const UploadItem = ({ isMultiple, name, subTitle, hasChangeLog }) => {
     onImgPreviewClose();
     setHoverImg({});
   };
-  const isDisabled = false;
 
   return (
     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
@@ -89,10 +102,15 @@ export const UploadItem = ({ isMultiple, name, subTitle, hasChangeLog }) => {
           <Stack flex={1} px={2} pt={'2px'} justifyContent={'center'} spacing={'6px'} maxWidth={'55%'}>
             {meta.value?.map((file, index) => (
               <Stack key={index} direction={'row'} alignItems={'center'} spacing={'5px'}>
-                <CancelIcon
-                  sx={{ width: 15, height: 15, color: 'gray.70', cursor: 'pointer' }}
-                  onClick={() => handleDelete(index)}
-                />
+                <Stack sx={{ width: 15, height: 15 }}>
+                  {file?.owner_type !== '1' && (
+                    <CancelIcon
+                      sx={{ width: 15, height: 15, color: 'gray.70', cursor: 'pointer' }}
+                      onClick={() => handleDelete(index)}
+                    />
+                  )}
+                </Stack>
+
                 <Typography
                   variant="files_upload_filename"
                   onMouseEnter={() => handleMouseEnter(file)}
@@ -104,39 +122,47 @@ export const UploadItem = ({ isMultiple, name, subTitle, hasChangeLog }) => {
               </Stack>
             ))}
           </Stack>
-          {hasChangeLog && (
-            <Box
-              sx={{
-                lineHeight: 1,
-                fontSize: '24px',
-                cursor: 'pointer',
-              }}
-              onClick={onModalOpen}
-            >
-              ...
-            </Box>
-          )}
+          <Stack direction={'row'} spacing={2}>
+            {(isUpdated || isUpdatedBorrowings) && (
+              <Box
+                sx={{
+                  lineHeight: 1,
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                }}
+                onClick={onModalOpen}
+              >
+                ...
+              </Box>
+            )}
+            <FilesUpdateHistoryModal
+              open={open}
+              onClose={onModalClose}
+              title={subTitle}
+              upConfig={{ ...upConfig, p_application_header_id: p_application_headers?.id }}
+            />
 
-          <Button
-            disabled={isDisabled}
-            sx={{
-              padding: '8px 16px',
-              border: (theme) => `1px solid ${theme.palette.primary.main}`,
-              color: 'primary.main',
-              backgroundColor: 'white',
-              '&:hover': {
-                backgroundColor: 'primary.main',
-                color: 'white',
-              },
-              '&:disabled': {
+            <Button
+              disabled={isDisabled}
+              sx={{
+                padding: '8px 16px',
+                border: (theme) => `1px solid ${theme.palette.primary.main}`,
                 color: 'primary.main',
-              },
-            }}
-            {...getRootProps()}
-          >
-            <Typography variant="files_upload_button">ファイルを選択</Typography>
-            <input {...getInputProps()} name={field.name} />
-          </Button>
+                backgroundColor: 'white',
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                },
+                '&:disabled': {
+                  color: 'primary.main',
+                },
+              }}
+              {...getRootProps()}
+            >
+              <Typography variant="files_upload_button">ファイルを選択</Typography>
+              <input {...getInputProps()} name={field.name} />
+            </Button>
+          </Stack>
         </Stack>
         {!touched && error && (
           <Stack direction={'row'} textAlign={'right'} flexWrap={'wrap'} width={330}>

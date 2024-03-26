@@ -432,6 +432,8 @@ export const preliminaryInitialValues = {
 
   p_activities: [],
 
+  files_p_activities: [],
+
   p_result: {
     pre_examination_status: '',
     provisional_status: '',
@@ -547,6 +549,7 @@ export const preliminarySelect = selector({
         : preliminaryInitialValues.p_join_guarantors,
       p_residents: tempArray,
       p_activities: res.data?.p_activities ? res.data?.p_activities : [],
+      files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
       p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : preliminaryInitialValues.p_borrowings,
       p_result: {
         ...preliminaryInitialValues.p_result,
