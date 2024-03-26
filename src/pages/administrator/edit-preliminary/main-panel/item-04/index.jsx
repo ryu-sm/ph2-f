@@ -15,6 +15,7 @@ import { Stack } from '@mui/material';
 import { tab04Schema } from '../../fullSchema';
 import { editMainTabStatusAtom, infoGroupTabAtom, joinGuarantorInitialValues } from '@/store';
 import { useSetRecoilState } from 'recoil';
+import { formatJapanDate } from '@/utils';
 
 export const Item04 = () => {
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
@@ -289,6 +290,7 @@ export const Item04 = () => {
                   upConfig={{
                     key: `p_join_guarantors.mobile_phone.${item?.id}`,
                   }}
+                  isLogicRequired
                   field={
                     isEditable ? (
                       <AdEditInput name={`p_join_guarantors[${index}].mobile_phone`} convertHalfWidth />
@@ -303,6 +305,7 @@ export const Item04 = () => {
                 />
                 <EditRow
                   label={'電話番号自宅'}
+                  isLogicRequired
                   upConfig={{
                     key: `p_join_guarantors.home_phone.${item?.id}`,
                   }}
