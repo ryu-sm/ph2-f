@@ -1,12 +1,10 @@
 import { convertToFullWidth, convertToHalfWidth } from '@/utils';
-import { Stack, TextField, Typography } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
-import AutosizeInput from 'react-input-autosize';
-import './autosize-style.css';
 import { useRef } from 'react';
 
-export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = true, ml, ...props }) => {
+export const AdEditFullWidthInput = ({ convertFullWidth, convertHalfWidth, autoTrim = true, ml, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setError } = helpers;
 
@@ -51,9 +49,33 @@ export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = tru
       sx={{ width: 1, py: 1, pl: '36px', ml: ml || -10 }}
       onClick={handleAutoFocus}
     >
-      <AutosizeInput
+      <TextField
+        fullWidth
         ref={inputRef}
-        inputClassName={'custom-input-style'}
+        sx={{
+          '.MuiInputBase-input': {
+            minHeight: 16,
+            height: 26,
+            p: 0,
+            pl: 1,
+            fontFamily: 'Noto Sans JP',
+            fontSize: 12,
+            fontWeight: 300,
+            lineHeight: '26px',
+            fontStyle: 'normal',
+            letterSpacing: 0.4,
+            color: '#333333',
+          },
+          '.MuiFormHelperText-root': {
+            display: 'none',
+          },
+          '&&&& .Mui-focused': {
+            fieldset: { border: '2px solid #0160CC' },
+          },
+          '&&&& fieldset': {
+            border: `none`,
+          },
+        }}
         name={field.name}
         value={meta.value}
         onChange={handleChange}

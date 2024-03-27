@@ -1,10 +1,16 @@
 import { Stack } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
-import { validationSchema } from './validationSchema';
 
 import { Fragment, useEffect } from 'react';
-import { AdEditInput, AdNumericInput, AdSelectCheckbox, AdSelectRadios, MonthPicker } from '@/components/administrator';
+import {
+  AdEditFullWidthInput,
+  AdEditInput,
+  AdNumericInput,
+  AdSelectCheckbox,
+  AdSelectRadios,
+  MonthPicker,
+} from '@/components/administrator';
 import {
   borrowerOptions,
   CurrBorrowingStatusOptions,
@@ -221,7 +227,11 @@ export const Item06 = () => {
                       key: `p_borrowings.lender.${item?.id}`,
                     }}
                     field={
-                      isEditable ? <AdEditInput name={`p_borrowings[${index}].lender`} convertFullWidth /> : item.lender
+                      isEditable ? (
+                        <AdEditFullWidthInput name={`p_borrowings[${index}].lender`} convertFullWidth />
+                      ) : (
+                        item.lender
+                      )
                     }
                     error={formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.lender}
                   />
@@ -253,7 +263,10 @@ export const Item06 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditInput name={`p_borrowings[${index}].loan_purpose_other`} convertFullWidth />
+                              <AdEditFullWidthInput
+                                name={`p_borrowings[${index}].loan_purpose_other`}
+                                convertFullWidth
+                              />
                             ) : (
                               item.loan_purpose_other
                             )
@@ -298,7 +311,7 @@ export const Item06 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditInput
+                              <AdEditFullWidthInput
                                 name={`p_borrowings[${index}].loan_business_target_other`}
                                 convertFullWidth
                               />
@@ -664,7 +677,7 @@ export const Item06 = () => {
                     }}
                     field={
                       isEditable ? (
-                        <AdEditInput name="p_application_headers.refund_source_content" convertFullWidth />
+                        <AdEditFullWidthInput name="p_application_headers.refund_source_content" convertFullWidth />
                       ) : (
                         formik.values.p_application_headers.refund_source_content
                       )

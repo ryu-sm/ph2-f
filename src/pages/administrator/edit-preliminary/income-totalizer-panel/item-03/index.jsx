@@ -370,7 +370,7 @@ export const Item03 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_phone" convertFullWidth />
+              <AdEditInput name="p_applicant_persons__1.office_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_phone
             )

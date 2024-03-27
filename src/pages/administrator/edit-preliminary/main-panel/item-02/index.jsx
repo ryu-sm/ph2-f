@@ -2,7 +2,13 @@ import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 import { formatJapanDate } from '@/utils';
 import { useEffect } from 'react';
-import { AdEditInput, AdSelectRadios, AdZipCodeInput, DayPicker } from '@/components/administrator';
+import {
+  AdEditFullWidthInput,
+  AdEditInput,
+  AdSelectRadios,
+  AdZipCodeInput,
+  DayPicker,
+} from '@/components/administrator';
 import { genderOptions, nationalityOptions } from './options';
 import { diffObj } from '@/utils';
 import { PREFECTURES } from '@/constant';
@@ -71,6 +77,10 @@ export const Item02 = () => {
     });
   }, [formik.values]);
 
+  useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.errors]);
+
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
@@ -82,7 +92,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.last_name_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.last_name_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.last_name_kanji
             )
@@ -97,7 +107,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.first_name_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.first_name_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.first_name_kanji
             )
@@ -112,7 +122,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.last_name_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.last_name_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.last_name_kana
             )
@@ -127,7 +137,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.first_name_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.first_name_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.first_name_kana
             )
@@ -196,7 +206,7 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.mobile_phone" />
+              <AdEditInput name="p_applicant_persons__0.mobile_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.mobile_phone
             )
@@ -211,7 +221,7 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.home_phone" />
+              <AdEditInput name="p_applicant_persons__0.home_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.home_phone
             )
@@ -226,7 +236,7 @@ export const Item02 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.emergency_contact" />
+              <AdEditInput name="p_applicant_persons__0.emergency_contact" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.emergency_contact
             )
@@ -282,7 +292,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.city_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.city_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.city_kanji
             )
@@ -297,7 +307,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.district_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.district_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.district_kanji
             )
@@ -312,7 +322,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.other_address_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.other_address_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.other_address_kanji
             )
@@ -328,7 +338,7 @@ export const Item02 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.prefecture_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.prefecture_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.prefecture_kana
             )
@@ -344,7 +354,7 @@ export const Item02 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.city_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.city_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.city_kana
             )
@@ -360,7 +370,7 @@ export const Item02 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.district_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.district_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.district_kana
             )
@@ -376,7 +386,7 @@ export const Item02 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.other_address_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.other_address_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.other_address_kana
             )
@@ -391,7 +401,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.email" />
+              <AdEditFullWidthInput name="p_applicant_persons__0.email" />
             ) : (
               formik.values.p_applicant_persons__0.email
             )

@@ -2,10 +2,11 @@ import { convertToFullWidth, convertToHalfWidth } from '@/utils';
 import { Stack, TextField } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
+import AutosizeInput from 'react-input-autosize';
 
 export const AdEditOutLineInput = ({ width, convertFullWidth, convertHalfWidth, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
+  const { setValue, setError } = helpers;
 
   const handelBlue = useCallback(
     async (e) => {
@@ -35,36 +36,14 @@ export const AdEditOutLineInput = ({ width, convertFullWidth, convertHalfWidth, 
   );
 
   return (
-    <Stack direction={'row'} sx={{ width: 1 }}>
-      <TextField
+    <Stack direction={'row'} sx={{ width: width, pl: 3 }}>
+      <AutosizeInput
+        inputClassName={'custom-input-border-style'}
         name={field.name}
-        sx={{
-          ml: -2,
-          width: width || 1,
-          '& .MuiOutlinedInput-root': {
-            padding: 0,
-            '& fieldset': {
-              border: '1px solid #CCCCCC',
-            },
-            '&:hover fieldset': {
-              border: '1px solid #CCCCCC',
-            },
-            '&.Mui-focused fieldset': {
-              border: '2px solid #1976d2',
-            },
-          },
-          '& .MuiInputBase-input': {
-            padding: '8px',
-            fontFamily: 'Hiragino Sans',
-            fontSize: '12px',
-            fontWeight: 300,
-            lineHeight: '18px',
-            borderRadius: 4,
-          },
-        }}
         value={meta.value}
         onChange={handleChange}
         onBlur={handelBlue}
+        onFocus={() => setError('')}
       />
     </Stack>
   );

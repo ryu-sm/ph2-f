@@ -1,7 +1,7 @@
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
-import { AdEditInput, AdSelectRadios } from '@/components/administrator';
+import { AdEditFullWidthInput, AdEditInput, AdSelectRadios } from '@/components/administrator';
 import { useSalesPersonOptions } from '@/hooks';
 import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
@@ -185,7 +185,7 @@ export const Item08 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.vendor_name" convertFullWidth />
+              <AdEditFullWidthInput name="p_application_headers.vendor_name" convertFullWidth />
             ) : (
               formik.values.p_application_headers.vendor_name
             )

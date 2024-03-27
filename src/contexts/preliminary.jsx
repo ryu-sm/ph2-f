@@ -1,6 +1,10 @@
+import { Icons } from '@/assets';
+import { AdPrimaryButton } from '@/components/administrator/button';
 import { API_500_ERROR } from '@/constant';
+import { useBoolean } from '@/hooks';
 import {
   adDeleteProvisionalResult,
+  adGetPreliminary,
   adUpdateApproverConfirmation,
   adUpdatePreExaminationStatus,
   adUpdatePreliminary,
@@ -12,7 +16,10 @@ import {
   preliminaryIdAtom,
   editMainTabStatusAtom,
   infoGroupTabAtom,
+  preliminaryInitialValues,
 } from '@/store';
+import { AdThemeProvider } from '@/styles/ad-theme';
+import { Modal, Stack, Typography } from '@mui/material';
 import deepDiff from 'deep-diff';
 
 import { createContext, useEffect, useMemo } from 'react';
@@ -28,6 +35,7 @@ export const PreliminaryProvider = ({ children }) => {
   const [preliminarySnap, setPreliminarySnap] = useRecoilState(preliminarySnapAtom);
   const preliminaryId = useRecoilValue(preliminaryIdAtom);
   const { pathname } = useLocation();
+  const checkDbModal = useBoolean(false);
 
   useEffect(() => {
     refreshPreliminary();
@@ -53,8 +61,132 @@ export const PreliminaryProvider = ({ children }) => {
     return Boolean(upData);
   };
 
+  const checkeDbUpdate = async () => {
+    try {
+      const res = await adGetPreliminary(preliminaryId);
+      const temp = res.data?.p_application_headers?.new_house_planned_resident_overview;
+      const p_residents = res.data?.p_residents || [];
+      const tempArray = [...p_residents];
+      if (Number(temp.spouse) > 0) {
+        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '1');
+        if (Number(temp.spouse) > filted.length) {
+          Array.from({ length: Number(temp.spouse) - filted.length }, () => {
+            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '1' });
+          });
+        }
+      }
+      if (Number(temp.children) > 0) {
+        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '2');
+        if (Number(temp.children) > filted.length) {
+          Array.from({ length: Number(temp.children) - filted.length }, () => {
+            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '2' });
+          });
+        }
+      }
+      if (Number(temp.father) > 0) {
+        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '3');
+        if (Number(temp.father) > filted.length) {
+          Array.from({ length: Number(temp.father) - filted.length }, () => {
+            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '3' });
+          });
+        }
+      }
+      if (Number(temp.mother) > 0) {
+        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '4');
+        if (Number(temp.mother) > filted.length) {
+          Array.from({ length: Number(temp.mother) - filted.length }, () => {
+            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '4' });
+          });
+        }
+      }
+      if (Number(temp.brothers_sisters) > 0) {
+        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '5');
+        if (Number(temp.brothers_sisters) > filted.length) {
+          Array.from({ length: Number(temp.brothers_sisters) - filted.length }, () => {
+            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '5' });
+          });
+        }
+      }
+      if (Number(temp.fiance) > 0) {
+        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '6');
+        if (Number(temp.fiance) > filted.length) {
+          Array.from({ length: Number(temp.fiance) - filted.length }, () => {
+            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '6' });
+          });
+        }
+      }
+      if (Number(temp.others) > 0) {
+        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '99');
+        if (Number(temp.others) > filted.length) {
+          Array.from({ length: Number(temp.others) - filted.length }, () => {
+            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '99' });
+          });
+        }
+      }
+
+      const dbData = {
+        ...preliminaryInitialValues,
+        p_uploaded_files: {
+          ...preliminaryInitialValues.p_uploaded_files,
+          ...res.data.p_uploaded_files,
+        },
+        p_application_headers: {
+          ...preliminaryInitialValues.p_application_headers,
+          ...res.data.p_application_headers,
+        },
+        p_borrowing_details__1: {
+          ...preliminaryInitialValues.p_borrowing_details__1,
+          ...res.data.p_borrowing_details__1,
+        },
+        p_borrowing_details__2: {
+          ...preliminaryInitialValues.p_borrowing_details__2,
+          ...res.data.p_borrowing_details__2,
+        },
+        p_application_banks: res.data?.p_application_banks
+          ? res.data?.p_application_banks
+          : preliminaryInitialValues.p_application_banks,
+        p_applicant_persons__0: {
+          ...preliminaryInitialValues.p_applicant_persons__0,
+          ...res.data.p_applicant_persons__0,
+        },
+        p_applicant_persons__1: {
+          ...preliminaryInitialValues.p_applicant_persons__1,
+          ...res.data.p_applicant_persons__1,
+        },
+        p_join_guarantors: res.data?.p_join_guarantors
+          ? res.data.p_join_guarantors
+          : preliminaryInitialValues.p_join_guarantors,
+        p_residents: tempArray,
+        p_activities: res.data?.p_activities ? res.data?.p_activities : [],
+        files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
+        p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : preliminaryInitialValues.p_borrowings,
+        p_result: {
+          ...preliminaryInitialValues.p_result,
+          ...res.data.p_result,
+        },
+        isMCJ: res.data.p_application_banks?.length > 1,
+        hasIncomeTotalizer: ['3', '4'].includes(res.data.p_application_headers.loan_type),
+        hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',
+        changeJoinGuarantor: false,
+        changeToIncomeTotalizer: false,
+      };
+
+      const upDbData = deepDiff(result.contents, dbData);
+      console.log('upData', upDbData);
+      return Boolean(upDbData);
+    } catch (error) {
+      console.log(error);
+      toast.error(API_500_ERROR);
+    }
+  };
+
   const handleSave = async (data) => {
     try {
+      const isUp = await checkeDbUpdate();
+      if (isUp) {
+        checkDbModal.onTrue();
+        return;
+      }
       await adUpdatePreliminary(result.contents?.p_application_headers?.id, {
         mainTab: mainTabStatus,
         subTab: infoGroup,
@@ -65,6 +197,11 @@ export const PreliminaryProvider = ({ children }) => {
     } catch (error) {
       toast.error(API_500_ERROR);
     }
+  };
+
+  const handleCloseModal = () => {
+    checkDbModal.onFalse();
+    refreshPreliminary();
   };
 
   const isEditable = useMemo(() => {
@@ -153,9 +290,43 @@ export const PreliminaryProvider = ({ children }) => {
         handleChangeApproverConfirmation: handleChangeApproverConfirmation,
         handleChangePreExaminationStatus: handleChangePreExaminationStatus,
         handleDeleteProvisionalResult: handleDeleteProvisionalResult,
+        checkeDbUpdate: checkeDbUpdate,
       }}
     >
       {children}
+      <AdThemeProvider>
+        <Modal
+          open={checkDbModal.value}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          disableAutoFocus
+        >
+          <Stack
+            sx={{
+              width: 470,
+              bgcolor: 'white',
+              minWidth: 'auto',
+              maxHeight: '75vh',
+              borderRadius: 1,
+              p: 3,
+            }}
+          >
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+              <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={handleCloseModal} />
+            </Stack>
+            <Stack sx={{ py: 2 }}>
+              <Typography
+                variant="dailog_warring"
+                fontWeight={300}
+              >{`データ更新がありました。\n最新データを確認した上で修正してください。`}</Typography>
+            </Stack>
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }}>
+              <AdPrimaryButton height={38} width={150} onClick={handleCloseModal}>
+                とじる
+              </AdPrimaryButton>
+            </Stack>
+          </Stack>
+        </Modal>
+      </AdThemeProvider>
     </PreliminaryContext.Provider>
   );
 };

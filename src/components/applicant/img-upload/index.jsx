@@ -129,7 +129,7 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
       <ApImageUploadModal
         isOpen={isUploadOpen}
         onClose={setUploadClose}
-        maxFiles={singleFile && 1}
+        singleFile={singleFile}
         setImages={(newFiles) => setValue([...meta.value, ...newFiles])}
       />
 

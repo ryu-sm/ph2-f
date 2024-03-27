@@ -51,6 +51,7 @@ export const Item01 = () => {
     setPreliminarySnap,
     handleSave,
     isEditable,
+    checkeDbUpdate,
   } = usePreliminaryContext();
 
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
@@ -146,14 +147,6 @@ export const Item01 = () => {
   }, [formik.values]);
 
   const bankMaster = useBankMaster();
-
-  // useEffect(() => {
-  //   if (['1', '2', '3', '4', '5', '6', ''].includes(p_application_headers.loan_target)) {
-  //     formik.setFieldValue('loan_target_', '0');
-  //   } else {
-  //     formik.setFieldValue('loan_target_', p_application_headers.loan_target);
-  //   }
-  // }, [p_application_headers.loan_target]);
 
   useEffect(() => {
     if (formik.values.p_application_banks.includes(bankMaster.find((item) => item.code === MCJ_CODE)?.value)) {

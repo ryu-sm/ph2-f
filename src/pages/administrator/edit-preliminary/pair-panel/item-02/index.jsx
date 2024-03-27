@@ -167,7 +167,7 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.mobile_phone" />
+              <AdEditInput name="p_applicant_persons__0.mobile_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.mobile_phone
             )
@@ -179,7 +179,7 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.home_phone" />
+              <AdEditInput name="p_applicant_persons__0.home_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.home_phone
             )

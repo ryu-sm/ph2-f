@@ -6,7 +6,9 @@ import { formatJapanDate, formatMoney } from '@/utils';
 import { useEffect, useMemo } from 'react';
 import {
   AdAreaInput,
+  AdEditFullWidthInput,
   AdEditInput,
+  AdEditOutLineInput,
   AdNumericInput,
   AdSelectCheckbox,
   AdSelectRadios,
@@ -325,7 +327,7 @@ export const Item05 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdEditInput name="p_application_headers.curr_house_owner_name" convertFullWidth />
+                  <AdEditFullWidthInput name="p_application_headers.curr_house_owner_name" convertFullWidth />
                 ) : (
                   formik.values.p_application_headers.curr_house_owner_name
                 )
@@ -339,7 +341,7 @@ export const Item05 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdEditInput name="p_application_headers.curr_house_owner_rel" convertFullWidth />
+                  <AdEditFullWidthInput name="p_application_headers.curr_house_owner_rel" convertFullWidth />
                 ) : (
                   formik.values.p_application_headers.curr_house_owner_rel
                 )
@@ -381,7 +383,7 @@ export const Item05 = () => {
                 isLogicRequired
                 field={
                   isEditable ? (
-                    <AdEditInput
+                    <AdEditFullWidthInput
                       name="p_application_headers.curr_house_schedule_disposal_type_other"
                       convertFullWidth
                     />
@@ -463,7 +465,7 @@ export const Item05 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.property_publish_url" convertHalfWidth />
+              <AdEditFullWidthInput name="p_application_headers.property_publish_url" convertHalfWidth />
             ) : (
               formik.values.p_application_headers.property_publish_url
             )
@@ -500,7 +502,7 @@ export const Item05 = () => {
             hasPleft={isEditable}
             field={
               isEditable ? (
-                <AdEditInput name="p_application_headers.new_house_acquire_reason_other" convertFullWidth />
+                <AdEditFullWidthInput name="p_application_headers.new_house_acquire_reason_other" convertFullWidth />
               ) : (
                 formik.values.p_application_headers.new_house_acquire_reason_other
               )
@@ -546,7 +548,10 @@ export const Item05 = () => {
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_application_headers.new_house_self_not_resident_reason" convertFullWidth />
+                <AdEditFullWidthInput
+                  name="p_application_headers.new_house_self_not_resident_reason"
+                  convertFullWidth
+                />
               ) : (
                 formik.values.p_application_headers.new_house_self_not_resident_reason
               )
@@ -570,10 +575,9 @@ export const Item05 = () => {
                         arrayHelpers={arrayHelpers}
                       />
                       {formik.values.p_application_headers.new_house_planned_resident_overview.others_umu && (
-                        <AdEditInput
+                        <AdEditOutLineInput
                           name={`p_application_headers.new_house_planned_resident_overview.others_rel`}
-                          ml={-5}
-                          showBorder
+                          width={120}
                           convertFullWidth
                         />
                       )}
@@ -612,7 +616,7 @@ export const Item05 = () => {
                       isAddendum={!item?.rel_to_applicant_a_name}
                       field={
                         isEditable ? (
-                          <AdEditInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
+                          <AdEditFullWidthInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
                         ) : (
                           item.last_name_kanji
                         )
@@ -630,7 +634,7 @@ export const Item05 = () => {
                       isAddendum={!item?.rel_to_applicant_a_name}
                       field={
                         isEditable ? (
-                          <AdEditInput name={`p_residents[${index}].first_name_kanji`} convertFullWidth />
+                          <AdEditFullWidthInput name={`p_residents[${index}].first_name_kanji`} convertFullWidth />
                         ) : (
                           item.first_name_kanji
                         )
@@ -649,7 +653,7 @@ export const Item05 = () => {
                       isAddendum={!item?.rel_to_applicant_a_name}
                       field={
                         isEditable ? (
-                          <AdEditInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
+                          <AdEditFullWidthInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
                         ) : (
                           item.last_name_kana
                         )
@@ -667,7 +671,7 @@ export const Item05 = () => {
                       isAddendum={!item?.rel_to_applicant_a_name}
                       field={
                         isEditable ? (
-                          <AdEditInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
+                          <AdEditFullWidthInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
                         ) : (
                           item.first_name_kana
                         )
@@ -720,10 +724,8 @@ export const Item05 = () => {
                                 }}
                               />
                               {item.rel_to_applicant_a === '99' && (
-                                <AdEditInput
+                                <AdEditOutLineInput
                                   name={`p_residents[${index}].rel_to_applicant_a_other`}
-                                  ml={-5}
-                                  showBorder
                                   convertFullWidth
                                 />
                               )}
@@ -743,7 +745,7 @@ export const Item05 = () => {
                       <EditRow
                         label={`入居家族${index + 1} 続柄`}
                         upConfig={{
-                          key: `p_residents.rel_to_applicant_a_name.${item?.id}`,
+                          key: `p_residents.rel_to_applicant_a.${item?.id}`,
                         }}
                         isLogicRequired
                         hasPleft={isEditable}
@@ -760,10 +762,8 @@ export const Item05 = () => {
                                 }}
                               />
                               {item.rel_to_applicant_a === '99' && (
-                                <AdEditInput
+                                <AdEditOutLineInput
                                   name={`p_residents[${index}].rel_to_applicant_a_other`}
-                                  ml={-5}
-                                  showBorder
                                   convertFullWidth
                                 />
                               )}
@@ -826,7 +826,7 @@ export const Item05 = () => {
                             formik.errors?.p_residents[index]?.loan_from_japan_house_finance_agency
                           }
                         />
-                        {/* TODO */}
+
                         <EditRow
                           label={`入居家族${index + 1} 郵便番号`}
                           upConfig={{
@@ -873,7 +873,11 @@ export const Item05 = () => {
                             key: `p_residents.city_kanji.${item?.id}`,
                           }}
                           field={
-                            isEditable ? <AdEditInput name={`p_residents[${index}].city_kanji`} /> : item.city_kanji
+                            isEditable ? (
+                              <AdEditFullWidthInput name={`p_residents[${index}].city_kanji`} />
+                            ) : (
+                              item.city_kanji
+                            )
                           }
                           error={
                             formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.city_kanji
@@ -887,7 +891,7 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditInput name={`p_residents[${index}].district_kanji`} />
+                              <AdEditFullWidthInput name={`p_residents[${index}].district_kanji`} />
                             ) : (
                               item.district_kanji
                             )
@@ -905,7 +909,7 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditInput name={`p_residents[${index}].other_address_kanji`} />
+                              <AdEditFullWidthInput name={`p_residents[${index}].other_address_kanji`} />
                             ) : (
                               item.other_address_kanji
                             )
@@ -922,7 +926,7 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditInput name={`p_residents[${index}].contact_phone`} />
+                              <AdEditInput name={`p_residents[${index}].contact_phone`} convertHalfWidth />
                             ) : (
                               item.contact_phone
                             )
@@ -1031,7 +1035,7 @@ export const Item05 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.property_city" convertFullWidth />
+              <AdEditFullWidthInput name="p_application_headers.property_city" convertFullWidth />
             ) : (
               formik.values.p_application_headers?.property_city
             )
@@ -1046,7 +1050,7 @@ export const Item05 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.property_district" convertFullWidth />
+              <AdEditFullWidthInput name="p_application_headers.property_district" convertFullWidth />
             ) : (
               formik.values.p_application_headers?.property_district
             )
@@ -1062,7 +1066,7 @@ export const Item05 = () => {
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_application_headers.property_apartment_and_room_no" convertFullWidth />
+                <AdEditFullWidthInput name="p_application_headers.property_apartment_and_room_no" convertFullWidth />
               ) : (
                 formik.values.p_application_headers?.property_apartment_and_room_no
               )
@@ -1078,7 +1082,7 @@ export const Item05 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.property_address_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_application_headers.property_address_kana" convertFullWidth />
             ) : (
               formik.values.p_application_headers?.property_address_kana
             )
@@ -1367,7 +1371,7 @@ export const Item05 = () => {
                 }}
                 field={
                   isEditable ? (
-                    <AdEditInput name="p_application_headers.property_planning_area_other" convertFullWidth />
+                    <AdEditFullWidthInput name="p_application_headers.property_planning_area_other" convertFullWidth />
                   ) : (
                     formik.values.p_application_headers.property_planning_area_other
                   )
@@ -1408,7 +1412,10 @@ export const Item05 = () => {
                     hasPleft={isEditable}
                     field={
                       isEditable ? (
-                        <AdEditInput name="p_application_headers.property_rebuilding_reason_other" convertFullWidth />
+                        <AdEditFullWidthInput
+                          name="p_application_headers.property_rebuilding_reason_other"
+                          convertFullWidth
+                        />
                       ) : (
                         formik.values.p_application_headers.property_rebuilding_reason_other
                       )

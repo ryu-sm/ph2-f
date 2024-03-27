@@ -2,7 +2,14 @@ import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 
 import { Fragment, useEffect } from 'react';
-import { AdEditInput, AdEditOutLineInput, AdSelectRadios, AdZipCodeInput, DayPicker } from '@/components/administrator';
+import {
+  AdEditFullWidthInput,
+  AdEditInput,
+  AdEditOutLineInput,
+  AdSelectRadios,
+  AdZipCodeInput,
+  DayPicker,
+} from '@/components/administrator';
 import { genderOptions, relToApplicantAOptions } from './options';
 
 import dayjs from 'dayjs';
@@ -134,7 +141,7 @@ export const Item04 = () => {
                   isRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].last_name_kanji`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].last_name_kanji`} convertFullWidth />
                     ) : (
                       item.last_name_kanji
                     )
@@ -152,7 +159,7 @@ export const Item04 = () => {
                   isRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].first_name_kanji`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].first_name_kanji`} convertFullWidth />
                     ) : (
                       item.first_name_kanji
                     )
@@ -170,7 +177,7 @@ export const Item04 = () => {
                   isRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].last_name_kana`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].last_name_kana`} convertFullWidth />
                     ) : (
                       item.last_name_kana
                     )
@@ -188,7 +195,7 @@ export const Item04 = () => {
                   isRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].first_name_kana`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].first_name_kana`} convertFullWidth />
                     ) : (
                       item.first_name_kana
                     )
@@ -223,7 +230,10 @@ export const Item04 = () => {
                   }}
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].rel_to_applicant_a_name`} convertFullWidth />
+                      <AdEditFullWidthInput
+                        name={`p_join_guarantors[${index}].rel_to_applicant_a_name`}
+                        convertFullWidth
+                      />
                     ) : (
                       item.rel_to_applicant_a_name
                     )
@@ -393,7 +403,7 @@ export const Item04 = () => {
                   isRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].city_kanji`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].city_kanji`} convertFullWidth />
                     ) : (
                       item.city_kanji
                     )
@@ -411,7 +421,7 @@ export const Item04 = () => {
                   isRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].district_kanji`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].district_kanji`} convertFullWidth />
                     ) : (
                       item.district_kanji
                     )
@@ -429,7 +439,7 @@ export const Item04 = () => {
                   isRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].other_address_kanji`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].other_address_kanji`} convertFullWidth />
                     ) : (
                       item.other_address_kanji
                     )
@@ -447,7 +457,7 @@ export const Item04 = () => {
                   isAddendum
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].prefecture_kana`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].prefecture_kana`} convertFullWidth />
                     ) : (
                       item.prefecture_kana
                     )
@@ -465,7 +475,7 @@ export const Item04 = () => {
                   isAddendum
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].city_kana`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].city_kana`} convertFullWidth />
                     ) : (
                       item.city_kana
                     )
@@ -483,7 +493,7 @@ export const Item04 = () => {
                   isAddendum
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].district_kana`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].district_kana`} convertFullWidth />
                     ) : (
                       item.district_kana
                     )
@@ -501,7 +511,7 @@ export const Item04 = () => {
                   isAddendum
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].other_address_kana`} convertFullWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].other_address_kana`} convertFullWidth />
                     ) : (
                       item.other_address_kana
                     )
@@ -519,7 +529,7 @@ export const Item04 = () => {
                   isAddendum
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].email`} convertHalfWidth />
+                      <AdEditFullWidthInput name={`p_join_guarantors[${index}].email`} convertHalfWidth />
                     ) : (
                       item.email
                     )

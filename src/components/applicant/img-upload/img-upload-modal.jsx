@@ -9,7 +9,7 @@ import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
 import { v4 as uuid4 } from 'uuid';
 import { toast } from 'react-toastify';
 
-export const ApImageUploadModal = ({ isOpen, onClose, maxFiles, setImages }) => {
+export const ApImageUploadModal = ({ isOpen, onClose, singleFile, setImages }) => {
   const [showCamera, setShowCamera] = useState(false);
 
   const onDrop = useCallback(
@@ -35,15 +35,9 @@ export const ApImageUploadModal = ({ isOpen, onClose, maxFiles, setImages }) => 
           });
       }
       if (rejectedFiles.length > 0) {
-        if (maxFiles === 1 && rejectedFiles.length > 1) {
-          toast.error(`複数のファイルをアップロードできません。`);
-        }
-        const size = rejectedFiles.reduce((accumulator, file) => {
-          return accumulator + file.size;
-        }, 0);
-        if (size > MAX_SIZE_FILE) {
-          toast.error(`許容容量 (${Math.round(MAX_SIZE_FILE / 1000 / 1000)}MB) を超えています`);
-        }
+        toast.error(`許容容量 (${Math.round(MAX_SIZE_FILE / 1000 / 1000)}MB) を超えています`, {
+          position: 'top-right',
+        });
       }
       onClose();
     },
@@ -54,7 +48,7 @@ export const ApImageUploadModal = ({ isOpen, onClose, maxFiles, setImages }) => 
     onDrop,
     accept: ALLOWED_IMAGE_TYPES,
     maxSize: MAX_SIZE_FILE,
-    maxFiles: 1,
+    multiple: !singleFile,
   });
   const handleTakePhoto = (data) => {
     setImages([{ src: data, name: `${uuid4()}.jpg`, id: '' }]);
