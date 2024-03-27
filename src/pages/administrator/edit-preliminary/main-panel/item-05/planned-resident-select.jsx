@@ -67,6 +67,17 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
     rel_to_applicant_a: '',
     rel_to_applicant_a_other: '',
     birthday: '',
+
+    loan_from_japan_house_finance_agency: '',
+    contact_phone: '',
+    postal_code: '',
+    prefecture_kanji: '',
+    city_kanji: '',
+    district_kanji: '',
+    other_address_kanji: '',
+    prefecture_kana: '',
+    city_kana: '',
+    district_kana: '',
   };
 
   return (

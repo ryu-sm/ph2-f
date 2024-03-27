@@ -131,9 +131,6 @@ export const AdFilesViewPage = () => {
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
 
-  // Events.scrollEvent.register('end', function (to, element) {
-  //   console.log('end', to, element);
-  // });
   const AllFiles = ({ fileItems }) => {
     return (
       <Stack
@@ -195,11 +192,10 @@ export const AdFilesViewPage = () => {
         <Stack
           sx={{
             height: '100dvh',
-            minHeight: '100dvh',
             background: (theme) => theme.palette.gray[20],
           }}
         >
-          <Stack direction={'row'} px={3} justifyContent="space-between" alignItems="center">
+          <Stack direction={'row'} sx={{ height: 50, px: 3 }} justifyContent="space-between" alignItems="center">
             <Typography>アップロード：{parseOwner(currentImage)}</Typography>
             <Stack alignItems={'center'}>
               <Stack direction={'row'} spacing={1} alignItems={'center'}>
@@ -237,24 +233,27 @@ export const AdFilesViewPage = () => {
           </Stack>
 
           <Stack
-            direction={'row'}
+            // direction={'row'}
             sx={{
               height: 'calc(85vh - 50px)',
-              px: 5,
+              // px: 5,
               alignItems: 'center',
-              justifyContent: 'space-between',
+              // justifyContent: 'space-between',
               borderBottom: `4px solid #EAEAEA`,
             }}
           >
-            <Box
+            <Stack
               sx={{
+                position: 'absolute',
+                top: '45%',
+                left: 20,
                 height: 32,
                 width: 32,
                 borderRadius: 16,
                 backgroundColor: '#EAEAEA',
-                display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                zIndex: 1,
               }}
               onClick={handlePrevImage}
             >
@@ -264,7 +263,7 @@ export const AdFilesViewPage = () => {
                   fontSize: 16,
                 }}
               />
-            </Box>
+            </Stack>
             {currentImage?.name?.includes('pdf') ? (
               <Stack
                 direction="row"
@@ -344,15 +343,18 @@ export const AdFilesViewPage = () => {
                 </Stack>
               </Box>
             )}
-            <Box
+            <Stack
               sx={{
+                position: 'absolute',
+                top: '45%',
+                right: 20,
                 height: 32,
                 width: 32,
                 borderRadius: 16,
                 backgroundColor: '#EAEAEA',
-                display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                zIndex: 1,
               }}
               onClick={handleNextImage}
             >
@@ -362,7 +364,7 @@ export const AdFilesViewPage = () => {
                   fontSize: 16,
                 }}
               />
-            </Box>
+            </Stack>
           </Stack>
 
           <Stack
