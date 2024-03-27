@@ -58,7 +58,9 @@ export const AdSelectRadios = ({ options, unit, cancelable, ...props }) => {
         <AdArrowDown sx={{ width: 8, height: 8, color: 'gray.80' }} />
       </Button>
       <Stack direction={'row'} alignItems={'center'}>
-        <Typography variant="edit_content">{options.find((item) => meta.value === item.value)?.label}</Typography>
+        <Typography variant="edit_content" whiteSpace={'nowrap'}>
+          {options.find((item) => meta.value === item.value)?.label}
+        </Typography>
         {unit && <Typography variant="edit_content">{unit}</Typography>}
       </Stack>
 
