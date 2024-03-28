@@ -40,14 +40,6 @@ export const apGetBanks = async () => {
   return await service.get('/banks');
 };
 
-export const apGetSalesCompanyOrgs = async (s_sales_company_org_id) => {
-  if (s_sales_company_org_id) {
-    return await service.get(`/orgs?s_sales_company_org_id=${s_sales_company_org_id}`);
-  } else {
-    return await service.get(`/orgs`);
-  }
-};
-
 export const apSaveDraft = async (data) => {
   return await service.post('/user/draft', data);
 };
@@ -274,4 +266,29 @@ export const adDeleteMessage = async (id) => {
 
 export const adGetRowData = async (p_application_header_id) => {
   return await service.get(`/row_data/${p_application_header_id}`);
+};
+
+// ap org
+export const getOrgsInfos = async (s_sales_company_org_id) => {
+  if (s_sales_company_org_id) {
+    return await service.get(`/orgs-info?s_sales_company_org_id=${s_sales_company_org_id}`);
+  } else {
+    return await service.get(`/orgs-info`);
+  }
+};
+export const getOrgsWithCategories = async (categories) => {
+  return await service.get(`/orgs/category?categories=${categories}`);
+};
+
+export const getChildrenOrgsWithCategory = async (parent_id, category) => {
+  return await service.get(`/orgs/children?parent_id=${parent_id}&category=${category}`);
+};
+
+// TODO:
+export const apGetSalesCompanyOrgs = async (s_sales_company_org_id) => {
+  if (s_sales_company_org_id) {
+    return await service.get(`/orgs?s_sales_company_org_id=${s_sales_company_org_id}`);
+  } else {
+    return await service.get(`/orgs`);
+  }
 };

@@ -13,7 +13,13 @@ import {
 } from '@/components';
 import { CONSENT_URL } from '@/configs';
 import { ApLayout, ApStepFooter } from '@/containers';
-import { apApplicationFile, apGetSalesCompanyOrgs } from '@/services';
+import {
+  apApplicationFile,
+  apGetSalesCompanyOrgs,
+  getChildrenOrgsWithCategory,
+  getOrgsInfos,
+  getOrgsWithCategories,
+} from '@/services';
 import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, authAtom } from '@/store';
 import { Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
@@ -39,7 +45,9 @@ export const ApStep12Page = () => {
     user: { salesCompanyOrgId },
     salesPerson,
   } = useRecoilValue(authAtom);
-  const [orgs, setOrgs] = useState([]);
+  const [orgsC, setOrgsC] = useState([]);
+  const [orgsB, setOrgsB] = useState([]);
+  const [orgsE, setOrgsE] = useState([]);
   const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
   const { p_uploaded_files, p_application_headers } = useRecoilValue(applicationAtom);
@@ -110,9 +118,99 @@ export const ApStep12Page = () => {
 
   useEffect(() => {
     if (salesCompanyOrgId) {
-    } else {
+      formik.setFieldValue('p_application_headers.vendor_business_card', '0');
     }
   }, [salesCompanyOrgId]);
+
+  const fetchOrgsB = async (sales_company_id) => {
+    try {
+      const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
+      console.log(res.data);
+      setOrgsB([{ value: '', label: '' }, ...res.data]);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const fetchOrgsE = async (sales_company_id, sales_area_id) => {
+    try {
+      const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
+      console.log(res.data);
+      setOrgsE([{ value: '', label: '' }, ...res.data]);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (salesCompanyOrgId) {
+        try {
+          const res = await getOrgsInfos(salesCompanyOrgId);
+
+          setOrgsC([{ value: res.data?.sales_company_id, label: res.data?.sales_company_name }]);
+          if (res.data?.sales_company_id) {
+            await fetchOrgsB(res.data?.sales_company_id);
+          }
+          if (res.data?.sales_company_id) {
+            await fetchOrgsE(res.data?.sales_company_id, res.data?.sales_area_id);
+          }
+
+          formik.setFieldValue('p_application_headers.sales_company_id', res.data?.sales_company_id);
+          formik.setFieldValue('p_application_headers.sales_area_id', res.data?.sales_area_id);
+          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', res.data?.sales_exhibition_hall_id);
+          console.log(res.data);
+        } catch (error) {
+          toast.error(API_500_ERROR);
+        }
+      } else {
+        try {
+          const res = await getOrgsWithCategories('C');
+
+          setOrgsC(res.data);
+          setOrgsB([{ value: '', label: '' }]);
+          setOrgsE([{ value: '', label: '' }]);
+        } catch (error) {
+          toast.error(API_500_ERROR);
+        }
+      }
+    };
+    fetchData();
+  }, [salesCompanyOrgId]);
+
+  // useEffect(() => {
+  //   if (formik.values.p_application_headers.sales_company_id) {
+  //     fetchData();
+  //   }
+  // }, [formik.values.p_application_headers.sales_company_id]);
+
+  const handleChangCompany = async (e) => {
+    const value = e.target.value;
+    if (value === '') {
+      formik.setFieldValue('p_application_headers.sales_area_id', '');
+      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+    } else {
+      const resB = await getChildrenOrgsWithCategory(value, 'B');
+      const resE = await getChildrenOrgsWithCategory(value, 'E');
+      if (!resB.data.find((item) => item?.value === formik.values.p_application_headers.sales_area_id)) {
+        formik.setFieldValue('p_application_headers.sales_area_id', '');
+      }
+      if (!resE.data.find((item) => item?.value === formik.values.p_application_headers.sales_area_id)) {
+        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+      }
+
+      setOrgsB([{ value: '', label: '' }, ...resB.data]);
+      setOrgsE([{ value: '', label: '' }, ...resE.data]);
+    }
+  };
+  const handleChangArea = async (e) => {
+    const value = e.target.value;
+    const resE = await getChildrenOrgsWithCategory(value, 'E');
+    if (!resE.data.find((item) => item?.value === formik.values.p_application_headers.sales_area_id)) {
+      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+    }
+    setOrgsE([{ value: '', label: '' }, ...resE.data]);
+  };
 
   const sendedFile = useCallback(async () => {
     if (agentSended) {
@@ -142,50 +240,26 @@ export const ApStep12Page = () => {
       navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
-  const getOrgs = useCallback(async () => {
-    try {
-      const res = await apGetSalesCompanyOrgs(salesCompanyOrgId);
 
-      const tempOrgs = res.data.map((item) => ({
-        value: item.id,
-        pid: item.pid,
-        label: item.name,
-        category: item.category,
-      }));
-      setOrgs(tempOrgs);
-      if (salesCompanyOrgId) {
-        formik.setFieldValue(
-          'p_application_headers.sales_company_id',
-          tempOrgs.find((item) => item.category === 'C').value
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [salesCompanyOrgId]);
+  // const salesCompanyOptions = useMemo(() => {
+  //   return orgs.filter((item) => item.category === 'C');
+  // }, [orgs]);
 
-  useEffect(() => {
-    getOrgs();
-  }, []);
+  // const salesAreaOptions = useMemo(() => {
+  //   if (!formik.values.p_application_headers.sales_company_id) return [{ value: '', label: '' }];
+  //   return [{ value: '', label: '' }].concat(
+  //     orgs.filter((item) => item.category === 'B' && item.pid === formik.values.p_application_headers.sales_company_id)
+  //   );
+  // }, [orgs, formik.values.p_application_headers.sales_company_id]);
 
-  const salesCompanyOptions = useMemo(() => {
-    return orgs.filter((item) => item.category === 'C');
-  }, [orgs]);
+  // const exhibitionHallOptions = useMemo(() => {
+  //   if (!formik.values.p_application_headers.sales_area_id) return [{ value: '', label: '' }];
+  //   return [{ value: '', label: '' }].concat(
+  //     orgs.filter((item) => item.category === 'E' && item.pid === formik.values.p_application_headers.sales_area_id)
+  //   );
+  // }, [orgs, formik.values.p_application_headers.sales_area_id]);
 
-  const salesAreaOptions = useMemo(() => {
-    if (!formik.values.p_application_headers.sales_company_id) return [{ value: '', label: '' }];
-    return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === 'B' && item.pid === formik.values.p_application_headers.sales_company_id)
-    );
-  }, [orgs, formik.values.p_application_headers.sales_company_id]);
-
-  const exhibitionHallOptions = useMemo(() => {
-    if (!formik.values.p_application_headers.sales_area_id) return [{ value: '', label: '' }];
-    return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === 'E' && item.pid === formik.values.p_application_headers.sales_area_id)
-    );
-  }, [orgs, formik.values.p_application_headers.sales_area_id]);
-
+  console.log(orgsB);
   return (
     <FormikProvider value={formik}>
       <ApLayout
@@ -265,88 +339,86 @@ export const ApStep12Page = () => {
                 </Stack>
               </Stack>
             )}
-            {formik.values.p_application_headers.vendor_business_card === '0' && orgs.length > 0 && (
-              <Stack
-                sx={{
-                  mt: 3,
-                  borderRadius: 2,
-                  border: (theme) => `1px solid ${theme.palette.primary.main}`,
-                  bgcolor: 'primary.main',
-                  boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
-                }}
-              >
-                <Stack sx={{ px: 4, py: 1 }}>
-                  <Typography variant="form_item_label" color="white">
-                    担当者情報
-                  </Typography>
-                </Stack>
+            {formik.values.p_application_headers.vendor_business_card === '0' &&
+              orgsC.length > 0 &&
+              orgsB.length > 0 &&
+              orgsE.length > 0 && (
                 <Stack
                   sx={{
-                    bgcolor: 'white',
-                    borderRadius: '7px',
+                    mt: 3,
+                    borderRadius: 2,
+                    border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                    bgcolor: 'primary.main',
+                    boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.05)',
                   }}
                 >
-                  <ApItemGroup
-                    label={
-                      <Typography variant="form_item_label" color={'text.main'}>
-                        提携先企業
-                        <Typography variant="note" color={'text.main'}>
-                          （不動産会社・住宅メーカー等）
-                        </Typography>
-                      </Typography>
-                    }
-                    pb={3}
-                    px={2}
+                  <Stack sx={{ px: 4, py: 1 }}>
+                    <Typography variant="form_item_label" color="white">
+                      担当者情報
+                    </Typography>
+                  </Stack>
+                  <Stack
+                    sx={{
+                      bgcolor: 'white',
+                      borderRadius: '7px',
+                    }}
                   >
-                    <ApSelectField
-                      name="p_application_headers.sales_company_id"
-                      placeholder={'選択してください'}
-                      width={1}
-                      justifyContent={'start'}
-                      options={salesCompanyOptions}
-                      onChange={(e) => {
-                        formik.setFieldValue('p_application_headers.sales_area_id', '');
-                        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-                      }}
-                    />
-                  </ApItemGroup>
-                  <ApItemGroup label={'エリア'} pb={3} px={2}>
-                    <ApSelectField
-                      name="p_application_headers.sales_area_id"
-                      placeholder={'選択してください'}
-                      width={1}
-                      justifyContent={'start'}
-                      options={salesAreaOptions}
-                      onChange={(e) => {
-                        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-                      }}
-                    />
-                  </ApItemGroup>
-                  <ApItemGroup label={'展示場'} pb={3} px={2}>
-                    <ApSelectField
-                      name="p_application_headers.sales_exhibition_hall_id"
-                      placeholder={'選択してください'}
-                      width={1}
-                      justifyContent={'start'}
-                      options={exhibitionHallOptions}
-                    />
-                  </ApItemGroup>
-                  <ApItemGroup label={'担当者名'} pb={3} px={2}>
-                    <ApTextInputField
-                      name="p_application_headers.vendor_name"
-                      placeholder={'例：○○さん'}
-                      convertFullWidth
-                    />
-                  </ApItemGroup>
-                  <ApItemGroup label={'携帯電話番号'} pb={3} px={2}>
-                    <Stack spacing={'6px'}>
-                      <ApPhoneInputField name="p_application_headers.vendor_phone" />
-                      <ApStarHelp label={'半角数字でご入力ください。'} />
-                    </Stack>
-                  </ApItemGroup>
+                    <ApItemGroup
+                      label={
+                        <Typography variant="form_item_label" color={'text.main'}>
+                          提携先企業
+                          <Typography variant="note" color={'text.main'}>
+                            （不動産会社・住宅メーカー等）
+                          </Typography>
+                        </Typography>
+                      }
+                      pb={3}
+                      px={2}
+                    >
+                      <ApSelectField
+                        name="p_application_headers.sales_company_id"
+                        placeholder={'選択してください'}
+                        width={1}
+                        justifyContent={'start'}
+                        options={orgsC}
+                        onChange={handleChangCompany}
+                      />
+                    </ApItemGroup>
+                    <ApItemGroup label={'エリア'} pb={3} px={2}>
+                      <ApSelectField
+                        name="p_application_headers.sales_area_id"
+                        placeholder={'選択してください'}
+                        width={1}
+                        justifyContent={'start'}
+                        options={orgsB}
+                        onChange={handleChangArea}
+                      />
+                    </ApItemGroup>
+                    <ApItemGroup label={'展示場'} pb={3} px={2}>
+                      <ApSelectField
+                        name="p_application_headers.sales_exhibition_hall_id"
+                        placeholder={'選択してください'}
+                        width={1}
+                        justifyContent={'start'}
+                        options={orgsE}
+                      />
+                    </ApItemGroup>
+                    <ApItemGroup label={'担当者名'} pb={3} px={2}>
+                      <ApTextInputField
+                        name="p_application_headers.vendor_name"
+                        placeholder={'例：○○さん'}
+                        convertFullWidth
+                      />
+                    </ApItemGroup>
+                    <ApItemGroup label={'携帯電話番号'} pb={3} px={2}>
+                      <Stack spacing={'6px'}>
+                        <ApPhoneInputField name="p_application_headers.vendor_phone" />
+                        <ApStarHelp label={'半角数字でご入力ください。'} />
+                      </Stack>
+                    </ApItemGroup>
+                  </Stack>
                 </Stack>
-              </Stack>
-            )}
+              )}
           </Stack>
         </ApItemGroup>
       </ApLayout>
