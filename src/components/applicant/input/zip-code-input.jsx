@@ -6,10 +6,20 @@ import { FormikProvider, useField, useFormik } from 'formik';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { debounce } from 'lodash';
 
-export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...props }) => {
+export const ApZipCodeInputField = ({
+  setPrefectureKanji,
+  setCityKanji,
+  setDistrictKanji,
+  setOtherAddressKanji,
+  setPrefectureKana,
+  setCityKana,
+  setDistrictKana,
+  onChange,
+  ...props
+}) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
-  const oldValue = meta.value;
+  const [oldValue, setOldValue] = useState(meta.value);
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const isSuccess = useMemo(() => !isError && !!meta.value && meta.value !== '', [isError, meta.value]);
   const [addrError, setAddrError] = useState(false);
@@ -109,27 +119,53 @@ export const ApZipCodeInputField = ({ callback, errorCallback, onChange, ...prop
       }
       const newValue = `${refOne.current.value}-${refTwo.current.value}`;
 
-      if (/^\d{3}[-]\d{4}$/.test(newValue) && newValue !== oldValue) {
+      if (/^\d{3}[-]\d{4}$/.test(newValue)) {
+        if (newValue === oldValue) {
+          return;
+        }
         try {
           const res = await axios.get(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${newValue}`);
           if (res.data.results.length > 0) {
-            callback({
-              prefecture_kanji: res.data.results[0].address1,
-              city_kanji: res.data.results[0].address2,
-              district_kanji: res.data.results[0].address3,
-              prefecture_kana: convertToFullWidth(res.data.results[0].kana1),
-              city_kana: convertToFullWidth(res.data.results[0].kana2),
-              district_kana: convertToFullWidth(res.data.results[0].kana3),
-            });
+            setPrefectureKanji && setPrefectureKanji(res.data.results[0].address1, false);
+            setCityKanji && setCityKanji(res.data.results[0].address2, false);
+            setDistrictKanji && setDistrictKanji(res.data.results[0].address3, false);
+            setOtherAddressKanji && setOtherAddressKanji('', false);
+            setPrefectureKana && setPrefectureKana(convertToFullWidth(res.data.results[0].kana1), false);
+            setCityKana && setCityKana(convertToFullWidth(res.data.results[0].kana2), false);
+            setDistrictKana && setDistrictKana(convertToFullWidth(res.data.results[0].kana3), false);
           } else {
             setAddrError(true);
+            setPrefectureKanji && setPrefectureKanji('', false);
+            setCityKanji && setCityKanji('', false);
+            setDistrictKanji && setDistrictKanji('', false);
+            setOtherAddressKanji && setOtherAddressKanji('', false);
+            setPrefectureKana && setPrefectureKana('', false);
+            setCityKana && setCityKana('', false);
+            setDistrictKana && setDistrictKana('', false);
           }
         } catch (error) {
           setAddrError(true);
+          setPrefectureKanji && setPrefectureKanji('', false);
+          setCityKanji && setCityKanji('', false);
+          setDistrictKanji && setDistrictKanji('', false);
+          setOtherAddressKanji && setOtherAddressKanji('', false);
+          setPrefectureKana && setPrefectureKana('', false);
+          setCityKana && setCityKana('', false);
+          setDistrictKana && setDistrictKana('', false);
         }
+      } else {
+        setPrefectureKanji && setPrefectureKanji('', false);
+        setCityKanji && setCityKanji('', false);
+        setDistrictKanji && setDistrictKanji('', false);
+        setOtherAddressKanji && setOtherAddressKanji('', false);
+        setPrefectureKana && setPrefectureKana('', false);
+        setCityKana && setCityKana('', false);
+        setDistrictKana && setDistrictKana('', false);
       }
+
+      setOldValue(newValue);
     },
-    [setValue, setTouched]
+    [setValue, setTouched, meta.value]
   );
 
   const handleFocusInput = useCallback(

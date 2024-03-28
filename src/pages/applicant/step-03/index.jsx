@@ -1,5 +1,5 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { applicationAtom, authAtom } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
@@ -192,6 +192,10 @@ export const ApStep03Page = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -329,21 +333,33 @@ export const ApStep03Page = () => {
           <Stack spacing={4}>
             <ApZipCodeInputField
               name="p_applicant_persons__0.office_postal_code"
-              callback={(addr) => {
-                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kanji', addr.prefecture_kanji);
-                formik.setFieldValue('p_applicant_persons__0.office_city_kanji', addr.city_kanji);
-                formik.setFieldValue('p_applicant_persons__0.office_district_kanji', addr.district_kanji);
-                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', addr.prefecture_kana);
-                formik.setFieldValue('p_applicant_persons__0.office_city_kana', addr.city_kana);
-                formik.setFieldValue('p_applicant_persons__0.office_district_kana', addr.district_kana);
+              setPrefectureKanji={(value, touched) => {
+                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kanji', value);
+                formik.setFieldTouched('p_applicant_persons__0.office_prefecture_kanji', touched);
               }}
-              errorCallback={() => {
-                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kanji', '');
-                formik.setFieldValue('p_applicant_persons__0.office_city_kanji', '');
-                formik.setFieldValue('p_applicant_persons__0.office_district_kanji', '');
-                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', '');
-                formik.setFieldValue('p_applicant_persons__0.office_city_kana', '');
-                formik.setFieldValue('p_applicant_persons__0.office_district_kana', '');
+              setCityKanji={(value, touched) => {
+                formik.setFieldValue('p_applicant_persons__0.office_city_kanji', value);
+                formik.setFieldTouched('p_applicant_persons__0.office_city_kanji', touched);
+              }}
+              setDistrictKanji={(value, touched) => {
+                formik.setFieldValue('p_applicant_persons__0.office_district_kanji', value);
+                formik.setFieldTouched('p_applicant_persons__0.office_district_kanji', touched);
+              }}
+              setOtherAddressKanji={(value, touched) => {
+                formik.setFieldValue('p_applicant_persons__0.office_other_address_kanji', value);
+                formik.setFieldTouched('p_applicant_persons__0.office_other_address_kanji', touched);
+              }}
+              setPrefectureKana={(value, touched) => {
+                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', value);
+                formik.setFieldTouched('p_applicant_persons__0.office_prefecture_kana', touched);
+              }}
+              setCityKana={(value, touched) => {
+                formik.setFieldValue('p_applicant_persons__0.office_city_kana', value);
+                formik.setFieldTouched('p_applicant_persons__0.office_city_kana', touched);
+              }}
+              setDistrictKana={(value, touched) => {
+                formik.setFieldValue('p_applicant_persons__0.office_district_kana', value);
+                formik.setFieldTouched('p_applicant_persons__0.office_district_kana', touched);
               }}
             />
             <ApSelectField
@@ -582,21 +598,21 @@ export const ApStep03Page = () => {
                     <Stack spacing={4}>
                       <ApZipCodeInputField
                         name="p_applicant_persons__0.transfer_office_postal_code"
-                        callback={(addr) => {
-                          formik.setFieldValue(
-                            'p_applicant_persons__0.transfer_office_prefecture_kanji',
-                            addr.prefecture_kanji
-                          );
-                          formik.setFieldValue('p_applicant_persons__0.transfer_office_city_kanji', addr.city_kanji);
-                          formik.setFieldValue(
-                            'p_applicant_persons__0.transfer_office_district_kanji',
-                            addr.district_kanji
-                          );
+                        setPrefectureKanji={(value, touched) => {
+                          formik.setFieldValue('p_applicant_persons__0.transfer_office_prefecture_kanji', value);
+                          formik.setFieldTouched('p_applicant_persons__0.transfer_office_prefecture_kanji', touched);
                         }}
-                        errorCallback={() => {
-                          formik.setFieldValue('p_applicant_persons__0.transfer_office_prefecture_kanji', '');
-                          formik.setFieldValue('p_applicant_persons__0.transfer_office_city_kanji', '');
-                          formik.setFieldValue('p_applicant_persons__0.transfer_office_district_kanji', '');
+                        setCityKanji={(value, touched) => {
+                          formik.setFieldValue('p_applicant_persons__0.transfer_office_city_kanji', value);
+                          formik.setFieldTouched('p_applicant_persons__0.transfer_office_city_kanji', touched);
+                        }}
+                        setDistrictKanji={(value, touched) => {
+                          formik.setFieldValue('p_applicant_persons__0.transfer_office_district_kanji', value);
+                          formik.setFieldTouched('p_applicant_persons__0.transfer_office_district_kanji', touched);
+                        }}
+                        setOtherAddressKanji={(value, touched) => {
+                          formik.setFieldValue('p_applicant_persons__0.transfer_office_other_address_kanji', value);
+                          formik.setFieldTouched('p_applicant_persons__0.transfer_office_other_address_kanji', touched);
                         }}
                       />
                       <ApSelectField

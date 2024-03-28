@@ -953,21 +953,33 @@ export const ApStep07Page = () => {
                       />
                       <ApZipCodeInputField
                         name="p_residents[0].postal_code"
-                        callback={(addr) => {
-                          formik.setFieldValue('p_residents[0].prefecture_kanji', addr.prefecture_kanji);
-                          formik.setFieldValue('p_residents[0].city_kanji', addr.city_kanji);
-                          formik.setFieldValue('p_residents[0].district_kanji', addr.district_kanji);
-                          formik.setFieldValue('p_residents[0].prefecture_kana', addr.prefecture_kana);
-                          formik.setFieldValue('p_residents[0].city_kana', addr.city_kana);
-                          formik.setFieldValue('p_residents[0].district_kana', addr.district_kana);
+                        setPrefectureKanji={(value, touched) => {
+                          formik.setFieldValue('p_residents[0].prefecture_kanji', value);
+                          formik.setFieldTouched('p_residents[0].prefecture_kanji', touched);
                         }}
-                        errorCallback={() => {
-                          formik.setFieldValue('p_residents[0].prefecture_kanji', '');
-                          formik.setFieldValue('p_residents[0].city_kanji', '');
-                          formik.setFieldValue('p_residents[0].district_kanji', '');
-                          formik.setFieldValue('p_residents[0].prefecture_kana', '');
-                          formik.setFieldValue('p_residents[0].city_kana', '');
-                          formik.setFieldValue('p_residents[0].district_kana', '');
+                        setCityKanji={(value, touched) => {
+                          formik.setFieldValue('p_residents[0].city_kanji', value);
+                          formik.setFieldTouched('p_residents[0].city_kanji', touched);
+                        }}
+                        setDistrictKanji={(value, touched) => {
+                          formik.setFieldValue('p_residents[0].district_kanji', value);
+                          formik.setFieldTouched('p_residents[0].district_kanji', touched);
+                        }}
+                        setOtherAddressKanji={(value, touched) => {
+                          formik.setFieldValue('p_residents[0].other_address_kanji', value);
+                          formik.setFieldTouched('p_residents[0].other_address_kanji', touched);
+                        }}
+                        setPrefectureKana={(value, touched) => {
+                          formik.setFieldValue('p_residents[0].prefecture_kana', value);
+                          formik.setFieldTouched('p_residents[0].prefecture_kana', touched);
+                        }}
+                        setCityKana={(value, touched) => {
+                          formik.setFieldValue('p_residents[0].city_kana', value);
+                          formik.setFieldTouched('p_residents[0].city_kana', touched);
+                        }}
+                        setDistrictKana={(value, touched) => {
+                          formik.setFieldValue('p_residents[0].district_kana', value);
+                          formik.setFieldTouched('p_residents[0].district_kana', touched);
                         }}
                       />
                       <ApSelectField

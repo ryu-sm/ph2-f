@@ -358,13 +358,33 @@ export const Item04 = () => {
                     isEditable ? (
                       <AdZipCodeInput
                         name={`p_join_guarantors[${index}].postal_code`}
-                        callback={(values) => {
-                          formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kanji`, values.prefecture_kanji);
-                          formik.setFieldValue(`p_join_guarantors[${index}].city_kanji`, values.city_kanji);
-                          formik.setFieldValue(`p_join_guarantors[${index}].district_kanji`, values.district_kanji);
-                          formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kana`, values.prefecture_kana);
-                          formik.setFieldValue(`p_join_guarantors[${index}].city_kana`, values.city_kana);
-                          formik.setFieldValue(`p_join_guarantors[${index}].district_kana`, values.district_kana);
+                        setPrefectureKanji={(value, touched) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kanji`, value);
+                          formik.setFieldTouched('p_join_guarantors[${index}].prefecture_kanji', touched);
+                        }}
+                        setCityKanji={(value, touched) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].city_kanji`, value);
+                          formik.setFieldTouched(`p_join_guarantors[${index}].city_kanji`, touched);
+                        }}
+                        setDistrictKanji={(value, touched) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].district_kanji`, value);
+                          formik.setFieldTouched(`p_join_guarantors[${index}].district_kanji`, touched);
+                        }}
+                        setOtherAddressKanji={(value, touched) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].other_address_kanji`, value);
+                          formik.setFieldTouched(`p_join_guarantors[${index}].other_address_kanji`, touched);
+                        }}
+                        setPrefectureKana={(value, touched) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kana`, value);
+                          formik.setFieldTouched(`p_join_guarantors[${index}].prefecture_kana`, touched);
+                        }}
+                        setCityKana={(value, touched) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].city_kana`, value);
+                          formik.setFieldTouched(`p_join_guarantors[${index}].city_kana`, touched);
+                        }}
+                        setDistrictKana={(value, touched) => {
+                          formik.setFieldValue(`p_join_guarantors[${index}].district_kana`, value);
+                          formik.setFieldTouched(`p_join_guarantors[${index}].district_kana`, touched);
                         }}
                       />
                     ) : (

@@ -834,7 +834,37 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdZipCodeInput name={`p_residents[${index}].postal_code`} />
+                              <AdZipCodeInput
+                                name={`p_residents[${index}].postal_code`}
+                                setPrefectureKanji={(value, touched) => {
+                                  formik.setFieldValue(`p_residents[${index}].prefecture_kanji`, value);
+                                  formik.setFieldTouched(`p_residents[${index}].prefecture_kanji`, touched);
+                                }}
+                                setCityKanji={(value, touched) => {
+                                  formik.setFieldValue(`p_residents[${index}].city_kanji`, value);
+                                  formik.setFieldTouched(`p_residents[${index}].city_kanji`, touched);
+                                }}
+                                setDistrictKanji={(value, touched) => {
+                                  formik.setFieldValue(`p_residents[${index}].district_kanji`, value);
+                                  formik.setFieldTouched(`p_residents[${index}].district_kanji`, touched);
+                                }}
+                                setOtherAddressKanji={(value, touched) => {
+                                  formik.setFieldValue(`p_residents[${index}].other_address_kanji`, value);
+                                  formik.setFieldTouched(`p_residents[${index}].other_address_kanji`, touched);
+                                }}
+                                setPrefectureKana={(value, touched) => {
+                                  formik.setFieldValue(`p_residents[${index}].prefecture_kana`, value);
+                                  formik.setFieldTouched(`p_residents[${index}].prefecture_kana`, touched);
+                                }}
+                                setCityKana={(value, touched) => {
+                                  formik.setFieldValue(`p_residents[${index}].city_kana`, value);
+                                  formik.setFieldTouched(`p_residents[${index}].city_kana`, touched);
+                                }}
+                                setDistrictKana={(value, touched) => {
+                                  formik.setFieldValue(`p_residents[${index}].district_kana`, value);
+                                  formik.setFieldTouched(`p_residents[${index}].district_kana`, touched);
+                                }}
+                              />
                             ) : (
                               item.postal_code
                             )
@@ -874,7 +904,7 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditFullWidthInput name={`p_residents[${index}].city_kanji`} />
+                              <AdEditFullWidthInput name={`p_residents[${index}].city_kanji`} convertFullWidth />
                             ) : (
                               item.city_kanji
                             )
@@ -891,7 +921,7 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditFullWidthInput name={`p_residents[${index}].district_kanji`} />
+                              <AdEditFullWidthInput name={`p_residents[${index}].district_kanji`} convertFullWidth />
                             ) : (
                               item.district_kanji
                             )
@@ -909,7 +939,10 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditFullWidthInput name={`p_residents[${index}].other_address_kanji`} />
+                              <AdEditFullWidthInput
+                                name={`p_residents[${index}].other_address_kanji`}
+                                convertFullWidth
+                              />
                             ) : (
                               item.other_address_kanji
                             )
