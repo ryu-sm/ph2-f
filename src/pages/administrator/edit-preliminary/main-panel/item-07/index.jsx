@@ -3,7 +3,7 @@ import { FormikProvider, useFormik } from 'formik';
 
 import { formatMoney } from '@/utils';
 import { useEffect } from 'react';
-import { AdEditFullWidthInput, AdEditInput, AdNumericInput } from '@/components/administrator';
+import { AdEditFullWidthInput, AdNumericInput } from '@/components/administrator';
 import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
@@ -56,7 +56,10 @@ export const Item07 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab07Schema,
-    validateOnMount: true,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      await handleSave(setUpdateData(values));
+    },
   });
 
   useEffect(() => {
@@ -166,7 +169,7 @@ export const Item07 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         {p_application_headers.loan_target === '6' && (
           <EditRow
             label={'土地'}
@@ -182,7 +185,6 @@ export const Item07 = () => {
                 formatMoney(formik.values.p_application_headers.required_funds_land_amount)
               )
             }
-            error={formik.errors?.p_application_headers?.required_funds_land_amount}
           />
         )}
         {['1', '2', '3', '4', '5', '6'].includes(p_application_headers.loan_target) && (
@@ -200,7 +202,6 @@ export const Item07 = () => {
                 formatMoney(formik.values.p_application_headers.required_funds_house_amount)
               )
             }
-            error={formik.errors?.p_application_headers?.required_funds_house_amount}
           />
         )}
         {['5', '6'].includes(p_application_headers.loan_target) && (
@@ -222,7 +223,6 @@ export const Item07 = () => {
                 formatMoney(formik.values.p_application_headers.required_funds_accessory_amount)
               )
             }
-            error={formik.errors?.p_application_headers?.required_funds_accessory_amount}
           />
         )}
         {p_application_headers.loan_target === '8' && (
@@ -244,7 +244,6 @@ export const Item07 = () => {
                 formatMoney(formik.values.p_application_headers.required_funds_upgrade_amount)
               )
             }
-            error={formik.errors?.p_application_headers?.required_funds_upgrade_amount}
           />
         )}
         {['7', '8'].includes(p_application_headers.loan_target) && (
@@ -266,7 +265,6 @@ export const Item07 = () => {
                 formatMoney(formik.values.p_application_headers.required_funds_refinance_loan_balance)
               )
             }
-            error={formik.errors?.p_application_headers?.required_funds_refinance_loan_balance}
           />
         )}
         <EditRow
@@ -288,7 +286,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.required_funds_additional_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.required_funds_additional_amount}
         />
         {p_application_headers.loan_plus === '1' && (
           <EditRow
@@ -309,7 +306,6 @@ export const Item07 = () => {
                 formatMoney(formik.values.p_application_headers.required_funds_loan_plus_amount)
               )
             }
-            error={formik.errors?.p_application_headers?.required_funds_loan_plus_amount}
           />
         )}
         <EditRow
@@ -327,7 +323,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.property_land_price)
             )
           }
-          error={formik.errors?.p_application_headers?.property_land_price}
         />
         <EditRow
           label={'建物価格'}
@@ -344,7 +339,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.property_building_price)
             )
           }
-          error={formik.errors?.p_application_headers?.property_building_price}
         />
         <EditRow
           label={'合計価格'}
@@ -361,7 +355,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.property_total_price)
             )
           }
-          error={formik.errors?.p_application_headers?.property_total_price}
         />
 
         <EditRow
@@ -372,7 +365,6 @@ export const Item07 = () => {
             unit: '万円',
           }}
           field={formatMoney(formik.values.p_application_headers.required_funds_total_amount)}
-          error={formik.errors?.p_application_headers?.required_funds_total_amount}
         />
 
         <EditRow
@@ -389,7 +381,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_saving_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_saving_amount}
         />
         <EditRow
           label={'不動産売却代金'}
@@ -405,7 +396,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_estate_sale_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_estate_sale_amount}
         />
         <EditRow
           label={'有価証券売却など'}
@@ -421,7 +411,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_other_saving_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_other_saving_amount}
         />
 
         <EditRow
@@ -434,7 +423,6 @@ export const Item07 = () => {
           isRequired
           isAddendum
           field={formatMoney(formik.values.p_application_headers.funding_self_amount)}
-          error={formik.errors?.p_application_headers?.funding_self_amount}
         />
         <EditRow
           label={'その他の借り入れ'}
@@ -452,7 +440,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_other_loan_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_other_loan_amount}
         />
         <EditRow
           label={'親族からの贈与'}
@@ -473,7 +460,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_relative_donation_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_relative_donation_amount}
         />
         <EditRow
           label={'本件ローン'}
@@ -489,7 +475,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_loan_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_loan_amount}
         />
         {p_application_headers.loan_type === '2' && (
           <EditRow
@@ -506,7 +491,6 @@ export const Item07 = () => {
                 formatMoney(formik.values.p_application_headers.funding_pair_loan_amount)
               )
             }
-            error={formik.errors?.p_application_headers?.funding_pair_loan_amount}
           />
         )}
         <EditRow
@@ -523,7 +507,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_other_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_other_amount}
         />
 
         {!!formik.values.p_application_headers.funding_other_amount && (
@@ -536,7 +519,6 @@ export const Item07 = () => {
                 formik.values.p_application_headers.funding_other_amount_detail
               )
             }
-            error={formik.errors?.p_application_headers?.funding_other_amount_detail}
           />
         )}
 
@@ -555,7 +537,6 @@ export const Item07 = () => {
               formatMoney(formik.values.p_application_headers.funding_other_refinance_amount)
             )
           }
-          error={formik.errors?.p_application_headers?.funding_other_refinance_amount}
         />
         <EditRow
           label={'調達資金　合計'}
@@ -565,7 +546,6 @@ export const Item07 = () => {
             unit: '万円',
           }}
           field={formatMoney(formik.values.p_application_headers.funding_total_amount)}
-          error={formik.errors?.p_application_headers?.funding_total_amount}
         />
       </ContentEditGroup>
     </FormikProvider>

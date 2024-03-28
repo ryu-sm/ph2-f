@@ -23,21 +23,24 @@ export const DayPicker = ({ content, maxDate, minDate, isBirthday, ...props }) =
   const handlePopoverOpen = (e) => setAnchorEl(e.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
 
-  const [currentYear, setCurrentYear] = useState(dayjs(meta.value).year());
+  const [currentYear, setCurrentYear] = useState(
+    meta.value ? dayjs(meta.value).year() : minDate ? minDate.format('YYYY') : dayjs().format('YYYY')
+  );
   const [holidays, setHolidays] = useState([]);
-
+  console.log(currentYear);
   const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
 
   useEffect(() => {
     const fetchHolidays = async () => {
       const res = await apGetPublicHolidays(currentYear);
+      console.log(res.data);
       const temp = localStorage.getItem('publicHolidays');
       if (!!temp) {
         localStorage.setItem('publicHolidays', JSON.stringify({ ...JSON.parse(temp), [currentYear]: res.data }));
       } else {
         localStorage.setItem('publicHolidays', JSON.stringify({ [currentYear]: res.data }));
       }
-      res.data && setHolidays(res.data);
+      setHolidays(res.data);
     };
     try {
       if (currentYear) fetchHolidays();
@@ -154,101 +157,110 @@ export const DayPicker = ({ content, maxDate, minDate, isBirthday, ...props }) =
   };
 
   return (
-    <Stack direction={'row'} alignItems={'center'} spacing={'10px'}>
-      <Button
-        sx={{
-          width: open ? 150 : 20,
-          height: 20,
-          minWidth: 0,
-          padding: 0,
-          boxShadow: 'none',
-          border: (theme) => `1px solid ${theme.palette.gray[80]}`,
-          bgcolor: 'white',
-          color: 'gray.80',
-          '&:hover': {
-            backgroundColor: 'white',
-          },
-        }}
-        onClick={(e) => {
-          handlePopoverOpen(e);
-          updatePopoverPosition(e);
-        }}
-      >
-        <AdArrowDown sx={{ width: 8, height: 8, color: 'gray.80' }} />
-      </Button>
-      <Typography variant="edit_content">{formatJapanDate(meta.value, true)}</Typography>
-
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={anchorOrigin}
-        transformOrigin={transformOrigin}
-        onClose={handlePopoverClose}
-        sx={{
-          top: 0,
-          left: 0,
-          '.MuiPopover-paper': {
-            overflow: 'visible',
-            boxShadow: 'none',
-            borderRadius: '2px',
-          },
-        }}
-      >
-        <Stack
+    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} flex={1} spacing={2}>
+      <Stack direction={'row'} alignItems={'center'} spacing={'10px'}>
+        <Button
           sx={{
-            width: 150,
-            overflow: 'hidden',
-            borderRadius: '2px',
+            width: open ? 150 : 20,
+            height: 20,
+            minWidth: 0,
+            padding: 0,
+            boxShadow: 'none',
             border: (theme) => `1px solid ${theme.palette.gray[80]}`,
+            bgcolor: 'white',
+            color: 'gray.80',
+            '&:hover': {
+              backgroundColor: 'white',
+            },
+          }}
+          onClick={(e) => {
+            handlePopoverOpen(e);
+            updatePopoverPosition(e);
+          }}
+        >
+          <AdArrowDown sx={{ width: 8, height: 8, color: 'gray.80' }} />
+        </Button>
+        <Typography variant="edit_content">{formatJapanDate(meta.value, true)}</Typography>
+
+        <Popover
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={anchorOrigin}
+          transformOrigin={transformOrigin}
+          onClose={handlePopoverClose}
+          sx={{
+            top: 0,
+            left: 0,
+            '.MuiPopover-paper': {
+              overflow: 'visible',
+              boxShadow: 'none',
+              borderRadius: '2px',
+            },
           }}
         >
           <Stack
-            direction={'row'}
-            alignItems={'center'}
-            justifyContent={'flex-end'}
             sx={{
-              px: 2,
-              width: 1,
-              height: 20,
-              bgcolor: 'white',
-              cursor: 'pointer',
-              borderBottom: (theme) => `1px solid ${theme.palette.gray[80]}`,
+              width: 150,
+              overflow: 'hidden',
+              borderRadius: '2px',
+              border: (theme) => `1px solid ${theme.palette.gray[80]}`,
             }}
-            onClick={handlePopoverClose}
           >
-            <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80' }} />
-          </Stack>
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              justifyContent={'flex-end'}
+              sx={{
+                px: 2,
+                width: 1,
+                height: 20,
+                bgcolor: 'white',
+                cursor: 'pointer',
+                borderBottom: (theme) => `1px solid ${theme.palette.gray[80]}`,
+              }}
+              onClick={handlePopoverClose}
+            >
+              <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80' }} />
+            </Stack>
 
-          <Stack
-            sx={{
-              px: 1,
-              '& > div > div, & > div > div > div, & .MuiPickersLayout-root': {
-                width: '100%',
-                minWidth: '100%',
-              },
-            }}
-          >
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ja">
-              <StaticDatePicker
-                name={field.name}
-                sx={{ ...dayPickerStyles }}
-                maxDate={maxDate}
-                minDate={minDate}
-                displayStaticWrapperAs="desktop"
-                ToolbarComponent={() => null}
-                value={dayjs(meta.value)}
-                slots={{
-                  day: CustomizeRenderDay,
-                }}
-                onChange={handleChange}
-                onYearChange={(date) => {
-                  setCurrentYear(date.year());
-                }}
-              />
-            </LocalizationProvider>
+            <Stack
+              sx={{
+                px: 1,
+                '& > div > div, & > div > div > div, & .MuiPickersLayout-root': {
+                  width: '100%',
+                  minWidth: '100%',
+                },
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ja">
+                <StaticDatePicker
+                  name={field.name}
+                  sx={{ ...dayPickerStyles }}
+                  maxDate={maxDate}
+                  minDate={minDate}
+                  displayStaticWrapperAs="desktop"
+                  ToolbarComponent={() => null}
+                  value={dayjs(meta.value)}
+                  slots={{
+                    day: CustomizeRenderDay,
+                  }}
+                  onChange={handleChange}
+                  onYearChange={(date) => {
+                    setCurrentYear(date.year());
+                  }}
+                />
+              </LocalizationProvider>
+            </Stack>
           </Stack>
+        </Popover>
+      </Stack>
+      {meta.error && (
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+          <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
+            {meta.error}
+          </Typography>
         </Stack>
-      </Popover>
+      )}
     </Stack>
   );
 };

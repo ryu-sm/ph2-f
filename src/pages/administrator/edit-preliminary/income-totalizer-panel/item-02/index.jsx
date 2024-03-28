@@ -63,9 +63,14 @@ export const Item02 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab02SchemaI,
-    validateOnMount: true,
-    onSubmit: (values) => {
-      setInfoGroupTab(3);
+    validateOnMount: changeToIncomeTotalizer,
+    enableReinitialize: !changeToIncomeTotalizer,
+    onSubmit: async (values) => {
+      if (changeToIncomeTotalizer) {
+        setInfoGroupTab(3);
+      } else {
+        handleSave(setUpdateData(values));
+      }
     },
   });
 
@@ -83,7 +88,7 @@ export const Item02 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'お名前（姓）'}
           upConfig={{
@@ -97,7 +102,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.last_name_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.last_name_kanji}
         />
         <EditRow
           label={'お名前（名）'}
@@ -112,7 +116,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.first_name_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.first_name_kanji}
         />
         <EditRow
           label={'お名前（姓）（フリガナ）'}
@@ -127,7 +130,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.last_name_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.last_name_kana}
         />
         <EditRow
           label={'お名前（名）（フリガナ）'}
@@ -142,7 +144,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.first_name_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.first_name_kana}
         />
         <EditRow
           label={'性別'}
@@ -159,7 +160,6 @@ export const Item02 = () => {
               genderOptions.find((item) => item.value === formik.values.p_applicant_persons__1.gender)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.gender}
         />
         <EditRow
           label={'生年月日'}
@@ -180,7 +180,6 @@ export const Item02 = () => {
               formatJapanDate(formik.values.p_applicant_persons__1.birthday, true)
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.birthday}
         />
         <EditRow
           label={'現在の国籍'}
@@ -196,7 +195,6 @@ export const Item02 = () => {
               nationalityOptions.find((item) => item.value === formik.values.p_applicant_persons__1.nationality)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.nationality}
         />
         <EditRow
           label={'電話番号携帯'}
@@ -211,7 +209,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.mobile_phone
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.mobile_phone}
         />
         <EditRow
           label={'電話番号自宅'}
@@ -226,7 +223,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.home_phone
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.home_phone}
         />
         <EditRow
           label={'緊急連絡先'}
@@ -241,7 +237,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.emergency_contact
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.emergency_contact}
         />
         <EditRow
           label={'郵便番号'}
@@ -286,7 +281,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.postal_code
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.postal_code}
         />
         <EditRow
           label={'都道府県'}
@@ -302,7 +296,6 @@ export const Item02 = () => {
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__1.prefecture_kanji)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.prefecture_kanji}
         />
         <EditRow
           label={'市区郡'}
@@ -317,7 +310,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.city_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.city_kanji}
         />
         <EditRow
           label={'町村丁目'}
@@ -332,7 +324,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.district_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.district_kanji}
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号'}
@@ -347,7 +338,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.other_address_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.other_address_kanji}
         />
         <EditRow
           label={'都道府県（フリガナ）'}
@@ -363,7 +353,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.prefecture_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.prefecture_kana}
         />
         <EditRow
           label={'市区郡（フリガナ）'}
@@ -379,7 +368,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.city_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.city_kana}
         />
         <EditRow
           label={'町村丁目（フリガナ）'}
@@ -395,7 +383,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.district_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.district_kana}
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号（フリガナ）'}
@@ -411,7 +398,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.other_address_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.other_address_kana}
         />
         <EditRow
           label={'ご連絡先用メールアドレス'}
@@ -426,7 +412,6 @@ export const Item02 = () => {
               formik.values.p_applicant_persons__1.email
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.email}
         />
       </ContentEditGroup>
     </FormikProvider>

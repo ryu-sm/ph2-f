@@ -86,13 +86,13 @@ export const Item04 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab04Schema,
-    validateOnMount: true,
-    onSubmit: (values) => {
+    enableReinitialize: true,
+    onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
         setMainTabStatus(2);
         setInfoGroupTab(2);
       } else {
-        handleSave(setUpdateData(values));
+        await handleSave(setUpdateData(values));
       }
     },
   });
@@ -125,13 +125,7 @@ export const Item04 = () => {
                 label={'担保提供者'}
                 subLabel={`（${index + 1}人目）`}
                 handleDeleteItem={() => arrayHelpers.remove(index)}
-                handleSave={() => {
-                  if (changeJoinGuarantor) {
-                    formik.handleSubmit();
-                  } else {
-                    handleSave(setUpdateData(formik.values));
-                  }
-                }}
+                handleSave={formik.handleSubmit}
               >
                 <EditRow
                   label={'担保提供者の氏名（姓）'}
@@ -145,10 +139,6 @@ export const Item04 = () => {
                     ) : (
                       item.last_name_kanji
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.last_name_kanji
                   }
                 />
                 <EditRow
@@ -164,10 +154,6 @@ export const Item04 = () => {
                       item.first_name_kanji
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.first_name_kanji
-                  }
                 />
                 <EditRow
                   label={'担保提供者の氏名（姓）（フリガナ）'}
@@ -181,10 +167,6 @@ export const Item04 = () => {
                     ) : (
                       item.last_name_kana
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.last_name_kana
                   }
                 />
                 <EditRow
@@ -200,10 +182,6 @@ export const Item04 = () => {
                       item.first_name_kana
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.first_name_kana
-                  }
                 />
                 <EditRow
                   label={'性別'}
@@ -214,13 +192,10 @@ export const Item04 = () => {
                   hasPleft={isEditable}
                   field={
                     isEditable ? (
-                      <AdSelectRadios name={`p_join_guarantors[${index}].gender`} options={genderOptions} />
+                      <AdSelectRadios name={`p_join_guarantors[${index}].gender`} options={genderOptions} cancelable />
                     ) : (
                       genderOptions.find((item) => item.value === item.gender)?.label
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index && formik.errors?.p_join_guarantors[index]?.gender
                   }
                 />
                 <EditRow
@@ -266,10 +241,6 @@ export const Item04 = () => {
                       relToApplicantAOptions.find((item) => item.value === item.rel_to_applicant_a)?.label
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.rel_to_applicant_a_name
-                  }
                 />
                 <EditRow
                   label={'生年月日'}
@@ -290,10 +261,6 @@ export const Item04 = () => {
                       formatJapanDate(item.birthday, true)
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.birthday
-                  }
                 />
                 <EditRow
                   label={'電話番号携帯'}
@@ -307,10 +274,6 @@ export const Item04 = () => {
                     ) : (
                       item.mobile_phone
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.mobile_phone
                   }
                 />
                 <EditRow
@@ -326,10 +289,6 @@ export const Item04 = () => {
                       item.home_phone
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.home_phone
-                  }
                 />
                 <EditRow
                   label={'緊急連絡先'}
@@ -343,10 +302,6 @@ export const Item04 = () => {
                     ) : (
                       item.emergency_contact
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.emergency_contact
                   }
                 />
                 <EditRow
@@ -391,10 +346,6 @@ export const Item04 = () => {
                       item.postal_code
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.postal_code
-                  }
                 />
                 <EditRow
                   label={'都道府県'}
@@ -410,10 +361,6 @@ export const Item04 = () => {
                       PREFECTURES.find((item) => item.value === item.prefecture_kanji)?.label
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.prefecture_kanji
-                  }
                 />
                 <EditRow
                   label={'市区郡'}
@@ -427,10 +374,6 @@ export const Item04 = () => {
                     ) : (
                       item.city_kanji
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.city_kanji
                   }
                 />
                 <EditRow
@@ -446,10 +389,6 @@ export const Item04 = () => {
                       item.district_kanji
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.district_kanji
-                  }
                 />
                 <EditRow
                   label={'丁目以下・建物名・部屋番号'}
@@ -463,10 +402,6 @@ export const Item04 = () => {
                     ) : (
                       item.other_address_kanji
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.other_address_kanji
                   }
                 />
                 <EditRow
@@ -482,10 +417,6 @@ export const Item04 = () => {
                       item.prefecture_kana
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.prefecture_kana
-                  }
                 />
                 <EditRow
                   label={'市区郡（フリガナ）'}
@@ -499,10 +430,6 @@ export const Item04 = () => {
                     ) : (
                       item.city_kana
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.city_kana
                   }
                 />
                 <EditRow
@@ -518,10 +445,6 @@ export const Item04 = () => {
                       item.district_kana
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.district_kana
-                  }
                 />
                 <EditRow
                   label={'丁目以下・建物名・部屋番号（フリガナ）'}
@@ -536,10 +459,6 @@ export const Item04 = () => {
                       item.other_address_kana
                     )
                   }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index &&
-                    formik.errors?.p_join_guarantors[index]?.other_address_kana
-                  }
                 />
                 <EditRow
                   label={'メールアドレス'}
@@ -553,9 +472,6 @@ export const Item04 = () => {
                     ) : (
                       item.email
                     )
-                  }
-                  error={
-                    formik.errors?.p_join_guarantors?.length > index && formik.errors?.p_join_guarantors[index]?.email
                   }
                 />
               </ContentEditGroup>

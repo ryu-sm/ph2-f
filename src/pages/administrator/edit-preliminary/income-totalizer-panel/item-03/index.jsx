@@ -119,9 +119,14 @@ export const Item03 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab03SchemaI,
-    validateOnMount: true,
-    onSubmit: (values) => {
-      setInfoGroupTab(9);
+    validateOnMount: changeToIncomeTotalizer,
+    enableReinitialize: !changeToIncomeTotalizer,
+    onSubmit: async (values) => {
+      if (changeToIncomeTotalizer) {
+        setInfoGroupTab(9);
+      } else {
+        handleSave(setUpdateData(values));
+      }
     },
   });
 
@@ -139,16 +144,7 @@ export const Item03 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup
-        isEditable={isEditable}
-        handleSave={() => {
-          if (changeToIncomeTotalizer) {
-            formik.handleSubmit();
-          } else {
-            handleSave(setUpdateData(formik.values));
-          }
-        }}
-      >
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'ご職業'}
           upConfig={{
@@ -176,7 +172,6 @@ export const Item03 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_occupation}
         />
         {formik.values.p_applicant_persons__1.office_occupation === '99' && (
           <EditRow
@@ -192,7 +187,6 @@ export const Item03 = () => {
                 formik.values.p_applicant_persons__1.office_occupation_other
               )
             }
-            error={formik.errors?.p_applicant_persons__1?.office_occupation_other}
           />
         )}
         <EditRow
@@ -217,7 +211,6 @@ export const Item03 = () => {
               industryOptions.find((item) => item.value === formik.values.p_applicant_persons__1.office_industry)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_industry}
         />
         {formik.values.p_applicant_persons__1.office_industry === '99' && (
           <EditRow
@@ -233,7 +226,6 @@ export const Item03 = () => {
                 formik.values.p_applicant_persons__1.office_industry_other
               )
             }
-            error={formik.errors?.p_applicant_persons__1?.office_industry_other}
           />
         )}
         <EditRow
@@ -261,7 +253,6 @@ export const Item03 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_occupation_detail}
         />
         {formik.values.p_applicant_persons__1.office_occupation_detail === '99' && (
           <EditRow
@@ -277,7 +268,6 @@ export const Item03 = () => {
                 formik.values.p_applicant_persons__1.office_occupation_detail_other
               )
             }
-            error={formik.errors?.p_applicant_persons__1?.office_occupation_detail_other}
           />
         )}
         <EditRow
@@ -298,7 +288,6 @@ export const Item03 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_employment_type}
         />
         <EditRow
           label={'勤務先名'}
@@ -313,7 +302,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_name_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_name_kanji}
         />
         <EditRow
           label={'勤務先名（フリガナ）'}
@@ -329,7 +317,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_name_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_name_kana}
         />
         <EditRow
           label={'所属部課'}
@@ -343,7 +330,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_department
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_department}
         />
         <EditRow
           label={'役職'}
@@ -360,7 +346,6 @@ export const Item03 = () => {
               roleOptions.find((item) => item.value === formik.values.p_applicant_persons__1.office_role)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_role}
         />
         <EditRow
           label={'勤務先の電話番号'}
@@ -375,7 +360,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_phone
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_phone}
         />
         <EditRow
           label={'勤務先本社所在地'}
@@ -391,7 +375,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_head_location
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_head_location}
         />
         <EditRow
           label={'勤務先上場区分'}
@@ -410,7 +393,6 @@ export const Item03 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_listed_division}
         />
         <EditRow
           label={'勤務先設立年月日'}
@@ -426,7 +408,6 @@ export const Item03 = () => {
               formatJapanDate(formik.values.p_applicant_persons__1.office_establishment_date)
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_establishment_date}
         />
         <EditRow
           label={'勤務先資本金'}
@@ -443,7 +424,6 @@ export const Item03 = () => {
               formatMoney(formik.values.p_applicant_persons__1.office_capital_stock)
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_capital_stock}
         />
         <EditRow
           label={'郵便番号'}
@@ -488,7 +468,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_postal_code
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_postal_code}
         />
         <EditRow
           label={'都道府県'}
@@ -504,7 +483,6 @@ export const Item03 = () => {
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__1.tax_return)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_prefecture_kanji}
         />
         <EditRow
           label={'市区郡'}
@@ -518,7 +496,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_city_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_city_kanji}
         />
         <EditRow
           label={'町村丁目'}
@@ -532,7 +509,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_district_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_district_kanji}
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号'}
@@ -546,7 +522,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_other_address_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_other_address_kanji}
         />
         <EditRow
           label={'都道府県（フリガナ）'}
@@ -562,7 +537,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_prefecture_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_prefecture_kana}
         />
         <EditRow
           label={'市区郡（フリガナ）'}
@@ -577,7 +551,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_city_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_city_kana}
         />
         <EditRow
           label={'町村丁目（フリガナ）'}
@@ -592,7 +565,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_district_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_district_kana}
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号（フリガナ）'}
@@ -607,7 +579,6 @@ export const Item03 = () => {
               formik.values.p_applicant_persons__1.office_other_address_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_other_address_kana}
         />
         <EditRow
           label={'従業員数'}
@@ -624,7 +595,6 @@ export const Item03 = () => {
               formatMoney(formik.values.p_applicant_persons__1.office_employee_num, '名')
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_employee_num}
         />
         <EditRow
           label={'入社年月'}
@@ -640,7 +610,6 @@ export const Item03 = () => {
               formatJapanDate(formik.values.p_applicant_persons__1.office_joining_date, true)
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.office_joining_date}
         />
         <EditRow
           label={'前年度年収'}
@@ -657,7 +626,6 @@ export const Item03 = () => {
               formatMoney(formik.values.p_applicant_persons__1.last_year_income)
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.last_year_income}
         />
         {isMCJ && (
           <Stack>
@@ -676,7 +644,6 @@ export const Item03 = () => {
                   formatMoney(formik.values.p_applicant_persons__1.last_year_bonus_income)
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.last_year_bonus_income}
             />
             <EditRow
               label={'前々年度年収 （MCJ固有項目）'}
@@ -693,7 +660,6 @@ export const Item03 = () => {
                   formatMoney(formik.values.p_applicant_persons__1.before_last_year_income)
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.before_last_year_income}
             />
           </Stack>
         )}
@@ -718,7 +684,6 @@ export const Item03 = () => {
                 .join('・')
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.income_sources}
         />
         <EditRow
           label={'収入源（銀行送信用）'}
@@ -736,7 +701,6 @@ export const Item03 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.main_income_source}
         />
         <EditRow
           label={'確定申告をしていますか？'}
@@ -761,7 +725,6 @@ export const Item03 = () => {
               taxReturnOptions.find((item) => item.value === formik.values.p_applicant_persons__1.tax_return)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.tax_return}
         />
         {formik.values.p_applicant_persons__1.tax_return === '1' && (
           <Stack>
@@ -795,7 +758,6 @@ export const Item03 = () => {
                     .join('・')
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.tax_return_reasons}
             />
             {formik.values.p_applicant_persons__1.tax_return_reasons.includes('99') && (
               <EditRow
@@ -811,7 +773,6 @@ export const Item03 = () => {
                     formik.values.p_applicant_persons__1.tax_return_reason_other
                   )
                 }
-                error={formik.errors?.p_applicant_persons__1?.tax_return_reason_other}
               />
             )}
           </Stack>
@@ -847,7 +808,6 @@ export const Item03 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.transfer_office}
         />
         {formik.values.p_applicant_persons__1.transfer_office === '1' && (
           <Stack>
@@ -864,7 +824,6 @@ export const Item03 = () => {
                   formik.values.p_applicant_persons__1.transfer_office_name_kanji
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_name_kanji}
             />
             <EditRow
               label={'出向（派遣）勤務先名（フリガナ）'}
@@ -879,7 +838,6 @@ export const Item03 = () => {
                   formik.values.p_applicant_persons__1.transfer_office_name_kana
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_name_kana}
             />
             <EditRow
               label={'出向（派遣）先 電話番号'}
@@ -894,7 +852,6 @@ export const Item03 = () => {
                   formik.values.p_applicant_persons__1.transfer_office_phone
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_phone}
             />
             <EditRow
               label={'出向（派遣）先 郵便番号'}
@@ -927,7 +884,6 @@ export const Item03 = () => {
                   formik.values.p_applicant_persons__1.transfer_office_postal_code
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_postal_code}
             />
             <EditRow
               label={'出向（派遣）先 都道府県'}
@@ -948,7 +904,6 @@ export const Item03 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_prefecture_kanji}
             />
             <EditRow
               label={'出向（派遣）先 市区郡'}
@@ -963,7 +918,6 @@ export const Item03 = () => {
                   formik.values.p_applicant_persons__1.transfer_office_city_kanji
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_city_kanji}
             />
             <EditRow
               label={'出向（派遣）先 町村丁目'}
@@ -978,7 +932,6 @@ export const Item03 = () => {
                   formik.values.p_applicant_persons__1.transfer_office_district_kanji
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_district_kanji}
             />
             <EditRow
               label={'出向（派遣）先 丁目以下・建物名・部屋番号'}
@@ -993,7 +946,6 @@ export const Item03 = () => {
                   formik.values.p_applicant_persons__1.transfer_office_other_address_kanji
                 )
               }
-              error={formik.errors?.p_applicant_persons__1?.transfer_office_other_address_kanji}
             />
           </Stack>
         )}
@@ -1021,7 +973,6 @@ export const Item03 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.maternity_paternity_leave}
         />
         <EditRow
           label={'取得開始時期'}
@@ -1045,7 +996,6 @@ export const Item03 = () => {
               formatJapanDate(formik.values.p_applicant_persons__1.maternity_paternity_leave_start_date, true)
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.maternity_paternity_leave_start_date}
         />
         <EditRow
           label={'取得終了時期'}
@@ -1070,7 +1020,6 @@ export const Item03 = () => {
               formatJapanDate(formik.values.p_applicant_persons__1.maternity_paternity_leave_end_date, true)
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.maternity_paternity_leave_end_date}
         />
         <EditRow
           label={'介護休暇の取得状況'}
@@ -1087,7 +1036,6 @@ export const Item03 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__1?.nursing_leave}
         />
       </ContentEditGroup>
     </FormikProvider>

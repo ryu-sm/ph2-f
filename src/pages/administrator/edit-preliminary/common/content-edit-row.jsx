@@ -4,19 +4,8 @@ import { Box, Stack, Typography } from '@mui/material';
 
 import { useMemo } from 'react';
 import { UpdateHistoryModal } from './update-history';
-// import { UpdateHistoryModal } from '../update-history';
 
-export const EditRow = ({
-  label,
-  isAddendum,
-  isRequired,
-  isLogicRequired,
-  hasPleft,
-  field,
-  subField,
-  upConfig,
-  error,
-}) => {
+export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPleft, field, subField, upConfig }) => {
   const noticeIcon = useMemo(() => {
     return isRequired ? '○' : isLogicRequired ? '△' : '';
   }, [isRequired, isLogicRequired]);
@@ -72,6 +61,7 @@ export const EditRow = ({
           p={'10px'}
           flex={1}
           sx={{ pl: hasPleft ? '10px' : 10, width: 1 }}
+          spacing={2}
         >
           {[field, subField]
             .filter((i) => !!i)
@@ -80,13 +70,6 @@ export const EditRow = ({
                 {typeof item === 'string' ? <Typography variant="edit_content">{item}</Typography> : item}
               </Stack>
             ))}
-          {error && (
-            <Stack sx={{ minWidth: 300 }}>
-              <Typography variant="edit_content" whiteSpace={'nowrap'} color={'secondary.main'}>
-                {error}
-              </Typography>
-            </Stack>
-          )}
         </Stack>
       </Stack>
 

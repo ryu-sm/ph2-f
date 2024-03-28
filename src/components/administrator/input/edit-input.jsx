@@ -8,7 +8,7 @@ import { useRef } from 'react';
 
 export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = true, ml, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue, setError } = helpers;
+  const { setValue, setTouched } = helpers;
 
   const inputRef = useRef(null);
 
@@ -30,7 +30,7 @@ export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = tru
       if (convertFullWidth) {
         value = convertToFullWidth(value);
       }
-
+      await setTouched(true);
       await setValue(value);
     },
     [field, props]
@@ -48,18 +48,29 @@ export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = tru
     <Stack
       direction={'row'}
       alignItems={'center'}
-      sx={{ width: 1, py: 1, pl: '36px', ml: ml || -10 }}
-      onClick={handleAutoFocus}
+      justifyContent={'space-between'}
+      flex={1}
+      spacing={2}
+      sx={{ ml: ml || -10 }}
     >
-      <AutosizeInput
-        ref={inputRef}
-        inputClassName={'custom-input-style'}
-        name={field.name}
-        value={meta.value}
-        onChange={handleChange}
-        onBlur={handelBlue}
-        onFocus={() => setError('')}
-      />
+      <Stack direction={'row'} alignItems={'center'} sx={{ width: 1, py: 1, pl: '36px' }} onClick={handleAutoFocus}>
+        <AutosizeInput
+          ref={inputRef}
+          inputClassName={'custom-input-style'}
+          name={field.name}
+          value={meta.value}
+          onChange={handleChange}
+          onBlur={handelBlue}
+          onFocus={() => setTouched(false)}
+        />
+      </Stack>
+      {meta.touched && meta.error && (
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+          <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
+            {meta.error}
+          </Typography>
+        </Stack>
+      )}
     </Stack>
   );
 };

@@ -4,6 +4,7 @@ import { FormikProvider, useFormik } from 'formik';
 import { formatJapanDate, formatMoney } from '@/utils';
 import { useEffect } from 'react';
 import {
+  AdEditFullWidthInput,
   AdEditInput,
   AdNumericInput,
   AdSelectCheckbox,
@@ -45,13 +46,11 @@ export const Item01 = () => {
       p_borrowing_details__1,
       p_borrowing_details__2,
       p_borrowings,
-      p_activities,
     },
     preliminarySnap: { changeJoinGuarantor, changeToIncomeTotalizer },
     setPreliminarySnap,
     handleSave,
     isEditable,
-    checkeDbUpdate,
   } = usePreliminaryContext();
 
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
@@ -122,7 +121,14 @@ export const Item01 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab01Schema,
-    validateOnMount: true,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      if (changeJoinGuarantor || changeToIncomeTotalizer) {
+        changeAfterAction.onTrue();
+        return;
+      }
+      await handleSave(setUpdateData(values));
+    },
   });
 
   useEffect(() => {
@@ -158,16 +164,7 @@ export const Item01 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup
-        isEditable={isEditable}
-        handleSave={() => {
-          if (changeJoinGuarantor || changeToIncomeTotalizer) {
-            changeAfterAction.onTrue();
-            return;
-          }
-          handleSave(setUpdateData(formik.values));
-        }}
-      >
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'申込日時'}
           field={`${formatJapanDate(formik.values.p_application_headers.created_at.split(' ')[0], true)} ${
@@ -189,7 +186,6 @@ export const Item01 = () => {
               formatJapanDate(formik.values.p_application_headers.move_scheduled_date, true)
             )
           }
-          error={formik.errors?.p_application_headers?.move_scheduled_date}
         />
         <EditRow
           label={'仮審査を申し込む金融機関の選択'}
@@ -205,7 +201,6 @@ export const Item01 = () => {
                 .join('・')
             )
           }
-          error={formik.errors?.p_application_banks}
         />
         <EditRow
           label={'お借入の目的'}
@@ -256,7 +251,6 @@ export const Item01 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.loan_target_type}
         />
         {formik.values.p_application_headers.loan_target_type == '0' && (
           <EditRow
@@ -272,32 +266,8 @@ export const Item01 = () => {
                 <AdSelectRadios
                   name={'p_application_headers.loan_target'}
                   options={loanTargetOptions}
+                  cancelable
                   onChange={(value) => {
-                    // setPreliminarySnap((pre) => {
-                    //   return {
-                    //     ...pre,
-                    //     p_application_headers: {
-                    //       ...pre?.p_application_headers,
-                    //       required_funds_land_amount: '',
-                    //       required_funds_house_amount: '',
-                    //       required_funds_accessory_amount: '',
-                    //       required_funds_additional_amount: '',
-                    //       required_funds_refinance_loan_balance: '',
-                    //       required_funds_upgrade_amount: '',
-                    //       required_funds_loan_plus_amount: '',
-                    //       required_funds_total_amount: '',
-                    //       funding_saving_amount: '',
-                    //       funding_estate_sale_amount: '',
-                    //       funding_other_saving_amount: '',
-                    //       funding_relative_donation_amount: '',
-                    //       funding_loan_amount: '',
-                    //       funding_pair_loan_amount: '',
-                    //       funding_other_amount: '',
-                    //       funding_other_amount_detail: '',
-                    //       funding_total_amount: '',
-                    //     },
-                    //   };
-                    // });
                     if (value !== '6') {
                       formik.setFieldValue('p_application_headers.land_advance_plan', '');
                       formik.setFieldValue('p_borrowing_details__2.desired_borrowing_date', '');
@@ -310,7 +280,6 @@ export const Item01 = () => {
                 loanTargetOptions.find((item) => item.value === formik.values.p_application_headers.loan_target)?.label
               )
             }
-            error={formik.errors?.p_application_headers?.loan_target}
           />
         )}
         {formik.values.p_application_headers.loan_target === '6' && (
@@ -331,7 +300,6 @@ export const Item01 = () => {
                 )?.label
               )
             }
-            error={formik.errors?.p_application_headers?.land_advance_plan}
           />
         )}
         <EditRow
@@ -394,7 +362,6 @@ export const Item01 = () => {
               loanTypeOptions.find((item) => item.value === formik.values.p_application_headers.loan_type)?.label
             )
           }
-          error={formik.errors?.p_application_headers?.loan_type}
         />
         {formik.values.p_application_headers.loan_type === '2' && (
           <Stack>
@@ -406,12 +373,11 @@ export const Item01 = () => {
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_application_headers.pair_loan_last_name" />
+                  <AdEditFullWidthInput name="p_application_headers.pair_loan_last_name" convertFullWidth />
                 ) : (
                   formik.values.p_application_headers.pair_loan_last_name
                 )
               }
-              error={formik.errors?.p_application_headers?.pair_loan_last_name}
             />
             <EditRow
               label={'ペアローン　お名前（名）'}
@@ -421,12 +387,11 @@ export const Item01 = () => {
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_application_headers.pair_loan_first_name" />
+                  <AdEditFullWidthInput name="p_application_headers.pair_loan_first_name" convertFullWidth />
                 ) : (
                   formik.values.p_application_headers.pair_loan_last_name
                 )
               }
-              error={formik.errors?.p_application_headers?.pair_loan_first_name}
             />
             <EditRow
               label={'ペアローン　続柄'}
@@ -437,7 +402,7 @@ export const Item01 = () => {
               isAddendum
               field={
                 isEditable ? (
-                  <AdEditInput name="p_application_headers.pair_loan_rel_name" />
+                  <AdEditFullWidthInput name="p_application_headers.pair_loan_rel_name" convertFullWidth />
                 ) : (
                   formik.values.p_application_headers.pair_loan_rel_name
                 )
@@ -450,7 +415,6 @@ export const Item01 = () => {
                     ?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.pair_loan_rel}
             />
           </Stack>
         )}
@@ -473,7 +437,6 @@ export const Item01 = () => {
               formatJapanDate(formik.values.p_borrowing_details__1.desired_borrowing_date, true)
             )
           }
-          error={formik.errors?.p_borrowing_details__1?.desired_borrowing_date}
         />
         <EditRow
           label={'お借入希望額'}
@@ -485,12 +448,11 @@ export const Item01 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdNumericInput name="p_borrowing_details__1.desired_loan_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput name="p_borrowing_details__1.desired_loan_amount" maxLength={5} unit={'万円'} />
             ) : (
               formatMoney(formik.values.p_borrowing_details__1.desired_loan_amount)
             )
           }
-          error={formik.errors?.p_borrowing_details__1?.desired_loan_amount}
         />
         <EditRow
           label={'お借入内容　うち、ボーナス返済分'}
@@ -504,7 +466,7 @@ export const Item01 = () => {
             isEditable ? (
               <AdNumericInput
                 name="p_borrowing_details__1.bonus_repayment_amount"
-                maxLength={6}
+                maxLength={5}
                 unit={'万円'}
                 onBlur={(e) => {
                   if (!!e.target.value && formik.values.p_borrowing_details__1.bonus_repayment_month === '1') {
@@ -519,7 +481,6 @@ export const Item01 = () => {
               formatMoney(formik.values.p_borrowing_details__1.bonus_repayment_amount)
             )
           }
-          error={formik.errors?.p_borrowing_details__1?.bonus_repayment_amount}
         />
         <EditRow
           label={'ボーナス返済月'}
@@ -541,7 +502,6 @@ export const Item01 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_borrowing_details__1?.bonus_repayment_month}
         />
         <EditRow
           label={'お借入内容　お借入期間（年）'}
@@ -558,7 +518,6 @@ export const Item01 = () => {
               yearNumOptions.find((item) => item.value === formik.values.p_borrowing_details__1.loan_term_year)?.label
             )
           }
-          error={formik.errors?.p_borrowing_details__1?.loan_term_year}
         />
         <EditRow
           label={'お借入内容　返済方法'}
@@ -577,7 +536,6 @@ export const Item01 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_borrowing_details__1?.loan_term_year}
         />
         {formik.values.p_application_headers.land_advance_plan === '1' && (
           <Stack>
@@ -600,7 +558,6 @@ export const Item01 = () => {
                   formatJapanDate(formik.values.p_borrowing_details__2.desired_borrowing_date, true)
                 )
               }
-              error={formik.errors?.p_borrowing_details__2?.desired_borrowing_date}
             />
             <EditRow
               label={'お借入希望額（2回目融資）'}
@@ -612,12 +569,11 @@ export const Item01 = () => {
               isRequired
               field={
                 isEditable ? (
-                  <AdNumericInput name="p_borrowing_details__2.desired_loan_amount" maxLength={6} unit={'万円'} />
+                  <AdNumericInput name="p_borrowing_details__2.desired_loan_amount" maxLength={5} unit={'万円'} />
                 ) : (
                   formatMoney(formik.values.p_borrowing_details__2.desired_loan_amount)
                 )
               }
-              error={formik.errors?.p_borrowing_details__2?.desired_loan_amount}
             />
             <EditRow
               label={'うち、ボーナス返済分（2回目融資）'}
@@ -628,12 +584,11 @@ export const Item01 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdNumericInput name="p_borrowing_details__2.bonus_repayment_amount" maxLength={6} unit={'万円'} />
+                  <AdNumericInput name="p_borrowing_details__2.bonus_repayment_amount" maxLength={5} unit={'万円'} />
                 ) : (
                   formatMoney(formik.values.p_borrowing_details__2.bonus_repayment_amount)
                 )
               }
-              error={formik.errors?.p_borrowing_details__2?.bonus_repayment_amount}
             />
           </Stack>
         )}
@@ -668,7 +623,6 @@ export const Item01 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.join_guarantor_umu}
         />
         <EditRow
           label={'住信SBIネット銀行の「住宅ローンプラス」の申し込みの有無'}
@@ -684,7 +638,6 @@ export const Item01 = () => {
               loanPlusOptions.find((item) => item.value === formik.values.p_application_headers.loan_plus)?.label
             )
           }
-          error={formik.errors?.p_application_headers?.loan_plus}
         />
       </ContentEditGroup>
       <Modal

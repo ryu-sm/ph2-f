@@ -5,7 +5,6 @@ import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { Fragment, useEffect } from 'react';
 import {
   AdEditFullWidthInput,
-  AdEditInput,
   AdNumericInput,
   AdSelectCheckbox,
   AdSelectRadios,
@@ -76,7 +75,10 @@ export const Item06 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab06Schema,
-    validateOnMount: true,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      await handleSave(setUpdateData(values));
+    },
   });
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export const Item06 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'あなたや連帯保証人予定者に、現在お借入はありますか？'}
           upConfig={{
@@ -145,7 +147,6 @@ export const Item06 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.curr_borrowing_status}
         />
         <FieldArray
           name="p_borrowings"
@@ -168,9 +169,6 @@ export const Item06 = () => {
                         ) : (
                           borrowerOptions.find((item) => item.value === item.borrower)?.label
                         )
-                      }
-                      error={
-                        formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.borrower
                       }
                     />
                   )}
@@ -218,7 +216,6 @@ export const Item06 = () => {
                         typeOptions.find((item) => item.value === item.type)?.label
                       )
                     }
-                    error={formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.type}
                   />
 
                   <EditRow
@@ -233,7 +230,6 @@ export const Item06 = () => {
                         item.lender
                       )
                     }
-                    error={formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.lender}
                   />
                   {formik.values.p_borrowings[index].type === '2' && (
                     <Stack>
@@ -249,10 +245,6 @@ export const Item06 = () => {
                           ) : (
                             loanPurposeOptions.find((item) => item.value === item.loan_purpose)?.label
                           )
-                        }
-                        error={
-                          formik.errors?.p_borrowings?.length > index &&
-                          formik.errors?.p_borrowings[index]?.loan_purpose
                         }
                       />
                       {formik.values.p_borrowings[index].loan_purpose === '99' && (
@@ -270,10 +262,6 @@ export const Item06 = () => {
                             ) : (
                               item.loan_purpose_other
                             )
-                          }
-                          error={
-                            formik.errors?.p_borrowings?.length > index &&
-                            formik.errors?.p_borrowings[index]?.loan_purpose_other
                           }
                         />
                       )}
@@ -298,10 +286,6 @@ export const Item06 = () => {
                             loanBusinessTargetOptions.find((item) => item.value === item.loan_business_target)?.label
                           )
                         }
-                        error={
-                          formik.errors?.p_borrowings?.length > index &&
-                          formik.errors?.p_borrowings[index]?.loan_business_target
-                        }
                       />
                       {formik.values.p_borrowings[index].loan_business_target === '99' && (
                         <EditRow
@@ -318,10 +302,6 @@ export const Item06 = () => {
                             ) : (
                               item.loan_business_target_other
                             )
-                          }
-                          error={
-                            formik.errors?.p_borrowings?.length > index &&
-                            formik.errors?.p_borrowings[index]?.loan_business_target_other
                           }
                         />
                       )}
@@ -345,10 +325,6 @@ export const Item06 = () => {
                             ?.label
                         )
                       }
-                      error={
-                        formik.errors?.p_borrowings?.length > index &&
-                        formik.errors?.p_borrowings[index]?.borrowing_from_house_finance_agency
-                      }
                     />
                   )}
                   {formik.values.p_borrowings[index].type === '2' && (
@@ -364,9 +340,6 @@ export const Item06 = () => {
                         ) : (
                           categoryOptions.find((item) => item.value === item.category)?.label
                         )
-                      }
-                      error={
-                        formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.category
                       }
                     />
                   )}
@@ -386,9 +359,6 @@ export const Item06 = () => {
                         formatJapanDate(item.loan_start_date, true)
                       )
                     }
-                    error={
-                      formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.loan_start_date
-                    }
                     isLogicRequired
                   />
                   <EditRow
@@ -406,9 +376,6 @@ export const Item06 = () => {
                         formatMoney(item.loan_amount)
                       )
                     }
-                    error={
-                      formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.loan_amount
-                    }
                   />
                   <EditRow
                     label={'現在の残高'}
@@ -424,10 +391,6 @@ export const Item06 = () => {
                         formatMoney(item.curr_loan_balance_amount)
                       )
                     }
-                    error={
-                      formik.errors?.p_borrowings?.length > index &&
-                      formik.errors?.p_borrowings[index]?.curr_loan_balance_amount
-                    }
                   />
                   <EditRow
                     label={'年間返済額'}
@@ -442,10 +405,6 @@ export const Item06 = () => {
                       ) : (
                         formatMoney(item.annual_repayment_amount)
                       )
-                    }
-                    error={
-                      formik.errors?.p_borrowings?.length > index &&
-                      formik.errors?.p_borrowings[index]?.annual_repayment_amount
                     }
                   />
                   {formik.values.p_borrowings[index].type === '2' ? (
@@ -465,10 +424,6 @@ export const Item06 = () => {
                           formatJapanDate(item.card_expiry_date, true)
                         )
                       }
-                      error={
-                        formik.errors?.p_borrowings?.length > index &&
-                        formik.errors?.p_borrowings[index]?.card_expiry_date
-                      }
                     />
                   ) : (
                     <EditRow
@@ -486,9 +441,6 @@ export const Item06 = () => {
                         ) : (
                           formatJapanDate(item.loan_end_date, true)
                         )
-                      }
-                      error={
-                        formik.errors?.p_borrowings?.length > index && formik.errors?.p_borrowings[index]?.loan_end_date
                       }
                     />
                   )}
@@ -512,10 +464,6 @@ export const Item06 = () => {
                             formatMoney(item.rental_room_num, '戸（室）')
                           )
                         }
-                        error={
-                          formik.errors?.p_borrowings?.length > index &&
-                          formik.errors?.p_borrowings[index]?.rental_room_num
-                        }
                       />
                       <EditRow
                         label={'共同住宅'}
@@ -532,10 +480,6 @@ export const Item06 = () => {
                           ) : (
                             commonHousingOptions.find((item) => item.value === item.common_housing)?.label
                           )
-                        }
-                        error={
-                          formik.errors?.p_borrowings?.length > index &&
-                          formik.errors?.p_borrowings[index]?.common_housing
                         }
                       />
                     </Stack>
@@ -556,10 +500,6 @@ export const Item06 = () => {
                         ) : (
                           estateSettingOptions.find((item) => item.value === item.estate_setting)?.label
                         )
-                      }
-                      error={
-                        formik.errors?.p_borrowings?.length > index &&
-                        formik.errors?.p_borrowings[index]?.estate_setting
                       }
                     />
                   )}
@@ -585,10 +525,6 @@ export const Item06 = () => {
                             estateSettingOptions.find((item) => item.value === item.scheduled_loan_payoff)?.label
                           )
                         }
-                        error={
-                          formik.errors?.p_borrowings?.length > index &&
-                          formik.errors?.p_borrowings[index]?.scheduled_loan_payoff
-                        }
                       />
                       {formik.values.p_borrowings[index].scheduled_loan_payoff === '1' && (
                         <EditRow
@@ -606,10 +542,6 @@ export const Item06 = () => {
                             ) : (
                               formatJapanDate(item.scheduled_loan_payoff_date, true)
                             )
-                          }
-                          error={
-                            formik.errors?.p_borrowings?.length > index &&
-                            formik.errors?.p_borrowings[index]?.scheduled_loan_payoff_date
                           }
                         />
                       )}
@@ -632,10 +564,6 @@ export const Item06 = () => {
                       ) : (
                         estateSettingOptions.find((item) => item.value === item.include_in_examination)?.label
                       )
-                    }
-                    error={
-                      formik.errors?.p_borrowings?.length > index &&
-                      formik.errors?.p_borrowings[index]?.include_in_examination
                     }
                   />
                 </ContentEditGroup>
@@ -668,7 +596,6 @@ export const Item06 = () => {
                           .join('・')
                       )
                     }
-                    error={formik.errors?.p_application_headers?.refund_source_type}
                   />
                   <EditRow
                     label={'完済原資の内容'}
@@ -682,7 +609,6 @@ export const Item06 = () => {
                         formik.values.p_application_headers.refund_source_content
                       )
                     }
-                    error={formik.errors?.p_application_headers?.refund_source_content}
                   />
                   <EditRow
                     label={'完済原資の金額'}
@@ -698,7 +624,6 @@ export const Item06 = () => {
                         formatMoney(formik.values.p_application_headers.refund_source_amount)
                       )
                     }
-                    error={formik.errors?.p_application_headers?.refund_source_amount}
                   />
                   <EditRow
                     label={'今回の住宅取得後も継続する支払地代'}
@@ -714,7 +639,6 @@ export const Item06 = () => {
                         formatMoney(formik.values.p_application_headers.rent_to_be_paid_land, '円')
                       )
                     }
-                    error={formik.errors?.p_application_headers?.rent_to_be_paid_land}
                   />
                   <EditRow
                     label={'今回の住宅取得後も継続する支払家賃'}
@@ -730,7 +654,6 @@ export const Item06 = () => {
                         formatMoney(formik.values.p_application_headers.rent_to_be_paid_house, '円')
                       )
                     }
-                    error={formik.errors?.p_application_headers?.rent_to_be_paid_house}
                   />
                 </Stack>
               )}

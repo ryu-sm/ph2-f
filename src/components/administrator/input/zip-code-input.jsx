@@ -1,12 +1,11 @@
 import { convertToFullWidth, convertToHalfWidth } from '@/utils';
 import { Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import AutosizeInput from 'react-input-autosize';
 import './autosize-style.css';
 import { useRef } from 'react';
 import axios from 'axios';
-import { cloneDeep } from 'lodash';
 
 export const AdZipCodeInput = ({
   setPrefectureKanji,
@@ -16,6 +15,7 @@ export const AdZipCodeInput = ({
   setPrefectureKana,
   setCityKana,
   setDistrictKana,
+  ml,
   ...props
 }) => {
   const [field, meta, helpers] = useField(props);
@@ -96,24 +96,35 @@ export const AdZipCodeInput = ({
     <Stack
       direction={'row'}
       alignItems={'center'}
-      sx={{ width: 1, py: 1, pl: '36px', ml: -10 }}
-      onClick={handleAutoFocus}
+      justifyContent={'space-between'}
+      flex={1}
+      spacing={2}
+      sx={{ ml: ml || -10 }}
     >
-      <AutosizeInput
-        ref={inputRef}
-        inputClassName="custom-input-style"
-        name={field.name}
-        value={meta.value}
-        onInput={(e) => {
-          e.target.value = convertToHalfWidth(e.target.value);
-          e.target.value = e.target.value.replace(/[^\d-]+/g, '');
-          e.target.value = e.target.value.substring(0, 8);
-          return e;
-        }}
-        onChange={handleChange}
-        onBlur={handelBlue}
-        onFocus={() => setError('')}
-      />
+      <Stack direction={'row'} alignItems={'center'} sx={{ width: 1, py: 1, pl: '36px' }} onClick={handleAutoFocus}>
+        <AutosizeInput
+          ref={inputRef}
+          inputClassName="custom-input-style"
+          name={field.name}
+          value={meta.value}
+          onInput={(e) => {
+            e.target.value = convertToHalfWidth(e.target.value);
+            e.target.value = e.target.value.replace(/[^\d-]+/g, '');
+            e.target.value = e.target.value.substring(0, 8);
+            return e;
+          }}
+          onChange={handleChange}
+          onBlur={handelBlue}
+          onFocus={() => setError('')}
+        />
+      </Stack>
+      {meta.touched && meta.error && (
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+          <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
+            {meta.error}
+          </Typography>
+        </Stack>
+      )}
     </Stack>
   );
 };

@@ -39,29 +39,41 @@ export const AdNumericInput = ({ unit, maxLength, width, showZero, ...props }) =
     <Stack
       direction={'row'}
       alignItems={'center'}
-      sx={{ width: 1, py: 1, pl: '36px', ml: -10 }}
-      onClick={handleAutoFocus}
+      justifyContent={'space-between'}
+      flex={1}
+      spacing={2}
+      sx={{ ml: -10 }}
     >
-      <NumericFormat
-        customInput={AutosizeInput}
-        thousandSeparator
-        getInputRef={inputRef}
-        inputClassName="custom-input-style"
-        name={field.name}
-        value={meta.value}
-        onInput={(e) => {
-          e.target.value = convertToHalfWidth(e.target.value);
-          e.target.value = e.target.value.substring(0, maxLength);
-          return e;
-        }}
-        onBlur={handelBlue}
-        onFocus={() => setError('')}
-        onValueChange={async (values) => handleChange(values.value)}
-      />
-      {unit && meta.value && (
-        <Typography variant="edit_content" whiteSpace={'nowrap'} color={'gray.100'}>
-          {unit}
-        </Typography>
+      <Stack direction={'row'} alignItems={'center'} sx={{ width: 1, py: 1, pl: '36px' }} onClick={handleAutoFocus}>
+        <NumericFormat
+          customInput={AutosizeInput}
+          thousandSeparator
+          getInputRef={inputRef}
+          inputClassName="custom-input-style"
+          name={field.name}
+          value={meta.value}
+          onInput={(e) => {
+            e.target.value = convertToHalfWidth(e.target.value);
+            e.target.value = e.target.value.replace(/^(0+)|[^\d]+/g, '');
+            e.target.value = e.target.value.substring(0, maxLength);
+            return e;
+          }}
+          onBlur={handelBlue}
+          onFocus={() => setError('')}
+          onValueChange={async (values) => handleChange(values.value)}
+        />
+        {unit && meta.value && (
+          <Typography variant="edit_content" whiteSpace={'nowrap'} color={'gray.100'}>
+            {unit}
+          </Typography>
+        )}
+      </Stack>
+      {meta.error && (
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+          <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
+            {meta.error}
+          </Typography>
+        </Stack>
       )}
     </Stack>
   );

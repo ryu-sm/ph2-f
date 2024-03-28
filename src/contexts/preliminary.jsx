@@ -17,6 +17,7 @@ import {
   editMainTabStatusAtom,
   infoGroupTabAtom,
   preliminaryInitialValues,
+  residentsInitialValues,
 } from '@/store';
 import { AdThemeProvider } from '@/styles/ad-theme';
 import { Modal, Stack, Typography } from '@mui/material';
@@ -195,6 +196,7 @@ export const PreliminaryProvider = ({ children }) => {
       toast.success('申込内容を更新しました。');
       refreshPreliminary();
     } catch (error) {
+      console.log(error);
       toast.error(API_500_ERROR);
     }
   };

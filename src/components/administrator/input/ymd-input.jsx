@@ -1,5 +1,5 @@
 import { convertToHalfWidth } from '@/utils';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
 import InputMask from 'react-input-mask';
@@ -21,13 +21,14 @@ const PatternFormatStyled = styled(InputMask)(({ theme }) => ({
   },
 }));
 
-export const AdYmdInput = ({ width, ...props }) => {
+export const AdYmdInput = ({ width, ml, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
+  const { setValue, setTouched } = helpers;
   const handelBlue = useCallback(
     async (e) => {
       field.onBlur(e);
       props.onBlur && props.onBlur(e);
+      await setTouched(true);
     },
     [field, props]
   );
@@ -42,20 +43,37 @@ export const AdYmdInput = ({ width, ...props }) => {
   );
 
   return (
-    <Stack direction={'row'} alignItems={'center'} sx={{ width: 1, py: 1, pl: '36px', ml: -10 }}>
-      <PatternFormatStyled
-        {...field}
-        alwaysShowMask
-        mask="9999年99月99日"
-        maskChar="_"
-        onInput={(e) => {
-          e.target.value = convertToHalfWidth(e.target.value);
-          return e;
-        }}
-        value={meta.value}
-        onChange={handleChange}
-        onBlur={handelBlue}
-      />
+    <Stack
+      direction={'row'}
+      alignItems={'center'}
+      justifyContent={'space-between'}
+      flex={1}
+      spacing={2}
+      sx={{ ml: ml || -10 }}
+    >
+      <Stack direction={'row'} alignItems={'center'} sx={{ width: 1, py: 1, pl: '36px' }}>
+        <PatternFormatStyled
+          {...field}
+          alwaysShowMask
+          mask="9999年99月99日"
+          maskChar="_"
+          onInput={(e) => {
+            e.target.value = convertToHalfWidth(e.target.value);
+            return e;
+          }}
+          value={meta.value}
+          onChange={handleChange}
+          onBlur={handelBlue}
+          onFocus={() => setTouched(false)}
+        />
+      </Stack>
+      {meta.touched && meta.error && (
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+          <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
+            {meta.error}
+          </Typography>
+        </Stack>
+      )}
     </Stack>
   );
 };

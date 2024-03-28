@@ -40,7 +40,10 @@ export const Item08 = () => {
 
   const formik = useFormik({
     initialValues,
-    validateOnMount: true,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      await handleSave(setUpdateData(values));
+    },
   });
 
   useEffect(() => {
@@ -96,7 +99,7 @@ export const Item08 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'提携会社'}
           upConfig={{
@@ -119,7 +122,6 @@ export const Item08 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.sales_company_id}
         />
         <EditRow
           label={'エリア'}
@@ -141,7 +143,6 @@ export const Item08 = () => {
               salesAreaOptions.find((item) => item.value === formik.values.p_application_headers.sales_area_id)?.label
             )
           }
-          error={formik.errors?.p_application_headers?.sales_area_id}
         />
         <EditRow
           label={'営業所・展示場'}
@@ -159,7 +160,6 @@ export const Item08 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.sales_exhibition_hall_id}
         />
         <EditRow
           label={'担当者名 (情報共有者)'}
@@ -176,7 +176,6 @@ export const Item08 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.s_sales_person_id}
         />
         <EditRow
           label={'担当者名'}
@@ -190,7 +189,6 @@ export const Item08 = () => {
               formik.values.p_application_headers.vendor_name
             )
           }
-          error={formik.errors?.p_application_headers?.vendor_name}
         />
         <EditRow
           label={'携帯電話番号'}
@@ -204,7 +202,6 @@ export const Item08 = () => {
               formik.values.p_application_headers.vendor_phone
             )
           }
-          error={formik.errors?.p_application_headers?.vendor_phone}
         />
         <EditRow
           label={'携帯電話番号（マスターデータ）'}

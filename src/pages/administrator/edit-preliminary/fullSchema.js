@@ -346,7 +346,7 @@ export const tab03Schema = yup.object({
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
 
     office_phone: yup.string(),
-
+    office_establishment_date: yup.string().matches(REGEX.YMD, YUP_MESSAGES.DATE_INVALID),
     office_postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
 
     office_prefecture_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
@@ -678,12 +678,10 @@ export const tab05Schema = yup.object({
       last_name_kanji: yup.string().max(48).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
       last_name_kana: yup
         .string()
-        .required()
         .max(48)
         .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
       first_name_kana: yup
         .string()
-        .required()
         .max(48)
         .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
       rel_to_applicant_a_name: yup.string().max(48).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),

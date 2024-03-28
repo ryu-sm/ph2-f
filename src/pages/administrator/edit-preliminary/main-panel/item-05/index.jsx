@@ -123,7 +123,10 @@ export const Item05 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab05Schema,
-    validateOnMount: true,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      await handleSave(setUpdateData(values));
+    },
   });
 
   useEffect(() => {
@@ -218,7 +221,7 @@ export const Item05 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'現在居住　居住年数（年）'}
           upConfig={{
@@ -240,7 +243,6 @@ export const Item05 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.curr_house_lived_year}
         />
         <EditRow
           label={'現在居住　居住年数（ヶ月）'}
@@ -263,7 +265,6 @@ export const Item05 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.curr_house_lived_month}
         />
         <EditRow
           label={'現在のお住まいの種類'}
@@ -298,7 +299,6 @@ export const Item05 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.curr_house_residence_type}
         />
         {isMCJ && (
           <EditRow
@@ -315,7 +315,6 @@ export const Item05 = () => {
                 formik.values.p_application_headers.curr_house_floor_area
               )
             }
-            error={formik.errors?.p_application_headers?.curr_house_floor_area}
           />
         )}
         {formik.values.p_application_headers.curr_house_residence_type === '4' && (
@@ -332,7 +331,6 @@ export const Item05 = () => {
                   formik.values.p_application_headers.curr_house_owner_name
                 )
               }
-              error={formik.errors?.p_application_headers?.curr_house_owner_name}
             />
             <EditRow
               label={'続柄'}
@@ -346,7 +344,6 @@ export const Item05 = () => {
                   formik.values.p_application_headers.curr_house_owner_rel
                 )
               }
-              error={formik.errors?.p_application_headers?.curr_house_owner_rel}
             />
           </Stack>
         )}
@@ -372,7 +369,6 @@ export const Item05 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.curr_house_schedule_disposal_type}
             />
             {formik.values.p_application_headers.curr_house_schedule_disposal_type === '99' && (
               <EditRow
@@ -391,7 +387,6 @@ export const Item05 = () => {
                     formik.values.p_application_headers.curr_house_schedule_disposal_type_other
                   )
                 }
-                error={formik.errors?.p_application_headers?.curr_house_schedule_disposal_type_other}
               />
             )}
 
@@ -411,7 +406,6 @@ export const Item05 = () => {
                       formatMoney(formik.values.p_application_headers.curr_house_shell_scheduled_price)
                     )
                   }
-                  error={formik.errors?.p_application_headers?.curr_house_shell_scheduled_price}
                 />
                 <EditRow
                   label={'持家　売却予定時期'}
@@ -430,7 +424,6 @@ export const Item05 = () => {
                       formatJapanDate(formik.values.p_application_headers.curr_house_shell_scheduled_date)
                     )
                   }
-                  error={formik.errors?.p_application_headers?.curr_house_shell_scheduled_date}
                 />
                 <EditRow
                   label={'持家　ローン残高'}
@@ -451,7 +444,6 @@ export const Item05 = () => {
                       )?.label
                     )
                   }
-                  error={formik.errors?.p_application_headers?.curr_house_loan_balance_type}
                 />
               </Stack>
             )}
@@ -470,7 +462,6 @@ export const Item05 = () => {
               formik.values.p_application_headers.property_publish_url
             )
           }
-          error={formik.errors?.p_application_headers?.property_publish_url}
         />
         <EditRow
           label={'新しい住居を必要とする理由'}
@@ -491,7 +482,6 @@ export const Item05 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.new_house_acquire_reason}
         />
         {formik.values.p_application_headers.new_house_acquire_reason === '99' && (
           <EditRow
@@ -507,7 +497,6 @@ export const Item05 = () => {
                 formik.values.p_application_headers.new_house_acquire_reason_other
               )
             }
-            error={formik.errors?.p_application_headers?.new_house_acquire_reason_other}
           />
         )}
         <EditRow
@@ -537,7 +526,6 @@ export const Item05 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.new_house_self_resident}
         />
         {formik.values.p_application_headers.new_house_self_resident === '0' && (
           <EditRow
@@ -556,7 +544,6 @@ export const Item05 = () => {
                 formik.values.p_application_headers.new_house_self_not_resident_reason
               )
             }
-            error={formik.errors?.p_application_headers?.new_house_self_not_resident_reason}
           />
         )}
 
@@ -605,7 +592,6 @@ export const Item05 = () => {
                           oneRoofOptions.find((op) => op.value === item.one_roof)?.label
                         )
                       }
-                      error={formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.one_roof}
                     />
                     <EditRow
                       label={`入居家族${index + 1} 姓　漢字`}
@@ -620,9 +606,6 @@ export const Item05 = () => {
                         ) : (
                           item.last_name_kanji
                         )
-                      }
-                      error={
-                        formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.last_name_kanji
                       }
                     />
                     <EditRow
@@ -639,10 +622,6 @@ export const Item05 = () => {
                           item.first_name_kanji
                         )
                       }
-                      error={
-                        formik.errors?.p_residents?.length > index &&
-                        formik.errors?.p_residents[index]?.first_name_kanji
-                      }
                     />
                     <EditRow
                       label={`入居家族${index + 1} 姓　カナ`}
@@ -658,9 +637,6 @@ export const Item05 = () => {
                           item.last_name_kana
                         )
                       }
-                      error={
-                        formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.last_name_kana
-                      }
                     />
                     <EditRow
                       label={`入居家族${index + 1} 名　カナ`}
@@ -675,9 +651,6 @@ export const Item05 = () => {
                         ) : (
                           item.first_name_kana
                         )
-                      }
-                      error={
-                        formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.first_name_kana
                       }
                     />
                     <EditRow
@@ -695,7 +668,6 @@ export const Item05 = () => {
                           genderOptions.find((op) => op.value === item.gender)?.label
                         )
                       }
-                      error={formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.gender}
                     />
                     {item?.rel_to_applicant_a_name ? (
                       <EditRow
@@ -736,10 +708,6 @@ export const Item05 = () => {
                             }`
                           )
                         }
-                        error={
-                          formik.errors?.p_residents?.length > index &&
-                          formik.errors?.p_residents[index]?.rel_to_applicant_a
-                        }
                       />
                     ) : (
                       <EditRow
@@ -774,10 +742,6 @@ export const Item05 = () => {
                             }`
                           )
                         }
-                        error={
-                          formik.errors?.p_residents?.length > index &&
-                          formik.errors?.p_residents[index]?.rel_to_applicant_a
-                        }
                       />
                     )}
 
@@ -796,7 +760,6 @@ export const Item05 = () => {
                           formatJapanDate(item.birthday, true)
                         )
                       }
-                      error={formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.birthday}
                     />
 
                     {isMCJ && item?.rel_to_applicant_a_name && (
@@ -820,10 +783,6 @@ export const Item05 = () => {
                                 (op) => op.value === item?.loan_from_japan_house_finance_agency
                               )?.label
                             )
-                          }
-                          error={
-                            formik.errors?.p_residents?.length > index &&
-                            formik.errors?.p_residents[index]?.loan_from_japan_house_finance_agency
                           }
                         />
 
@@ -869,9 +828,6 @@ export const Item05 = () => {
                               item.postal_code
                             )
                           }
-                          error={
-                            formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.postal_code
-                          }
                         />
                         <EditRow
                           label={`入居家族${index + 1} 都道府県`}
@@ -891,10 +847,6 @@ export const Item05 = () => {
                               PREFECTURES.find((op) => op.value === item?.prefecture_kanji)?.label
                             )
                           }
-                          error={
-                            formik.errors?.p_residents?.length > index &&
-                            formik.errors?.p_residents[index]?.prefecture_kanji
-                          }
                         />
 
                         <EditRow
@@ -909,9 +861,6 @@ export const Item05 = () => {
                               item.city_kanji
                             )
                           }
-                          error={
-                            formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.city_kanji
-                          }
                         />
 
                         <EditRow
@@ -925,10 +874,6 @@ export const Item05 = () => {
                             ) : (
                               item.district_kanji
                             )
-                          }
-                          error={
-                            formik.errors?.p_residents?.length > index &&
-                            formik.errors?.p_residents[index]?.district_kanji
                           }
                         />
 
@@ -947,10 +892,6 @@ export const Item05 = () => {
                               item.other_address_kanji
                             )
                           }
-                          error={
-                            formik.errors?.p_residents?.length > index &&
-                            formik.errors?.p_residents[index]?.other_address_kanji
-                          }
                         />
                         <EditRow
                           label={`入居家族${index + 1} 電話番号`}
@@ -963,10 +904,6 @@ export const Item05 = () => {
                             ) : (
                               item.contact_phone
                             )
-                          }
-                          error={
-                            formik.errors?.p_residents?.length > index &&
-                            formik.errors?.p_residents[index]?.contact_phone
                           }
                         />
 
@@ -987,9 +924,6 @@ export const Item05 = () => {
                             ) : (
                               nationalityOptions.find((op) => op.value === item?.nationality)?.label
                             )
-                          }
-                          error={
-                            formik.errors?.p_residents?.length > index && formik.errors?.p_residents[index]?.nationality
                           }
                         />
                       </Stack>
@@ -1021,7 +955,6 @@ export const Item05 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.property_business_type}
         />
         <EditRow
           label={'融資対象物件　郵便番号'}
@@ -1042,7 +975,6 @@ export const Item05 = () => {
               formik.values.p_application_headers?.property_postal_code
             )
           }
-          error={formik.errors?.p_application_headers?.property_postal_code}
         />
         <EditRow
           label={'融資対象物件　都道府県'}
@@ -1058,7 +990,6 @@ export const Item05 = () => {
               PREFECTURES.find((item) => item.value === formik.values.p_application_headers?.property_prefecture)?.label
             )
           }
-          error={formik.errors?.p_application_headers?.property_prefecture}
         />
         <EditRow
           label={'融資対象物件　市区町村郡'}
@@ -1073,7 +1004,6 @@ export const Item05 = () => {
               formik.values.p_application_headers?.property_city
             )
           }
-          error={formik.errors?.p_application_headers?.property_city}
         />
         <EditRow
           label={'融資対象物件　以下地番'}
@@ -1088,7 +1018,6 @@ export const Item05 = () => {
               formik.values.p_application_headers?.property_district
             )
           }
-          error={formik.errors?.p_application_headers?.property_district}
         />
         {['2', '3'].includes(p_application_headers.loan_target) && (
           <EditRow
@@ -1104,7 +1033,6 @@ export const Item05 = () => {
                 formik.values.p_application_headers?.property_apartment_and_room_no
               )
             }
-            error={formik.errors?.p_application_headers?.property_apartment_and_room_no}
           />
         )}
         <EditRow
@@ -1120,7 +1048,6 @@ export const Item05 = () => {
               formik.values.p_application_headers?.property_address_kana
             )
           }
-          error={formik.errors?.p_application_headers?.property_address_kana}
         />
         {!['2', '3'].includes(p_application_headers.loan_target) ? (
           <Stack>
@@ -1138,7 +1065,6 @@ export const Item05 = () => {
                   formatMoney(formik.values.p_application_headers?.property_land_area, 'm²')
                 )
               }
-              error={formik.errors?.p_application_headers?.property_land_area}
             />
             <EditRow
               label={'融資対象物件　建物の延べ床面積'}
@@ -1154,7 +1080,6 @@ export const Item05 = () => {
                   formatMoney(formik.values.p_application_headers?.property_floor_area, 'm²')
                 )
               }
-              error={formik.errors?.p_application_headers?.property_floor_area}
             />
           </Stack>
         ) : (
@@ -1173,7 +1098,6 @@ export const Item05 = () => {
                   formatMoney(formik.values.p_application_headers?.property_private_area, 'm²')
                 )
               }
-              error={formik.errors?.p_application_headers?.property_private_area}
             />
             <EditRow
               label={'融資対象物件　マンション全体の延べ床面積'}
@@ -1189,7 +1113,6 @@ export const Item05 = () => {
                   formatMoney(formik.values.p_application_headers?.property_total_floor_area, 'm²')
                 )
               }
-              error={formik.errors?.p_application_headers?.property_total_floor_area}
             />
           </Stack>
         )}
@@ -1211,7 +1134,6 @@ export const Item05 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.property_type}
         />
         <EditRow
           label={'土地取得時期'}
@@ -1228,7 +1150,6 @@ export const Item05 = () => {
               formatJapanDate(formik.values.p_application_headers?.property_land_acquire_date, true)
             )
           }
-          error={formik.errors?.p_application_headers?.property_land_acquire_date}
         />
         <EditRow
           label={'共有区分'}
@@ -1250,7 +1171,6 @@ export const Item05 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.property_joint_ownership_type}
         />
         <EditRow
           label={'建物割合分子'}
@@ -1271,7 +1191,6 @@ export const Item05 = () => {
               formatMoney(formik.values.p_application_headers?.property_building_ratio_numerator, 'm²')
             )
           }
-          error={formik.errors?.p_application_headers?.property_building_ratio_numerator}
         />
         <EditRow
           label={'建物割合分母'}
@@ -1292,7 +1211,6 @@ export const Item05 = () => {
               formatMoney(formik.values.p_application_headers?.property_building_ratio_denominator, 'm²')
             )
           }
-          error={formik.errors?.p_application_headers?.property_building_ratio_denominator}
         />
         <EditRow
           label={'土地割合分子'}
@@ -1309,7 +1227,6 @@ export const Item05 = () => {
               formatMoney(formik.values.p_application_headers?.property_land_ratio_numerator, 'm²')
             )
           }
-          error={formik.errors?.p_application_headers?.property_land_ratio_numerator}
         />
         <EditRow
           label={'土地割合分母'}
@@ -1326,7 +1243,6 @@ export const Item05 = () => {
               formatMoney(formik.values.p_application_headers?.property_land_ratio_denominator, 'm²')
             )
           }
-          error={formik.errors?.p_application_headers?.property_land_ratio_denominator}
         />
         {isMCJ && (
           <Stack>
@@ -1350,7 +1266,6 @@ export const Item05 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.property_land_type}
             />
             <EditRow
               label={'買戻・保留地・仮換地'}
@@ -1372,7 +1287,6 @@ export const Item05 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.property_purchase_type}
             />
             <EditRow
               label={'都市計画区域等'}
@@ -1394,7 +1308,6 @@ export const Item05 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.property_planning_area}
             />
             {formik.values.p_application_headers.property_planning_area === '99' && (
               <EditRow
@@ -1409,7 +1322,6 @@ export const Item05 = () => {
                     formik.values.p_application_headers.property_planning_area_other
                   )
                 }
-                error={formik.errors?.p_application_headers?.property_planning_area_other}
               />
             )}
             {['1', '2'].includes(formik.values.p_application_headers.property_planning_area) && (
@@ -1434,7 +1346,6 @@ export const Item05 = () => {
                       )?.label
                     )
                   }
-                  error={formik.errors?.p_application_headers?.property_rebuilding_reason}
                 />
                 {formik.values.p_application_headers.property_rebuilding_reason === '99' && (
                   <EditRow
@@ -1453,7 +1364,6 @@ export const Item05 = () => {
                         formik.values.p_application_headers.property_rebuilding_reason_other
                       )
                     }
-                    error={formik.errors?.p_application_headers?.property_rebuilding_reason_other}
                   />
                 )}
               </Stack>
@@ -1484,7 +1394,6 @@ export const Item05 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.property_flat_35_plan}
             />
             <EditRow
               label={'維持保全型'}
@@ -1506,7 +1415,6 @@ export const Item05 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.property_maintenance_type}
             />
             {formik.values.p_application_headers.property_flat_35_plan === '2' && (
               <EditRow
@@ -1529,7 +1437,6 @@ export const Item05 = () => {
                     )?.label
                   )
                 }
-                error={formik.errors?.p_application_headers?.property_flat_35_tech}
               />
             )}
             <EditRow
@@ -1552,7 +1459,6 @@ export const Item05 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_application_headers?.property_region_type}
             />
           </Stack>
         )}
