@@ -41,7 +41,7 @@ export const useApUpdateApplyInfo = () => {
           p_residents: res.data?.p_residents ? res.data?.p_residents : pre.p_residents,
           p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : pre.p_borrowings,
           apCurrStepId: 14,
-          isMCJ: res.data.p_application_banks?.lengt > 1,
+          isMCJ: res.data.p_application_banks?.length > 1,
           hasIncomeTotalizer:
             res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4',
           hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',
