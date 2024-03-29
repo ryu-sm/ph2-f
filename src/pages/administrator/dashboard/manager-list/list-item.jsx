@@ -1,5 +1,5 @@
 import { Badge, Box, Button, Divider, Stack, Typography } from '@mui/material';
-import { Fragment, useCallback, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { PopoverSelect } from '../common/popover-select';
 import { ProgressStatus } from '../common/progress-status';
 import { FieldItem } from '../common/field-item';
@@ -7,14 +7,16 @@ import { formatApplyTime } from '@/utils';
 import { Icons } from '@/assets';
 import { FormikProvider, useFormik } from 'formik';
 import {
-  adUpdatePreliminarieManagerId,
-  adUpdatePreliminarieSalesAreaId,
-  adUpdatePreliminarieSalesExhibitionHallId,
-  adUpdatePreliminarieSalesPersonId,
+  adGetAccessSalesPersonOptions,
+  adUpdatePreliminaryManagerId,
+  adUpdatePreliminarySalesAreaId,
+  adUpdatePreliminarySalesExhibitionHallId,
+  adUpdatePreliminarySalesPersonId,
   adUpdateProvisionalAfterResult,
+  getChildrenOrgsWithCategory,
 } from '@/services';
 import { toast } from 'react-toastify';
-import { useBoolean, useDashboardContext, useSalesExhibitionHallOptions, useSalesPersonOptions } from '@/hooks';
+import { useBoolean, useDashboardContext } from '@/hooks';
 import { SetPairLoanModal } from './pair-loan-modal';
 import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +24,7 @@ import { routeNames } from '@/router/settings';
 import { UpAfterResultModal } from './after-result-modal';
 import { dashboardTabStatusAtom, editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { API_500_ERROR } from '@/constant';
 
 export const AdCaseItem = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -62,12 +65,27 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const afterResultModal = useBoolean(false);
   const formik = useFormik({
     initialValues: {
+      sales_company_id: item?.sales_company_id,
       sales_area_id: item?.sales_area_id,
       sales_exhibition_hall_id: item?.sales_exhibition_hall_id,
       s_sales_person_id: item?.s_sales_person_id,
       s_manager_id: item?.s_manager_id,
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue('sales_company_id', item?.sales_company_id);
+    formik.setFieldValue('sales_area_id', item?.sales_area_id);
+    formik.setFieldValue('sales_exhibition_hall_id', item?.sales_exhibition_hall_id);
+    formik.setFieldValue('s_sales_person_id', item?.s_sales_person_id);
+    formik.setFieldValue('s_manager_id', item?.s_manager_id);
+  }, [
+    item?.sales_company_id,
+    item?.sales_area_id,
+    item?.sales_exhibition_hall_id,
+    item?.s_sales_person_id,
+    item?.s_manager_id,
+  ]);
 
   const letfLinkItems = [
     {
@@ -198,8 +216,49 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     { value: '2', label: '否決' },
   ];
 
-  const salesExhibitionHallOptions = useSalesExhibitionHallOptions(formik.values.sales_area_id);
-  const salesPersonOptions = useSalesPersonOptions(formik.values.sales_exhibition_hall_id);
+  const [salesAreaOptions, setSalesAreaOptions] = useState([]);
+  const [salesExhibitionHallOptions, setSalesExhibitionHallOptions] = useState([]);
+  const [salesPersonOptions, setSalesPersonOptions] = useState([]);
+
+  const fetchSalesAreaOptions = async (sales_company_id) => {
+    try {
+      const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
+      console.log(res.data);
+      setSalesAreaOptions(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const fetchSalesExhibitionHallOptions = async (sales_area_id, sales_company_id) => {
+    try {
+      const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
+      console.log(res.data);
+      setSalesExhibitionHallOptions(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const fetchSalesPersonOptions = async (sales_exhibition_hall_id, sales_area_id, sales_company_id) => {
+    try {
+      const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
+      setSalesPersonOptions(res.data);
+      console.log(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    fetchSalesAreaOptions(formik.values.sales_company_id);
+    fetchSalesExhibitionHallOptions(formik.values.sales_area_id, formik.values.sales_company_id);
+    fetchSalesPersonOptions(
+      formik.values.sales_exhibition_hall_id,
+      formik.values.sales_area_id,
+      formik.values.sales_company_id
+    );
+  }, []);
 
   const handleUpdateProvisionalAfterResult = useCallback(async () => {
     try {
@@ -214,7 +273,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
   const handleChangeManager = useCallback(async (s_manager_id, item) => {
     try {
-      const res = await adUpdatePreliminarieManagerId({
+      const res = await adUpdatePreliminaryManagerId({
         p_application_header_id: item?.id,
         s_manager_id: s_manager_id,
       });
@@ -226,9 +285,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     }
   }, []);
 
-  const handleSalesPerson = useCallback(async (s_sales_person_id, item) => {
+  const handleSalesPerson = useCallback(async (s_sales_person_id) => {
     try {
-      const res = await adUpdatePreliminarieSalesPersonId({
+      const res = await adUpdatePreliminarySalesPersonId({
         p_application_header_id: item?.id,
         s_sales_person_id: s_sales_person_id,
       });
@@ -240,14 +299,21 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     }
   }, []);
 
-  const handleChangeSalesArea = useCallback(async (sales_area_id, sales_exhibition_hall_id, item) => {
+  const handleChangeSalesArea = useCallback(async (sales_area_id) => {
     try {
-      const res = await adUpdatePreliminarieSalesAreaId({
+      const res = await adUpdatePreliminarySalesAreaId({
         p_application_header_id: item?.id,
+        sales_company_id: item?.sales_company_id,
         sales_area_id: sales_area_id,
-        sales_exhibition_hall_id: sales_exhibition_hall_id,
+        sales_exhibition_hall_id: item?.sales_exhibition_hall_id,
+        s_sales_person_id: item?.s_sales_person_id,
       });
+      await fetchSalesExhibitionHallOptions(sales_area_id, formik.values.sales_company_id);
+      await fetchSalesPersonOptions(res.data.sales_exhibition_hall_id, sales_area_id, formik.values.sales_company_id);
+      console.log(res.data);
       formik.setFieldValue('sales_exhibition_hall_id', res.data.sales_exhibition_hall_id);
+      formik.setFieldValue('s_sales_person_id', res.data.s_sales_person_id);
+
       toast.success('エリアを変更しました。');
     } catch (error) {
       console.log(error);
@@ -256,13 +322,18 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     }
   }, []);
 
-  const handleChangeSalesExhibitionHall = useCallback(async (sales_exhibition_hall_id, s_sales_person_id, item) => {
+  const handleChangeSalesExhibitionHall = useCallback(async (sales_exhibition_hall_id) => {
     try {
-      const res = await adUpdatePreliminarieSalesExhibitionHallId({
+      const res = await adUpdatePreliminarySalesExhibitionHallId({
         p_application_header_id: item?.id,
         sales_exhibition_hall_id: sales_exhibition_hall_id,
-        s_sales_person_id: s_sales_person_id,
+        s_sales_person_id: item?.s_sales_person_id,
       });
+      await fetchSalesPersonOptions(
+        sales_exhibition_hall_id,
+        formik.values.sales_area_id,
+        formik.values.sales_company_id
+      );
       formik.setFieldValue('s_sales_person_id', res.data.s_sales_person_id);
       toast.success('エリアを変更しました。');
     } catch (error) {
@@ -388,13 +459,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             maxWidth={widthConfig[9]}
             minWidth={widthConfig[9]}
             fontSize={15}
-            value={
-              <PopoverSelect
-                name="sales_area_id"
-                options={item?.area_options}
-                onChange={(value) => handleChangeSalesArea(value, formik.values.sales_exhibition_hall_id, item)}
-              />
-            }
+            value={<PopoverSelect name="sales_area_id" options={salesAreaOptions} onChange={handleChangeSalesArea} />}
             isText={false}
           />
           <FieldItem
@@ -405,7 +470,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
               <PopoverSelect
                 name="sales_exhibition_hall_id"
                 options={salesExhibitionHallOptions}
-                onChange={(value) => handleChangeSalesExhibitionHall(value, formik.values.s_sales_person_id, item)}
+                onChange={handleChangeSalesExhibitionHall}
               />
             }
             isText={false}
@@ -413,13 +478,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           <FieldItem
             maxWidth={widthConfig[11]}
             minWidth={widthConfig[11]}
-            value={
-              <PopoverSelect
-                name="s_sales_person_id"
-                options={salesPersonOptions}
-                onChange={(value) => handleSalesPerson(value, item)}
-              />
-            }
+            value={<PopoverSelect name="s_sales_person_id" options={salesPersonOptions} onChange={handleSalesPerson} />}
             isText={false}
           />
           <FieldItem

@@ -640,7 +640,7 @@ export const Item03 = () => {
               isRequired
               field={
                 isEditable ? (
-                  <AdNumericInput name="p_applicant_persons__0.last_year_bonus_income" maxLength={5} />
+                  <AdNumericInput name="p_applicant_persons__0.last_year_bonus_income" maxLength={5} unit={'万円'} />
                 ) : (
                   formatMoney(formik.values.p_applicant_persons__0.last_year_bonus_income)
                 )

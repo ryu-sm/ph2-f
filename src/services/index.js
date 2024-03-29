@@ -112,30 +112,6 @@ export const adSalesPersonPreliminaries = async (status) => {
   return await service.get(`/sales-person/preliminaries?status=${status}`);
 };
 
-export const adUpdatePreliminarieManagerId = async (data) => {
-  return await service.put('/preliminaries/s_manager_id', data);
-};
-
-export const adUpdatePreliminarieSalesPersonId = async (data) => {
-  return await service.put('/preliminaries/s_sales_person_id', data);
-};
-
-export const adUpdatePreliminarieSalesAreaId = async (data) => {
-  return await service.put('/preliminaries/sales_area_id', data);
-};
-
-export const adUpdatePreliminarieSalesExhibitionHallId = async (data) => {
-  return await service.put('/preliminaries/sales_exhibition_hall_id', data);
-};
-
-export const adGetSalesPersonOptions = async (parent_id) => {
-  return await service.get(`/sales_person_options?parent_id=${parent_id}`);
-};
-
-export const adGetSalesExhibitionHallOptions = async (parent_id) => {
-  return await service.get(`/sales_exhibition_hall_options?parent_id=${parent_id}`);
-};
-
 export const adGetPairLoanOptions = async (p_application_header_id) => {
   return await service.get(`/pair_loan_options?id=${p_application_header_id}`);
 };
@@ -291,4 +267,39 @@ export const apGetSalesCompanyOrgs = async (s_sales_company_org_id) => {
   } else {
     return await service.get(`/orgs`);
   }
+};
+
+// ad org
+
+export const adUpdatePreliminaryManagerId = async (data) => {
+  return await service.put('/preliminary/s_manager_id', data);
+};
+
+export const adGetAccessSalesPersonOptions = async (orgs_id) => {
+  return await service.get(`/orgs/s_sales_persons?orgs_id=${orgs_id}`);
+};
+
+export const adUpdatePreliminarySalesAreaId = async (data) => {
+  return await service.put('/preliminary/sales_area_id', data);
+};
+
+export const adUpdatePreliminarySalesPersonId = async (data) => {
+  return await service.put('/preliminary/s_sales_person_id', data);
+};
+
+export const adUpdatePreliminarySalesExhibitionHallId = async (data) => {
+  return await service.put('/preliminary/sales_exhibition_hall_id', data);
+};
+
+// export const adGetAccessOrgs = async (parent_id) => {
+//   return await service.get(`/preliminary/access_args?parent_id${parent_id}`);
+// };
+
+// TODO:delete
+export const adGetSalesPersonOptions = async (parent_id) => {
+  return await service.get(`/sales_person_options?parent_id=${parent_id}`);
+};
+// TODO:delete
+export const adGetSalesExhibitionHallOptions = async (parent_id) => {
+  return await service.get(`/sales_exhibition_hall_options?parent_id=${parent_id}`);
 };

@@ -20,7 +20,7 @@ export const AdSelectRadios = ({ options, unit, cancelable, ...props }) => {
         await setValue('');
         return;
       }
-      await setValue(value);
+      setValue(value);
     },
     [props, setValue, cancelable, meta.value]
   );

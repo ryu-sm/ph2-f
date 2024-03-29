@@ -12,6 +12,7 @@ export const ManagerList = () => {
   const { status, preliminarieList, refreshPreliminarieList } = useDashboardContext();
   const [data, setData] = useState([]);
   useEffect(() => {
+    console.log('refresh:999999');
     refreshPreliminarieList();
   }, []);
 
