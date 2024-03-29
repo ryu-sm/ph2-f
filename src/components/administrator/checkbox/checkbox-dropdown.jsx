@@ -27,7 +27,7 @@ export const CheckboxDropdown = ({ options, hasFilter, ...props }) => {
       filterValue: '',
     },
   });
-  const filteredOptions = useMemo(() => {
+  const filtedOptions = useMemo(() => {
     return formik.values.filterValue
       ? options.filter((option) => option.label.toLowerCase().includes(formik.values.filterValue.toLowerCase()))
       : options;
@@ -51,7 +51,7 @@ export const CheckboxDropdown = ({ options, hasFilter, ...props }) => {
         </Stack>
       )}
       <Stack maxHeight={125} minHeight={hasFilter ? 120 : 0} overflow={'auto'} spacing={3}>
-        {filteredOptions.map((option) => (
+        {filtedOptions.map((option) => (
           <Stack key={option.value} direction={'row'} alignItems={'center'} spacing={1} px={'68px'}>
             <Stack
               direction={'row'}

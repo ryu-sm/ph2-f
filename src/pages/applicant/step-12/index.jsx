@@ -205,8 +205,8 @@ export const ApStep12Page = () => {
   };
   const handleChangArea = async (e) => {
     const value = e.target.value;
-    const resE = await getChildrenOrgsWithCategory(value, 'E');
-    if (!resE.data.find((item) => item?.value === formik.values.p_application_headers.sales_area_id)) {
+    const resE = await getChildrenOrgsWithCategory(value || formik.values.p_application_headers.sales_company_id, 'E');
+    if (!resE.data.find((item) => item?.value === formik.values.p_application_headers.sales_exhibition_hall_id)) {
       formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
     }
     setOrgsE([{ value: '', label: '' }, ...resE.data]);

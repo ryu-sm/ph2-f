@@ -3,10 +3,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box, Popover, Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export const PopoverSelect = ({ options = [], onChange, ...props }) => {
   const [field, meta, helpers] = useField(props);
+  const [oldValue, setOldValue] = useState(meta.value);
   const { setValue } = helpers;
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState('');
@@ -20,10 +21,19 @@ export const PopoverSelect = ({ options = [], onChange, ...props }) => {
   };
 
   const handleChange = (value) => {
+    if (oldValue === value) {
+      handleClosePopover();
+      return;
+    }
     onChange(value);
     setValue(value);
+    setOldValue(value);
     handleClosePopover();
   };
+
+  const filtedOptions = useMemo(() => {
+    return searchText ? options.filter((option) => option.label.includes(searchText)) : options;
+  }, [options, searchText]);
 
   return (
     <>
@@ -117,7 +127,7 @@ export const PopoverSelect = ({ options = [], onChange, ...props }) => {
             />
           </Stack>
 
-          {[{ value: '', label: '' }, ...options]?.map((item) => (
+          {[{ value: '', label: '' }, ...filtedOptions]?.map((item) => (
             <Stack
               key={item.value}
               onClick={() => {
@@ -129,7 +139,7 @@ export const PopoverSelect = ({ options = [], onChange, ...props }) => {
                 minHeight: 46,
                 px: 2,
                 justifyContent: 'center',
-                bgcolor: item.id === meta?.value ? 'primary.40' : 'white',
+                bgcolor: item.value === meta?.value ? 'primary.40' : 'white',
                 '&:hover': {
                   bgcolor: 'gray.60',
                 },
