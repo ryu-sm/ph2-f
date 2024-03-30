@@ -126,7 +126,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     {
       value: '4',
       title: '住信SBIネット銀行',
-      label: ['4'].includes(item?.pre_examination_status) ? `仮審査中（${item?.provisional_status}/5）` : '仮審査中',
+      label: ['4'].includes(item?.pre_examination_status)
+        ? `仮審査中（${item?.provisional_status ? item?.provisional_status : 0}/5）`
+        : '仮審査中',
       bgcolor: ['4'].includes(item?.pre_examination_status) ? '#DF8550' : 'gray.20',
     },
     {
