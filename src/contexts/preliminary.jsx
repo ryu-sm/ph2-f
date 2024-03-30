@@ -66,63 +66,22 @@ export const PreliminaryProvider = ({ children }) => {
     try {
       const res = await adGetPreliminary(preliminaryId);
       const temp = res.data?.p_application_headers?.new_house_planned_resident_overview;
+
       const p_residents = res.data?.p_residents || [];
       const tempArray = [...p_residents];
-      if (Number(temp.spouse) > 0) {
-        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '1');
-        if (Number(temp.spouse) > filted.length) {
-          Array.from({ length: Number(temp.spouse) - filted.length }, () => {
-            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '1' });
-          });
-        }
-      }
-      if (Number(temp.children) > 0) {
-        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '2');
-        if (Number(temp.children) > filted.length) {
-          Array.from({ length: Number(temp.children) - filted.length }, () => {
-            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '2' });
-          });
-        }
-      }
-      if (Number(temp.father) > 0) {
-        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '3');
-        if (Number(temp.father) > filted.length) {
-          Array.from({ length: Number(temp.father) - filted.length }, () => {
-            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '3' });
-          });
-        }
-      }
-      if (Number(temp.mother) > 0) {
-        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '4');
-        if (Number(temp.mother) > filted.length) {
-          Array.from({ length: Number(temp.mother) - filted.length }, () => {
-            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '4' });
-          });
-        }
-      }
-      if (Number(temp.brothers_sisters) > 0) {
-        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '5');
-        if (Number(temp.brothers_sisters) > filted.length) {
-          Array.from({ length: Number(temp.brothers_sisters) - filted.length }, () => {
-            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '5' });
-          });
-        }
-      }
-      if (Number(temp.fiance) > 0) {
-        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '6');
-        if (Number(temp.fiance) > filted.length) {
-          Array.from({ length: Number(temp.fiance) - filted.length }, () => {
-            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '6' });
-          });
-        }
-      }
-      if (Number(temp.others) > 0) {
-        const filted = p_residents.filter((item) => item.rel_to_applicant_a === '99');
-        if (Number(temp.others) > filted.length) {
-          Array.from({ length: Number(temp.others) - filted.length }, () => {
-            tempArray.push({ ...residentsInitialValues, rel_to_applicant_a: '99' });
-          });
-        }
+      const plannedResidentNum =
+        Number(temp.spouse) +
+        Number(temp.children) +
+        Number(temp.father) +
+        Number(temp.mother) +
+        Number(temp.brothers_sisters) +
+        Number(temp.fiance) +
+        Number(temp.others);
+
+      if (p_residents.length < 6 && plannedResidentNum >= 6) {
+        Array.from({ length: 6 - p_residents.length }, () => {
+          tempArray.push(residentsInitialValues);
+        });
       }
 
       const dbData = {

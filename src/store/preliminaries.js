@@ -483,7 +483,7 @@ export const preliminarySelect = selector({
         tempArray.push(residentsInitialValues);
       });
     }
-    console.log(res.data.p_application_headers);
+
     return {
       ...preliminaryInitialValues,
       p_uploaded_files: {
