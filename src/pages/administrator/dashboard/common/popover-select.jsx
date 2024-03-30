@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 
 export const PopoverSelect = ({ options = [], onChange, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const [oldValue, setOldValue] = useState(meta.value);
+  const [oldValue, setOldValue] = useState(null);
   const { setValue } = helpers;
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchText, setSearchText] = useState('');
@@ -27,7 +27,7 @@ export const PopoverSelect = ({ options = [], onChange, ...props }) => {
     }
     onChange(value);
     setValue(value);
-    setOldValue(value);
+    setOldValue(null);
     handleClosePopover();
   };
 
@@ -43,6 +43,7 @@ export const PopoverSelect = ({ options = [], onChange, ...props }) => {
         width={160}
         onClick={(e) => {
           handleOpenPopover(e);
+          setOldValue(meta.value);
           setSearchText('');
         }}
       >
