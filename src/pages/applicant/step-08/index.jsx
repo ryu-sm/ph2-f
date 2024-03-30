@@ -172,6 +172,10 @@ export const ApStep08Page = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -194,33 +198,40 @@ export const ApStep08Page = () => {
               options={CurrBorrowingStatusOptions}
               onChange={(e) => {
                 if (e.target.value === '1') {
-                  formik.setFieldValue('p_borrowings', [
-                    {
-                      id: '',
-                      p_borrowings__I: [],
-                      self_input: '0',
-                      borrower: '',
-                      type: '',
-                      lender: '',
-                      borrowing_from_house_finance_agency: '',
-                      loan_start_date: '',
-                      loan_amount: '',
-                      curr_loan_balance_amount: '',
-                      annual_repayment_amount: '',
-                      loan_end_date: '',
-                      scheduled_loan_payoff: '',
-                      scheduled_loan_payoff_date: '',
-                      loan_business_target: '',
-                      loan_business_target_other: '',
-                      loan_purpose: '',
-                      loan_purpose_other: '',
-                      category: '',
-                      card_expiry_date: '',
-                      rental_room_num: '',
-                      common_housing: '',
-                      estate_setting: '',
-                    },
-                  ]);
+                  let tempPborrowings = [];
+                  if (p_borrowings.length > 0) {
+                    tempPborrowings = p_borrowings;
+                  } else {
+                    tempPborrowings = [
+                      {
+                        id: '',
+                        p_borrowings__I: [],
+                        self_input: '0',
+                        borrower: hasIncomeTotalizer ? '' : '1',
+                        type: '',
+                        lender: '',
+                        borrowing_from_house_finance_agency: '',
+                        loan_start_date: '',
+                        loan_amount: '',
+                        curr_loan_balance_amount: '',
+                        annual_repayment_amount: '',
+                        loan_end_date: '',
+                        scheduled_loan_payoff: '',
+                        scheduled_loan_payoff_date: '',
+                        loan_business_target: '',
+                        loan_business_target_other: '',
+                        loan_purpose: '',
+                        loan_purpose_other: '',
+                        category: '',
+                        card_expiry_date: '',
+                        rental_room_num: '',
+                        common_housing: '',
+                        estate_setting: '',
+                      },
+                    ];
+                  }
+
+                  formik.setFieldValue('p_borrowings', tempPborrowings);
                 } else {
                   formik.setFieldValue('p_borrowings', []);
                 }
@@ -293,14 +304,15 @@ export const ApStep08Page = () => {
                                 options={typeOptions}
                                 justifyContent={'start'}
                                 width={1}
-                                onChange={() => {
+                                onChange={(e) => {
+                                  console.log(e.target.value);
                                   if (formik.values.p_borrowings[index].type !== '')
                                     arrayHelpers.replace(index, {
                                       id: p_borrowing.id,
-                                      p_borrowings__I: [],
+                                      p_borrowings__I: p_borrowing.p_borrowings__I,
                                       self_input: '0',
                                       borrower: p_borrowing.borrower,
-                                      type: '',
+                                      type: e.target.value,
                                       lender: '',
                                       borrowing_from_house_finance_agency: '',
                                       loan_start_date: '',
