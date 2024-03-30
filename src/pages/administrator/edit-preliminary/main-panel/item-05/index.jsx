@@ -204,19 +204,19 @@ export const Item05 = () => {
     return conter.join('・');
   }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
 
-  useEffect(() => {
-    const temp00 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a_name !== '');
-    const temp01 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '1');
-    const temp02 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '2');
-    const temp03 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '3');
-    const temp04 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '4');
-    const temp05 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '5');
-    const temp06 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '6');
-    const temp99 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '99');
-    const tempNull = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '');
-    const temp = [...temp00, ...temp01, ...temp02, ...temp03, ...temp04, ...temp05, ...temp06, ...temp99, ...tempNull];
-    formik.setFieldValue('p_residents', temp.slice(0, 6));
-  }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
+  // useEffect(() => {
+  //   const temp00 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a_name !== '');
+  //   const temp01 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '1');
+  //   const temp02 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '2');
+  //   const temp03 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '3');
+  //   const temp04 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '4');
+  //   const temp05 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '5');
+  //   const temp06 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '6');
+  //   const temp99 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '99');
+  //   const tempNull = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '');
+  //   const temp = [...temp00, ...temp01, ...temp02, ...temp03, ...temp04, ...temp05, ...temp06, ...temp99, ...tempNull];
+  //   formik.setFieldValue('p_residents', temp.slice(0, 6));
+  // }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
 
   return (
     <FormikProvider value={formik}>

@@ -484,6 +484,27 @@ export const preliminarySelect = selector({
       });
     }
 
+    const temp00 = tempArray.filter((item) => item?.rel_to_applicant_a_name !== '');
+    const temp01 = tempArray.filter((item) => item?.rel_to_applicant_a === '1');
+    const temp02 = tempArray.filter((item) => item?.rel_to_applicant_a === '2');
+    const temp03 = tempArray.filter((item) => item?.rel_to_applicant_a === '3');
+    const temp04 = tempArray.filter((item) => item?.rel_to_applicant_a === '4');
+    const temp05 = tempArray.filter((item) => item?.rel_to_applicant_a === '5');
+    const temp06 = tempArray.filter((item) => item?.rel_to_applicant_a === '6');
+    const temp99 = tempArray.filter((item) => item?.rel_to_applicant_a === '99');
+    const temp__ = tempArray.filter((item) => item?.rel_to_applicant_a === '');
+    const tempArraySorted = [
+      ...temp00,
+      ...temp01,
+      ...temp02,
+      ...temp03,
+      ...temp04,
+      ...temp05,
+      ...temp06,
+      ...temp99,
+      ...temp__,
+    ];
+
     return {
       ...preliminaryInitialValues,
       p_uploaded_files: {
@@ -516,7 +537,7 @@ export const preliminarySelect = selector({
       p_join_guarantors: res.data?.p_join_guarantors
         ? res.data.p_join_guarantors
         : preliminaryInitialValues.p_join_guarantors,
-      p_residents: tempArray,
+      p_residents: tempArraySorted,
       p_activities: res.data?.p_activities ? res.data?.p_activities : [],
       files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
       p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : preliminaryInitialValues.p_borrowings,
