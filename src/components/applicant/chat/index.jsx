@@ -19,7 +19,7 @@ export const ApChat = () => {
       const res = await apGetMessages();
       setMessages(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   };
 

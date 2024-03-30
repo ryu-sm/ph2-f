@@ -132,10 +132,6 @@ export const Item03 = () => {
     });
   }, [formik.values]);
 
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>

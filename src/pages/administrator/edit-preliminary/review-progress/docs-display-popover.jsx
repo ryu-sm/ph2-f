@@ -75,10 +75,8 @@ export const AdDocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
         }
       }
     });
-    console.log(temp);
     return temp;
   }, [p_uploaded_files, p_borrowings, mainTab]);
-  console.log(mainTab);
   const handleClick = (item) => {
     const path = `${
       isManager ? routeNames.adManagerFilesViewPage.path : routeNames.adSalesPersonFilesViewPage.path

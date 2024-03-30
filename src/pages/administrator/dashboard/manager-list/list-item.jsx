@@ -223,7 +223,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const fetchSalesAreaOptions = async (sales_company_id) => {
     try {
       const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
-      console.log(res.data);
       setSalesAreaOptions(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -233,7 +232,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const fetchSalesExhibitionHallOptions = async (sales_area_id, sales_company_id) => {
     try {
       const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
-      console.log(res.data);
       setSalesExhibitionHallOptions(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -244,7 +242,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     try {
       const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
       setSalesPersonOptions(res.data);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -267,7 +264,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       afterResultModal.onFalse();
       toast.success('更新をしました。');
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, [afterResult]);
 
@@ -279,7 +276,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       });
       toast.success('銀代担当を変更しました。');
     } catch (error) {
-      console.log(error);
       toast.error('サーバーとの通信に失敗しました。再度お試しください。');
       return;
     }
@@ -293,7 +289,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       });
       toast.success('担当担当を変更しました。');
     } catch (error) {
-      console.log(error);
       toast.error('サーバーとの通信に失敗しました。再度お試しください。');
       return;
     }
@@ -310,13 +305,11 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       });
       await fetchSalesExhibitionHallOptions(sales_area_id, formik.values.sales_company_id);
       await fetchSalesPersonOptions(res.data.sales_exhibition_hall_id, sales_area_id, formik.values.sales_company_id);
-      console.log(res.data);
       formik.setFieldValue('sales_exhibition_hall_id', res.data.sales_exhibition_hall_id);
       formik.setFieldValue('s_sales_person_id', res.data.s_sales_person_id);
 
       toast.success('エリアを変更しました。');
     } catch (error) {
-      console.log(error);
       toast.error('サーバーとの通信に失敗しました。再度お試しください。');
       return;
     }
@@ -337,7 +330,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       formik.setFieldValue('s_sales_person_id', res.data.s_sales_person_id);
       toast.success('エリアを変更しました。');
     } catch (error) {
-      console.log(error);
       toast.error('サーバーとの通信に失敗しました。再度お試しください。');
       return;
     }

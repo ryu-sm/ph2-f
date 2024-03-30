@@ -10,6 +10,8 @@ import { UpdateModal } from './update-modal';
 import { useBoolean } from '@/hooks';
 import { adGetRowData } from '@/services';
 import { downloadExcelAsync } from '@/utils';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const AdReviewProgress = () => {
   const {
@@ -22,9 +24,8 @@ export const AdReviewProgress = () => {
     try {
       const res = await adGetRowData(id);
       await downloadExcelAsync(res.data.src, `${apply_no}_申込内容のローデータ.xlsx`);
-      console.log(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   };
 

@@ -192,10 +192,6 @@ export const ApStep03Page = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

@@ -1,22 +1,37 @@
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
-import { AdEditInput, AdSelectRadios } from '@/components/administrator';
-import { useSalesPersonOptions } from '@/hooks';
+import { AdEditFullWidthInput, AdEditInput, AdSelectRadios } from '@/components/administrator';
+
 import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { apGetSalesCompanyOrgs } from '@/services';
+import {
+  adGetAccessSalesPersonOptions,
+  adGetSalesPersonInfo,
+  getChildrenOrgsWithCategory,
+  getOrgsWithCategories,
+} from '@/services';
+import { useRecoilValue } from 'recoil';
+import { authAtom } from '@/store';
+import { useIsManager } from '@/hooks';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const Item08 = () => {
-  const [orgs, setOrgs] = useState([]);
+  const isManager = useIsManager();
+  const [salesPersonInfo, setSalesPersonInfo] = useState({});
   const {
     preliminaryInfo: { p_application_headers },
     setPreliminarySnap,
     handleSave,
   } = usePreliminaryContext();
   const isEditable = false;
+
+  const {
+    salesPerson: { orgs },
+  } = useRecoilValue(authAtom);
   const initialValues = {
     p_application_headers: {
       sales_company_id: p_application_headers?.sales_company_id,
@@ -39,7 +54,178 @@ export const Item08 = () => {
 
   const formik = useFormik({
     initialValues,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      await handleSave(setUpdateData(values));
+    },
   });
+  const [salesCompanyOptions, setSalesCompanyOptions] = useState([]);
+  const [salesAreaOptions, setSalesAreaOptions] = useState([]);
+  const [salesExhibitionHallOptions, setSalesExhibitionHallOptions] = useState([]);
+  const [salesPersonOptions, setSalesPersonOptions] = useState([]);
+
+  const [accessOrgs, setAccessOrgs] = useState([]);
+
+  const fetchAccessOrgs = async () => {
+    try {
+      const tempAccessOrgs = [];
+      for (let org of orgs) {
+        const resC = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'C');
+        const resB = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'B');
+        const resE = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'E');
+
+        [...resC.data, ...resB.data, ...resE.data].forEach((item) => {
+          tempAccessOrgs.push({ ...item, role: org?.role });
+        });
+      }
+      setAccessOrgs(tempAccessOrgs);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    if (!isManager) {
+      fetchAccessOrgs();
+    }
+  }, [orgs]);
+
+  const fetchSalesCompanyOptions = async () => {
+    try {
+      const res = await getOrgsWithCategories('C');
+      setSalesCompanyOptions(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const fetchSalesAreaOptions = async (sales_company_id) => {
+    try {
+      const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
+      setSalesAreaOptions(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const fetchSalesExhibitionHallOptions = async (sales_area_id, sales_company_id) => {
+    try {
+      const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
+      setSalesExhibitionHallOptions(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  const fetchSalesPersonOptions = async (sales_exhibition_hall_id, sales_area_id, sales_company_id) => {
+    try {
+      const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
+      setSalesPersonOptions(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    fetchSalesCompanyOptions();
+    fetchSalesAreaOptions(formik.values.p_application_headers.sales_company_id);
+    fetchSalesExhibitionHallOptions(
+      formik.values.p_application_headers.sales_area_id,
+      formik.values.p_application_headers.sales_company_id
+    );
+    fetchSalesPersonOptions(
+      formik.values.p_application_headers.sales_exhibition_hall_id,
+      formik.values.p_application_headers.sales_area_id,
+      formik.values.p_application_headers.sales_company_id
+    );
+  }, []);
+
+  const checkEnableSalesArea = useMemo(() => {
+    if (isManager) return true;
+    return accessOrgs.find((accessOrg) => accessOrg?.category === 'C' && accessOrg?.role === 9);
+  }, [accessOrgs]);
+
+  const checkEnableSalesExhibitionHall = useMemo(() => {
+    if (isManager) return true;
+    const accessOrgsID = [];
+    accessOrgs.forEach((item) => {
+      if (item?.role === 9) {
+        accessOrgsID.push(item?.value);
+      }
+    });
+    return accessOrgs.find(
+      (accessOrg) =>
+        accessOrg?.category === 'B' &&
+        accessOrg?.role === 9 &&
+        accessOrgsID.includes(formik.values.p_application_headers.sales_area_id)
+    );
+  }, [accessOrgs, formik.values.p_application_headers.sales_area_id]);
+
+  const checkEnableSalesPerson = useMemo(() => {
+    if (isManager) return true;
+    const accessOrgsID = [];
+    accessOrgs.forEach((item) => {
+      if (item?.role === 9) {
+        accessOrgsID.push(item?.value);
+      }
+    });
+    return accessOrgs.find(
+      (accessOrg) =>
+        accessOrg?.category === 'E' &&
+        accessOrg?.role === 9 &&
+        accessOrgsID.includes(formik.values.p_application_headers.sales_exhibition_hall_id)
+    );
+  }, [accessOrgs, formik.values.p_application_headers.sales_exhibition_hall_id]);
+
+  const handleChangeSalesCompany = useCallback(async (sales_company_id) => {
+    formik.setFieldValue('p_application_headers.sales_area_id', '');
+    formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+    formik.setFieldValue('p_application_headers.s_sales_person_id', '');
+    await fetchSalesAreaOptions(sales_company_id);
+    await fetchSalesExhibitionHallOptions(sales_company_id);
+    await fetchSalesPersonOptions(sales_company_id);
+  }, []);
+
+  const handleChangeSalesArea = useCallback(async (sales_area_id) => {
+    try {
+      const res = await getChildrenOrgsWithCategory(
+        sales_area_id || formik.values.p_application_headers.sales_company_id,
+        'E'
+      );
+      setSalesExhibitionHallOptions(res.data);
+      if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.sales_exhibition_hall_id)) {
+        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+      } else {
+        const res = await adGetAccessSalesPersonOptions(
+          formik.values.p_application_headers.sales_exhibition_hall_id ||
+            sales_area_id ||
+            formik.values.p_application_headers.sales_company_id
+        );
+        setSalesPersonOptions(res.data);
+        if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.s_sales_person_id)) {
+          formik.setFieldValue('p_application_headers.s_sales_person_id', '');
+        }
+      }
+    } catch (error) {
+      toast.error('サーバーとの通信に失敗しました。再度お試しください。');
+    }
+  }, []);
+
+  const handleChangeSalesExhibitionHall = useCallback(async (sales_exhibition_hall_id) => {
+    try {
+      const res = await adGetAccessSalesPersonOptions(
+        sales_exhibition_hall_id ||
+          formik.values.p_application_headers.sales_area_id ||
+          formik.values.p_application_headers.sales_company_id
+      );
+      setSalesPersonOptions(res.data);
+      if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.s_sales_person_id)) {
+        formik.setFieldValue('p_application_headers.s_sales_person_id', '');
+      }
+    } catch (error) {
+      toast.error('サーバーとの通信に失敗しました。再度お試しください。');
+    }
+  }, []);
 
   useEffect(() => {
     setPreliminarySnap((pre) => {
@@ -53,126 +239,127 @@ export const Item08 = () => {
     });
   }, [formik.values]);
 
-  const getOrgs = useCallback(async () => {
-    try {
-      const res = await apGetSalesCompanyOrgs();
-
-      const tempOrgs = res.data.map((item) => ({
-        value: item.id,
-        pid: item.pid,
-        label: item.name,
-        category: item.category,
-      }));
-      setOrgs(tempOrgs);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   useEffect(() => {
-    getOrgs();
-  }, []);
-  const salesCompanyOptions = useMemo(() => {
-    return orgs.filter((item) => item.category === 'C');
-  }, [orgs]);
-
-  const salesAreaOptions = useMemo(() => {
-    if (!formik.values.p_application_headers.sales_company_id) return [{ value: '', label: '' }];
-    return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === 'B' && item.pid === formik.values.p_application_headers.sales_company_id)
-    );
-  }, [orgs, formik.values.p_application_headers.sales_company_id]);
-
-  const exhibitionHallOptions = useMemo(() => {
-    if (!formik.values.p_application_headers.sales_area_id) return [{ value: '', label: '' }];
-    return [{ value: '', label: '' }].concat(
-      orgs.filter((item) => item.category === 'E' && item.pid === formik.values.p_application_headers.sales_area_id)
-    );
-  }, [orgs, formik.values.p_application_headers.sales_area_id]);
-
-  const salesPersonOptions = useSalesPersonOptions(formik.values.p_application_headers.sales_exhibition_hall_id);
+    const fetchData = async () => {
+      try {
+        if (formik.values.p_application_headers.s_sales_person_id) {
+          const res = await adGetSalesPersonInfo(formik.values.p_application_headers.s_sales_person_id);
+          setSalesPersonInfo(res.data);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
+      }
+    };
+    fetchData();
+  }, [formik.values.p_application_headers.s_sales_person_id]);
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'提携会社'}
-          hasPleft={isEditable}
+          upConfig={{
+            key: `p_application_headers.sales_company_id.${p_application_headers?.id}`,
+            options: salesCompanyOptions,
+          }}
+          hasPleft={isEditable && isManager}
           field={
-            isEditable ? (
+            isEditable && isManager ? (
               <AdSelectRadios
                 name="p_application_headers.sales_company_id"
                 options={salesCompanyOptions}
-                onChange={() => {
-                  formik.setFieldValue('p_application_headers.sales_area_id', '');
-                  formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-                }}
+                hasFilter
+                onChange={handleChangeSalesCompany}
               />
             ) : (
               salesCompanyOptions.find((item) => item.value === formik.values.p_application_headers.sales_company_id)
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.sales_company_id}
         />
         <EditRow
           label={'エリア'}
-          hasPleft={isEditable}
+          upConfig={{
+            key: `p_application_headers.sales_area_id.${p_application_headers?.id}`,
+            options: salesAreaOptions,
+          }}
+          hasPleft={isEditable && checkEnableSalesArea}
           field={
-            isEditable ? (
+            isEditable && checkEnableSalesArea ? (
               <AdSelectRadios
                 name="p_application_headers.sales_area_id"
                 options={salesAreaOptions}
-                onChange={() => {
-                  formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-                }}
+                cancelable
+                hasFilter
+                onChange={handleChangeSalesArea}
               />
             ) : (
               salesAreaOptions.find((item) => item.value === formik.values.p_application_headers.sales_area_id)?.label
             )
           }
-          error={formik.errors?.p_application_headers?.sales_area_id}
         />
         <EditRow
           label={'営業所・展示場'}
-          hasPleft={isEditable}
+          upConfig={{
+            key: `p_application_headers.sales_exhibition_hall_id.${p_application_headers?.id}`,
+            options: salesExhibitionHallOptions,
+          }}
+          hasPleft={isEditable && checkEnableSalesExhibitionHall}
           field={
-            isEditable ? (
-              <AdSelectRadios name="p_application_headers.sales_exhibition_hall_id" options={exhibitionHallOptions} />
+            isEditable && checkEnableSalesExhibitionHall ? (
+              <AdSelectRadios
+                name="p_application_headers.sales_exhibition_hall_id"
+                options={salesExhibitionHallOptions}
+                cancelable
+                hasFilter
+                onChange={handleChangeSalesExhibitionHall}
+              />
             ) : (
-              exhibitionHallOptions.find(
+              salesExhibitionHallOptions.find(
                 (item) => item.value === formik.values.p_application_headers.sales_exhibition_hall_id
               )?.label
             )
           }
-          error={formik.errors?.p_application_headers?.sales_exhibition_hall_id}
         />
         <EditRow
           label={'担当者名 (情報共有者)'}
-          hasPleft={isEditable}
+          upConfig={{
+            key: `p_application_headers.s_sales_person_id.${p_application_headers?.id}`,
+            options: salesPersonOptions,
+          }}
+          hasPleft={isEditable && checkEnableSalesPerson}
           field={
-            isEditable ? (
-              <AdSelectRadios name="p_application_headers.s_sales_person_id" options={salesPersonOptions} />
+            isEditable && checkEnableSalesPerson ? (
+              <AdSelectRadios
+                name="p_application_headers.s_sales_person_id"
+                options={salesPersonOptions}
+                cancelable
+                hasFilter
+              />
             ) : (
               salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
                 ?.label
             )
           }
-          error={formik.errors?.p_application_headers?.s_sales_person_id}
         />
         <EditRow
           label={'担当者名'}
+          upConfig={{
+            key: `p_application_headers.vendor_name.${p_application_headers?.id}`,
+          }}
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.vendor_name" convertFullWidth />
+              <AdEditFullWidthInput name="p_application_headers.vendor_name" convertFullWidth />
             ) : (
               formik.values.p_application_headers.vendor_name
             )
           }
-          error={formik.errors?.p_application_headers?.vendor_name}
         />
         <EditRow
           label={'携帯電話番号'}
+          upConfig={{
+            key: `p_application_headers.vendor_phone.${p_application_headers?.id}`,
+          }}
           field={
             isEditable ? (
               <AdEditInput name="p_application_headers.vendor_phone" convertHalfWidth />
@@ -180,22 +367,9 @@ export const Item08 = () => {
               formik.values.p_application_headers.vendor_phone
             )
           }
-          error={formik.errors?.p_application_headers?.vendor_phone}
         />
-        <EditRow
-          label={'携帯電話番号（マスターデータ）'}
-          field={
-            salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
-              ?.mobile_phone
-          }
-        />
-        <EditRow
-          label={'メールアドレス'}
-          field={
-            salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
-              ?.email
-          }
-        />
+        <EditRow label={'携帯電話番号（マスターデータ）'} field={salesPersonInfo?.mobile_phone} />
+        <EditRow label={'メールアドレス'} field={salesPersonInfo?.email} />
       </ContentEditGroup>
     </FormikProvider>
   );

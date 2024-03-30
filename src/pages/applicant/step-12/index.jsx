@@ -110,7 +110,6 @@ export const ApStep12Page = () => {
           navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
-        console.log(error);
         toast.error(API_500_ERROR);
       }
     },
@@ -125,7 +124,6 @@ export const ApStep12Page = () => {
   const fetchOrgsB = async (sales_company_id) => {
     try {
       const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
-      console.log(res.data);
       setOrgsB([{ value: '', label: '' }, ...res.data]);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -135,7 +133,6 @@ export const ApStep12Page = () => {
   const fetchOrgsE = async (sales_company_id, sales_area_id) => {
     try {
       const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
-      console.log(res.data);
       setOrgsE([{ value: '', label: '' }, ...res.data]);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -159,7 +156,6 @@ export const ApStep12Page = () => {
           formik.setFieldValue('p_application_headers.sales_company_id', res.data?.sales_company_id);
           formik.setFieldValue('p_application_headers.sales_area_id', res.data?.sales_area_id);
           formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', res.data?.sales_exhibition_hall_id);
-          console.log(res.data);
         } catch (error) {
           toast.error(API_500_ERROR);
         }
@@ -241,25 +237,6 @@ export const ApStep12Page = () => {
     }
   };
 
-  // const salesCompanyOptions = useMemo(() => {
-  //   return orgs.filter((item) => item.category === 'C');
-  // }, [orgs]);
-
-  // const salesAreaOptions = useMemo(() => {
-  //   if (!formik.values.p_application_headers.sales_company_id) return [{ value: '', label: '' }];
-  //   return [{ value: '', label: '' }].concat(
-  //     orgs.filter((item) => item.category === 'B' && item.pid === formik.values.p_application_headers.sales_company_id)
-  //   );
-  // }, [orgs, formik.values.p_application_headers.sales_company_id]);
-
-  // const exhibitionHallOptions = useMemo(() => {
-  //   if (!formik.values.p_application_headers.sales_area_id) return [{ value: '', label: '' }];
-  //   return [{ value: '', label: '' }].concat(
-  //     orgs.filter((item) => item.category === 'E' && item.pid === formik.values.p_application_headers.sales_area_id)
-  //   );
-  // }, [orgs, formik.values.p_application_headers.sales_area_id]);
-
-  console.log(orgsB);
   return (
     <FormikProvider value={formik}>
       <ApLayout

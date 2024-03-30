@@ -32,6 +32,8 @@ import { apAgentSend, apApplication } from '@/services';
 import { Icons } from '@/assets';
 import { useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApStep13Page = () => {
   const navigate = useNavigate();
@@ -185,7 +187,7 @@ export const ApStep13Page = () => {
         });
         navigate(`/step-id-${apNextStepId}`);
       } catch (error) {
-        console.log(error);
+        toast.error(API_500_ERROR);
       }
     },
   });
@@ -303,7 +305,7 @@ export const ApStep13Page = () => {
         {getIndex(9) >= 0 && <ApStep09Info stepIndex={String(getIndex(9) + 1).padStart(2, '0')} />}
         {getIndex(10) >= 0 && <ApStep10Info stepIndex={String(getIndex(10) + 1).padStart(2, '0')} />}
         {getIndex(11) >= 0 && <ApStep11Info stepIndex={String(getIndex(11) + 1).padStart(2, '0')} />}
-        {getIndex(11) >= 0 && <ApStep12Info stepIndex={String(getIndex(12) + 1).padStart(2, '0')} />}
+        {getIndex(12) >= 0 && <ApStep12Info stepIndex={String(getIndex(12) + 1).padStart(2, '0')} />}
 
         {roleType === 2 && (
           <ApConfirmGroup label={'最後'}>

@@ -27,6 +27,8 @@ import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 import { apApplication, apApplicationFile } from '@/services';
 import { useIsSalesPerson } from '@/hooks';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApTopPage = () => {
   const isSalesPerson = useIsSalesPerson();
@@ -90,7 +92,7 @@ export const ApTopPage = () => {
         };
       });
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, []);
   useEffect(() => {

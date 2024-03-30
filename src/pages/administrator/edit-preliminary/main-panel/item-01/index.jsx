@@ -5,7 +5,6 @@ import { formatJapanDate, formatMoney } from '@/utils';
 import { useEffect } from 'react';
 import {
   AdEditFullWidthInput,
-  AdEditInput,
   AdNumericInput,
   AdSelectCheckbox,
   AdSelectRadios,
@@ -216,7 +215,6 @@ export const Item01 = () => {
                 name="p_application_headers.loan_target_type"
                 options={loanTargetOptions_}
                 onChange={(value) => {
-                  console.log(value);
                   switch (value) {
                     case '0':
                       formik.setFieldValue('p_application_headers.loan_target', '');

@@ -3,7 +3,7 @@ import { FormikProvider, useFormik } from 'formik';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { useEffect } from 'react';
-import { Button, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { ResultUploadItem } from '../../common/result-upload-item';
 import { ResultPreviewPDF } from '../../common/examination-result-preview';
 

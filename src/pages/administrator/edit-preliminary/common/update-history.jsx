@@ -1,3 +1,4 @@
+import { API_500_ERROR } from '@/constant';
 import { adGetUpdateHistory } from '@/services';
 import { formatJapanDate, formatMoney } from '@/utils';
 import { useTheme } from '@emotion/react';
@@ -16,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
   const theme = useTheme();
@@ -50,7 +52,7 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
       const res = await adGetUpdateHistory(upConfig.p_application_header_id, upConfig.key);
       setData(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, [upConfig]);
 

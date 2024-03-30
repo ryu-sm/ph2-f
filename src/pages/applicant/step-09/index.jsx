@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector, authAtom } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -149,19 +149,11 @@ export const ApStep09Page = () => {
   }, [formik.values]);
 
   useEffect(() => {
-    if (
-      formik.values.p_application_headers.funding_saving_amount ||
-      formik.values.p_application_headers.funding_estate_sale_amount ||
-      formik.values.p_application_headers.funding_other_saving_amount
-    ) {
-      const sum =
-        Number(formik.values.p_application_headers.funding_saving_amount) +
-        Number(formik.values.p_application_headers.funding_estate_sale_amount) +
-        Number(formik.values.p_application_headers.funding_other_saving_amount);
-      formik.setFieldValue('p_application_headers.funding_self_amount', `${sum ? sum : ''}`);
-    } else {
-      formik.setFieldValue('p_application_headers.funding_self_amount', '');
-    }
+    const funding_self_amount =
+      Number(formik.values.p_application_headers.funding_saving_amount) +
+      Number(formik.values.p_application_headers.funding_estate_sale_amount) +
+      Number(formik.values.p_application_headers.funding_other_saving_amount);
+    formik.setFieldValue('p_application_headers.funding_self_amount', `${funding_self_amount}`);
   }, [
     formik.values.p_application_headers.funding_saving_amount,
     formik.values.p_application_headers.funding_estate_sale_amount,

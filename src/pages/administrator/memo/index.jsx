@@ -13,6 +13,7 @@ import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
+import { API_500_ERROR } from '@/constant';
 
 export const AdMemo = () => {
   const navigate = useNavigate();
@@ -35,14 +36,12 @@ export const AdMemo = () => {
     try {
       const res = await adGetMemo(p_application_header_id);
       setMemos(res.data);
-      console.log(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, []);
 
   useEffect(() => {
-    console.log(sortBy, sortOrder);
     const sortedData = [...memos].sort((a, b) => {
       const valueA = a[sortBy];
       const valueB = b[sortBy];
@@ -86,7 +85,7 @@ export const AdMemo = () => {
           toast.success('メモを更新しました。');
         }
       } catch (error) {
-        console.log(error);
+        toast.error(API_500_ERROR);
       }
     },
   });

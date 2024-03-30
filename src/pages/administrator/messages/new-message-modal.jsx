@@ -19,7 +19,6 @@ export const NewMessageModal = ({ open, onClose, messages }) => {
     }),
     onSubmit: (values) => {
       const message = messages.find((item) => item.id === values.applicantId);
-      console.log(message);
       isManager
         ? navigate(`/manager/messages-detail?id=${message?.id}&type=${message?.type}`)
         : navigate(`/sale-persons/messages-detail?id=${message?.id}&type=${message?.type}`);

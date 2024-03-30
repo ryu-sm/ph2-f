@@ -5,11 +5,13 @@ import { FormikProvider, useFormik } from 'formik';
 import { formatJapanDate, formatMoney } from '@/utils';
 import { useEffect } from 'react';
 import {
+  AdEditFullWidthInput,
   AdEditInput,
   AdNumericInput,
   AdSelectCheckbox,
   AdSelectRadios,
   AdYmdInput,
+  AdZipCodeInput,
   MonthPicker,
 } from '@/components/administrator';
 import {
@@ -45,6 +47,7 @@ export const Item03 = () => {
     handleSave,
   } = usePreliminaryContext();
   const isEditable = false;
+
   const initialValues = {
     p_applicant_persons__0: {
       office_occupation: p_applicant_persons__0?.office_occupation,
@@ -111,6 +114,10 @@ export const Item03 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab03Schema,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      await handleSave(setUpdateData(values));
+    },
   });
 
   useEffect(() => {
@@ -127,9 +134,13 @@ export const Item03 = () => {
 
   return (
     <FormikProvider value={formik}>
-      <ContentEditGroup isEditable={isEditable} handleSave={() => handleSave(setUpdateData(formik.values))}>
+      <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
         <EditRow
           label={'ご職業'}
+          upConfig={{
+            key: `p_applicant_persons.office_occupation.${p_applicant_persons__0?.id}`,
+            options: occupationOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -137,6 +148,7 @@ export const Item03 = () => {
               <AdSelectRadios
                 name="p_applicant_persons__0.office_occupation"
                 options={occupationOptions}
+                cancelable
                 onChange={(value) => {
                   if (value === '12') {
                     formik.setFieldValue('p_applicant_persons__0.office_phone', '');
@@ -151,30 +163,36 @@ export const Item03 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_occupation}
         />
         {formik.values.p_applicant_persons__0.office_occupation === '99' && (
           <EditRow
             label={'勤務先　職業（その他）'}
+            upConfig={{
+              key: `p_applicant_persons.office_occupation_other.${p_applicant_persons__0?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_applicant_persons__0.office_occupation_other" convertFullWidth />
+                <AdEditFullWidthInput name="p_applicant_persons__0.office_occupation_other" convertFullWidth />
               ) : (
                 formik.values.p_applicant_persons__0.office_occupation_other
               )
             }
-            error={formik.errors?.p_applicant_persons__0?.office_occupation_other}
           />
         )}
         <EditRow
           label={'業種'}
+          upConfig={{
+            key: `p_applicant_persons.office_industry.${p_applicant_persons__0?.id}`,
+            options: industryOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
                 name="p_applicant_persons__0.office_industry"
                 options={industryOptions}
+                cancelable
                 onChange={(value) => {
                   if (value === '99') {
                     formik.setFieldValue('p_applicant_persons__0.office_industry_other', '');
@@ -185,24 +203,29 @@ export const Item03 = () => {
               industryOptions.find((item) => item.value === formik.values.p_applicant_persons__0.office_industry)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_industry}
         />
         {formik.values.p_applicant_persons__0.office_industry === '99' && (
           <EditRow
             label={'勤務先　業種（その他）'}
+            upConfig={{
+              key: `p_applicant_persons.office_industry_other.${p_applicant_persons__0?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_applicant_persons__0.office_industry_other" convertFullWidth />
+                <AdEditFullWidthInput name="p_applicant_persons__0.office_industry_other" convertFullWidth />
               ) : (
                 formik.values.p_applicant_persons__0.office_industry_other
               )
             }
-            error={formik.errors?.p_applicant_persons__0?.office_industry_other}
           />
         )}
         <EditRow
           label={'職種'}
+          upConfig={{
+            key: `p_applicant_persons.office_occupation_detail.${p_applicant_persons__0?.id}`,
+            options: occupationDetailOptions,
+          }}
           hasPleft={isEditable}
           isRequired
           field={
@@ -210,6 +233,7 @@ export const Item03 = () => {
               <AdSelectRadios
                 name="p_applicant_persons__0.office_occupation_detail"
                 options={occupationDetailOptions}
+                cancelable
                 onChange={(value) => {
                   if (value === '99') {
                     formik.setFieldValue('p_applicant_persons__0.office_occupation_detail_other', '');
@@ -222,24 +246,29 @@ export const Item03 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_occupation_detail}
         />
         {formik.values.p_applicant_persons__0.office_occupation_detail === '99' && (
           <EditRow
             label={'勤務先　職種（その他）'}
+            upConfig={{
+              key: `p_applicant_persons.office_occupation_detail_other.${p_applicant_persons__0?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_applicant_persons__0.office_occupation_detail_other" convertFullWidth />
+                <AdEditFullWidthInput name="p_applicant_persons__0.office_occupation_detail_other" convertFullWidth />
               ) : (
                 formik.values.p_applicant_persons__0.office_occupation_detail_other
               )
             }
-            error={formik.errors?.p_applicant_persons__0?.office_occupation_detail_other}
           />
         )}
         <EditRow
           label={'雇用形態'}
+          upConfig={{
+            key: `p_applicant_persons.office_employment_type.${p_applicant_persons__0?.id}`,
+            options: employmentTypeOptions,
+          }}
           isRequired
           isAddendum
           hasPleft={isEditable}
@@ -252,99 +281,122 @@ export const Item03 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_employment_type}
         />
         <EditRow
           label={'勤務先名'}
+          upConfig={{
+            key: `p_applicant_persons.office_name_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_name_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_name_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_name_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_name_kanji}
         />
         <EditRow
           label={'勤務先名（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_name_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_name_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_name_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_name_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_name_kana}
         />
         <EditRow
           label={'所属部課'}
+          upConfig={{
+            key: `p_applicant_persons.office_department.${p_applicant_persons__0?.id}`,
+          }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_department" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_department" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_department
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_department}
         />
         <EditRow
           label={'役職'}
+          upConfig={{
+            key: `p_applicant_persons.office_role.${p_applicant_persons__0?.id}`,
+            options: roleOptions,
+          }}
           isAddendum
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__0.office_role" options={roleOptions} />
+              <AdSelectRadios name="p_applicant_persons__0.office_role" options={roleOptions} cancelable />
             ) : (
               roleOptions.find((item) => item.value === formik.values.p_applicant_persons__0.office_role)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_role}
         />
         <EditRow
           label={'勤務先の電話番号'}
+          upConfig={{
+            key: `p_applicant_persons.office_phone.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_phone" convertFullWidth />
+              <AdEditInput name="p_applicant_persons__0.office_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_phone
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_phone}
         />
         <EditRow
           label={'勤務先本社所在地'}
+          upConfig={{
+            key: `p_applicant_persons.office_head_location.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_head_location" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_head_location" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_head_location
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_head_location}
         />
         <EditRow
           label={'勤務先上場区分'}
+          upConfig={{
+            key: `p_applicant_persons.office_listed_division.${p_applicant_persons__0?.id}`,
+            options: listedDivisionOptions,
+          }}
           isAddendum
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__0.office_listed_division" options={listedDivisionOptions} />
+              <AdSelectRadios
+                name="p_applicant_persons__0.office_listed_division"
+                options={listedDivisionOptions}
+                cancelable
+              />
             ) : (
               listedDivisionOptions.find(
                 (item) => item.value === formik.values.p_applicant_persons__0.office_listed_division
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_listed_division}
         />
         <EditRow
           label={'勤務先設立年月日'}
+          upConfig={{
+            key: `p_applicant_persons.office_establishment_date.${p_applicant_persons__0?.id}`,
+            formatDate: true,
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -353,10 +405,14 @@ export const Item03 = () => {
               formatJapanDate(formik.values.p_applicant_persons__0.office_establishment_date)
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_establishment_date}
         />
         <EditRow
           label={'勤務先資本金'}
+          upConfig={{
+            key: `p_applicant_persons.office_capital_stock.${p_applicant_persons__0?.id}`,
+            formatNumber: true,
+            unit: '万円',
+          }}
           isAddendum
           field={
             isEditable ? (
@@ -365,22 +421,56 @@ export const Item03 = () => {
               formatMoney(formik.values.p_applicant_persons__0.office_capital_stock)
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_capital_stock}
         />
         <EditRow
           label={'郵便番号'}
+          upConfig={{
+            key: `p_applicant_persons.office_postal_code.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_postal_code" convertFullWidth />
+              <AdZipCodeInput
+                name="p_applicant_persons__0.office_postal_code"
+                setPrefectureKanji={(value, touched) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_prefecture_kanji', value);
+                  formik.setFieldTouched('p_applicant_persons__0.office_prefecture_kanji', touched);
+                }}
+                setCityKanji={(value, touched) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_city_kanji', value);
+                  formik.setFieldTouched('p_applicant_persons__0.office_city_kanji', touched);
+                }}
+                setDistrictKanji={(value, touched) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_district_kanji', value);
+                  formik.setFieldTouched('p_applicant_persons__0.office_district_kanji', touched);
+                }}
+                setOtherAddressKanji={(value, touched) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_other_address_kanji', value);
+                  formik.setFieldTouched('p_applicant_persons__0.office_other_address_kanji', touched);
+                }}
+                setPrefectureKana={(value, touched) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', value);
+                  formik.setFieldTouched('p_applicant_persons__0.office_prefecture_kana', touched);
+                }}
+                setCityKana={(value, touched) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_city_kana', value);
+                  formik.setFieldTouched('p_applicant_persons__0.office_city_kana', touched);
+                }}
+                setDistrictKana={(value, touched) => {
+                  formik.setFieldValue('p_applicant_persons__0.office_district_kana', value);
+                  formik.setFieldTouched('p_applicant_persons__0.office_district_kana', touched);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__0.office_postal_code
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_postal_code}
         />
         <EditRow
           label={'都道府県'}
+          upConfig={{
+            key: `p_applicant_persons.office_prefecture_kanji.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -390,104 +480,125 @@ export const Item03 = () => {
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__0.tax_return)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_prefecture_kanji}
         />
         <EditRow
           label={'市区郡'}
+          upConfig={{
+            key: `p_applicant_persons.office_city_kanji.${p_applicant_persons__0?.id}`,
+          }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_city_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_city_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_city_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_city_kanji}
         />
         <EditRow
           label={'町村丁目'}
+          upConfig={{
+            key: `p_applicant_persons.office_district_kanji.${p_applicant_persons__0?.id}`,
+          }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_district_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_district_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_district_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_district_kanji}
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号'}
+          upConfig={{
+            key: `p_applicant_persons.office_other_address_kanji.${p_applicant_persons__0?.id}`,
+          }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_other_address_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_other_address_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_other_address_kanji
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_other_address_kanji}
         />
         <EditRow
           label={'都道府県（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_prefecture_kana.${p_applicant_persons__0?.id}`,
+          }}
           isRequired
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_prefecture_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_prefecture_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_prefecture_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_prefecture_kana}
         />
         <EditRow
           label={'市区郡（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_city_kana.${p_applicant_persons__0?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_city_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_city_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_city_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_city_kana}
         />
         <EditRow
           label={'町村丁目（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_district_kana.${p_applicant_persons__0?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_district_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_district_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_district_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_district_kana}
         />
         <EditRow
           label={'丁目以下・建物名・部屋番号（フリガナ）'}
+          upConfig={{
+            key: `p_applicant_persons.office_other_address_kana.${p_applicant_persons__0?.id}`,
+          }}
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_other_address_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__0.office_other_address_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_other_address_kana
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_other_address_kana}
         />
         <EditRow
           label={'従業員数'}
+          upConfig={{
+            key: `p_applicant_persons.office_employee_num.${p_applicant_persons__0?.id}`,
+            formatNumber: true,
+            unit: '名',
+          }}
           isRequired
           field={
             isEditable ? (
-              <AdNumericInput name="p_applicant_persons__0.office_employee_num" maxLength={9} unit={' 名'} />
+              <AdNumericInput name="p_applicant_persons__0.office_employee_num" maxLength={9} unit={'名'} />
             ) : (
               formatMoney(formik.values.p_applicant_persons__0.office_employee_num, '名')
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_employee_num}
         />
         <EditRow
           label={'入社年月'}
+          upConfig={{
+            key: `p_applicant_persons.office_joining_date.${p_applicant_persons__0?.id}`,
+            formatJaDate: true,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -496,50 +607,67 @@ export const Item03 = () => {
               formatJapanDate(formik.values.p_applicant_persons__0.office_joining_date, true)
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.office_joining_date}
         />
         <EditRow
           label={'前年度年収'}
+          upConfig={{
+            key: `p_applicant_persons.last_year_income.${p_applicant_persons__0?.id}`,
+            formatNumber: true,
+            unit: '万円',
+          }}
           isRequired
           field={
             isEditable ? (
-              <AdNumericInput name="p_applicant_persons__0.last_year_income" maxLength={6} />
+              <AdNumericInput name="p_applicant_persons__0.last_year_income" maxLength={5} unit={'万円'} />
             ) : (
               formatMoney(formik.values.p_applicant_persons__0.last_year_income)
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.last_year_income}
         />
         {isMCJ && (
           <Stack>
             <EditRow
-              label={'うち、ボーナス'}
+              label={'うち、ボーナス（MCJ固有項目）'}
+              upConfig={{
+                key: `p_applicant_persons.last_year_bonus_income.${p_applicant_persons__0?.id}`,
+                formatNumber: true,
+                unit: '万円',
+              }}
               isRequired
               field={
                 isEditable ? (
-                  <AdNumericInput name="p_applicant_persons__0.last_year_bonus_income" maxLength={6} />
+                  <AdNumericInput name="p_applicant_persons__0.last_year_bonus_income" maxLength={5} unit={'万円'} />
                 ) : (
                   formatMoney(formik.values.p_applicant_persons__0.last_year_bonus_income)
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.last_year_bonus_income}
             />
             <EditRow
               label={'前々年度年収 （MCJ固有項目）'}
+              upConfig={{
+                key: `p_applicant_persons.before_last_year_income.${p_applicant_persons__0?.id}`,
+                formatNumber: true,
+                unit: '万円',
+              }}
               isRequired
               field={
                 isEditable ? (
-                  <AdNumericInput name="p_applicant_persons__0.before_last_year_income" maxLength={6} />
+                  <AdNumericInput name="p_applicant_persons__0.before_last_year_income" maxLength={5} unit={'万円'} />
                 ) : (
                   formatMoney(formik.values.p_applicant_persons__0.before_last_year_income)
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.before_last_year_income}
             />
           </Stack>
         )}
         <EditRow
           label={'収入源'}
+          upConfig={{
+            key: `p_applicant_persons.income_sources.${p_applicant_persons__0?.id}`,
+            options: incomeOptions,
+            mapOptions: true,
+            join: '・',
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -553,10 +681,13 @@ export const Item03 = () => {
                 .join('・')
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.income_sources}
         />
         <EditRow
           label={'収入源（銀行送信用）'}
+          upConfig={{
+            key: `p_applicant_persons.main_income_source.${p_applicant_persons__0?.id}`,
+            options: incomeOptions,
+          }}
           isRequired
           hasPleft={isEditable}
           field={
@@ -567,10 +698,13 @@ export const Item03 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.main_income_source}
         />
         <EditRow
           label={'確定申告をしていますか？'}
+          upConfig={{
+            key: `p_applicant_persons.tax_return.${p_applicant_persons__0?.id}`,
+            options: taxReturnOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -588,12 +722,17 @@ export const Item03 = () => {
               taxReturnOptions.find((item) => item.value === formik.values.p_applicant_persons__0.tax_return)?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.tax_return}
         />
         {formik.values.p_applicant_persons__0.tax_return === '1' && (
           <Stack>
             <EditRow
               label={'確定申告の理由'}
+              upConfig={{
+                key: `p_applicant_persons.tax_return_reasons.${p_applicant_persons__0?.id}`,
+                options: taxReturnReasonsOptions,
+                mapOptions: true,
+                join: '・',
+              }}
               isLogicRequired
               hasPleft={isEditable}
               field={
@@ -616,26 +755,31 @@ export const Item03 = () => {
                     .join('・')
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.tax_return_reasons}
             />
             {formik.values.p_applicant_persons__0.tax_return_reasons.includes('99') && (
               <EditRow
                 label={'確定申告の理由　その他'}
+                upConfig={{
+                  key: `p_applicant_persons.tax_return_reason_other.${p_applicant_persons__0?.id}`,
+                }}
                 isLogicRequired
                 field={
                   isEditable ? (
-                    <AdEditInput name="p_applicant_persons__0.tax_return_reason_other" convertFullWidth />
+                    <AdEditFullWidthInput name="p_applicant_persons__0.tax_return_reason_other" convertFullWidth />
                   ) : (
                     formik.values.p_applicant_persons__0.tax_return_reason_other
                   )
                 }
-                error={formik.errors?.p_applicant_persons__0?.tax_return_reason_other}
               />
             )}
           </Stack>
         )}
         <EditRow
           label={'現在、出向（派遣）していますか？'}
+          upConfig={{
+            key: `p_applicant_persons.transfer_office.${p_applicant_persons__0?.id}`,
+            options: transferOfficeOptions,
+          }}
           isLogicRequired
           hasPleft={isEditable}
           field={
@@ -661,16 +805,18 @@ export const Item03 = () => {
                 ?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.transfer_office}
         />
         {formik.values.p_applicant_persons__0.transfer_office === '1' && (
           <Stack>
             <EditRow
               label={'出向（派遣）勤務先名'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_name_kanji.${p_applicant_persons__0?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_name_kanji" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__0.transfer_office_name_kanji" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_name_kanji
                 )
@@ -679,42 +825,69 @@ export const Item03 = () => {
             />
             <EditRow
               label={'出向（派遣）勤務先名（フリガナ）'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_name_kana.${p_applicant_persons__0?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_name_kana" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__0.transfer_office_name_kana" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_name_kana
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.transfer_office_name_kana}
             />
             <EditRow
               label={'出向（派遣）先 電話番号'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_phone.${p_applicant_persons__0?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_phone" convertFullWidth />
+                  <AdEditInput name="p_applicant_persons__0.transfer_office_phone" convertHalfWidth />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_phone
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.transfer_office_phone}
             />
             <EditRow
               label={'出向（派遣）先 郵便番号'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_postal_code.${p_applicant_persons__0?.id}`,
+              }}
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_postal_code" convertFullWidth />
+                  <AdZipCodeInput
+                    name="p_applicant_persons__0.transfer_office_postal_code"
+                    setPrefectureKanji={(value, touched) => {
+                      formik.setFieldValue('p_applicant_persons__0.transfer_office_prefecture_kanji', value);
+                      formik.setFieldTouched('p_applicant_persons__0.transfer_office_prefecture_kanji', touched);
+                    }}
+                    setCityKanji={(value, touched) => {
+                      formik.setFieldValue('p_applicant_persons__0.transfer_office_city_kanji', value);
+                      formik.setFieldTouched('p_applicant_persons__0.transfer_office_city_kanji', touched);
+                    }}
+                    setDistrictKanji={(value, touched) => {
+                      formik.setFieldValue('p_applicant_persons__0.transfer_office_district_kanji', value);
+                      formik.setFieldTouched('p_applicant_persons__0.transfer_office_district_kanji', touched);
+                    }}
+                    setOtherAddressKanji={(value, touched) => {
+                      formik.setFieldValue('p_applicant_persons__0.transfer_office_other_address_kanji', value);
+                      formik.setFieldTouched('p_applicant_persons__0.transfer_office_other_address_kanji', touched);
+                    }}
+                  />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_postal_code
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.transfer_office_postal_code}
             />
             <EditRow
               label={'出向（派遣）先 都道府県'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_prefecture_kanji.${p_applicant_persons__0?.id}`,
+              }}
               isLogicRequired
               hasPleft={isEditable}
               field={
@@ -729,54 +902,67 @@ export const Item03 = () => {
                   )?.label
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.transfer_office_prefecture_kanji}
             />
             <EditRow
               label={'出向（派遣）先 市区郡'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_city_kanji.${p_applicant_persons__0?.id}`,
+              }}
               isRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_city_kanji" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__0.transfer_office_city_kanji" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_city_kanji
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.transfer_office_city_kanji}
             />
             <EditRow
               label={'出向（派遣）先 町村丁目'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_district_kanji.${p_applicant_persons__0?.id}`,
+              }}
               isRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_district_kanji" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__0.transfer_office_district_kanji" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_district_kanji
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.transfer_office_district_kanji}
             />
             <EditRow
               label={'出向（派遣）先 丁目以下・建物名・部屋番号'}
+              upConfig={{
+                key: `p_applicant_persons.transfer_office_other_address_kanji.${p_applicant_persons__0?.id}`,
+              }}
               isRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_other_address_kanji" convertFullWidth />
+                  <AdEditFullWidthInput
+                    name="p_applicant_persons__0.transfer_office_other_address_kanji"
+                    convertFullWidth
+                  />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_other_address_kanji
                 )
               }
-              error={formik.errors?.p_applicant_persons__0?.transfer_office_other_address_kanji}
             />
           </Stack>
         )}
         <EditRow
           label={'産休・育休の取得状況'}
+          upConfig={{
+            key: `p_applicant_persons.maternity_paternity_leave.${p_applicant_persons__0?.id}`,
+            options: maternityPaternityLeaveOptions,
+          }}
           hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
                 name="p_applicant_persons__0.maternity_paternity_leave"
                 options={maternityPaternityLeaveOptions}
+                cancelable
                 onChange={() => {
                   formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_start_date', '');
                   formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_end_date', '');
@@ -788,62 +974,76 @@ export const Item03 = () => {
               )?.label
             )
           }
-          error={formik.errors?.p_applicant_persons__0?.maternity_paternity_leave}
         />
-        <EditRow
-          label={'取得開始時期'}
-          hasPleft={isEditable}
-          isLogicRequired
-          field={
-            isEditable ? (
-              <MonthPicker
-                name="p_applicant_persons__0.maternity_paternity_leave_start_date"
-                yearOptions={
-                  formik.values.p_applicant_persons__0.maternity_paternity_leave === '1'
-                    ? leaveStatusUpYearOptions
-                    : leaveStatusDownYearOptions
-                }
-              />
-            ) : (
-              formatJapanDate(formik.values.p_applicant_persons__0.maternity_paternity_leave_start_date, true)
-            )
-          }
-          error={formik.errors?.p_applicant_persons__0?.maternity_paternity_leave_start_date}
-        />
-        <EditRow
-          label={'取得終了時期'}
-          isLogicRequired
-          hasPleft={isEditable}
-          field={
-            isEditable ? (
-              <MonthPicker
-                name="p_applicant_persons__0.maternity_paternity_leave_end_date"
-                yearOptions={
-                  formik.values.p_applicant_persons__0.maternity_paternity_leave === '1' ||
-                  formik.values.p_applicant_persons__0.maternity_paternity_leave === '2'
-                    ? leaveStatusUpYearOptions
-                    : leaveStatusDownYearOptions
-                }
-              />
-            ) : (
-              formatJapanDate(formik.values.p_applicant_persons__0.maternity_paternity_leave_end_date, true)
-            )
-          }
-          error={formik.errors?.p_applicant_persons__0?.maternity_paternity_leave_end_date}
-        />
-        <EditRow
-          label={'介護休暇の取得状況'}
-          hasPleft={isEditable}
-          field={
-            isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__0.nursing_leave" options={nursingLeaveOptions} />
-            ) : (
-              nursingLeaveOptions.find((item) => item.value === formik.values.p_applicant_persons__0.nursing_leave)
-                ?.label
-            )
-          }
-          error={formik.errors?.p_applicant_persons__0?.nursing_leave}
-        />
+        {formik.values.p_applicant_persons__0.maternity_paternity_leave && (
+          <Stack>
+            <EditRow
+              label={'取得開始時期'}
+              upConfig={{
+                key: `p_applicant_persons.maternity_paternity_leave_start_date.${p_applicant_persons__0?.id}`,
+                formatJaDate: true,
+              }}
+              hasPleft={isEditable}
+              isLogicRequired
+              field={
+                isEditable ? (
+                  <MonthPicker
+                    name="p_applicant_persons__0.maternity_paternity_leave_start_date"
+                    yearOptions={
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave === '1'
+                        ? leaveStatusUpYearOptions
+                        : leaveStatusDownYearOptions
+                    }
+                  />
+                ) : (
+                  formatJapanDate(formik.values.p_applicant_persons__0.maternity_paternity_leave_start_date, true)
+                )
+              }
+            />
+            <EditRow
+              label={'取得終了時期'}
+              upConfig={{
+                key: `p_applicant_persons.maternity_paternity_leave_end_date.${p_applicant_persons__0?.id}`,
+                formatJaDate: true,
+              }}
+              isLogicRequired
+              hasPleft={isEditable}
+              field={
+                isEditable ? (
+                  <MonthPicker
+                    name="p_applicant_persons__0.maternity_paternity_leave_end_date"
+                    yearOptions={
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave === '1' ||
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave === '2'
+                        ? leaveStatusUpYearOptions
+                        : leaveStatusDownYearOptions
+                    }
+                  />
+                ) : (
+                  formatJapanDate(formik.values.p_applicant_persons__0.maternity_paternity_leave_end_date, true)
+                )
+              }
+            />
+          </Stack>
+        )}
+        {isMCJ && (
+          <EditRow
+            label={'介護休暇の取得状況'}
+            upConfig={{
+              key: `p_applicant_persons.nursing_leave.${p_applicant_persons__0?.id}`,
+              options: nursingLeaveOptions,
+            }}
+            hasPleft={isEditable}
+            field={
+              isEditable ? (
+                <AdSelectRadios name="p_applicant_persons__0.nursing_leave" options={nursingLeaveOptions} cancelable />
+              ) : (
+                nursingLeaveOptions.find((item) => item.value === formik.values.p_applicant_persons__0.nursing_leave)
+                  ?.label
+              )
+            }
+          />
+        )}
       </ContentEditGroup>
     </FormikProvider>
   );

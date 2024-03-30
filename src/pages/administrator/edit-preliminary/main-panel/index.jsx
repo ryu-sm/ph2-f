@@ -25,7 +25,6 @@ export const MainDetail = () => {
     checkUpdate,
     resetPreliminarySnap,
   } = usePreliminaryContext();
-  // const { p_application_headers, hasJoinGuarantor } = premliminaryInfo;
 
   const infoGroupItems = useMemo(() => {
     return [

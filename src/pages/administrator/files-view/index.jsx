@@ -1,5 +1,5 @@
 import { adPdf } from '@/assets';
-import { FILES_CATEGORY, FILES_SUBTITLE_MAP } from '@/constant';
+import { API_500_ERROR, FILES_CATEGORY, FILES_SUBTITLE_MAP } from '@/constant';
 import { adGetFilesView } from '@/services';
 import { AdThemeProvider } from '@/styles/ad-theme';
 import { downloadImageAsync } from '@/utils';
@@ -22,6 +22,7 @@ import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Element, Events, scroller } from 'react-scroll';
+import { toast } from 'react-toastify';
 
 export const AdFilesViewPage = () => {
   const [filesOrign, setFilesOrigin] = useState(null);
@@ -35,10 +36,9 @@ export const AdFilesViewPage = () => {
   const fetch = useCallback(async () => {
     try {
       const res = await adGetFilesView(p_application_header_id, `${type}__${category}`);
-      console.log(res.data);
       setFilesOrigin(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, [p_application_header_id, category, type]);
 

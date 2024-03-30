@@ -43,8 +43,8 @@ export const loanTypeOptions = [
 ];
 
 export const hasJoinGuarantorOptions = [
-  { value: '', label: 'いない' },
   { value: '1', label: 'いる' },
+  { value: '', label: 'いない' },
 ];
 
 export const loanPlusOptions = [

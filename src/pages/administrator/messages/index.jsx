@@ -19,11 +19,9 @@ export const AdMessagesPages = () => {
       if (isManager) {
         const res = await adGetManagerMessages();
         setMessages(res.data);
-        console.log(res.data);
       } else {
         const res = await adGetSalesPersonMessages();
         setMessages(res.data);
-        console.log(res.data);
       }
     } catch (error) {
       toast.error(API_500_ERROR);

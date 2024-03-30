@@ -1,4 +1,5 @@
 import { Icons } from '@/assets';
+import { API_500_ERROR } from '@/constant';
 import { useDashboardContext } from '@/hooks';
 import { adGetPairLoanOptions, adSetPairLoan, adUnPairLoan } from '@/services';
 import { Box, Button, Divider, MenuItem, Modal, Select, Stack, Typography } from '@mui/material';
@@ -14,7 +15,7 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
       const res = await adGetPairLoanOptions(id);
       setPairLoanOptions(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, [id]);
 
@@ -43,7 +44,7 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
           onClose();
         }
       } catch (error) {
-        console.log(error);
+        toast.error(API_500_ERROR);
       }
     },
   });

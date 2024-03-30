@@ -1,3 +1,4 @@
+import { API_500_ERROR } from '@/constant';
 import { adGetFilesUpdateHistory, adGetUpdateHistory } from '@/services';
 import { formatJapanDate, formatMoney } from '@/utils';
 import { useTheme } from '@emotion/react';
@@ -16,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export const FilesUpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
   const theme = useTheme();
@@ -55,7 +57,7 @@ export const FilesUpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
         setData(res.data);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, [upConfig]);
 

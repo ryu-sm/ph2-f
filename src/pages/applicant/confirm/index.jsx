@@ -20,6 +20,8 @@ import { routeNames } from '@/router/settings';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { apApplication, apApplicationFile } from '@/services';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const ApConfirmPage = () => {
   const navigate = useNavigate();
@@ -145,7 +147,7 @@ export const ApConfirmPage = () => {
         };
       });
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   }, []);
   useEffect(() => {

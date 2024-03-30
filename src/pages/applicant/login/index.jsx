@@ -172,7 +172,6 @@ export const ApLoginPage = () => {
           navigate(routeNames.apAgreementPage.path);
         }
       } catch (error) {
-        console.log(error);
         switch (error?.status) {
           case 400:
             setWarningText('メールアドレスまたはパスワードが正しくありません。');

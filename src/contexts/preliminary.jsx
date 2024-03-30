@@ -176,7 +176,6 @@ export const PreliminaryProvider = ({ children }) => {
       console.log('upData', upDbData);
       return Boolean(upDbData);
     } catch (error) {
-      console.log(error);
       toast.error(API_500_ERROR);
     }
   };
@@ -196,7 +195,6 @@ export const PreliminaryProvider = ({ children }) => {
       toast.success('申込内容を更新しました。');
       refreshPreliminary();
     } catch (error) {
-      console.log(error);
       toast.error(API_500_ERROR);
     }
   };
@@ -273,8 +271,6 @@ export const PreliminaryProvider = ({ children }) => {
       toast.error(API_500_ERROR);
     }
   };
-
-  // console.log(JSON.stringify(result.contents));
 
   return (
     <PreliminaryContext.Provider

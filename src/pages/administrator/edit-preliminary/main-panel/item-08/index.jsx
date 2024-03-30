@@ -10,9 +10,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   adGetAccessSalesPersonOptions,
   adGetSalesPersonInfo,
-  adUpdatePreliminarySalesAreaId,
-  adUpdatePreliminarySalesExhibitionHallId,
-  adUpdatePreliminarySalesPersonId,
   getChildrenOrgsWithCategory,
   getOrgsWithCategories,
 } from '@/services';
@@ -81,7 +78,6 @@ export const Item08 = () => {
         });
       }
       setAccessOrgs(tempAccessOrgs);
-      console.log(9999, tempAccessOrgs);
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -105,7 +101,6 @@ export const Item08 = () => {
   const fetchSalesAreaOptions = async (sales_company_id) => {
     try {
       const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
-      console.log(res.data);
       setSalesAreaOptions(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -115,7 +110,6 @@ export const Item08 = () => {
   const fetchSalesExhibitionHallOptions = async (sales_area_id, sales_company_id) => {
     try {
       const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
-      console.log(res.data);
       setSalesExhibitionHallOptions(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -126,7 +120,6 @@ export const Item08 = () => {
     try {
       const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
       setSalesPersonOptions(res.data);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -213,7 +206,6 @@ export const Item08 = () => {
         }
       }
     } catch (error) {
-      console.log(error);
       toast.error('サーバーとの通信に失敗しました。再度お試しください。');
     }
   }, []);
@@ -230,7 +222,6 @@ export const Item08 = () => {
         formik.setFieldValue('p_application_headers.s_sales_person_id', '');
       }
     } catch (error) {
-      console.log(error);
       toast.error('サーバーとの通信に失敗しました。再度お試しください。');
     }
   }, []);
@@ -297,6 +288,7 @@ export const Item08 = () => {
               <AdSelectRadios
                 name="p_application_headers.sales_area_id"
                 options={salesAreaOptions}
+                cancelable
                 hasFilter
                 onChange={handleChangeSalesArea}
               />
@@ -317,6 +309,7 @@ export const Item08 = () => {
               <AdSelectRadios
                 name="p_application_headers.sales_exhibition_hall_id"
                 options={salesExhibitionHallOptions}
+                cancelable
                 hasFilter
                 onChange={handleChangeSalesExhibitionHall}
               />
@@ -336,7 +329,12 @@ export const Item08 = () => {
           hasPleft={isEditable && checkEnableSalesPerson}
           field={
             isEditable && checkEnableSalesPerson ? (
-              <AdSelectRadios name="p_application_headers.s_sales_person_id" options={salesPersonOptions} hasFilter />
+              <AdSelectRadios
+                name="p_application_headers.s_sales_person_id"
+                options={salesPersonOptions}
+                cancelable
+                hasFilter
+              />
             ) : (
               salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
                 ?.label

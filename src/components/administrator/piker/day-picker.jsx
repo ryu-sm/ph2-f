@@ -27,13 +27,11 @@ export const DayPicker = ({ content, maxDate, minDate, isBirthday, ...props }) =
     meta.value ? dayjs(meta.value).year() : minDate ? minDate.format('YYYY') : dayjs().format('YYYY')
   );
   const [holidays, setHolidays] = useState([]);
-  console.log(currentYear);
   const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
 
   useEffect(() => {
     const fetchHolidays = async () => {
       const res = await apGetPublicHolidays(currentYear);
-      console.log(res.data);
       const temp = localStorage.getItem('publicHolidays');
       if (!!temp) {
         localStorage.setItem('publicHolidays', JSON.stringify({ ...JSON.parse(temp), [currentYear]: res.data }));

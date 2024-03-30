@@ -78,11 +78,6 @@ export const ApplicantSelect = ({ options, ...props }) => {
         }}
         IconComponent={renderIconComponent}
         className={meta.value.length > 0 ? 'Mui-success' : ''}
-        // onChange={(value) => {
-        //   console.log(value);
-
-        //   // setIsSelectOpen(false);
-        // }}
       >
         {options.map((option, index) => (
           <MenuItem

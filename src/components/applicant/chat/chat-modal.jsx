@@ -22,7 +22,7 @@ export const ApChatModal = ({ open, onClose }) => {
       const res = await apGetMessages();
       setMessages(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(API_500_ERROR);
     }
   };
   useEffect(() => {

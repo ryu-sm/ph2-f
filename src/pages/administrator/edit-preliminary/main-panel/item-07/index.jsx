@@ -75,32 +75,16 @@ export const Item07 = () => {
   }, [formik.values]);
 
   useEffect(() => {
-    if (
-      formik.values.p_application_headers.required_funds_land_amount ||
-      formik.values.p_application_headers.required_funds_house_amount ||
-      formik.values.p_application_headers.required_funds_accessory_amount ||
-      formik.values.p_application_headers.required_funds_upgrade_amount ||
-      formik.values.p_application_headers.required_funds_refinance_loan_balance ||
-      formik.values.p_application_headers.required_funds_additional_amount ||
-      formik.values.p_application_headers.required_funds_loan_plus_amount ||
-      formik.values.p_application_headers.funding_other_loan_amount
-    ) {
-      formik.setFieldValue(
-        'p_application_headers.required_funds_total_amount',
-        `${
-          Number(formik.values.p_application_headers.required_funds_land_amount) +
-          Number(formik.values.p_application_headers.required_funds_house_amount) +
-          Number(formik.values.p_application_headers.required_funds_accessory_amount) +
-          Number(formik.values.p_application_headers.required_funds_upgrade_amount) +
-          Number(formik.values.p_application_headers.required_funds_refinance_loan_balance) +
-          Number(formik.values.p_application_headers.required_funds_additional_amount) +
-          Number(formik.values.p_application_headers.required_funds_loan_plus_amount) +
-          Number(formik.values.p_application_headers.funding_other_loan_amount)
-        }`
-      );
-    } else {
-      formik.setFieldValue('p_application_headers.required_funds_total_amount', '');
-    }
+    const tempRequiredFundsTotalAmount =
+      Number(formik.values.p_application_headers.required_funds_land_amount) +
+      Number(formik.values.p_application_headers.required_funds_house_amount) +
+      Number(formik.values.p_application_headers.required_funds_accessory_amount) +
+      Number(formik.values.p_application_headers.required_funds_upgrade_amount) +
+      Number(formik.values.p_application_headers.required_funds_refinance_loan_balance) +
+      Number(formik.values.p_application_headers.required_funds_additional_amount) +
+      Number(formik.values.p_application_headers.required_funds_loan_plus_amount) +
+      Number(formik.values.p_application_headers.funding_other_loan_amount);
+    formik.setFieldValue('p_application_headers.required_funds_total_amount', `${tempRequiredFundsTotalAmount}`);
   }, [
     formik.values.p_application_headers.required_funds_land_amount,
     formik.values.p_application_headers.required_funds_house_amount,
@@ -113,19 +97,11 @@ export const Item07 = () => {
   ]);
 
   useEffect(() => {
-    if (
-      formik.values.p_application_headers.funding_saving_amount ||
-      formik.values.p_application_headers.funding_estate_sale_amount ||
-      formik.values.p_application_headers.funding_other_saving_amount
-    ) {
-      const sum =
-        Number(formik.values.p_application_headers.funding_saving_amount) +
-        Number(formik.values.p_application_headers.funding_estate_sale_amount) +
-        Number(formik.values.p_application_headers.funding_other_saving_amount);
-      formik.setFieldValue('p_application_headers.funding_self_amount', `${sum ? sum : ''}`);
-    } else {
-      formik.setFieldValue('p_application_headers.funding_self_amount', '');
-    }
+    const tempFundingSelfAmount =
+      Number(formik.values.p_application_headers.funding_saving_amount) +
+      Number(formik.values.p_application_headers.funding_estate_sale_amount) +
+      Number(formik.values.p_application_headers.funding_other_saving_amount);
+    formik.setFieldValue('p_application_headers.funding_self_amount', `${tempFundingSelfAmount}`);
   }, [
     formik.values.p_application_headers.funding_saving_amount,
     formik.values.p_application_headers.funding_estate_sale_amount,
@@ -133,30 +109,15 @@ export const Item07 = () => {
   ]);
 
   useEffect(() => {
-    if (
-      formik.values.p_application_headers.funding_saving_amount ||
-      formik.values.p_application_headers.funding_estate_sale_amount ||
-      formik.values.p_application_headers.funding_other_saving_amount ||
-      formik.values.p_application_headers.funding_relative_donation_amount ||
-      formik.values.p_application_headers.funding_loan_amount ||
-      formik.values.p_application_headers.funding_pair_loan_amount ||
-      formik.values.p_application_headers.funding_other_amount
-    ) {
-      formik.setFieldValue(
-        'p_application_headers.funding_total_amount',
-        `${
-          Number(formik.values.p_application_headers.funding_saving_amount) +
-          Number(formik.values.p_application_headers.funding_estate_sale_amount) +
-          Number(formik.values.p_application_headers.funding_other_saving_amount) +
-          Number(formik.values.p_application_headers.funding_relative_donation_amount) +
-          Number(formik.values.p_application_headers.funding_loan_amount) +
-          Number(formik.values.p_application_headers.funding_pair_loan_amount) +
-          Number(formik.values.p_application_headers.funding_other_amount)
-        }`
-      );
-    } else {
-      formik.setFieldValue('p_application_headers.funding_total_amount', '');
-    }
+    const fundingTotalAmountt =
+      Number(formik.values.p_application_headers.funding_saving_amount) +
+      Number(formik.values.p_application_headers.funding_estate_sale_amount) +
+      Number(formik.values.p_application_headers.funding_other_saving_amount) +
+      Number(formik.values.p_application_headers.funding_relative_donation_amount) +
+      Number(formik.values.p_application_headers.funding_loan_amount) +
+      Number(formik.values.p_application_headers.funding_pair_loan_amount) +
+      Number(formik.values.p_application_headers.funding_other_amount);
+    formik.setFieldValue('p_application_headers.funding_total_amount', `${fundingTotalAmountt}`);
   }, [
     formik.values.p_application_headers.funding_saving_amount,
     formik.values.p_application_headers.funding_estate_sale_amount,
