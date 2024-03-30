@@ -9,6 +9,7 @@ import { ContentEditGroup } from '../../common/content-edit-group';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   adGetAccessSalesPersonOptions,
+  adGetSalesPersonInfo,
   adUpdatePreliminarySalesAreaId,
   adUpdatePreliminarySalesExhibitionHallId,
   adUpdatePreliminarySalesPersonId,
@@ -23,6 +24,7 @@ import { API_500_ERROR } from '@/constant';
 
 export const Item08 = () => {
   const isManager = useIsManager();
+  const [salesPersonInfo, setSalesPersonInfo] = useState({});
   const {
     preliminaryInfo: { p_application_headers },
     setPreliminarySnap,
@@ -245,6 +247,20 @@ export const Item08 = () => {
     });
   }, [formik.values]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (formik.values.p_application_headers.s_sales_person_id) {
+          const res = await adGetSalesPersonInfo(formik.values.p_application_headers.s_sales_person_id);
+          setSalesPersonInfo(res.data);
+        }
+      } catch (error) {
+        toast.error(API_500_ERROR);
+      }
+    };
+    fetchData();
+  }, [formik.values.p_application_headers.s_sales_person_id]);
+
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
@@ -260,6 +276,7 @@ export const Item08 = () => {
               <AdSelectRadios
                 name="p_application_headers.sales_company_id"
                 options={salesCompanyOptions}
+                hasFilter
                 onChange={handleChangeSalesCompany}
               />
             ) : (
@@ -280,6 +297,7 @@ export const Item08 = () => {
               <AdSelectRadios
                 name="p_application_headers.sales_area_id"
                 options={salesAreaOptions}
+                hasFilter
                 onChange={handleChangeSalesArea}
               />
             ) : (
@@ -299,6 +317,7 @@ export const Item08 = () => {
               <AdSelectRadios
                 name="p_application_headers.sales_exhibition_hall_id"
                 options={salesExhibitionHallOptions}
+                hasFilter
                 onChange={handleChangeSalesExhibitionHall}
               />
             ) : (
@@ -317,7 +336,7 @@ export const Item08 = () => {
           hasPleft={isEditable && checkEnableSalesPerson}
           field={
             isEditable && checkEnableSalesPerson ? (
-              <AdSelectRadios name="p_application_headers.s_sales_person_id" options={salesPersonOptions} />
+              <AdSelectRadios name="p_application_headers.s_sales_person_id" options={salesPersonOptions} hasFilter />
             ) : (
               salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
                 ?.label
@@ -350,20 +369,8 @@ export const Item08 = () => {
             )
           }
         />
-        <EditRow
-          label={'携帯電話番号（マスターデータ）'}
-          field={
-            salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
-              ?.mobile_phone
-          }
-        />
-        <EditRow
-          label={'メールアドレス'}
-          field={
-            salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
-              ?.email
-          }
-        />
+        <EditRow label={'携帯電話番号（マスターデータ）'} field={salesPersonInfo?.mobile_phone} />
+        <EditRow label={'メールアドレス'} field={salesPersonInfo?.email} />
       </ContentEditGroup>
     </FormikProvider>
   );

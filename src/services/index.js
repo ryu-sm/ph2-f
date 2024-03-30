@@ -244,6 +244,10 @@ export const adGetRowData = async (p_application_header_id) => {
   return await service.get(`/row_data/${p_application_header_id}`);
 };
 
+export const adGetSalesPersonInfo = async (s_sales_person_id) => {
+  return await service.get(`/sales-person/${s_sales_person_id}`);
+};
+
 // ap org
 export const getOrgsInfos = async (s_sales_company_org_id) => {
   if (s_sales_company_org_id) {

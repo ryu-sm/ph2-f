@@ -126,7 +126,7 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
           bgcolor: 'white',
           boxShadow:
             'rgba(0, 0, 0, 0.2) 0px 11px 15px -7px, rgba(0, 0, 0, 0.14) 0px 24px 38px 3px, rgba(0, 0, 0, 0.12) 0px 9px 46px 8px',
-          overflowY: 'auto',
+          // overflowY: 'auto',
         }}
       >
         <Stack
@@ -146,8 +146,8 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
         </Stack>
 
         <Stack padding={2}>
-          <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: 'none' }}>
-            <TableContainer sx={{ maxHeight: 440 }}>
+          <Paper sx={{ width: '100%', boxShadow: 'none' }}>
+            <TableContainer sx={{ maxHeight: 390, overflowY: 'auto', overflowX: 'hidden' }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>

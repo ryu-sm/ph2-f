@@ -103,6 +103,7 @@ export const Item06 = () => {
             key: `p_application_headers.curr_borrowing_status.${p_application_headers?.id}`,
             options: CurrBorrowingStatusOptions,
           }}
+          hasPleft={isEditable}
           field={
             isEditable ? (
               <AdSelectRadios
@@ -163,6 +164,11 @@ export const Item06 = () => {
                   {hasIncomeTotalizer && (
                     <EditRow
                       label={'借入名義人'}
+                      upConfig={{
+                        key: `p_borrowings.borrower.${item?.id}`,
+                        options: borrowerOptions,
+                      }}
+                      hasPleft={isEditable}
                       field={
                         isEditable ? (
                           <AdSelectRadios name={`p_borrowings[${index}].borrower`} options={borrowerOptions} />
@@ -178,6 +184,7 @@ export const Item06 = () => {
                       key: `p_borrowings.type.${item?.id}`,
                       options: CurrBorrowingStatusOptions,
                     }}
+                    hasPleft={isEditable}
                     field={
                       isEditable ? (
                         <AdSelectRadios
@@ -239,6 +246,7 @@ export const Item06 = () => {
                           key: `p_borrowings.loan_purpose.${item?.id}`,
                           options: loanPurposeOptions,
                         }}
+                        hasPleft={isEditable}
                         field={
                           isEditable ? (
                             <AdSelectRadios name={`p_borrowings[${index}].loan_purpose`} options={loanPurposeOptions} />
@@ -276,6 +284,7 @@ export const Item06 = () => {
                           key: `p_borrowings.loan_business_target.${item?.id}`,
                           options: loanBusinessTargetOptions,
                         }}
+                        hasPleft={isEditable}
                         field={
                           isEditable ? (
                             <AdSelectRadios
@@ -314,6 +323,7 @@ export const Item06 = () => {
                         key: `p_borrowings.borrowing_from_house_finance_agency.${item?.id}`,
                         options: houseFinanceAgency,
                       }}
+                      hasPleft={isEditable}
                       field={
                         isEditable ? (
                           <AdSelectRadios
@@ -334,6 +344,7 @@ export const Item06 = () => {
                         key: `p_borrowings.category.${item?.id}`,
                         options: categoryOptions,
                       }}
+                      hasPleft={isEditable}
                       field={
                         isEditable ? (
                           <AdSelectRadios name={`p_borrowings[${index}].category`} options={categoryOptions} />
@@ -349,6 +360,7 @@ export const Item06 = () => {
                       key: `p_borrowings.loan_start_date.${item?.id}`,
                       formatJaDate: true,
                     }}
+                    hasPleft={isEditable}
                     field={
                       isEditable ? (
                         <MonthPicker
@@ -414,6 +426,7 @@ export const Item06 = () => {
                         key: `p_borrowings.card_expiry_date.${item?.id}`,
                         formatJaDate: true,
                       }}
+                      hasPleft={isEditable}
                       field={
                         isEditable ? (
                           <MonthPicker
@@ -432,6 +445,7 @@ export const Item06 = () => {
                         key: `p_borrowings.loan_end_date.${item?.id}`,
                         formatJaDate: true,
                       }}
+                      hasPleft={isEditable}
                       field={
                         isEditable ? (
                           <MonthPicker
@@ -471,6 +485,7 @@ export const Item06 = () => {
                           key: `p_borrowings.common_housing.${item?.id}`,
                           options: commonHousingOptions,
                         }}
+                        hasPleft={isEditable}
                         field={
                           isEditable ? (
                             <AdSelectRadios
@@ -491,6 +506,7 @@ export const Item06 = () => {
                         key: `p_borrowings.estate_setting.${item?.id}`,
                         options: estateSettingOptions,
                       }}
+                      hasPleft={isEditable}
                       field={
                         isEditable ? (
                           <AdSelectRadios
@@ -511,6 +527,7 @@ export const Item06 = () => {
                           key: `p_borrowings.scheduled_loan_payoff.${item?.id}`,
                           options: scheduledLoanPayoffOptions,
                         }}
+                        hasPleft={isEditable}
                         field={
                           isEditable ? (
                             <AdSelectRadios
@@ -533,6 +550,7 @@ export const Item06 = () => {
                             key: `p_borrowings.scheduled_loan_payoff_date.${item?.id}`,
                             formatJaDate: true,
                           }}
+                          hasPleft={isEditable}
                           field={
                             isEditable ? (
                               <MonthPicker
@@ -555,6 +573,7 @@ export const Item06 = () => {
                       options: includeInExaminationOptions,
                     }}
                     isAddendum
+                    hasPleft={isEditable}
                     field={
                       isEditable ? (
                         <AdSelectRadios
@@ -579,6 +598,7 @@ export const Item06 = () => {
                       mapOptions: true,
                       join: '・',
                     }}
+                    hasPleft={isEditable}
                     field={
                       isEditable ? (
                         <AdSelectCheckbox

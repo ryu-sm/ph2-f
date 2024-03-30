@@ -2,15 +2,16 @@ import { AdArrowDown } from '@/assets/icons/ad-arrow-down';
 import { AdArrowUp } from '@/assets/icons/ad-arrow-up';
 import { usePopoverPositionByClick } from '@/hooks/update-popover-position';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Button, Popover, Stack, Typography } from '@mui/material';
+import { Button, Popover, Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
-
+import SearchIcon from '@mui/icons-material/Search';
 import { useCallback, useMemo, useState } from 'react';
 
-export const AdSelectRadios = ({ options, unit, cancelable, ...props }) => {
+export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
+  const [searchText, setSearchText] = useState('');
 
   const { setValue, setTouched } = helpers;
   const handleChange = useCallback(
@@ -27,6 +28,7 @@ export const AdSelectRadios = ({ options, unit, cancelable, ...props }) => {
   const handlePopoverOpen = (e) => {
     setAnchorEl(e.currentTarget);
     setTouched(false);
+    setSearchText('');
   };
   const handlePopoverClose = () => {
     setAnchorEl(null);
@@ -34,7 +36,9 @@ export const AdSelectRadios = ({ options, unit, cancelable, ...props }) => {
   };
 
   const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
-
+  const filtedOptions = useMemo(() => {
+    return searchText ? options.filter((option) => option.label.includes(searchText)) : options;
+  }, [options, searchText]);
   return (
     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} flex={1} spacing={2}>
       <Stack direction={'row'} alignItems={'center'} spacing={'10px'}>
@@ -108,8 +112,55 @@ export const AdSelectRadios = ({ options, unit, cancelable, ...props }) => {
               <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80' }} />
             </Stack>
 
+            {hasFilter && (
+              <Stack
+                py={'2px'}
+                direction={'row'}
+                alignItems={'center'}
+                borderBottom={'1px solid'}
+                borderColor={'gray.70'}
+                spacing={1}
+              >
+                <Stack alignItems={'center'} sx={{ pl: 1, pt: 1 }}>
+                  <SearchIcon sx={{ color: 'primary.main', fontSize: 18 }} />
+                </Stack>
+                <TextField
+                  variant="standard"
+                  autoFocus
+                  fullWidth
+                  sx={{
+                    height: 22,
+                    pl: 1,
+
+                    '& .MuiInput-underline:after': {
+                      borderBottom: 'none',
+                    },
+                    '& .MuiInput-underline:before': {
+                      borderBottom: 'none',
+                    },
+                    '.MuiInput-underline:hover:not(.Mui-disabled):before': {
+                      borderBottom: 'none',
+                    },
+                    '& .MuiInputBase-input': {
+                      fontFamily: 'Hiragino Sans',
+                      fontWeight: 400,
+                      fontSize: '12px',
+                      lineHeight: '22px',
+                    },
+                  }}
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Escape') {
+                      e.stopPropagation();
+                    }
+                  }}
+                />
+              </Stack>
+            )}
+
             <Stack width={'100%'} maxHeight={'40dvh'} overflow={'auto'}>
-              {options.map((item, index) => (
+              {filtedOptions.map((item, index) => (
                 <Stack
                   key={item.value}
                   direction={'row'}
