@@ -1,4 +1,3 @@
-import { useIsManager } from '@/hooks';
 import { adManagerPreliminaries, adSalesPersonPreliminaries } from '@/services';
 import { atom, selector } from 'recoil';
 import { authAtom } from './auth';

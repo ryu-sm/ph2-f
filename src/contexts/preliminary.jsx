@@ -24,7 +24,7 @@ import { Modal, Stack, Typography } from '@mui/material';
 import deepDiff from 'deep-diff';
 
 import { createContext, useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil';
 
@@ -35,12 +35,12 @@ export const PreliminaryProvider = ({ children }) => {
   const refreshPreliminary = useRecoilRefresher_UNSTABLE(preliminarySelect);
   const [preliminarySnap, setPreliminarySnap] = useRecoilState(preliminarySnapAtom);
   const preliminaryId = useRecoilValue(preliminaryIdAtom);
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
   const checkDbModal = useBoolean(false);
 
-  useEffect(() => {
-    refreshPreliminary();
-  }, [pathname]);
+  // useEffect(() => {
+  //   refreshPreliminary();
+  // }, [pathname]);
   const infoGroup = useRecoilValue(infoGroupTabAtom);
   const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
   useEffect(() => {

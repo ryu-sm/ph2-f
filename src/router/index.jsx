@@ -5,6 +5,7 @@ import { ScrollToTop } from '@/containers';
 import { applicantRoutes } from './applicant-routes';
 import { salesPersonRoutes } from './sales-person-routes';
 import { managerRoutes } from './manager-routes';
+import { ApplicationProvider } from '@/contexts/application';
 
 export const RootRouter = () => {
   return (
@@ -18,7 +19,15 @@ export const RootRouter = () => {
           </Route>
           <Route element={<GroupNavigations group={'applicant'} />}>
             {applicantRoutes.map(({ path, Element }, key) => (
-              <Route key={key} path={path} element={<Element />} />
+              <Route
+                key={key}
+                path={path}
+                element={
+                  <ApplicationProvider>
+                    <Element />
+                  </ApplicationProvider>
+                }
+              />
             ))}
           </Route>
           <Route element={<GroupNavigations group={'sales-person'} />}>

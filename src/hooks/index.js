@@ -7,3 +7,4 @@ export * from './use-sort-preliminaries';
 export * from './update-popover-position';
 export * from './use-dashboard-context';
 export * from './use-is-sales-person';
+export * from './use-application-context';

@@ -1,4 +1,6 @@
 import { atom, selector } from 'recoil';
+import { authAtom } from './auth';
+import { apGetSendedApplication } from '@/services';
 
 export const applicationInitialValues = {
   //
@@ -72,6 +74,7 @@ export const applicationInitialValues = {
   },
 
   p_application_headers: {
+    apply_no: '',
     // STEP00
     apply_date: '',
     // STEP01
@@ -138,6 +141,7 @@ export const applicationInitialValues = {
     property_maintenance_type: '',
     property_flat_35_tech: '',
     property_region_type: '',
+    G: [],
     // STEP08
     curr_borrowing_status: '',
     refund_source_type: [],
@@ -174,6 +178,7 @@ export const applicationInitialValues = {
     vendor_name: '',
     vendor_phone: '',
     vendor_business_card: '',
+    J: [],
   },
   // STEP01
   p_borrowing_details__1: {
@@ -215,6 +220,8 @@ export const applicationInitialValues = {
     city_kana: '',
     district_kana: '',
     email: '',
+    H__a: [],
+    H__b: [],
     // STEP03
     office_occupation: '',
     office_occupation_other: '',
@@ -257,6 +264,28 @@ export const applicationInitialValues = {
     nursing_leave: '',
     // STEP10
     identity_verification_type: '',
+    A__01__a: [],
+    A__01__b: [],
+    A__02: [],
+    A__03__a: [],
+    A__03__b: [],
+    B__a: [],
+    B__b: [],
+    C__01: [],
+    C__02: [],
+    C__03: [],
+    C__04: [],
+    C__05: [],
+    D__01: [],
+    D__02: [],
+    D__03: [],
+    E: [],
+    F__01: [],
+    F__02: [],
+    F__03: [],
+    K: [],
+    // STEP13
+    S: [],
   },
 
   p_applicant_persons__1: {
@@ -279,6 +308,8 @@ export const applicationInitialValues = {
     city_kana: '',
     district_kana: '',
     rel_to_applicant_a_name: '',
+    H__a: [],
+    H__b: [],
     // STEP05
     office_occupation: '',
     office_occupation_other: '',
@@ -321,6 +352,26 @@ export const applicationInitialValues = {
     nursing_leave: '',
     // STEP11
     identity_verification_type: '',
+    A__01__a: [],
+    A__01__b: [],
+    A__02: [],
+    A__03__a: [],
+    A__03__b: [],
+    B__a: [],
+    B__b: [],
+    C__01: [],
+    C__02: [],
+    C__03: [],
+    C__04: [],
+    C__05: [],
+    D__01: [],
+    D__02: [],
+    D__03: [],
+    E: [],
+    F__01: [],
+    F__02: [],
+    F__03: [],
+    K: [],
   },
   // STEP06
   p_join_guarantors: [],
@@ -414,4 +465,50 @@ export const hasIncomeTotalizerSelector = selector({
     const application = get(applicationAtom);
     return application?.hasIncomeTotalizer;
   },
+});
+
+export const sendedApllicationSelect = selector({
+  key: 'sendedApllicationSelect',
+  get: async ({ get }) => {
+    const { user, agentSended } = get(authAtom);
+    if (!agentSended) {
+      return null;
+    }
+
+    try {
+      const res = await apGetSendedApplication(user?.id);
+
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+});
+
+const localApplicationEffect =
+  (key) =>
+  ({ setSelf, onSet }) => {
+    const savedValue = localStorage.getItem(key);
+    if (savedValue != null) {
+      setSelf(JSON.parse(savedValue));
+    }
+
+    onSet((newValue, _, isReset) => {
+      isReset
+        ? localStorage.removeItem(key)
+        : localStorage.setItem(
+            key,
+            JSON.stringify({
+              ...newValue,
+              p_uploaded_files: applicationInitialValues.p_uploaded_files,
+            })
+          );
+    });
+  };
+
+export const localApplication = atom({
+  key: 'localApplication',
+  default: applicationInitialValues,
+  effects_UNSTABLE: [localApplicationEffect('localApplicationInfo')],
 });

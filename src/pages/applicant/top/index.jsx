@@ -26,7 +26,7 @@ import { MCJ_CODE } from '@/configs';
 import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 import { apApplication, apApplicationFile } from '@/services';
-import { useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useIsSalesPerson } from '@/hooks';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
 
@@ -41,6 +41,10 @@ export const ApTopPage = () => {
   const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
   const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
   const setApplicationInfo = useSetRecoilState(applicationAtom);
+
+  const { localApplicationInfo } = useApplicationContext();
+
+  console.log(localApplicationInfo);
 
   const refreshApplyInfo = useCallback(async () => {
     try {

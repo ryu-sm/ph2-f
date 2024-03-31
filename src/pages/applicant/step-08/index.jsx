@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { Fragment, useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector, authAtom } from '@/store';
+import { applicationAtom, authAtom } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {

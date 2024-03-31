@@ -52,8 +52,13 @@ export const apAgentSend = async (data) => {
   return await service.post('/application', data);
 };
 
+// TODO :deleted
 export const apApplication = async (apply_no) => {
   return await service.get(`/application?apply_no=${apply_no}`);
+};
+
+export const apGetSendedApplication = async (c_user_id) => {
+  return await service.get(`/application/${c_user_id}`);
 };
 
 export const apApplicationFile = async (apply_no) => {

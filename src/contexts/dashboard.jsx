@@ -1,7 +1,7 @@
 import { API_500_ERROR } from '@/constant';
 import { dashboardTabStatusAtom, preliminarieListSelect } from '@/store';
 import { createContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue, useRecoilValueLoadable } from 'recoil';
 
@@ -11,11 +11,11 @@ export const DashboardProvider = ({ children }) => {
   const result = useRecoilValueLoadable(preliminarieListSelect);
   const refreshPreliminarieList = useRecoilRefresher_UNSTABLE(preliminarieListSelect);
   const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
-  useEffect(() => {
-    refreshPreliminarieList();
-  }, [pathname]);
+  // useEffect(() => {
+  //   refreshPreliminarieList();
+  // }, [pathname]);
 
   useEffect(() => {
     if (result.state === 'hasError') {
