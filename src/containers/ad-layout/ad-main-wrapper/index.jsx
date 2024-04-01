@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 import { MainFooter } from './main-footer';
 import { MainHeader } from './main-header';
 
-export const AdMainWrapper = ({ leftContent, rightAddItems, children }) => {
+export const AdMainWrapper = ({ leftContent, rightAddItems, children, style }) => {
   return (
     <AdThemeProvider>
       <Stack
@@ -11,6 +11,7 @@ export const AdMainWrapper = ({ leftContent, rightAddItems, children }) => {
           // height: '100dvh',
           minHeight: '100dvh',
           background: (theme) => theme.palette.gray[60],
+          ...style,
         }}
       >
         <MainHeader leftContent={leftContent} rightAddItems={rightAddItems} />

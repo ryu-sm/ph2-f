@@ -11,3 +11,4 @@ export { AdNewDocumentsPage } from './new-documents';
 export { AdDocumentsDetailPage } from './documents-detail';
 export { AdMessagesPages } from './messages';
 export { AdMessagesDetailPage } from './message-detail';
+export { AdUnderPreliminaryExamination } from './under-preliminary-examination';

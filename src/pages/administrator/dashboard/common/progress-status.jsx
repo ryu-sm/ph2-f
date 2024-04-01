@@ -1,6 +1,7 @@
 import { Icons } from '@/assets';
 import { Stack, Typography } from '@mui/material';
 import { useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const ProgressStatus = ({ status }) => {
   const currentStatusItem = useMemo(() => {
@@ -42,8 +43,18 @@ export const ProgressStatus = ({ status }) => {
     return currentItem;
   }, [status]);
 
+  const navigator = useNavigate();
+  const handleCheckUnderPreliminary = () => {
+    navigator('/manager/under-preliminary-examination');
+  };
   return currentStatusItem ? (
-    <Stack direction={'row'} alignItems={'center'} spacing={'2px'}>
+    <Stack
+      direction={'row'}
+      alignItems={'center'}
+      spacing={'2px'}
+      onClick={currentStatusItem?.values.includes('4') ? handleCheckUnderPreliminary : () => {}}
+      sx={{ cursor: currentStatusItem?.values.includes('4') ? 'pointer' : 'default' }}
+    >
       <Icons.AdStatusResultIcon fill={currentStatusItem?.fillColor} stroke={currentStatusItem?.strokeColor} />
       <Typography variant="case_content_text" color={'gray.100'}>
         {currentStatusItem?.label}

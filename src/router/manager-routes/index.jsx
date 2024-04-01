@@ -10,6 +10,7 @@ import {
   AdOrSpResetPasswordFinishedPage,
   AdOrSpResetPasswordPage,
   AdOrSpResetPasswordVerifyEmailPage,
+  AdUnderPreliminaryExamination,
   DashboardPage,
   EditPreliminary,
 } from '@/pages/administrator';
@@ -62,5 +63,9 @@ export const managerRoutes = [
   {
     ...routeNames.adManagerMessagesDetailPage,
     Element: AdMessagesDetailPage,
+  },
+  {
+    ...routeNames.adManagerUnderPreliminaryExaminationPage,
+    Element: AdUnderPreliminaryExamination,
   },
 ];

@@ -304,4 +304,8 @@ export const routeNames = {
     name: 'adSalesPersonMessagesDetailPage',
     path: '/sales-person/messages-detail',
   },
+  adManagerUnderPreliminaryExaminationPage: {
+    name: 'adUnderPreliminaryExaminationPage',
+    path: '/manager/under-preliminary-examination',
+  },
 };

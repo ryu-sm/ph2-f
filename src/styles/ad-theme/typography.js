@@ -602,4 +602,12 @@ export const typography = {
     letterSpacing: '0.4px',
     color: 'rgb(68, 68, 68)',
   },
+  under_preliminary_examination_title: {
+    fontFamily: 'Hiragino Sans',
+    fontWeight: 300,
+    fontSize: '12px',
+    lineHeight: '16.8px',
+    whiteSpace: 'nowrap',
+    color: 'rgb(51, 51, 51)',
+  },
 };
