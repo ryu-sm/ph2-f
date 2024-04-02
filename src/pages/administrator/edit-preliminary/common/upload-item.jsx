@@ -46,12 +46,12 @@ export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig })
   );
 
   const {
-    preliminaryInfo: { files_p_activities, p_activities, p_application_headers },
+    preliminaryInfo: { p_activities, p_application_headers },
   } = usePreliminaryContext();
 
   const isUpdated = useMemo(() => {
-    return files_p_activities.includes(upConfig?.key);
-  }, [files_p_activities, upConfig]);
+    return p_activities.includes(upConfig?.key);
+  }, [p_activities, upConfig]);
 
   const isUpdatedBorrowings = useMemo(() => {
     return p_activities.includes(upConfig?.key);

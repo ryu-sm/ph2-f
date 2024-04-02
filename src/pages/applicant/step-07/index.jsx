@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom, applyNoSelector, authAtom } from '@/store';
+import { useEffect, useMemo } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authAtom, localApplication } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -52,31 +52,24 @@ import {
 import { API_500_ERROR, PREFECTURES } from '@/constant';
 
 import { cloneDeep } from 'lodash';
-import { apApplicationFile } from '@/services';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
+import { apGetPapplicationHeadersFiles } from '@/services';
 
 export const ApStep07Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
+  const { agentSended, user } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
-  const {
-    isMCJ,
-    apNextStepId,
-    apPreStepId,
-    //
-    p_application_headers,
-    p_residents,
-    p_applicant_persons__0,
-    p_uploaded_files,
-  } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const { isMCJ, apNextStepId, apPreStepId, p_application_headers, p_residents, p_applicant_persons__0 } =
+    localApplicationInfo;
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
         p_application_headers: {
@@ -117,11 +110,9 @@ export const ApStep07Page = () => {
           property_maintenance_type: values.p_application_headers.property_maintenance_type,
           property_flat_35_tech: values.p_application_headers.property_flat_35_tech,
           property_region_type: values.p_application_headers.property_region_type,
+          G: values.p_application_headers.G,
         },
-        p_uploaded_files: {
-          ...pre.p_uploaded_files,
-          G: values.p_uploaded_files.G,
-        },
+
         p_residents: values.p_residents,
       };
     });
@@ -164,9 +155,7 @@ export const ApStep07Page = () => {
       property_maintenance_type: p_application_headers.property_maintenance_type,
       property_flat_35_tech: p_application_headers.property_flat_35_tech,
       property_region_type: p_application_headers.property_region_type,
-    },
-    p_uploaded_files: {
-      G: p_uploaded_files.G,
+      G: p_application_headers.G,
     },
     p_residents,
     isMCJ,
@@ -177,9 +166,9 @@ export const ApStep07Page = () => {
     const diffData = {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
-      },
-      p_uploaded_files: {
-        G: values.p_uploaded_files.G,
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
       p_residents: values.p_residents,
     };
@@ -191,7 +180,7 @@ export const ApStep07Page = () => {
     onSubmit: async (values) => {
       try {
         if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -202,21 +191,6 @@ export const ApStep07Page = () => {
       }
     },
   });
-
-  const sendedFile = useCallback(async () => {
-    if (agentSended) {
-      try {
-        const res = await apApplicationFile(applyNo);
-        formik.setFieldValue('p_uploaded_files.G', res.data.G);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  });
-
-  useEffect(() => {
-    sendedFile();
-  }, [agentSended, applyNo]);
 
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
@@ -284,6 +258,22 @@ export const ApStep07Page = () => {
     [birthdayMonth]
   );
 
+  const fetchPapplicationHeadersFiles = async () => {
+    try {
+      const res = await apGetPapplicationHeadersFiles(user.id);
+      formik.setFieldValue('p_application_headers.G', res.data?.G);
+      console.log(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    if (agentSended) {
+      fetchPapplicationHeadersFiles();
+    }
+  }, []);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -293,7 +283,12 @@ export const ApStep07Page = () => {
         bottomContent={
           <>
             <ApSaveDraftButton pageInfo={parseVaildData} />
-            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
+            />
           </>
         }
       >
@@ -532,7 +527,7 @@ export const ApStep07Page = () => {
                       'ご購入される土地・建物の 所在地・面積・価格などが記載されたチラシやパンフレット等があればアップロードしてください。'
                     }
                   />
-                  <ApImgUpload name="p_uploaded_files.G" />
+                  <ApImgUpload name="p_application_headers.G" />
                 </Stack>
               </ApItemGroup>
 

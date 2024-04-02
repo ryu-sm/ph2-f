@@ -48,6 +48,7 @@ export const PreliminaryProvider = ({ children }) => {
       toast.error(API_500_ERROR);
     }
     if (result.state === 'hasValue') {
+      console.log(result.contents);
       setPreliminarySnap(result.contents);
     }
   }, [result.state, preliminaryId]);
@@ -84,26 +85,26 @@ export const PreliminaryProvider = ({ children }) => {
         });
       }
 
-      const temp00 = tempArray.filter((item) => item?.rel_to_applicant_a_name !== '');
-      const temp01 = tempArray.filter((item) => item?.rel_to_applicant_a === '1');
-      const temp02 = tempArray.filter((item) => item?.rel_to_applicant_a === '2');
-      const temp03 = tempArray.filter((item) => item?.rel_to_applicant_a === '3');
-      const temp04 = tempArray.filter((item) => item?.rel_to_applicant_a === '4');
-      const temp05 = tempArray.filter((item) => item?.rel_to_applicant_a === '5');
-      const temp06 = tempArray.filter((item) => item?.rel_to_applicant_a === '6');
-      const temp99 = tempArray.filter((item) => item?.rel_to_applicant_a === '99');
-      const temp__ = tempArray.filter((item) => item?.rel_to_applicant_a === '');
-      const tempArraySorted = [
-        ...temp00,
-        ...temp01,
-        ...temp02,
-        ...temp03,
-        ...temp04,
-        ...temp05,
-        ...temp06,
-        ...temp99,
-        ...temp__,
-      ];
+      // const temp00 = tempArray.filter((item) => item?.rel_to_applicant_a_name !== '');
+      // const temp01 = tempArray.filter((item) => item?.rel_to_applicant_a === '1');
+      // const temp02 = tempArray.filter((item) => item?.rel_to_applicant_a === '2');
+      // const temp03 = tempArray.filter((item) => item?.rel_to_applicant_a === '3');
+      // const temp04 = tempArray.filter((item) => item?.rel_to_applicant_a === '4');
+      // const temp05 = tempArray.filter((item) => item?.rel_to_applicant_a === '5');
+      // const temp06 = tempArray.filter((item) => item?.rel_to_applicant_a === '6');
+      // const temp99 = tempArray.filter((item) => item?.rel_to_applicant_a === '99');
+      // const temp__ = tempArray.filter((item) => item?.rel_to_applicant_a === '');
+      // const tempArraySorted = [
+      //   ...temp00,
+      //   ...temp01,
+      //   ...temp02,
+      //   ...temp03,
+      //   ...temp04,
+      //   ...temp05,
+      //   ...temp06,
+      //   ...temp99,
+      //   ...temp__,
+      // ];
 
       const dbData = {
         ...preliminaryInitialValues,
@@ -137,10 +138,10 @@ export const PreliminaryProvider = ({ children }) => {
         p_join_guarantors: res.data?.p_join_guarantors
           ? res.data.p_join_guarantors
           : preliminaryInitialValues.p_join_guarantors,
-        p_residents: tempArraySorted,
+        p_residents: tempArray,
         p_activities: res.data?.p_activities ? res.data?.p_activities : [],
-        files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
-        p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : preliminaryInitialValues.p_borrowings,
+        // files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
+        p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : [],
         p_result: {
           ...preliminaryInitialValues.p_result,
           ...res.data.p_result,
@@ -154,7 +155,12 @@ export const PreliminaryProvider = ({ children }) => {
 
       const upDbData = deepDiff(result.contents, dbData);
       console.log('upData', upDbData);
-      return Boolean(upDbData);
+      if (upDbData === undefined) {
+        return false;
+      } else {
+        const upList = upDbData.filter((item) => !item.path.includes('src'));
+        return upList > 0;
+      }
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -203,7 +209,7 @@ export const PreliminaryProvider = ({ children }) => {
         p_application_header_id: result.contents?.p_application_headers?.id,
         provisional_result: provisional_result,
         s_bank_id: s_bank_id,
-        R: preliminarySnap?.p_uploaded_files?.R,
+        R: preliminarySnap?.p_application_headers?.R,
       });
       refreshPreliminary();
     } catch (error) {
@@ -239,12 +245,12 @@ export const PreliminaryProvider = ({ children }) => {
     }
   };
 
-  const handleDeleteProvisionalResult = async (p_uploaded_file_id) => {
+  const handleDeleteProvisionalResult = async (p_upload_file_id) => {
     try {
       await adDeleteProvisionalResult({
         p_application_header_id: result.contents?.p_application_headers?.id,
         s_bank_id: result.contents?.p_result?.s_bank_id,
-        p_uploaded_file_id: p_uploaded_file_id,
+        p_upload_file_id: p_upload_file_id,
       });
       refreshPreliminary();
     } catch (error) {

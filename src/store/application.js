@@ -16,63 +16,6 @@ export const applicationInitialValues = {
   p_applicant_persons_a_agreement: false,
   p_applicant_persons_b_agreement: false,
 
-  p_uploaded_files: {
-    // STEP02
-    p_applicant_persons__0__H__a: [],
-    p_applicant_persons__0__H__b: [],
-    // STEP04
-    p_applicant_persons__1__H__a: [],
-    p_applicant_persons__1__H__b: [],
-    // STEP07
-    G: [],
-    // STEP10
-    p_applicant_persons__0__A__01__a: [],
-    p_applicant_persons__0__A__01__b: [],
-    p_applicant_persons__0__A__02: [],
-    p_applicant_persons__0__A__03__a: [],
-    p_applicant_persons__0__A__03__b: [],
-    p_applicant_persons__0__B__a: [],
-    p_applicant_persons__0__B__b: [],
-    p_applicant_persons__0__C__01: [],
-    p_applicant_persons__0__C__02: [],
-    p_applicant_persons__0__C__03: [],
-    p_applicant_persons__0__C__04: [],
-    p_applicant_persons__0__C__05: [],
-    p_applicant_persons__0__D__01: [],
-    p_applicant_persons__0__D__02: [],
-    p_applicant_persons__0__D__03: [],
-    p_applicant_persons__0__E: [],
-    p_applicant_persons__0__F__01: [],
-    p_applicant_persons__0__F__02: [],
-    p_applicant_persons__0__F__03: [],
-    p_applicant_persons__0__K: [],
-    // STEP11
-    p_applicant_persons__1__A__01__a: [],
-    p_applicant_persons__1__A__01__b: [],
-    p_applicant_persons__1__A__02: [],
-    p_applicant_persons__1__A__03__a: [],
-    p_applicant_persons__1__A__03__b: [],
-    p_applicant_persons__1__B__a: [],
-    p_applicant_persons__1__B__b: [],
-    p_applicant_persons__1__C__01: [],
-    p_applicant_persons__1__C__02: [],
-    p_applicant_persons__1__C__03: [],
-    p_applicant_persons__1__C__04: [],
-    p_applicant_persons__1__C__05: [],
-    p_applicant_persons__1__D__01: [],
-    p_applicant_persons__1__D__02: [],
-    p_applicant_persons__1__D__03: [],
-    p_applicant_persons__1__E: [],
-    p_applicant_persons__1__F__01: [],
-    p_applicant_persons__1__F__02: [],
-    p_applicant_persons__1__F__03: [],
-    p_applicant_persons__1__K: [],
-    // STEP12
-    J: [],
-    // STEP13
-    S: [],
-  },
-
   p_application_headers: {
     apply_no: '',
     // STEP00
@@ -179,6 +122,7 @@ export const applicationInitialValues = {
     vendor_phone: '',
     vendor_business_card: '',
     J: [],
+    R: [],
   },
   // STEP01
   p_borrowing_details__1: {
@@ -383,90 +327,6 @@ export const applicationInitialValues = {
   p_borrowings: [],
 };
 
-const localStorageEffect =
-  (key) =>
-  ({ setSelf, onSet }) => {
-    const savedValue = localStorage.getItem(key);
-    if (savedValue != null) {
-      setSelf(JSON.parse(savedValue));
-    }
-
-    onSet((newValue, _, isReset) => {
-      isReset
-        ? localStorage.removeItem(key)
-        : localStorage.setItem(
-            key,
-            JSON.stringify({
-              ...newValue,
-              p_uploaded_files: applicationInitialValues.p_uploaded_files,
-              p_borrowings: newValue.p_borrowings.map((item) => ({ ...item, p_borrowings__I: [] })),
-            })
-          );
-    });
-  };
-
-export const applicationAtom = atom({
-  key: 'application',
-  default: applicationInitialValues,
-  effects_UNSTABLE: [localStorageEffect('application')],
-});
-
-export const appliedBanksSelector = selector({
-  key: 'appliedBanks',
-  get: ({ get }) => {
-    const application = get(applicationAtom);
-    return application?.p_application_banks__s_bank_ids || [];
-  },
-});
-
-export const isMcjSelector = selector({
-  key: 'isMCJ',
-  get: ({ get }) => {
-    const application = get(applicationAtom);
-    return application?.isMCJ;
-  },
-});
-
-export const apCurrStepIdSelector = selector({
-  key: 'apCurrStepId',
-  get: ({ get }) => {
-    const application = get(applicationAtom);
-    return application?.apCurrStepId;
-  },
-});
-
-export const apNextStepIdSelector = selector({
-  key: 'apNextStepId',
-  get: ({ get }) => {
-    const application = get(applicationAtom);
-    return application?.apNextStepId;
-  },
-});
-
-export const apPreStepIdSelector = selector({
-  key: 'apPreStepId',
-  get: ({ get }) => {
-    const application = get(applicationAtom);
-    return application?.apPreStepId;
-  },
-});
-
-export const hasJoinGuarantorSelector = selector({
-  key: 'hasJoinGuarantor',
-  get: ({ get }) => {
-    const application = get(applicationAtom);
-    return application?.hasJoinGuarantor;
-  },
-});
-
-export const hasIncomeTotalizerSelector = selector({
-  key: 'hasIncomeTotalizer',
-  get: ({ get }) => {
-    const application = get(applicationAtom);
-    return application?.hasIncomeTotalizer;
-  },
-});
-
 export const sendedApllicationSelect = selector({
   key: 'sendedApllicationSelect',
   get: async ({ get }) => {
@@ -474,11 +334,8 @@ export const sendedApllicationSelect = selector({
     if (!agentSended) {
       return null;
     }
-
     try {
       const res = await apGetSendedApplication(user?.id);
-
-      console.log(res.data);
       return res.data;
     } catch (error) {
       throw error;
@@ -501,7 +358,64 @@ const localApplicationEffect =
             key,
             JSON.stringify({
               ...newValue,
-              p_uploaded_files: applicationInitialValues.p_uploaded_files,
+              p_application_headers: {
+                ...newValue?.p_application_headers,
+                G: [],
+                J: [],
+              },
+              p_applicant_persons__0: {
+                ...newValue?.p_applicant_persons__0,
+                H__a: [],
+                H__b: [],
+                A__01__a: [],
+                A__01__b: [],
+                A__02: [],
+                A__03__a: [],
+                A__03__b: [],
+                B__a: [],
+                B__b: [],
+                C__01: [],
+                C__02: [],
+                C__03: [],
+                C__04: [],
+                C__05: [],
+                D__01: [],
+                D__02: [],
+                D__03: [],
+                E: [],
+                F__01: [],
+                F__02: [],
+                F__03: [],
+                K: [],
+                // STEP13
+                S: [],
+              },
+              p_applicant_persons__1: {
+                ...newValue?.p_applicant_persons__1,
+                H__a: [],
+                H__b: [],
+                A__01__a: [],
+                A__01__b: [],
+                A__02: [],
+                A__03__a: [],
+                A__03__b: [],
+                B__a: [],
+                B__b: [],
+                C__01: [],
+                C__02: [],
+                C__03: [],
+                C__04: [],
+                C__05: [],
+                D__01: [],
+                D__02: [],
+                D__03: [],
+                E: [],
+                F__01: [],
+                F__02: [],
+                F__03: [],
+                K: [],
+              },
+              p_borrowings: newValue.p_borrowings.map((item) => ({ ...item, I: [] })),
             })
           );
     });

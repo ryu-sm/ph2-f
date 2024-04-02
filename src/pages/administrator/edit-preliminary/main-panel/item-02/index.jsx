@@ -4,7 +4,7 @@ import { formatJapanDate } from '@/utils';
 import { useEffect } from 'react';
 import {
   AdEditFullWidthInput,
-  AdEditInput,
+  AdPhoneInputField,
   AdSelectRadios,
   AdZipCodeInput,
   DayPicker,
@@ -198,7 +198,7 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.mobile_phone" convertHalfWidth />
+              <AdPhoneInputField name="p_applicant_persons__0.mobile_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.mobile_phone
             )
@@ -212,7 +212,7 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.home_phone" convertHalfWidth />
+              <AdPhoneInputField name="p_applicant_persons__0.home_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.home_phone
             )
@@ -226,7 +226,7 @@ export const Item02 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.emergency_contact" convertHalfWidth />
+              <AdPhoneInputField name="p_applicant_persons__0.emergency_contact" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.emergency_contact
             )

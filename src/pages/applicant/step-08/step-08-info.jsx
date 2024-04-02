@@ -1,8 +1,7 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
-import { useBankMaster } from '@/hooks/use-bank-master';
-import { agentSendedSelector, applicationAtom, hasIncomeTotalizerSelector, isMcjSelector } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate, formatMoney } from '@/utils';
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
 import { Icons } from '@/assets';
@@ -17,7 +16,6 @@ import {
   houseFinanceAgency,
   loanBusinessTargetOptions,
   loanPurposeOptions,
-  refundSourceTypeOptions,
   scheduledLoanPayoffOptions,
   typeOptions,
 } from './options';
@@ -26,10 +24,9 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApStep08Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { isMCJ, hasIncomeTotalizer, p_application_headers, p_borrowings } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { isMCJ, hasIncomeTotalizer, p_application_headers, p_borrowings } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
 
-  const bankMaster = useBankMaster();
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={`：現在の借入状況`}>
       <ApConfirmItemGroup label={'あなたや連帯保証人予定者に、現在お借入はありますか？'}>
@@ -60,7 +57,7 @@ export const ApStep08Info = ({ stepIndex }) => {
               〈借入種類〉
               {p_borrowing.type ? typeOptions.find((item) => item.value === p_borrowing.type).label : 'ー'}
             </Typography>
-            {p_borrowing.p_borrowings__I.length > 0 && <ApImgItem files={p_borrowing.p_borrowings__I} />}
+            {p_borrowing.I.length > 0 && <ApImgItem files={p_borrowing.I} />}
 
             {p_borrowing.lender && (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>

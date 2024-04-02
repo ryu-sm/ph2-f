@@ -1,14 +1,14 @@
 import { ApPageTitle } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 import { routeNames } from '@/router/settings';
-import { applyNoSelector } from '@/store';
+import { authAtom } from '@/store';
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 export const ApStep14Page = () => {
   const navigate = useNavigate();
-  const applyNo = useRecoilValue(applyNoSelector);
+  const { applyNo } = useRecoilValue(authAtom);
 
   return (
     <ApLayout hasMenu hasStepBar pb={18}>

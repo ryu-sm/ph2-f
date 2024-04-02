@@ -52,8 +52,15 @@ export const AdOrSpLoginPage = () => {
               },
             };
           });
-          navigate(routeNames.adManagerDashboardPage.path);
-          return;
+          const preliminaryId = localStorage.getItem('preliminary_id');
+          if (preliminaryId) {
+            localStorage.removeItem('preliminary_id');
+            navigate(`${routeNames.adManagerEditPreliminaryPage.path}?id=${preliminaryId}`);
+            return;
+          } else {
+            navigate(routeNames.adManagerDashboardPage.path);
+            return;
+          }
         }
         const res = await adSalesPersonLogin(values);
         const { access_token } = res.data;
@@ -74,6 +81,7 @@ export const AdOrSpLoginPage = () => {
         });
         navigate(routeNames.adSalesPersonDashboardPage.path);
       } catch (error) {
+        console.log(error);
         switch (error?.status) {
           case 400:
             setWarningText('メールアドレスまたはパスワードが正しくありません。');

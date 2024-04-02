@@ -6,16 +6,11 @@ import {
   AdMessagesDetailPage,
   AdMessagesPages,
   AdNewDocumentsPage,
-  AdOrSpLoginPage,
-  AdOrSpResetPasswordFinishedPage,
-  AdOrSpResetPasswordPage,
-  AdOrSpResetPasswordVerifyEmailPage,
   DashboardPage,
   EditPreliminary,
 } from '@/pages/administrator';
 import {
   ApAgreementPage,
-  ApTopPage,
   ApStep01Page,
   ApStep02Page,
   ApStep03Page,
@@ -29,27 +24,9 @@ import {
   ApStep11Page,
   ApStep12Page,
   ApStep13Page,
-  ApStep14Page,
-  ApConfirmPage,
 } from '@/pages/applicant';
 
 export const salesPersonAdRoutes = [
-  {
-    ...routeNames.adSalesPersonLoginPage,
-    Element: AdOrSpLoginPage,
-  },
-  {
-    ...routeNames.adSalesPersonResetPasswordVerifyEmailPage,
-    Element: AdOrSpResetPasswordVerifyEmailPage,
-  },
-  {
-    ...routeNames.adSalesPersonResetPasswordPage,
-    Element: AdOrSpResetPasswordPage,
-  },
-  {
-    ...routeNames.adSalesPersonResetPasswordFinishedPage,
-    Element: AdOrSpResetPasswordFinishedPage,
-  },
   {
     ...routeNames.adSalesPersonDashboardPage,
     Element: DashboardPage,

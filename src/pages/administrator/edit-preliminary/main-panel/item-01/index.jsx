@@ -95,8 +95,6 @@ export const Item01 = () => {
       desired_loan_amount: p_borrowing_details__2?.desired_loan_amount,
       bonus_repayment_amount: p_borrowing_details__2?.bonus_repayment_amount,
     },
-    // 補助フィールド
-    // loan_target_: '0',
   };
 
   const setUpdateData = (values) => {
@@ -104,6 +102,7 @@ export const Item01 = () => {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
         land_advance_plan: values.p_application_headers.land_advance_plan,
+        join_guarantor_umu: values.p_application_headers.join_guarantor_umu,
         loan_type: values.p_application_headers.loan_type,
       },
       p_application_banks: values.p_application_banks,

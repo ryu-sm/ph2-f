@@ -173,7 +173,7 @@ export const typography = {
   },
   edit_content_title: {
     fontFamily: 'Hiragino Sans',
-    fontStyle: 500,
+    // fontStyle: 500,
     fontSize: '12px',
     lineHeight: '24px',
     letterSpacing: '1px',

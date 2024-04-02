@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { Fragment, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { applicationAtom, authAtom } from '@/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authAtom, localApplication } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -26,16 +26,18 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { toast } from 'react-toastify';
 
 export const ApStep06Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
+  const { agentSended } = useRecoilValue(authAtom);
+
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
   const {
     apNextStepId,
     apPreStepId,
@@ -44,10 +46,10 @@ export const ApStep06Page = () => {
     changeJoinGuarantor,
     p_join_guarantors,
     p_application_headers,
-  } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+  } = localApplicationInfo;
+
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
         p_join_guarantors: values.p_join_guarantors,
@@ -62,6 +64,8 @@ export const ApStep06Page = () => {
     const diffData = {
       p_application_headers: {
         join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
       p_join_guarantors: values.p_join_guarantors,
     };
@@ -76,10 +80,10 @@ export const ApStep06Page = () => {
           setLocalData(values);
           navigate(routeNames.apStep11Page.path);
         } else if (changeJoinGuarantor) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -123,6 +127,7 @@ export const ApStep06Page = () => {
               left={handelLeft}
               right={formik.handleSubmit}
               rightLabel={changeToIncomeTotalizer ? false : agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
             />
           </>
         }

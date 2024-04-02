@@ -1,5 +1,5 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
-import { agentSendedSelector, applicationAtom, authAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { Icons } from '@/assets';
@@ -12,11 +12,12 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApStep12Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { p_uploaded_files, p_application_headers } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { p_application_headers } = useRecoilValue(localApplication);
   const {
+    agentSended,
     user: { salesCompanyOrgId },
   } = useRecoilValue(authAtom);
+
   const [orgs, setOrgs] = useState([]);
   const getOrgs = useCallback(async () => {
     try {
@@ -42,8 +43,8 @@ export const ApStep12Info = ({ stepIndex }) => {
     <ApConfirmGroup stepIndex={stepIndex} label={`：担当者情報`}>
       {p_application_headers.vendor_business_card === '1' ? (
         <ApConfirmItemGroup label={'担当者の名刺'}>
-          {p_uploaded_files.J.length ? (
-            <ApImgItem files={p_uploaded_files.J} />
+          {p_application_headers.J.length ? (
+            <ApImgItem files={p_application_headers.J} />
           ) : (
             <Typography variant="label" color={'gray.150'}>
               〈 書類はまだ添付されません。〉

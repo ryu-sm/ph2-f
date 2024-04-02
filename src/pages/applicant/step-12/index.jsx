@@ -14,52 +14,49 @@ import {
 import { CONSENT_URL } from '@/configs';
 import { ApLayout, ApStepFooter } from '@/containers';
 import {
-  apApplicationFile,
-  apGetSalesCompanyOrgs,
+  apGetPapplicationHeadersFiles,
   getChildrenOrgsWithCategory,
   getOrgsInfos,
   getOrgsWithCategories,
 } from '@/services';
-import { apNextStepIdSelector, apPreStepIdSelector, applicationAtom, authAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useEffect, useMemo, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { inputOptions } from './options';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { routeNames } from '@/router/settings';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
 import { diffObj } from '@/utils';
 
 export const ApStep12Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
   const {
-    user: { salesCompanyOrgId },
+    agentSended,
+    user: { salesCompanyOrgId, id },
     salesPerson,
   } = useRecoilValue(authAtom);
+
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const { apNextStepId, apPreStepId, p_application_headers } = localApplicationInfo;
+
   const [orgsC, setOrgsC] = useState([]);
   const [orgsB, setOrgsB] = useState([]);
   const [orgsE, setOrgsE] = useState([]);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
+
   const updateModal = useBoolean(false);
-  const { p_uploaded_files, p_application_headers } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
-        p_uploaded_files: {
-          ...pre.p_uploaded_files,
-          J: values.p_uploaded_files.J,
-        },
         p_application_headers: {
           ...pre.p_application_headers,
           sales_company_id: values.p_application_headers.sales_company_id,
@@ -68,14 +65,12 @@ export const ApStep12Page = () => {
           vendor_name: values.p_application_headers.vendor_name,
           vendor_phone: values.p_application_headers.vendor_phone,
           vendor_business_card: values.p_application_headers.vendor_business_card,
+          J: values.p_application_headers.J,
         },
       };
     });
   };
   const initialValues = {
-    p_uploaded_files: {
-      J: p_uploaded_files.J,
-    },
     p_application_headers: {
       sales_company_id: p_application_headers.sales_company_id,
       sales_area_id: p_application_headers.sales_area_id,
@@ -83,6 +78,7 @@ export const ApStep12Page = () => {
       vendor_name: p_application_headers.vendor_name,
       vendor_phone: p_application_headers.vendor_phone,
       vendor_business_card: p_application_headers.vendor_business_card,
+      J: p_application_headers.J,
     },
   };
 
@@ -90,11 +86,14 @@ export const ApStep12Page = () => {
     const diffData = {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
-      },
-      p_uploaded_files: {
-        ...diffObj(initialValues.p_uploaded_files, values.p_uploaded_files),
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
     };
+
+    console.log(diffData);
+
     return diffData;
   };
 
@@ -103,7 +102,7 @@ export const ApStep12Page = () => {
     onSubmit: async (values) => {
       try {
         if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -116,7 +115,7 @@ export const ApStep12Page = () => {
   });
 
   useEffect(() => {
-    if (salesCompanyOrgId) {
+    if (salesCompanyOrgId && !formik.values.p_application_headers.vendor_business_card) {
       formik.setFieldValue('p_application_headers.vendor_business_card', '0');
     }
   }, [salesCompanyOrgId]);
@@ -152,10 +151,15 @@ export const ApStep12Page = () => {
           if (res.data?.sales_company_id) {
             await fetchOrgsE(res.data?.sales_company_id, res.data?.sales_area_id);
           }
-
-          formik.setFieldValue('p_application_headers.sales_company_id', res.data?.sales_company_id);
-          formik.setFieldValue('p_application_headers.sales_area_id', res.data?.sales_area_id);
-          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', res.data?.sales_exhibition_hall_id);
+          if (
+            !p_application_headers.sales_company_id &&
+            !p_application_headers.sales_area_id &&
+            !p_application_headers.sales_exhibition_hall_id
+          ) {
+            formik.setFieldValue('p_application_headers.sales_company_id', res.data?.sales_company_id);
+            formik.setFieldValue('p_application_headers.sales_area_id', res.data?.sales_area_id);
+            formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', res.data?.sales_exhibition_hall_id);
+          }
         } catch (error) {
           toast.error(API_500_ERROR);
         }
@@ -172,13 +176,7 @@ export const ApStep12Page = () => {
       }
     };
     fetchData();
-  }, [salesCompanyOrgId]);
-
-  // useEffect(() => {
-  //   if (formik.values.p_application_headers.sales_company_id) {
-  //     fetchData();
-  //   }
-  // }, [formik.values.p_application_headers.sales_company_id]);
+  }, []);
 
   const handleChangCompany = async (e) => {
     const value = e.target.value;
@@ -208,21 +206,6 @@ export const ApStep12Page = () => {
     setOrgsE([{ value: '', label: '' }, ...resE.data]);
   };
 
-  const sendedFile = useCallback(async () => {
-    if (agentSended) {
-      try {
-        const res = await apApplicationFile(applyNo);
-        formik.setFieldValue('p_uploaded_files.J', res.data.J);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  });
-
-  useEffect(() => {
-    sendedFile();
-  }, [agentSended, applyNo]);
-
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
     return dataCopy;
@@ -237,6 +220,22 @@ export const ApStep12Page = () => {
     }
   };
 
+  const fetchPapplicationHeadersFiles = async () => {
+    try {
+      const res = await apGetPapplicationHeadersFiles(id);
+      formik.setFieldValue('p_application_headers.J', res.data?.J);
+      console.log(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    if (agentSended) {
+      fetchPapplicationHeadersFiles();
+    }
+  }, []);
+
   return (
     <FormikProvider value={formik}>
       <ApLayout
@@ -245,7 +244,12 @@ export const ApStep12Page = () => {
         bottomContent={
           <>
             <ApSaveDraftButton pageInfo={parseVaildData} />
-            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
+            />
           </>
         }
       >
@@ -311,7 +315,7 @@ export const ApStep12Page = () => {
                     borderTopRightRadius={'7px'}
                     borderTopLeftRadius={'7px'}
                   >
-                    <ApImgUpload name="p_uploaded_files.J" singleFile />
+                    <ApImgUpload name="p_application_headers.J" singleFile />
                   </ApItemGroup>
                 </Stack>
               </Stack>

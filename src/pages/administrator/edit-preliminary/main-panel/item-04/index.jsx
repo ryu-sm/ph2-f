@@ -4,8 +4,8 @@ import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { Fragment, useEffect } from 'react';
 import {
   AdEditFullWidthInput,
-  AdEditInput,
   AdEditOutLineInput,
+  AdPhoneInputField,
   AdSelectRadios,
   AdZipCodeInput,
   DayPicker,
@@ -275,7 +275,7 @@ export const Item04 = () => {
                   isLogicRequired
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].mobile_phone`} convertHalfWidth />
+                      <AdPhoneInputField name={`p_join_guarantors[${index}].mobile_phone`} convertHalfWidth />
                     ) : (
                       item.mobile_phone
                     )
@@ -289,7 +289,7 @@ export const Item04 = () => {
                   }}
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].home_phone`} convertHalfWidth />
+                      <AdPhoneInputField name={`p_join_guarantors[${index}].home_phone`} convertHalfWidth />
                     ) : (
                       item.home_phone
                     )
@@ -303,7 +303,7 @@ export const Item04 = () => {
                   isAddendum
                   field={
                     isEditable ? (
-                      <AdEditInput name={`p_join_guarantors[${index}].emergency_contact`} convertHalfWidth />
+                      <AdPhoneInputField name={`p_join_guarantors[${index}].emergency_contact`} convertHalfWidth />
                     ) : (
                       item.emergency_contact
                     )

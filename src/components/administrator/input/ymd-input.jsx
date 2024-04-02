@@ -35,6 +35,7 @@ export const AdYmdInput = ({ width, ml, ...props }) => {
 
   const handleChange = useCallback(
     async (e) => {
+      console.log(e);
       e.target.value = e.target.value.replace('年', '/').replace('月', '/').replace('日', '');
       props.onChange && props.onChange(e);
       setValue(e.target.value);

@@ -87,64 +87,6 @@ export const joinGuarantorInitialValues = {
 };
 
 export const preliminaryInitialValues = {
-  p_uploaded_files: {
-    // STEP02
-    p_applicant_persons__0__H__a: [],
-    p_applicant_persons__0__H__b: [],
-    // STEP04
-    p_applicant_persons__1__H__a: [],
-    p_applicant_persons__1__H__b: [],
-    // STEP07
-    G: [],
-    // STEP10
-    p_applicant_persons__0__A__01__a: [],
-    p_applicant_persons__0__A__01__b: [],
-    p_applicant_persons__0__A__02: [],
-    p_applicant_persons__0__A__03__a: [],
-    p_applicant_persons__0__A__03__b: [],
-    p_applicant_persons__0__B__a: [],
-    p_applicant_persons__0__B__b: [],
-    p_applicant_persons__0__C__01: [],
-    p_applicant_persons__0__C__02: [],
-    p_applicant_persons__0__C__03: [],
-    p_applicant_persons__0__C__04: [],
-    p_applicant_persons__0__C__05: [],
-    p_applicant_persons__0__D__01: [],
-    p_applicant_persons__0__D__02: [],
-    p_applicant_persons__0__D__03: [],
-    p_applicant_persons__0__E: [],
-    p_applicant_persons__0__F__01: [],
-    p_applicant_persons__0__F__02: [],
-    p_applicant_persons__0__F__03: [],
-    p_applicant_persons__0__K: [],
-    // STEP11
-    p_applicant_persons__1__A__01__a: [],
-    p_applicant_persons__1__A__01__b: [],
-    p_applicant_persons__1__A__02: [],
-    p_applicant_persons__1__A__03__a: [],
-    p_applicant_persons__1__A__03__b: [],
-    p_applicant_persons__1__B__a: [],
-    p_applicant_persons__1__B__b: [],
-    p_applicant_persons__1__C__01: [],
-    p_applicant_persons__1__C__02: [],
-    p_applicant_persons__1__C__03: [],
-    p_applicant_persons__1__C__04: [],
-    p_applicant_persons__1__C__05: [],
-    p_applicant_persons__1__D__01: [],
-    p_applicant_persons__1__D__02: [],
-    p_applicant_persons__1__D__03: [],
-    p_applicant_persons__1__E: [],
-    p_applicant_persons__1__F__01: [],
-    p_applicant_persons__1__F__02: [],
-    p_applicant_persons__1__F__03: [],
-    p_applicant_persons__1__K: [],
-    // STEP12
-    J: [],
-    // STEP13
-    S: [],
-    R: [],
-  },
-
   p_application_headers: {
     id: '',
     apply_no: '',
@@ -223,6 +165,7 @@ export const preliminaryInitialValues = {
     property_maintenance_type: '',
     property_flat_35_tech: '',
     property_region_type: '',
+    G: [],
     curr_borrowing_status: '',
     refund_source_type: [],
     refund_source_type_other: '',
@@ -266,6 +209,8 @@ export const preliminaryInitialValues = {
     funding_other_refinance_amount: '',
     funding_other_loan_amount: '',
     unsubcribed: '',
+    J: [],
+    R: [],
   },
 
   p_borrowing_details__1: {
@@ -310,6 +255,8 @@ export const preliminaryInitialValues = {
     district_kana: '',
     other_address_kana: '',
     email: '',
+    H__a: [],
+    H__b: [],
     office_occupation: '',
     office_occupation_other: '',
     office_industry: '',
@@ -359,6 +306,28 @@ export const preliminaryInitialValues = {
     office_capital_stock: '',
     main_income_source: '',
     before_last_year_income: '',
+
+    A__01__a: [],
+    A__01__b: [],
+    A__02: [],
+    A__03__a: [],
+    A__03__b: [],
+    B__a: [],
+    B__b: [],
+    C__01: [],
+    C__02: [],
+    C__03: [],
+    C__04: [],
+    C__05: [],
+    D__01: [],
+    D__02: [],
+    D__03: [],
+    E: [],
+    F__01: [],
+    F__02: [],
+    F__03: [],
+    K: [],
+    S: [],
   },
 
   p_applicant_persons__1: {
@@ -384,6 +353,8 @@ export const preliminaryInitialValues = {
     district_kana: '',
     other_address_kana: '',
     email: '',
+    H__a: [],
+    H__b: [],
     office_occupation: '',
     office_occupation_other: '',
     office_industry: '',
@@ -433,6 +404,27 @@ export const preliminaryInitialValues = {
     office_capital_stock: '',
     main_income_source: '',
     before_last_year_income: '',
+    rel_to_applicant_a: '',
+    A__01__a: [],
+    A__01__b: [],
+    A__02: [],
+    A__03__a: [],
+    A__03__b: [],
+    B__a: [],
+    B__b: [],
+    C__01: [],
+    C__02: [],
+    C__03: [],
+    C__04: [],
+    C__05: [],
+    D__01: [],
+    D__02: [],
+    D__03: [],
+    E: [],
+    F__01: [],
+    F__02: [],
+    F__03: [],
+    K: [],
   },
 
   p_join_guarantors: [],
@@ -443,7 +435,7 @@ export const preliminaryInitialValues = {
 
   p_activities: [],
 
-  files_p_activities: [],
+  // files_p_activities: [],
 
   p_result: {
     pre_examination_status: '',
@@ -460,6 +452,8 @@ export const preliminarySelect = selector({
     const id = get(preliminaryIdAtom);
     if (!id) return null;
     const res = await adGetPreliminary(id);
+
+    // console.log(res.data);
 
     if (res.error) {
       throw res.error;
@@ -484,26 +478,26 @@ export const preliminarySelect = selector({
       });
     }
 
-    const temp00 = tempArray.filter((item) => item?.rel_to_applicant_a_name !== '');
-    const temp01 = tempArray.filter((item) => item?.rel_to_applicant_a === '1');
-    const temp02 = tempArray.filter((item) => item?.rel_to_applicant_a === '2');
-    const temp03 = tempArray.filter((item) => item?.rel_to_applicant_a === '3');
-    const temp04 = tempArray.filter((item) => item?.rel_to_applicant_a === '4');
-    const temp05 = tempArray.filter((item) => item?.rel_to_applicant_a === '5');
-    const temp06 = tempArray.filter((item) => item?.rel_to_applicant_a === '6');
-    const temp99 = tempArray.filter((item) => item?.rel_to_applicant_a === '99');
-    const temp__ = tempArray.filter((item) => item?.rel_to_applicant_a === '');
-    const tempArraySorted = [
-      ...temp00,
-      ...temp01,
-      ...temp02,
-      ...temp03,
-      ...temp04,
-      ...temp05,
-      ...temp06,
-      ...temp99,
-      ...temp__,
-    ];
+    // const temp00 = tempArray.filter((item) => item?.rel_to_applicant_a_name !== '');
+    // const temp01 = tempArray.filter((item) => item?.rel_to_applicant_a === '1');
+    // const temp02 = tempArray.filter((item) => item?.rel_to_applicant_a === '2');
+    // const temp03 = tempArray.filter((item) => item?.rel_to_applicant_a === '3');
+    // const temp04 = tempArray.filter((item) => item?.rel_to_applicant_a === '4');
+    // const temp05 = tempArray.filter((item) => item?.rel_to_applicant_a === '5');
+    // const temp06 = tempArray.filter((item) => item?.rel_to_applicant_a === '6');
+    // const temp99 = tempArray.filter((item) => item?.rel_to_applicant_a === '99');
+    // const temp__ = tempArray.filter((item) => item?.rel_to_applicant_a === '');
+    // const tempArraySorted = [
+    //   ...temp00,
+    //   ...temp01,
+    //   ...temp02,
+    //   ...temp03,
+    //   ...temp04,
+    //   ...temp05,
+    //   ...temp06,
+    //   ...temp99,
+    //   ...temp__,
+    // ];
 
     return {
       ...preliminaryInitialValues,
@@ -537,10 +531,10 @@ export const preliminarySelect = selector({
       p_join_guarantors: res.data?.p_join_guarantors
         ? res.data.p_join_guarantors
         : preliminaryInitialValues.p_join_guarantors,
-      p_residents: tempArraySorted,
+      p_residents: tempArray,
       p_activities: res.data?.p_activities ? res.data?.p_activities : [],
-      files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
-      p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : preliminaryInitialValues.p_borrowings,
+      // files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
+      p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : [],
       p_result: {
         ...preliminaryInitialValues.p_result,
         ...res.data.p_result,

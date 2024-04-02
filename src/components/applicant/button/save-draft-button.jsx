@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Stack, Typography, Button } from '@mui/material';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { agentSendedSelector, applicationAtom } from '@/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { agentSendedSelector, localApplication } from '@/store';
 import { Icons } from '@/assets';
 import { apSaveDraft } from '@/services';
 import { useBoolean, useIsSalesPerson } from '@/hooks';
@@ -10,19 +10,14 @@ import { ApLighterButton } from './lighter-button';
 
 export const ApSaveDraftButton = ({ pageInfo }) => {
   const isSalesPerson = useIsSalesPerson();
-  const application = useRecoilValue(applicationAtom);
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
   const agentSended = useRecoilValue(agentSendedSelector);
   const modal = useBoolean();
   const handleSave = useCallback(async () => {
     try {
-      setApplicationInfo((pre) => {
+      setLocalApplicationInfo((pre) => {
         return {
           ...pre,
-          p_uploaded_files: {
-            ...pre.p_uploaded_files,
-            ...pageInfo?.p_uploaded_files,
-          },
           p_application_headers: {
             ...pre.p_application_headers,
             ...pageInfo?.p_application_headers,
@@ -50,44 +45,43 @@ export const ApSaveDraftButton = ({ pageInfo }) => {
         };
       });
       await apSaveDraft({
-        ...application,
-        p_uploaded_files: {
-          ...application.p_uploaded_files,
-          ...pageInfo?.p_uploaded_files,
-        },
+        ...localApplicationInfo,
+
         p_application_headers: {
-          ...application.p_application_headers,
+          ...localApplicationInfo.p_application_headers,
           ...pageInfo?.p_application_headers,
         },
         p_borrowing_details__1: {
-          ...application.p_borrowing_details__1,
+          ...localApplicationInfo.p_borrowing_details__1,
           ...pageInfo?.p_borrowing_details__1,
         },
         p_borrowing_details__2: {
-          ...application.p_borrowing_details__2,
+          ...localApplicationInfo.p_borrowing_details__2,
           ...pageInfo?.p_borrowing_details__2,
         },
         p_application_banks: pageInfo?.p_application_banks
           ? pageInfo?.p_application_banks
-          : application.p_application_banks,
+          : localApplicationInfo.p_application_banks,
         p_applicant_persons__0: {
-          ...application.p_applicant_persons__0,
+          ...localApplicationInfo.p_applicant_persons__0,
           ...pageInfo?.p_applicant_persons__0,
         },
         p_applicant_persons__1: {
-          ...application.p_applicant_persons__1,
+          ...localApplicationInfo.p_applicant_persons__1,
           ...pageInfo?.p_applicant_persons__1,
         },
-        p_join_guarantors: pageInfo?.p_join_guarantors ? pageInfo?.p_join_guarantors : application.p_join_guarantors,
-        p_residents: pageInfo?.p_residents ? pageInfo?.p_residents : application.p_residents,
-        p_borrowings: pageInfo?.p_borrowings ? pageInfo?.p_borrowings : application.p_borrowings,
+        p_join_guarantors: pageInfo?.p_join_guarantors
+          ? pageInfo?.p_join_guarantors
+          : localApplicationInfo.p_join_guarantors,
+        p_residents: pageInfo?.p_residents ? pageInfo?.p_residents : localApplicationInfo.p_residents,
+        p_borrowings: pageInfo?.p_borrowings ? pageInfo?.p_borrowings : localApplicationInfo.p_borrowings,
       });
 
       modal.onTrue();
     } catch (error) {
       console.error(error);
     }
-  }, [application, pageInfo]);
+  }, [localApplicationInfo, pageInfo]);
 
   return (
     <Stack

@@ -1,5 +1,5 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
-import { agentSendedSelector, applicationAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
@@ -13,8 +13,8 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApStep06Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { p_join_guarantors } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { p_join_guarantors } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
 
   return (
     <Stack sx={{ width: 1 }}>

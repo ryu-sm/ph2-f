@@ -8,79 +8,140 @@ import { Popover, Stack, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
-export const AdDocsDisplayPopover = ({ open, onClose, anchorEl, items }) => {
+export const AdDocsDisplayPopover = ({ open, onClose, anchorEl }) => {
   const theme = useTheme();
   const isManager = useIsManager();
   const {
-    preliminaryInfo: { p_uploaded_files, p_borrowings, p_application_headers },
+    preliminaryInfo: { p_applicant_persons__0, p_applicant_persons__1, p_borrowings, p_application_headers },
   } = usePreliminaryContext();
   const mainTab = useRecoilValue(editMainTabStatusAtom);
 
   const fileItems = useMemo(() => {
-    const basic0 = [
-      { label: 'A', title: '本人確認書類' },
-      { label: 'B', title: '健康保険証' },
-      { label: 'C', title: '収入に関する書類' },
-      { label: 'D', title: '非上場企業の役員の方の書類' },
-      { label: 'E', title: '雇用契約に関する書類' },
-      { label: 'F', title: '親族経営の会社等にご勤務の方に関する書類' },
-      { label: 'G', title: '物件についての書類' },
-      { label: 'H', title: '在留カード' },
-      { label: 'I', title: '返済予定表・利用明細書' },
-      { label: 'J', title: '提携会社の担当者名刺' },
-      { label: 'K', title: 'その他' },
-      { label: 'S', title: 'サイン' },
+    const files_0 = [
+      {
+        label: 'A',
+        title: '本人確認書類',
+        show:
+          p_applicant_persons__0.A__01__a?.length +
+            p_applicant_persons__0.A__01__b?.length +
+            p_applicant_persons__0.A__02?.length +
+            p_applicant_persons__0.A__03__a?.length +
+            p_applicant_persons__0.A__03__b?.length >
+          0,
+      },
+      {
+        label: 'B',
+        title: '健康保険証',
+        show: p_applicant_persons__0.B__a?.length + p_applicant_persons__0.B__b?.length > 0,
+      },
+      {
+        label: 'C',
+        title: '収入に関する書類',
+        show:
+          p_applicant_persons__0.C__01?.length +
+            p_applicant_persons__0.C__02?.length +
+            p_applicant_persons__0.C__03?.length +
+            p_applicant_persons__0.C__04?.length +
+            p_applicant_persons__0.C__05?.length >
+          0,
+      },
+      {
+        label: 'D',
+        title: '非上場企業の役員の方の書類',
+        show:
+          p_applicant_persons__0.D__01?.length +
+            p_applicant_persons__0.D__02?.length +
+            p_applicant_persons__0.D__03?.length >
+          0,
+      },
+      { label: 'E', title: '雇用契約に関する書類', show: p_applicant_persons__0.E?.length > 0 },
+      {
+        label: 'F',
+        title: '親族経営の会社等にご勤務の方に関する書類',
+        show:
+          p_applicant_persons__0.F__01?.length +
+            p_applicant_persons__0.F__02?.length +
+            p_applicant_persons__0.F__03?.length >
+          0,
+      },
+      { label: 'G', title: '物件についての書類', show: p_application_headers.G?.length > 0 },
+      {
+        label: 'H',
+        title: '在留カード',
+        show: p_applicant_persons__0.H__a?.length + p_applicant_persons__0.H__b?.length > 0,
+      },
+      { label: 'I', title: '返済予定表・利用明細書', show: p_borrowings.some((item) => item?.I?.length > 0) },
+      { label: 'J', title: '提携会社の担当者名刺', show: p_application_headers.J?.length > 0 },
+      { label: 'K', title: 'その他', show: p_applicant_persons__0.K?.length > 0 },
+      { label: 'S', title: 'サイン', show: p_applicant_persons__0.S?.length > 0 },
     ];
-    const basic1 = [
-      { label: 'A', title: '本人確認書類' },
-      { label: 'B', title: '健康保険証' },
-      { label: 'C', title: '収入に関する書類' },
-      { label: 'D', title: '非上場企業の役員の方の書類' },
-      { label: 'E', title: '雇用契約に関する書類' },
-      { label: 'F', title: '親族経営の会社等にご勤務の方に関する書類' },
-      // { label: 'G', title: '物件についての書類' },
-      { label: 'H', title: '在留カード' },
-      { label: 'K', title: 'その他' },
+    const files_1 = [
+      {
+        label: 'A',
+        title: '本人確認書類',
+        show:
+          p_applicant_persons__1.A__01__a?.length +
+            p_applicant_persons__1.A__01__b?.length +
+            p_applicant_persons__1.A__02?.length +
+            p_applicant_persons__1.A__03__a?.length +
+            p_applicant_persons__1.A__03__b?.length >
+          0,
+      },
+      {
+        label: 'B',
+        title: '健康保険証',
+        show: p_applicant_persons__1.B__a?.length + p_applicant_persons__1.B__b?.length > 0,
+      },
+      {
+        label: 'C',
+        title: '収入に関する書類',
+        show:
+          p_applicant_persons__1.C__01?.length +
+            p_applicant_persons__1.C__02?.length +
+            p_applicant_persons__1.C__03?.length +
+            p_applicant_persons__1.C__04?.length +
+            p_applicant_persons__1.C__05?.length >
+          0,
+      },
+      {
+        label: 'D',
+        title: '非上場企業の役員の方の書類',
+        show:
+          p_applicant_persons__1.D__01?.length +
+            p_applicant_persons__1.D__02?.length +
+            p_applicant_persons__1.D__03?.length >
+          0,
+      },
+      { label: 'E', title: '雇用契約に関する書類', show: p_applicant_persons__1.E?.length > 0 },
+      {
+        label: 'F',
+        title: '親族経営の会社等にご勤務の方に関する書類',
+        show:
+          p_applicant_persons__1.F__01?.length +
+            p_applicant_persons__1.F__02?.length +
+            p_applicant_persons__1.F__03?.length >
+          0,
+      },
+      {
+        label: 'H',
+        title: '在留カード',
+        show: p_applicant_persons__1.H__a?.length + p_applicant_persons__1.H__b?.length > 0,
+      },
+      { label: 'K', title: 'その他', show: p_applicant_persons__1.K?.length > 0 },
     ];
-    const temp = [];
-    const fileList = Object.keys(p_uploaded_files).map((key) => ({
-      key: key,
-      value: p_uploaded_files[key],
-    }));
-    const basic = mainTab === 1 ? basic0 : basic1;
-    const prefix = mainTab === 1 ? '__0__' : '__1__';
-    basic.forEach((item) => {
-      if (item.label === 'G') {
-        if (fileList.some(({ key, value }) => key.includes(`${item.label}`) && value.length > 0)) {
-          temp.push(item);
-        }
-      }
-      if (item.label === 'J') {
-        if (fileList.some(({ key, value }) => key.includes(`${item.label}`) && value.length > 0)) {
-          temp.push(item);
-        }
-      }
-      if (item.label === 'S') {
-        if (fileList.some(({ key, value }) => key.includes(`${item.label}`) && value.length > 0)) {
-          temp.push(item);
-        }
-      }
-      if (item.label === 'I') {
-        if (p_borrowings.some((item) => item['p_borrowings__I'].length > 0)) {
-          temp.push(item);
-        }
-      } else {
-        if (fileList.some(({ key, value }) => key.includes(`${prefix}${item.label}`) && value.length > 0)) {
-          temp.push(item);
-        }
-      }
-    });
-    return temp;
-  }, [p_uploaded_files, p_borrowings, mainTab]);
+
+    if (mainTab === 1) {
+      return files_0.filter((item) => item.show);
+    }
+    if (mainTab === 2) {
+      return files_1.filter((item) => item.show);
+    }
+  }, [p_applicant_persons__0, p_applicant_persons__1, p_borrowings, p_application_headers, mainTab, open]);
+
   const handleClick = (item) => {
     const path = `${
       isManager ? routeNames.adManagerFilesViewPage.path : routeNames.adSalesPersonFilesViewPage.path
-    }?p_application_header_id=${p_application_headers?.id}&type=${mainTab === 1 ? '0' : '1'}&category=${item.label}`;
+    }?p_application_header_id=${p_application_headers?.id}&type=${mainTab - 1}&category=${item.label}`;
     window.open(path);
   };
 

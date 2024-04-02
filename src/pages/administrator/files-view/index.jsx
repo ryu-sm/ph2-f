@@ -1,8 +1,8 @@
 import { adPdf } from '@/assets';
 import { API_500_ERROR, FILES_CATEGORY, FILES_SUBTITLE_MAP } from '@/constant';
-import { adGetFilesView } from '@/services';
+import { adGetFilesView, adGetPborrowingsFilesView } from '@/services';
 import { AdThemeProvider } from '@/styles/ad-theme';
-import { downloadImageAsync } from '@/utils';
+import { downloadFileAsync } from '@/utils';
 import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
@@ -21,7 +21,7 @@ import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Element, Events, scroller } from 'react-scroll';
+import { Element, scroller } from 'react-scroll';
 import { toast } from 'react-toastify';
 
 export const AdFilesViewPage = () => {
@@ -32,11 +32,43 @@ export const AdFilesViewPage = () => {
   const type = searchParams.get('type');
   const [currentImage, setCurrentImage] = useState(null);
   const [rotate, setRotate] = useState(0);
+  const [fileItems, setFileItems] = useState([]);
 
   const fetch = useCallback(async () => {
     try {
-      const res = await adGetFilesView(p_application_header_id, `${type}__${category}`);
-      setFilesOrigin(res.data);
+      if (category === 'I') {
+        const res = await adGetPborrowingsFilesView(p_application_header_id);
+        const temp = [];
+        res.data.forEach((f) => {
+          temp.push({
+            ...f,
+            title: FILES_CATEGORY[category],
+            subTitle: `${f?.times}件目の借入`,
+          });
+        });
+        setFileItems(temp);
+        setCurrentImage(temp[0]);
+        console.log(res.data);
+      } else {
+        const res = await adGetFilesView(p_application_header_id, type, category);
+        console.log(res.data);
+        const fileList = Object.keys(res.data).map((key) => ({
+          key: key,
+          value: res.data[key],
+        }));
+        const temp = [];
+        fileList.forEach((item) => {
+          item.value.map((f) => {
+            temp.push({
+              ...f,
+              title: FILES_CATEGORY[category],
+              subTitle: FILES_SUBTITLE_MAP[f.key],
+            });
+          });
+        });
+        setFileItems(temp);
+        setCurrentImage(temp[0]);
+      }
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -45,42 +77,6 @@ export const AdFilesViewPage = () => {
   useEffect(() => {
     fetch();
   }, []);
-
-  const fileItems = useMemo(() => {
-    const temp = [];
-    if (filesOrign) {
-      if (category === 'I') {
-        filesOrign.forEach((item, index) => {
-          item?.p_borrowings__I?.map((f) => {
-            temp.push({
-              ...f,
-              title: FILES_CATEGORY[category],
-              subTitle: `${index + 1}件目の借入`,
-              sortKey: item.key,
-            });
-          });
-        });
-      } else {
-        const fileList = Object.keys(filesOrign).map((key) => ({
-          key: key,
-          value: filesOrign[key],
-        }));
-
-        fileList.forEach((item) => {
-          item.value.map((f) => {
-            temp.push({
-              ...f,
-              title: FILES_CATEGORY[category],
-              subTitle: FILES_SUBTITLE_MAP[item.key],
-              sortKey: item.key,
-            });
-          });
-        });
-      }
-    }
-    setCurrentImage(temp[0]);
-    return temp;
-  }, [filesOrign, category]);
 
   const parseOwner = (item) => {
     if (item?.owner_type === 1) return item?.p_applicant_person_name;
@@ -119,7 +115,7 @@ export const AdFilesViewPage = () => {
   const handleDownload = async () => {
     setIsDownloading(true);
     try {
-      await downloadImageAsync(currentImage.src, currentImage.name);
+      await downloadFileAsync(currentImage.src, currentImage.name);
     } catch (e) {
       console.error('error：', e);
     } finally {
@@ -164,7 +160,7 @@ export const AdFilesViewPage = () => {
                 });
               }}
             >
-              {image.name.includes('pdf') ? (
+              {image?.name?.includes('pdf') ? (
                 <Avatar
                   variant="square"
                   src={adPdf}
@@ -196,7 +192,9 @@ export const AdFilesViewPage = () => {
           }}
         >
           <Stack direction={'row'} sx={{ height: 50, px: 3 }} justifyContent="space-between" alignItems="center">
-            <Typography>アップロード：{parseOwner(currentImage)}</Typography>
+            <Stack width={'30%'}>
+              <Typography>アップロード：{parseOwner(currentImage)}</Typography>
+            </Stack>
             <Stack alignItems={'center'}>
               <Stack direction={'row'} spacing={1} alignItems={'center'}>
                 <Typography
@@ -229,16 +227,15 @@ export const AdFilesViewPage = () => {
                 {currentImage?.subTitle}
               </Typography>
             </Stack>
-            <Typography>{currentImage?.created_at}</Typography>
+            <Stack width={'30%'} alignItems={'flex-end'}>
+              <Typography>{currentImage?.created_at}</Typography>
+            </Stack>
           </Stack>
 
           <Stack
-            // direction={'row'}
             sx={{
               height: 'calc(85vh - 50px)',
-              // px: 5,
               alignItems: 'center',
-              // justifyContent: 'space-between',
               borderBottom: `4px solid #EAEAEA`,
             }}
           >

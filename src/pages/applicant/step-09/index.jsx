@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { applicationAtom, authAtom } from '@/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authAtom, localApplication } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -17,27 +17,24 @@ import {
 import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
 
 export const ApStep09Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
+  const { agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
-  const {
-    apNextStepId,
-    apPreStepId,
-    //
-    p_application_headers,
-  } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const { apNextStepId, apPreStepId, p_application_headers } = localApplicationInfo;
+
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
         p_application_headers: {
@@ -89,6 +86,9 @@ export const ApStep09Page = () => {
     const diffData = {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
     };
     return diffData;
@@ -99,7 +99,7 @@ export const ApStep09Page = () => {
     onSubmit: async (values) => {
       try {
         if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -169,7 +169,12 @@ export const ApStep09Page = () => {
         bottomContent={
           <>
             <ApSaveDraftButton pageInfo={parseVaildData} />
-            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
+            />
           </>
         }
       >

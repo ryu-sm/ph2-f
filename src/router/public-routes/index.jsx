@@ -9,6 +9,13 @@ import {
   ApStartPage,
 } from '@/pages/applicant';
 
+import {
+  AdOrSpLoginPage,
+  AdOrSpResetPasswordFinishedPage,
+  AdOrSpResetPasswordPage,
+  AdOrSpResetPasswordVerifyEmailPage,
+} from '@/pages/administrator';
+
 export const publicRoutes = [
   {
     ...routeNames.apStartPage,
@@ -41,5 +48,38 @@ export const publicRoutes = [
   {
     ...routeNames.spDocmentPdfPreviewPage,
     Element: PdfPreviewPage,
+  },
+  //
+  {
+    ...routeNames.adSalesPersonLoginPage,
+    Element: AdOrSpLoginPage,
+  },
+  {
+    ...routeNames.adSalesPersonResetPasswordVerifyEmailPage,
+    Element: AdOrSpResetPasswordVerifyEmailPage,
+  },
+  {
+    ...routeNames.adSalesPersonResetPasswordPage,
+    Element: AdOrSpResetPasswordPage,
+  },
+  {
+    ...routeNames.adSalesPersonResetPasswordFinishedPage,
+    Element: AdOrSpResetPasswordFinishedPage,
+  },
+  {
+    ...routeNames.adManagerLoginPage,
+    Element: AdOrSpLoginPage,
+  },
+  {
+    ...routeNames.adManagerResetPasswordVerifyEmailPage,
+    Element: AdOrSpResetPasswordVerifyEmailPage,
+  },
+  {
+    ...routeNames.adManagerResetPasswordPage,
+    Element: AdOrSpResetPasswordPage,
+  },
+  {
+    ...routeNames.adManagerResetPasswordFinishedPage,
+    Element: AdOrSpResetPasswordFinishedPage,
   },
 ];

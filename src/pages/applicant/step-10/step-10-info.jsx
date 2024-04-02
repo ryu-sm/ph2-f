@@ -1,5 +1,5 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
-import { agentSendedSelector, applicationAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
@@ -12,8 +12,8 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApStep10Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { p_applicant_persons__0, p_uploaded_files } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { p_applicant_persons__0 } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
 
   const plan = useMemo(() => {
     if (
@@ -46,8 +46,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈表面〉
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__A__01__a.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__A__01__a} />
+                {p_applicant_persons__0?.A__01__a.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.A__01__a} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -58,8 +58,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈裏面〉
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__A__01__b.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__A__01__b} />
+                {p_applicant_persons__0?.A__01__b.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.A__01__b} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -81,8 +81,8 @@ export const ApStep10Info = ({ stepIndex }) => {
               <Typography variant="label" color={'text.main'}>
                 〈表面〉
               </Typography>
-              {p_uploaded_files?.p_applicant_persons__0__A__02.length ? (
-                <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__A__02} />
+              {p_applicant_persons__0?.A__02.length ? (
+                <ApImgItem files={p_applicant_persons__0?.A__02} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉
@@ -105,8 +105,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈表面〉
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__A__03__a.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__A__03__a} />
+                {p_applicant_persons__0?.A__03__a.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.A__03__a} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -117,8 +117,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   〈裏面〉
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__A__03__b.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__A__03__b} />
+                {p_applicant_persons__0?.A__03__b.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.A__03__b} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -136,8 +136,8 @@ export const ApStep10Info = ({ stepIndex }) => {
             <Typography variant="label" color={'text.main'}>
               〈表面〉
             </Typography>
-            {p_uploaded_files?.p_applicant_persons__0__B__a.length ? (
-              <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__B__a} />
+            {p_applicant_persons__0?.B__a.length ? (
+              <ApImgItem files={p_applicant_persons__0?.B__a} />
             ) : (
               <Typography variant="label" color={'gray.150'}>
                 〈 書類はまだ添付されません。〉
@@ -148,8 +148,8 @@ export const ApStep10Info = ({ stepIndex }) => {
             <Typography variant="label" color={'text.main'}>
               〈裏面〉
             </Typography>
-            {p_uploaded_files?.p_applicant_persons__0__B__b.length ? (
-              <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__B__b} />
+            {p_applicant_persons__0?.B__b.length ? (
+              <ApImgItem files={p_applicant_persons__0?.B__b} />
             ) : (
               <Typography variant="label" color={'gray.150'}>
                 〈 書類はまだ添付されません。〉
@@ -167,8 +167,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   源泉徴収票（前年度分）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__C__01.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__01} />
+                {p_applicant_persons__0?.C__01.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.C__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -179,8 +179,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   源泉徴収票（前々年度分）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__C__02.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__02} />
+                {p_applicant_persons__0?.C__02.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.C__02} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -195,8 +195,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   会社の決算報告書（1期前）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__D__01.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__D__01} />
+                {p_applicant_persons__0?.D__01.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.D__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -207,8 +207,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   会社の決算報告書（2期前）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__D__02.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__D__02} />
+                {p_applicant_persons__0?.D__02.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.D__02} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -219,8 +219,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   会社の決算報告書（3期前）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__D__03.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__D__03} />
+                {p_applicant_persons__0?.D__03.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.D__03} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -239,8 +239,8 @@ export const ApStep10Info = ({ stepIndex }) => {
               <Typography variant="label" color={'text.main'}>
                 源泉徴収票（前年度分）
               </Typography>
-              {p_uploaded_files?.p_applicant_persons__0__C__01.length ? (
-                <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__01} />
+              {p_applicant_persons__0?.C__01.length ? (
+                <ApImgItem files={p_applicant_persons__0?.C__01} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉
@@ -253,8 +253,8 @@ export const ApStep10Info = ({ stepIndex }) => {
               <Typography variant="label" color={'text.main'}>
                 雇用契約書
               </Typography>
-              {p_uploaded_files?.p_applicant_persons__0__E.length ? (
-                <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__E} />
+              {p_applicant_persons__0?.E.length ? (
+                <ApImgItem files={p_applicant_persons__0?.E} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉
@@ -273,8 +273,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   源泉徴収票（前年度分）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__C__01.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__01} />
+                {p_applicant_persons__0?.C__01.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.C__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -287,8 +287,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     源泉徴収票（前々年度分）
                   </Typography>
-                  {p_uploaded_files?.p_applicant_persons__0__C__02.length ? (
-                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__02} />
+                  {p_applicant_persons__0?.C__02.length ? (
+                    <ApImgItem files={p_applicant_persons__0?.C__02} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -304,8 +304,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   {`会社の決算報告書\nまたは経営する親族の確定申告書（1期前）`}
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__F__01.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__F__01} />
+                {p_applicant_persons__0?.F__01.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.F__01} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -316,8 +316,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   {`会社の決算報告書\nまたは経営する親族の確定申告書（2期前）`}
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__F__02.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__F__02} />
+                {p_applicant_persons__0?.F__02.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.F__02} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -328,8 +328,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   {`会社の決算報告書\nまたは経営する親族の確定申告書（3期前）`}
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__F__03.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__F__03} />
+                {p_applicant_persons__0?.F__03.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.F__03} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -349,8 +349,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   確定申告書（1期前）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__C__03.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__03} />
+                {p_applicant_persons__0?.C__03.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.C__03} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -361,8 +361,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   確定申告書（2期前）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__C__04.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__04} />
+                {p_applicant_persons__0?.C__04.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.C__04} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -373,8 +373,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                 <Typography variant="label" color={'text.main'}>
                   確定申告書（3期前）
                 </Typography>
-                {p_uploaded_files?.p_applicant_persons__0__C__05.length ? (
-                  <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__C__05} />
+                {p_applicant_persons__0?.C__05.length ? (
+                  <ApImgItem files={p_applicant_persons__0?.C__05} />
                 ) : (
                   <Typography variant="label" color={'gray.150'}>
                     〈 書類はまだ添付されません。〉
@@ -391,8 +391,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（1期前）
                   </Typography>
-                  {p_uploaded_files?.p_applicant_persons__0__D__01.length ? (
-                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__D__01} />
+                  {p_applicant_persons__0?.D__01.length ? (
+                    <ApImgItem files={p_applicant_persons__0?.D__01} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -403,8 +403,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（2期前）
                   </Typography>
-                  {p_uploaded_files?.p_applicant_persons__0__D__02.length ? (
-                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__D__02} />
+                  {p_applicant_persons__0?.D__02.length ? (
+                    <ApImgItem files={p_applicant_persons__0?.D__02} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -415,8 +415,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     会社の決算報告書（3期前）
                   </Typography>
-                  {p_uploaded_files?.p_applicant_persons__0__D__03.length ? (
-                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__D__03} />
+                  {p_applicant_persons__0?.D__03.length ? (
+                    <ApImgItem files={p_applicant_persons__0?.D__03} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -436,8 +436,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（1期前）`}
                   </Typography>
-                  {p_uploaded_files?.p_applicant_persons__0__F__01.length ? (
-                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__F__01} />
+                  {p_applicant_persons__0?.F__01.length ? (
+                    <ApImgItem files={p_applicant_persons__0?.F__01} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -448,8 +448,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（2期前）`}
                   </Typography>
-                  {p_uploaded_files?.p_applicant_persons__0__F__02.length ? (
-                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__F__02} />
+                  {p_applicant_persons__0?.F__02.length ? (
+                    <ApImgItem files={p_applicant_persons__0?.F__02} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -460,8 +460,8 @@ export const ApStep10Info = ({ stepIndex }) => {
                   <Typography variant="label" color={'text.main'}>
                     {`会社の決算報告書\nまたは経営する親族の確定申告書（3期前）`}
                   </Typography>
-                  {p_uploaded_files?.p_applicant_persons__0__F__03.length ? (
-                    <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__F__03} />
+                  {p_applicant_persons__0?.F__03.length ? (
+                    <ApImgItem files={p_applicant_persons__0?.F__03} />
                   ) : (
                     <Typography variant="label" color={'gray.150'}>
                       〈 書類はまだ添付されません。〉
@@ -475,8 +475,8 @@ export const ApStep10Info = ({ stepIndex }) => {
       )}
 
       <ApConfirmItemGroup label={`その他の書類`}>
-        {p_uploaded_files?.p_applicant_persons__0__K.length ? (
-          <ApImgItem files={p_uploaded_files?.p_applicant_persons__0__K} />
+        {p_applicant_persons__0?.K.length ? (
+          <ApImgItem files={p_applicant_persons__0?.K} />
         ) : (
           <Typography variant="label" color={'gray.150'}>
             〈 書類はまだ添付されません。〉

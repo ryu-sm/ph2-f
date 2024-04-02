@@ -7,7 +7,7 @@ import '@react-pdf-viewer/zoom/lib/styles/index.css';
 import { useIsManager } from '@/hooks';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 
-export const ResultPreviewPDF = ({ onRemove, file }) => {
+export const ResultPreviewPDF = ({ file }) => {
   const { handleDeleteProvisionalResult } = usePreliminaryContext();
   const isManager = useIsManager();
   const zoomPluginInstance = zoomPlugin();

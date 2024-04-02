@@ -1,5 +1,5 @@
 import { ApConfirmGroup, ApLighterButton, ApItemGroup } from '@/components';
-import { agentSendedSelector, applicationAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { Icons } from '@/assets';
@@ -10,8 +10,8 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApStep09Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { p_application_headers } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { p_application_headers } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
 
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={`：資金計画`}>

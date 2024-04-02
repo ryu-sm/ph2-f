@@ -6,12 +6,11 @@ import { useMemo } from 'react';
 
 export const ExaminationResultButtons = () => {
   const {
-    preliminaryInfo: { p_application_headers, p_result },
-    preliminarySnap: { p_uploaded_files },
+    preliminaryInfo: { p_result },
+    preliminarySnap: { p_application_headers },
     handleChangeProvisionalResult,
     handleChangeApproverConfirmation,
     handleChangePreExaminationStatus,
-    isEditable,
   } = usePreliminaryContext();
   const provisionalResultItems = useMemo(() => {
     const basic = [
@@ -35,7 +34,11 @@ export const ExaminationResultButtons = () => {
       },
     ];
     return basic.map((item) => {
-      if (p_result.pre_examination_status === '4' && !p_result.provisional_result && p_uploaded_files?.R?.length > 0) {
+      if (
+        p_result.pre_examination_status === '4' &&
+        !p_result.provisional_result &&
+        p_application_headers?.R?.length > 0
+      ) {
         return { ...item, status: 'clickable' };
       }
       if (p_result.provisional_result === item.value) {
@@ -43,7 +46,7 @@ export const ExaminationResultButtons = () => {
       }
       return item;
     });
-  }, [p_result, p_uploaded_files]);
+  }, [p_result, p_application_headers]);
 
   const preExaminationStatusItems = useMemo(() => {
     const basic = [

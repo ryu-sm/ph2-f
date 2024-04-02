@@ -1,6 +1,6 @@
 import { API_500_ERROR } from '@/constant';
-import { adGetFilesUpdateHistory, adGetUpdateHistory } from '@/services';
-import { formatJapanDate, formatMoney } from '@/utils';
+import { adGetUpdateHistory } from '@/services';
+
 import { useTheme } from '@emotion/react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
@@ -49,13 +49,8 @@ export const FilesUpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
 
   const fetch = useCallback(async () => {
     try {
-      if (upConfig?.p_borrowingsTitle) {
-        const res = await adGetUpdateHistory(upConfig.p_application_header_id, upConfig.key);
-        setData(res.data);
-      } else {
-        const res = await adGetFilesUpdateHistory(upConfig.p_application_header_id, upConfig.key);
-        setData(res.data);
-      }
+      const res = await adGetUpdateHistory(upConfig.p_application_header_id, upConfig.key);
+      setData(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }

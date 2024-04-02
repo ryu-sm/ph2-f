@@ -1,5 +1,5 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
-import { agentSendedSelector, applicationAtom, isMcjSelector } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate, formatMoney } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
@@ -8,23 +8,20 @@ import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import {
-  incomeOptions,
   industryOptions,
   maternityPaternityLeaveOptions,
   nursingLeaveOptions,
   occupationDetailOptions,
   occupationOptions,
   taxReturnOptions,
-  taxReturnReasonsOptions,
 } from './options';
 import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep05Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { p_applicant_persons__1 } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
-  const isMCJ = useRecoilValue(isMcjSelector);
+  const { isMCJ, p_applicant_persons__1 } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
 
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={`：収入合算者の職業`}>

@@ -1,7 +1,7 @@
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
-import { AdEditFullWidthInput, AdEditInput, AdSelectRadios } from '@/components/administrator';
+import { AdEditFullWidthInput, AdPhoneInputField, AdSelectRadios } from '@/components/administrator';
 
 import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
@@ -46,6 +46,9 @@ export const Item08 = () => {
     const diffData = {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
     };
     return diffData;
@@ -361,7 +364,7 @@ export const Item08 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.vendor_phone" convertHalfWidth />
+              <AdPhoneInputField name="p_application_headers.vendor_phone" convertHalfWidth />
             ) : (
               formik.values.p_application_headers.vendor_phone
             )

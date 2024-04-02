@@ -9,7 +9,7 @@ import { CONFIRMATION_URL, CONSENT_URL } from '@/configs';
 import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { applicationAtom } from '@/store';
+import { localApplication } from '@/store';
 import { dayjs } from '@/libs';
 import { agreeOptions } from './options';
 import { useIsSalesPerson } from '@/hooks';
@@ -20,7 +20,7 @@ export const ApAgreementPage = () => {
   const [isReadedConsent, setIsReadedConsent] = useState(false);
   const [isReadedConfirmation, setIsReadedConfirmation] = useState(false);
   const isSalesPerson = useIsSalesPerson();
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
+  const setLocalApplicationInfo = useSetRecoilState(localApplication);
 
   const formik = useFormik({
     initialValues: {
@@ -32,7 +32,7 @@ export const ApAgreementPage = () => {
       confirmation: yup.string().required().oneOf(['1'], 'ご確認ください'),
     }),
     onSubmit: () => {
-      setApplicationInfo((pre) => {
+      setLocalApplicationInfo((pre) => {
         return {
           ...pre,
           p_applicant_persons_a_agreement: true,

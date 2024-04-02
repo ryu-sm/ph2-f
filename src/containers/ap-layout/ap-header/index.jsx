@@ -1,8 +1,7 @@
 import { Icons } from '@/assets';
 import { Box, Stack } from '@mui/material';
-import { ApHeaderMenuIcon } from '@/assets/icons';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { applicationAtom, authAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useIsSalesPerson } from '@/hooks';
@@ -10,7 +9,8 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApHeader = ({ hasMenu, menu }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const resetApplication = useResetRecoilState(applicationAtom);
+
+  const resetLocalApplicationInfo = useResetRecoilState(localApplication);
   const { isLogined, roleType, applyNo } = useRecoilValue(authAtom);
   const setAuthInfo = useSetRecoilState(authAtom);
   const { pathname } = useLocation();
@@ -81,7 +81,7 @@ export const ApHeader = ({ hasMenu, menu }) => {
                     agentSended: false,
                   };
                 });
-                resetApplication();
+                resetLocalApplicationInfo();
                 navigate(routeNames.adSalesPersonDashboardPage.path);
               }
             }}

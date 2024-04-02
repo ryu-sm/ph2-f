@@ -1,8 +1,8 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApPageTitle } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
-import { applicationAtom, applyNoSelector, hasIncomeTotalizerSelector, hasJoinGuarantorSelector } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate } from '@/utils';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { ApStep01Info } from '../step-01/step-01-info';
 import { ApStep02Info } from '../step-02/step-02-info';
 import { ApStep03Info } from '../step-03/step-03-info';
@@ -19,17 +19,13 @@ import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { apApplication, apApplicationFile } from '@/services';
-import { toast } from 'react-toastify';
-import { API_500_ERROR } from '@/constant';
+import { useApplicationContext } from '@/hooks';
 
 export const ApConfirmPage = () => {
   const navigate = useNavigate();
-  const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
-  const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
-  const application = useRecoilValue(applicationAtom);
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const applyNo = useRecoilValue(applyNoSelector);
+
+  const { p_application_headers, hasJoinGuarantor, hasIncomeTotalizer } = useRecoilValue(localApplication);
+
   const apSteps = useMemo(
     () => [
       {
@@ -90,69 +86,22 @@ export const ApConfirmPage = () => {
     [hasIncomeTotalizer, hasJoinGuarantor]
   );
 
+  const { applyNo, agentSended } = useRecoilValue(authAtom);
+
+  const { refreshsendedApllication } = useApplicationContext();
+
+  useEffect(() => {
+    if (agentSended) {
+      refreshsendedApllication();
+    }
+  }, [agentSended]);
+
   const getIndex = useCallback(
     (id) => {
       return apSteps.findIndex((item) => item.id === id);
     },
     [apSteps]
   );
-
-  const refreshApplyInfo = useCallback(async () => {
-    try {
-      const res = await apApplication(applyNo);
-      const fileRes = await apApplicationFile(applyNo);
-      setApplicationInfo((pre) => {
-        return {
-          ...pre,
-          p_uploaded_files: {
-            ...pre.p_uploaded_files,
-            ...fileRes.data,
-          },
-          p_application_headers: {
-            ...pre.p_application_headers,
-            ...res.data.p_application_headers,
-          },
-          p_borrowing_details__1: {
-            ...pre.p_borrowing_details__1,
-            ...res.data.p_borrowing_details__1,
-          },
-          p_borrowing_details__2: {
-            ...pre.p_borrowing_details__2,
-            ...res.data.p_borrowing_details__2,
-          },
-          p_application_banks: res.data?.p_application_banks ? res.data?.p_application_banks : pre.p_application_banks,
-          p_applicant_persons__0: {
-            ...pre.p_applicant_persons__0,
-            ...res.data.p_applicant_persons__0,
-          },
-          p_applicant_persons__1: {
-            ...pre.p_applicant_persons__1,
-            ...res.data.p_applicant_persons__1,
-          },
-          p_join_guarantors: res.data?.p_join_guarantors ? res.data.p_join_guarantors : pre.p_join_guarantors,
-          p_residents: res.data?.p_residents ? res.data?.p_residents : pre.p_residents,
-          p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : pre.p_borrowings,
-          apCurrStepId: 14,
-          isMCJ: res.data.p_application_banks?.length > 1,
-          hasIncomeTotalizer:
-            res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4',
-          hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',
-          changeJoinGuarantor: false,
-          changeToIncomeTotalizer: false,
-          p_applicant_persons_a_agreement: true,
-          p_applicant_persons_b_agreement:
-            res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4'
-              ? true
-              : false,
-        };
-      });
-    } catch (error) {
-      toast.error(API_500_ERROR);
-    }
-  }, []);
-  useEffect(() => {
-    refreshApplyInfo();
-  }, []);
 
   return (
     <ApLayout hasMenu pb={13}>
@@ -198,9 +147,7 @@ export const ApConfirmPage = () => {
         </Stack>
         <ApConfirmGroup label={'はじめに'}>
           <ApConfirmItemGroup label={'同意日'}>
-            {application.p_application_headers.apply_date
-              ? formatJapanDate(application.p_application_headers.apply_date, true)
-              : 'ー'}
+            {p_application_headers.apply_date ? formatJapanDate(p_application_headers.apply_date, true) : 'ー'}
           </ApConfirmItemGroup>
         </ApConfirmGroup>
         {getIndex(1) >= 0 && <ApStep01Info stepIndex={String(getIndex(1) + 1).padStart(2, '0')} />}

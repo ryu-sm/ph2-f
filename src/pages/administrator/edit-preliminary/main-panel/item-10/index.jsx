@@ -1,5 +1,4 @@
 import { FormikProvider, useFormik } from 'formik';
-
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { useEffect } from 'react';
@@ -9,25 +8,14 @@ import { ResultPreviewPDF } from '../../common/examination-result-preview';
 
 export const Item10 = () => {
   const {
-    preliminaryInfo: { p_uploaded_files, p_result },
+    preliminaryInfo: { p_application_headers, p_result },
     setPreliminarySnap,
-    handleSave,
-    isEditable,
   } = usePreliminaryContext();
 
   const initialValues = {
-    p_uploaded_files: {
-      R: p_uploaded_files.R,
+    p_application_headers: {
+      R: p_application_headers.R,
     },
-  };
-
-  const setUpdateData = (values) => {
-    const diffData = {
-      p_uploaded_files: {
-        ...values.p_uploaded_files,
-      },
-    };
-    return diffData;
   };
 
   const formik = useFormik({
@@ -39,9 +27,9 @@ export const Item10 = () => {
     setPreliminarySnap((pre) => {
       return {
         ...pre,
-        p_uploaded_files: {
-          ...pre.p_uploaded_files,
-          ...formik.values.p_uploaded_files,
+        p_application_headers: {
+          ...pre.p_application_headers,
+          ...formik.values.p_application_headers,
         },
       };
     });
@@ -51,14 +39,11 @@ export const Item10 = () => {
     <FormikProvider value={formik}>
       <ContentEditGroup hiddenTitle hiddenLine>
         <Stack spacing={4} alignItems={'center'} overflow={'auto'} sx={{ py: 8 }}>
-          {formik.values.p_uploaded_files.R.length > 0 ? (
-            <ResultPreviewPDF
-              file={formik.values.p_uploaded_files.R}
-              // onRemove={() => formik.setFieldValue('p_uploaded_files.R', [])}
-            />
+          {formik.values.p_application_headers.R.length > 0 ? (
+            <ResultPreviewPDF file={formik.values.p_application_headers.R} />
           ) : (
             <Stack flex={1} justifyContent={'center'} minHeight={550}>
-              <ResultUploadItem name="p_uploaded_files.R" isDisabled={p_result.pre_examination_status !== '4'} />
+              <ResultUploadItem name="p_application_headers.R" isDisabled={p_result.pre_examination_status !== '4'} />
             </Stack>
           )}
         </Stack>

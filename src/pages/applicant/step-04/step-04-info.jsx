@@ -1,5 +1,5 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
-import { agentSendedSelector, applicationAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
@@ -13,8 +13,8 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApStep04Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { p_applicant_persons__1, p_uploaded_files } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { p_applicant_persons__1 } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
 
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={'：収入合算者'}>
@@ -53,8 +53,8 @@ export const ApStep04Info = ({ stepIndex }) => {
               <Typography variant="label" color={'text.main'}>
                 〈表面〉
               </Typography>
-              {p_uploaded_files.p_applicant_persons__1__H__a.length ? (
-                <ApImgItem files={p_uploaded_files.p_applicant_persons__1__H__a} />
+              {p_applicant_persons__1.H__a.length ? (
+                <ApImgItem files={p_applicant_persons__1.H__a} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉
@@ -65,8 +65,8 @@ export const ApStep04Info = ({ stepIndex }) => {
               <Typography variant="label" color={'text.main'}>
                 〈裏面〉
               </Typography>
-              {p_uploaded_files.p_applicant_persons__1__H__b.length ? (
-                <ApImgItem files={p_uploaded_files.p_applicant_persons__1__H__b} />
+              {p_applicant_persons__1.H__b.length ? (
+                <ApImgItem files={p_applicant_persons__1.H__b} />
               ) : (
                 <Typography variant="label" color={'gray.150'}>
                   〈 書類はまだ添付されません。〉

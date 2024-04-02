@@ -1,20 +1,15 @@
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-export const downloadImageAsync = async (imageUrl, desiredFilename = 'desiredFilename.png') => {
-  const response = await fetch(imageUrl);
-  const blob = await response.blob();
-
-  const blobUrl = URL.createObjectURL(blob);
-
+export const downloadFileAsync = async (url, filename) => {
   const a = document.createElement('a');
-  a.href = blobUrl;
-  a.download = desiredFilename;
+  a.href = url;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
 
   document.body.removeChild(a);
-  URL.revokeObjectURL(blobUrl);
+  URL.revokeObjectURL(imageUrl);
 };
 
 export const downloadImageZipAsync = async (files, zipName) => {

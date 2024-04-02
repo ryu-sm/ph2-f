@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import {
   AdEditInput,
   AdNumericInput,
+  AdPhoneInputField,
   AdSelectCheckbox,
   AdSelectRadios,
   AdYmdInput,
@@ -355,7 +356,7 @@ export const Item03 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_phone" convertHalfWidth />
+              <AdPhoneInputField name="p_applicant_persons__1.office_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_phone
             )
@@ -847,7 +848,7 @@ export const Item03 = () => {
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__1.transfer_office_phone" convertFullWidth />
+                  <AdPhoneInputField name="p_applicant_persons__1.transfer_office_phone" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__1.transfer_office_phone
                 )

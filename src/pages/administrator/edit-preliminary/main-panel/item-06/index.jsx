@@ -66,6 +66,9 @@ export const Item06 = () => {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
         curr_borrowing_status: values.p_application_headers.curr_borrowing_status,
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
       p_borrowings: values.p_borrowings,
     };

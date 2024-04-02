@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { applicationAtom, authAtom } from '@/store';
+import { useMemo } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authAtom, localApplication } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -40,26 +40,20 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { routeNames } from '@/router/settings';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 
 export const ApStep03Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
+  const { agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
-  const {
-    isMCJ,
-    apNextStepId,
-    apPreStepId,
-    //
-    p_applicant_persons__0,
-  } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const { isMCJ, apNextStepId, apPreStepId, p_applicant_persons__0 } = localApplicationInfo;
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
         p_applicant_persons__0: {
@@ -166,7 +160,7 @@ export const ApStep03Page = () => {
     onSubmit: async (values) => {
       try {
         if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -201,7 +195,12 @@ export const ApStep03Page = () => {
         bottomContent={
           <>
             <ApSaveDraftButton pageInfo={parseVaildData} />
-            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
+            />
           </>
         }
       >

@@ -60,26 +60,19 @@ export const validationSchema = yup.object({
       .max(99)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI),
     email: yup.string().max(128).matches(REGEX.EMAIL, YUP_MESSAGES.EMAIL_AP).label('メールアドレス'),
-  }),
-
-  p_uploaded_files: yup.object({
-    p_applicant_persons__0__H__a: yup
-      .array()
-      .test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { options: { context } }) => {
-        if (context.p_applicant_persons__0.nationality === '2') {
-          return field_value.length === 1;
-        } else {
-          return true;
-        }
-      }),
-    p_applicant_persons__0__H__b: yup
-      .array()
-      .test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { options: { context } }) => {
-        if (context.p_applicant_persons__0.nationality === '2') {
-          return field_value.length === 1;
-        } else {
-          return true;
-        }
-      }),
+    H__a: yup.array().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.nationality === '2') {
+        return field_value.length === 1;
+      } else {
+        return true;
+      }
+    }),
+    H__b: yup.array().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
+      if (parent.nationality === '2') {
+        return field_value.length === 1;
+      } else {
+        return true;
+      }
+    }),
   }),
 });

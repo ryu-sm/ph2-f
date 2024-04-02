@@ -6,8 +6,8 @@ import { formatJapanDate, formatMoney } from '@/utils';
 import { useEffect } from 'react';
 import {
   AdEditFullWidthInput,
-  AdEditInput,
   AdNumericInput,
+  AdPhoneInputField,
   AdSelectCheckbox,
   AdSelectRadios,
   AdYmdInput,
@@ -130,6 +130,10 @@ export const Item03 = () => {
         },
       };
     });
+  }, [formik.values]);
+
+  useEffect(() => {
+    console.log(999, formik.values.p_applicant_persons__0.office_establishment_date);
   }, [formik.values]);
 
   return (
@@ -348,7 +352,7 @@ export const Item03 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.office_phone" convertHalfWidth />
+              <AdPhoneInputField name="p_applicant_persons__0.office_phone" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.office_phone
             )
@@ -845,7 +849,7 @@ export const Item03 = () => {
               isLogicRequired
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__0.transfer_office_phone" convertHalfWidth />
+                  <AdPhoneInputField name="p_applicant_persons__0.transfer_office_phone" convertHalfWidth />
                 ) : (
                   formik.values.p_applicant_persons__0.transfer_office_phone
                 )

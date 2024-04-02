@@ -27,8 +27,8 @@ import {
 } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 import { useEffect, useMemo } from 'react';
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { applicationAtom, authAtom } from '@/store';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import { authAtom, localApplication } from '@/store';
 import {
   bonusRepaymentMonthOptions,
   hasJoinGuarantorOptions,
@@ -44,7 +44,7 @@ import {
 import { validationSchema } from './validationSchema';
 import { useBankMaster } from '@/hooks/use-bank-master';
 import { Box, Stack, Typography } from '@mui/material';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { Icons } from '@/assets';
 import { MCJ_CODE, SBI_CODE } from '@/configs';
 import { useNavigate } from 'react-router-dom';
@@ -55,15 +55,18 @@ import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 
 export const ApStep01Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const isSalesPerson = useIsSalesPerson();
   const navigate = useNavigate();
   const pairLoanModal = useBoolean(false);
   const delPairLoanModal = useBoolean(false);
   const updateModal = useBoolean(false);
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const resetApplication = useResetRecoilState(applicationAtom);
-  const setAuthInfo = useSetRecoilState(authAtom);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
+
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const [authInfo, setAuthInfo] = useRecoilState(authAtom);
+  const resetLocalApplicationInfo = useResetRecoilState(localApplication);
+
+  const { applyNo, agentSended } = authInfo;
   const {
     isMCJ,
     apNextStepId,
@@ -74,10 +77,10 @@ export const ApStep01Page = () => {
     p_application_banks,
     p_borrowing_details__1,
     p_borrowing_details__2,
-  } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+  } = localApplicationInfo;
+
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
         p_application_headers: {
@@ -145,8 +148,19 @@ export const ApStep01Page = () => {
   const setUpdateData = (values) => {
     const diffData = {
       p_application_headers: {
-        ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+        ...diffObj(initialValues.p_application_headers, {
+          ...values.p_application_headers,
+          ...(values.p_application_headers.loan_type !== '2'
+            ? {
+                pair_loan_last_name: '',
+                pair_loan_first_name: '',
+                pair_loan_rel_name: '',
+              }
+            : {}),
+        }),
         land_advance_plan: values.p_application_headers.land_advance_plan,
+        join_guarantor_umu: values.p_application_headers.join_guarantor_umu,
+        loan_type: values.p_application_headers.loan_type,
       },
       p_application_banks: values.p_application_banks,
       p_borrowing_details__1: {
@@ -158,6 +172,7 @@ export const ApStep01Page = () => {
     };
     return diffData;
   };
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -170,7 +185,7 @@ export const ApStep01Page = () => {
           setLocalData(values);
           navigate(routeNames.apStep06Page.path);
         } else if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -201,7 +216,7 @@ export const ApStep01Page = () => {
             agentSended: false,
           };
         });
-        resetApplication();
+        resetLocalApplicationInfo();
         navigate(routeNames.adSalesPersonDashboardPage.path);
       }
     } else {
@@ -223,43 +238,21 @@ export const ApStep01Page = () => {
 
   useEffect(() => {
     if (p_application_banks.includes(bankMaster.find((item) => item.code === MCJ_CODE)?.value)) {
-      setApplicationInfo((pre) => ({ ...pre, isMCJ: true }));
+      setLocalApplicationInfo((pre) => ({ ...pre, isMCJ: true }));
     } else {
-      setApplicationInfo((pre) => ({ ...pre, isMCJ: false }));
+      setLocalApplicationInfo((pre) => ({ ...pre, isMCJ: false }));
     }
     if (['3', '4'].includes(p_application_headers.loan_type)) {
-      setApplicationInfo((pre) => ({ ...pre, hasIncomeTotalizer: true }));
+      setLocalApplicationInfo((pre) => ({ ...pre, hasIncomeTotalizer: true }));
     } else {
-      setApplicationInfo((pre) => ({ ...pre, hasIncomeTotalizer: false }));
+      setLocalApplicationInfo((pre) => ({ ...pre, hasIncomeTotalizer: false }));
     }
     if (p_application_headers.join_guarantor_umu === '1') {
-      setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
+      setLocalApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: true }));
     } else {
-      setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
+      setLocalApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: false }));
     }
   }, [p_application_banks, p_application_headers.loan_type, p_application_headers.join_guarantor_umu, bankMaster]);
-
-  // TODO: **delete**
-  // useEffect(() => {
-  //   if (formik.values.loan_type !== '3' || formik.values.loan_type !== '4') {
-  //     setApplicationInfo((pre) => {
-  //       return {
-  //         ...pre,
-  //         p_application_headers: {
-  //           ...pre.p_application_headers,
-  //           rent_to_be_paid_land_borrower: '',
-  //           rent_to_be_paid_land: '',
-  //           rent_to_be_paid_house_borrower: '',
-  //           rent_to_be_paid_house: '',
-  //           refund_source_type: [],
-  //           refund_source_type_other: '',
-  //           refund_source_content: '',
-  //           refund_source_amount: '',
-  //         },
-  //       };
-  //     });
-  //   }
-  // }, [formik.values.loan_type]);
 
   return (
     <FormikProvider value={formik}>
@@ -274,6 +267,7 @@ export const ApStep01Page = () => {
               left={handelLeft}
               right={formik.handleSubmit}
               rightLabel={changeToIncomeTotalizer || changeJoinGuarantor ? false : agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
             />
           </>
         }
@@ -290,7 +284,7 @@ export const ApStep01Page = () => {
               options={bankMaster}
               onChange={(e) => {
                 if (bankMaster.find((item) => item.code === MCJ_CODE)?.value == e.target.value) {
-                  setApplicationInfo((pre) => {
+                  setLocalApplicationInfo((pre) => {
                     return { ...pre, isMCJ: e.target.checked };
                   });
                 }
@@ -315,7 +309,7 @@ export const ApStep01Page = () => {
                   formik.setFieldTouched('p_application_headers.loan_target', false);
                   break;
                 case '7':
-                  setApplicationInfo((pre) => {
+                  setLocalApplicationInfo((pre) => {
                     return {
                       ...pre,
                       p_application_headers: {
@@ -352,7 +346,7 @@ export const ApStep01Page = () => {
               name={'p_application_headers.loan_target'}
               options={loanTargetOptions}
               onChange={(e) => {
-                setApplicationInfo((pre) => {
+                setLocalApplicationInfo((pre) => {
                   return {
                     ...pre,
                     p_application_headers: {
@@ -433,21 +427,21 @@ export const ApStep01Page = () => {
                 (p_application_headers.loan_type !== '3' || p_application_headers.loan_type !== '4') &&
                 agentSended
               ) {
-                setApplicationInfo((pre) => {
+                setLocalApplicationInfo((pre) => {
                   return { ...pre, changeToIncomeTotalizer: true, apNextStepId: 4 };
                 });
               } else {
-                setApplicationInfo((pre) => {
+                setLocalApplicationInfo((pre) => {
                   return { ...pre, changeToIncomeTotalizer: false, apNextStepId: 2 };
                 });
               }
               if (e.target.value === '2') pairLoanModal.onTrue();
               if (e.target.value === '3' || e.target.value === '4') {
-                setApplicationInfo((pre) => {
+                setLocalApplicationInfo((pre) => {
                   return { ...pre, hasIncomeTotalizer: true };
                 });
               } else {
-                setApplicationInfo((pre) => {
+                setLocalApplicationInfo((pre) => {
                   return { ...pre, hasIncomeTotalizer: false };
                 });
               }
@@ -456,7 +450,7 @@ export const ApStep01Page = () => {
                   formik.values.p_application_headers.loan_type === '4') &&
                 (e.target.value !== '3' || e.target.value !== '4')
               ) {
-                setApplicationInfo((pre) => {
+                setLocalApplicationInfo((pre) => {
                   return {
                     ...pre,
                     p_application_headers: {
@@ -796,12 +790,12 @@ export const ApStep01Page = () => {
             options={hasJoinGuarantorOptions}
             onChange={(e) => {
               if (e.target.checked && p_application_headers.join_guarantor_umu !== '1' && agentSended) {
-                setApplicationInfo((pre) => ({ ...pre, changeJoinGuarantor: true }));
+                setLocalApplicationInfo((pre) => ({ ...pre, changeJoinGuarantor: true }));
               } else {
-                setApplicationInfo((pre) => ({ ...pre, changeJoinGuarantor: false }));
+                setLocalApplicationInfo((pre) => ({ ...pre, changeJoinGuarantor: false }));
               }
               if (e.target.checked) {
-                setApplicationInfo((pre) => ({
+                setLocalApplicationInfo((pre) => ({
                   ...pre,
                   hasJoinGuarantor: true,
                   p_join_guarantors: [
@@ -828,7 +822,7 @@ export const ApStep01Page = () => {
                   ],
                 }));
               } else {
-                setApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: false, p_join_guarantors: [] }));
+                setLocalApplicationInfo((pre) => ({ ...pre, hasJoinGuarantor: false, p_join_guarantors: [] }));
               }
             }}
           />

@@ -1,5 +1,5 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
-import { agentSendedSelector, applicationAtom, isMcjSelector } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate, formatMoney } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
@@ -30,8 +30,8 @@ import { useIsSalesPerson } from '@/hooks';
 export const ApStep07Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const { isMCJ, p_uploaded_files, p_residents, p_application_headers } = useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { isMCJ, p_residents, p_application_headers } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={`：お住まい`}>
       <ApConfirmItemGroup label={'現在のお住まいの居住年数'}>
@@ -161,7 +161,11 @@ export const ApStep07Info = ({ stepIndex }) => {
       )}
 
       <ApConfirmItemGroup label={'物件情報の画像添付'}>
-        {p_uploaded_files.G.length ? <ApImgItem files={p_uploaded_files.G} /> : '〈 書類はまだ添付されません。〉'}
+        {p_application_headers.G.length ? (
+          <ApImgItem files={p_application_headers.G} />
+        ) : (
+          '〈 書類はまだ添付されません。〉'
+        )}
       </ApConfirmItemGroup>
 
       <ApConfirmItemGroup label={'物件情報が掲載されたURL'}>

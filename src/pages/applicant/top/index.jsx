@@ -1,17 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  agentSendedSelector,
-  apCurrStepIdSelector,
-  applicationAtom,
-  appliedBanksSelector,
-  applyNoSelector,
-  hasDraftDataSelector,
-  hasIncomeTotalizerSelector,
-  hasJoinGuarantorSelector,
-  preExaminationStatusSelector,
-  provisionalResultSelector,
-} from '@/store';
+import { useRecoilValue } from 'recoil';
+import { authAtom, localApplication, preExaminationStatusSelector } from '@/store';
 import { ApFooter, ApLayout } from '@/containers';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
@@ -25,85 +14,27 @@ import {
 import { MCJ_CODE } from '@/configs';
 import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
-import { apApplication, apApplicationFile } from '@/services';
-import { useApplicationContext, useIsSalesPerson } from '@/hooks';
-import { toast } from 'react-toastify';
-import { API_500_ERROR } from '@/constant';
+
+import { useApplicationContext } from '@/hooks';
 
 export const ApTopPage = () => {
-  const isSalesPerson = useIsSalesPerson();
-  const applyNo = useRecoilValue(applyNoSelector);
-  const appliedBanks = useRecoilValue(appliedBanksSelector);
   const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
-  const hasDraftData = useRecoilValue(hasDraftDataSelector);
-  const apCurrStepId = useRecoilValue(apCurrStepIdSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
-  const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
-  const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
 
-  const { localApplicationInfo } = useApplicationContext();
+  const {
+    applyNo,
+    agentSended,
+    user: { hasDraftData },
+  } = useRecoilValue(authAtom);
 
-  console.log(localApplicationInfo);
+  const { refreshsendedApllication } = useApplicationContext();
 
-  const refreshApplyInfo = useCallback(async () => {
-    try {
-      const res = await apApplication(applyNo);
-      const fileRes = await apApplicationFile(applyNo);
-      setApplicationInfo((pre) => {
-        return {
-          ...pre,
-          p_uploaded_files: {
-            ...pre.p_uploaded_files,
-            ...fileRes.data,
-          },
-          p_application_headers: {
-            ...pre.p_application_headers,
-            ...res.data.p_application_headers,
-          },
-          p_borrowing_details__1: {
-            ...pre.p_borrowing_details__1,
-            ...res.data.p_borrowing_details__1,
-          },
-          p_borrowing_details__2: {
-            ...pre.p_borrowing_details__2,
-            ...res.data.p_borrowing_details__2,
-          },
-          p_application_banks: res.data?.p_application_banks ? res.data?.p_application_banks : pre.p_application_banks,
-          p_applicant_persons__0: {
-            ...pre.p_applicant_persons__0,
-            ...res.data.p_applicant_persons__0,
-          },
-          p_applicant_persons__1: {
-            ...pre.p_applicant_persons__1,
-            ...res.data.p_applicant_persons__1,
-          },
-          p_join_guarantors: res.data?.p_join_guarantors ? res.data.p_join_guarantors : pre.p_join_guarantors,
-          p_residents: res.data?.p_residents ? res.data?.p_residents : pre.p_residents,
-          p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : pre.p_borrowings,
-          apCurrStepId: 14,
-          isMCJ: res.data.p_application_banks?.length > 1,
-          hasIncomeTotalizer:
-            res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4',
-          hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',
-          changeJoinGuarantor: false,
-          changeToIncomeTotalizer: false,
-          p_applicant_persons_a_agreement: true,
-          p_applicant_persons_b_agreement:
-            res.data.p_application_headers.loan_type === '3' || res.data.p_application_headers.loan_type === '4'
-              ? true
-              : false,
-        };
-      });
-    } catch (error) {
-      toast.error(API_500_ERROR);
-    }
-  }, []);
   useEffect(() => {
     if (agentSended) {
-      refreshApplyInfo();
+      refreshsendedApllication();
     }
-  }, []);
+  }, [agentSended]);
+
+  const { apCurrStepId, hasJoinGuarantor, hasIncomeTotalizer, p_application_banks } = useRecoilValue(localApplication);
 
   const topItems = useMemo(
     () => [
@@ -111,7 +42,7 @@ export const ApTopPage = () => {
         id: 1,
         stepTitle: 'お借入のご希望',
         stepIcon: <Icons.ApTopStepIdIcon01 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep01Page.path : routeNames.apStep01Page.path,
+        stepPath: routeNames.apStep01Page.path,
         buttonLabel: apCurrStepId === 1 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -119,7 +50,7 @@ export const ApTopPage = () => {
         id: 2,
         stepTitle: 'あなたの情報',
         stepIcon: <Icons.ApTopStepIdIcon02 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep02Page.path : routeNames.apStep02Page.path,
+        stepPath: routeNames.apStep02Page.path,
         buttonLabel: apCurrStepId < 2 ? '---' : apCurrStepId === 2 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -127,7 +58,7 @@ export const ApTopPage = () => {
         id: 3,
         stepTitle: 'あなたのご職業',
         stepIcon: <Icons.ApTopStepIdIcon03 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep03Page.path : routeNames.apStep03Page.path,
+        stepPath: routeNames.apStep03Page.path,
         buttonLabel: apCurrStepId < 3 ? '---' : apCurrStepId === 3 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -137,7 +68,7 @@ export const ApTopPage = () => {
               id: 4,
               stepTitle: '収入合算者',
               stepIcon: <Icons.ApTopStepIdIcon04 />,
-              stepPath: isSalesPerson ? routeNames.adSalesPersonStep04Page.path : routeNames.apStep04Page.path,
+              stepPath: routeNames.apStep04Page.path,
               buttonLabel: apCurrStepId < 4 ? '---' : apCurrStepId === 4 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -145,7 +76,7 @@ export const ApTopPage = () => {
               id: 5,
               stepTitle: '収入合算者の職業',
               stepIcon: <Icons.ApTopStepIdIcon05 />,
-              stepPath: isSalesPerson ? routeNames.adSalesPersonStep05Page.path : routeNames.apStep05Page.path,
+              stepPath: routeNames.apStep05Page.path,
               buttonLabel: apCurrStepId < 5 ? '---' : apCurrStepId === 5 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -157,7 +88,7 @@ export const ApTopPage = () => {
               id: 6,
               stepTitle: '担保提供者',
               stepIcon: <Icons.ApTopStepIdIcon06 />,
-              stepPath: isSalesPerson ? routeNames.adSalesPersonStep06Page.path : routeNames.apStep06Page.path,
+              stepPath: routeNames.apStep06Page.path,
               buttonLabel: apCurrStepId < 6 ? '---' : apCurrStepId === 6 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -167,7 +98,7 @@ export const ApTopPage = () => {
         id: 7,
         stepTitle: 'お住まい',
         stepIcon: <Icons.ApTopStepIdIcon07 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep07Page.path : routeNames.apStep07Page.path,
+        stepPath: routeNames.apStep07Page.path,
         buttonLabel: apCurrStepId < 7 ? '---' : apCurrStepId === 7 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -175,7 +106,7 @@ export const ApTopPage = () => {
         id: 8,
         stepTitle: '現在のお借入状況',
         stepIcon: <Icons.ApTopStepIdIcon08 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep08Page.path : routeNames.apStep08Page.path,
+        stepPath: routeNames.apStep08Page.path,
         buttonLabel: apCurrStepId < 8 ? '---' : apCurrStepId === 8 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -183,7 +114,7 @@ export const ApTopPage = () => {
         id: 9,
         stepTitle: '資金計画',
         stepIcon: <Icons.ApTopStepIdIcon09 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep09Page.path : routeNames.apStep09Page.path,
+        stepPath: routeNames.apStep09Page.path,
         buttonLabel: apCurrStepId < 9 ? '---' : apCurrStepId === 9 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -191,7 +122,7 @@ export const ApTopPage = () => {
         id: 10,
         stepTitle: '書類添付',
         stepIcon: <Icons.ApTopStepIdIcon10 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep10Page.path : routeNames.apStep10Page.path,
+        stepPath: routeNames.apStep10Page.path,
         buttonLabel: apCurrStepId < 10 ? '---' : apCurrStepId === 10 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -201,7 +132,7 @@ export const ApTopPage = () => {
               id: 11,
               stepTitle: '収入合算者の書類',
               stepIcon: <Icons.ApTopStepIdIcon11 />,
-              stepPath: isSalesPerson ? routeNames.adSalesPersonStep11Page.path : routeNames.apStep11Page.path,
+              stepPath: routeNames.apStep11Page.path,
               buttonLabel: apCurrStepId < 11 ? '---' : apCurrStepId === 11 ? '入力する' : '修正する',
               show: preExaminationStatus < parseInt(APPROVAL),
             },
@@ -211,7 +142,7 @@ export const ApTopPage = () => {
         id: 12,
         stepTitle: '担当者情報',
         stepIcon: <Icons.ApTopStepIdIcon12 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep12Page.path : routeNames.apStep12Page.path,
+        stepPath: routeNames.apStep12Page.path,
         buttonLabel: apCurrStepId < 12 ? '---' : apCurrStepId === 12 ? '入力する' : '修正する',
         show: preExaminationStatus < parseInt(APPROVAL),
       },
@@ -219,7 +150,7 @@ export const ApTopPage = () => {
         id: 13,
         stepTitle: '入力内容確認',
         stepIcon: <Icons.ApTopStepIdIcon13 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonStep13Page.path : routeNames.apStep13Page.path,
+        stepPath: routeNames.apStep13Page.path,
         buttonLabel: apCurrStepId < 13 ? '---' : apCurrStepId === 13 ? '入力する' : '修正する',
         show: !agentSended,
       },
@@ -227,7 +158,7 @@ export const ApTopPage = () => {
         id: 14,
         stepTitle: '仮審査申込',
         stepIcon: <Icons.ApTopStepIdIcon14 />,
-        stepPath: isSalesPerson ? routeNames.adSalesPersonConfirmPage.path : routeNames.apConfirmPage.path,
+        stepPath: routeNames.apConfirmPage.path,
         buttonLabel: apCurrStepId < 14 ? '---' : '申込内容確認',
         show: true,
       },
@@ -244,7 +175,7 @@ export const ApTopPage = () => {
           ]
         : []),
 
-      ...(appliedBanks.includes(MCJ_CODE)
+      ...(p_application_banks.includes(MCJ_CODE)
         ? [
             {
               id: 16,
@@ -257,7 +188,7 @@ export const ApTopPage = () => {
           ]
         : []),
     ],
-    [appliedBanks, preExaminationStatus, hasIncomeTotalizer, hasJoinGuarantor]
+    [p_application_banks, preExaminationStatus, hasIncomeTotalizer, hasJoinGuarantor, apCurrStepId]
   );
 
   const topLabelText = useMemo(() => {
@@ -320,8 +251,8 @@ export const ApTopPage = () => {
 const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, stepPath, topItems }) => {
   const navigate = useNavigate();
   const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
-  const apCurrStepId = useRecoilValue(apCurrStepIdSelector);
-  const agentSended = useRecoilValue(agentSendedSelector);
+  const { apCurrStepId } = useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
 
   const itemButton = useCallback((id) => {
     switch (id) {

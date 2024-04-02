@@ -1,6 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
 import { useBankMaster } from '@/hooks/use-bank-master';
-import { agentSendedSelector, applicationAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
@@ -21,8 +21,8 @@ export const ApStep01Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
   const { p_application_headers, p_application_banks, p_borrowing_details__1, p_borrowing_details__2 } =
-    useRecoilValue(applicationAtom);
-  const agentSended = useRecoilValue(agentSendedSelector);
+    useRecoilValue(localApplication);
+  const { agentSended } = useRecoilValue(authAtom);
   const bankMaster = useBankMaster();
 
   return (

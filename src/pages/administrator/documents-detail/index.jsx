@@ -4,7 +4,7 @@ import { AdMainWrapper } from '@/containers';
 import { useBoolean, useCurrSearchParams, useIsManager } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { adGetArchiveFile, adUpdateArchiveFile } from '@/services';
-import { downloadImageAsync } from '@/utils';
+import { downloadFileAsync } from '@/utils';
 import { Button, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -213,7 +213,7 @@ export const AdDocumentsDetailPage = () => {
                         opacity: 0.9,
                       },
                     }}
-                    onClick={async () => await downloadImageAsync(item.src, item.name)}
+                    onClick={async () => await downloadFileAsync(item.src, item.name)}
                   >
                     <Typography variant="doc_download_button">ダウンロード</Typography>
                   </Button>

@@ -1,15 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApPageTitle, ApSignatureBoard } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
-import {
-  apNextStepIdSelector,
-  apPreStepIdSelector,
-  applicationAtom,
-  applicationInitialValues,
-  authAtom,
-  hasIncomeTotalizerSelector,
-  hasJoinGuarantorSelector,
-  roleTypeSelector,
-} from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { formatJapanDate } from '@/utils';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ApStep01Info } from '../step-01/step-01-info';
@@ -28,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import { Box, Stack, Typography } from '@mui/material';
-import { apAgentSend, apApplication } from '@/services';
+import { apAgentSend } from '@/services';
 import { Icons } from '@/assets';
 import { useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
@@ -38,14 +29,19 @@ import { API_500_ERROR } from '@/constant';
 export const ApStep13Page = () => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const apNextStepId = useRecoilValue(apNextStepIdSelector);
-  const apPreStepId = useRecoilValue(apPreStepIdSelector);
-  const hasJoinGuarantor = useRecoilValue(hasJoinGuarantorSelector);
-  const hasIncomeTotalizer = useRecoilValue(hasIncomeTotalizerSelector);
-  const application = useRecoilValue(applicationAtom);
+
   const setAuthInfo = useSetRecoilState(authAtom);
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const roleType = useRecoilValue(roleTypeSelector);
+
+  const localApplicationInfo = useRecoilValue(localApplication);
+  const {
+    apNextStepId,
+    apPreStepId,
+    hasJoinGuarantor,
+    hasIncomeTotalizer,
+    p_applicant_persons__0,
+    p_application_headers,
+  } = localApplicationInfo;
+
   const showError = useBoolean(false);
   const apSteps = useMemo(
     () => [
@@ -123,8 +119,8 @@ export const ApStep13Page = () => {
   }, [errorMsgRef.current]);
 
   const initialValues = {
-    p_uploaded_files: {
-      S: application.p_uploaded_files.S,
+    p_applicant_persons__0: {
+      S: p_applicant_persons__0.S,
     },
   };
   const formik = useFormik({
@@ -136,37 +132,11 @@ export const ApStep13Page = () => {
           return;
         }
         const sendRes = await apAgentSend({
-          ...applicationInitialValues,
-
-          p_uploaded_files: {
-            ...applicationInitialValues.p_uploaded_files,
-            ...application.p_uploaded_files,
-            S: values.p_uploaded_files.S,
-          },
-          p_application_headers: {
-            ...applicationInitialValues.p_application_headers,
-            ...application.p_application_headers,
-          },
-          p_borrowing_details__1: {
-            ...applicationInitialValues.p_borrowing_details__1,
-            ...application.p_borrowing_details__1,
-          },
-          p_borrowing_details__2: {
-            ...applicationInitialValues.p_borrowing_details__2,
-            ...application.p_borrowing_details__2,
-          },
-          p_application_banks: application.p_application_banks,
+          ...localApplicationInfo,
           p_applicant_persons__0: {
-            ...applicationInitialValues.p_applicant_persons__0,
-            ...application.p_applicant_persons__0,
+            ...localApplicationInfo.p_applicant_persons__0,
+            S: values.p_applicant_persons__0.S,
           },
-          p_applicant_persons__1: {
-            ...applicationInitialValues.p_applicant_persons__1,
-            ...application.p_applicant_persons__1,
-          },
-          p_join_guarantors: application.p_join_guarantors,
-          p_residents: application.p_residents,
-          p_borrowings: application.p_borrowings,
         });
         if (isSalesPerson) {
           return navigate(routeNames.adSalesPersonDashboardPage.path);
@@ -178,13 +148,7 @@ export const ApStep13Page = () => {
             agentSended: true,
           };
         });
-        const infoRes = await apApplication(sendRes.data?.apply_no);
-        setApplicationInfo((pre) => {
-          return {
-            ...pre,
-            ...infoRes.data,
-          };
-        });
+
         navigate(`/step-id-${apNextStepId}`);
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -195,82 +159,83 @@ export const ApStep13Page = () => {
   const handelLeft = () => {
     navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
   };
+  const errorMsg = [];
 
-  const errorMsg = useMemo(() => {
-    const tempMsg = [];
-    if (application.p_applicant_persons__0.identity_verification_type === '1') {
-      if (
-        application.p_uploaded_files.p_applicant_persons__0__A__01__a.length === 0 ||
-        application.p_uploaded_files.p_applicant_persons__0__A__01__b.length === 0
-      ) {
-        tempMsg.push('本人確認書類');
-      }
-    }
-    if (application.p_applicant_persons__0.identity_verification_type === '2') {
-      if (application.p_uploaded_files.p_applicant_persons__0__A__02.length === 0) {
-        tempMsg.push('本人確認書類');
-      }
-    }
-    if (application.p_applicant_persons__0.identity_verification_type === '3') {
-      if (
-        application.p_uploaded_files.p_applicant_persons__0__A__03__a.length === 0 ||
-        application.p_uploaded_files.p_applicant_persons__0__A__03__b.length === 0
-      ) {
-        tempMsg.push('本人確認書類');
-      }
-    }
+  // const errorMsg = useMemo(() => {
+  //   const tempMsg = [];
+  //   if (application.p_applicant_persons__0.identity_verification_type === '1') {
+  //     if (
+  //       application.p_uploaded_files.p_applicant_persons__0__A__01__a.length === 0 ||
+  //       application.p_uploaded_files.p_applicant_persons__0__A__01__b.length === 0
+  //     ) {
+  //       tempMsg.push('本人確認書類');
+  //     }
+  //   }
+  //   if (application.p_applicant_persons__0.identity_verification_type === '2') {
+  //     if (application.p_uploaded_files.p_applicant_persons__0__A__02.length === 0) {
+  //       tempMsg.push('本人確認書類');
+  //     }
+  //   }
+  //   if (application.p_applicant_persons__0.identity_verification_type === '3') {
+  //     if (
+  //       application.p_uploaded_files.p_applicant_persons__0__A__03__a.length === 0 ||
+  //       application.p_uploaded_files.p_applicant_persons__0__A__03__b.length === 0
+  //     ) {
+  //       tempMsg.push('本人確認書類');
+  //     }
+  //   }
 
-    if (application.hasIncomeTotalizer) {
-      if (application.p_applicant_persons__1.identity_verification_type === '1') {
-        if (
-          application.p_uploaded_files.p_applicant_persons__1__A__01__a.length === 0 ||
-          application.p_uploaded_files.p_applicant_persons__1__A__01__b.length === 0
-        ) {
-          tempMsg.push('収入合算者の本人確認書類');
-        }
-      }
-      if (application.p_applicant_persons__1.identity_verification_type === '2') {
-        if (application.p_uploaded_files.p_applicant_persons__1__A__02.length === 0) {
-          tempMsg.push('収入合算者の本人確認書類');
-        }
-      }
-      if (application.p_applicant_persons__1.identity_verification_type === '3') {
-        if (
-          application.p_uploaded_files.p_applicant_persons__1__A__03__a.length === 0 ||
-          application.p_uploaded_files.p_applicant_persons__1__A__03__b.length === 0
-        ) {
-          tempMsg.push('収入合算者の本人確認書類');
-        }
-      }
-    }
+  //   if (application.hasIncomeTotalizer) {
+  //     if (application.p_applicant_persons__1.identity_verification_type === '1') {
+  //       if (
+  //         application.p_uploaded_files.p_applicant_persons__1__A__01__a.length === 0 ||
+  //         application.p_uploaded_files.p_applicant_persons__1__A__01__b.length === 0
+  //       ) {
+  //         tempMsg.push('収入合算者の本人確認書類');
+  //       }
+  //     }
+  //     if (application.p_applicant_persons__1.identity_verification_type === '2') {
+  //       if (application.p_uploaded_files.p_applicant_persons__1__A__02.length === 0) {
+  //         tempMsg.push('収入合算者の本人確認書類');
+  //       }
+  //     }
+  //     if (application.p_applicant_persons__1.identity_verification_type === '3') {
+  //       if (
+  //         application.p_uploaded_files.p_applicant_persons__1__A__03__a.length === 0 ||
+  //         application.p_uploaded_files.p_applicant_persons__1__A__03__b.length === 0
+  //       ) {
+  //         tempMsg.push('収入合算者の本人確認書類');
+  //       }
+  //     }
+  //   }
 
-    if (application.p_applicant_persons__0.nationality === '2') {
-      if (
-        application.p_uploaded_files.p_applicant_persons__0__H__a.length === 0 ||
-        application.p_uploaded_files.p_applicant_persons__0__H__b.length === 0
-      ) {
-        tempMsg.push('〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
-      }
-    }
-    if (application.p_applicant_persons__1.nationality === '2') {
-      if (application.hasIncomeTotalizer) {
-        if (
-          application.p_uploaded_files.p_applicant_persons__1__H__a.length === 0 ||
-          application.p_uploaded_files.p_applicant_persons__1__H__b.length === 0
-        ) {
-          tempMsg.push('収入合算者の〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
-        }
-      }
-    }
+  //   if (application.p_applicant_persons__0.nationality === '2') {
+  //     if (
+  //       application.p_uploaded_files.p_applicant_persons__0__H__a.length === 0 ||
+  //       application.p_uploaded_files.p_applicant_persons__0__H__b.length === 0
+  //     ) {
+  //       tempMsg.push('〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
+  //     }
+  //   }
+  //   if (application.p_applicant_persons__1.nationality === '2') {
+  //     if (application.hasIncomeTotalizer) {
+  //       if (
+  //         application.p_uploaded_files.p_applicant_persons__1__H__a.length === 0 ||
+  //         application.p_uploaded_files.p_applicant_persons__1__H__b.length === 0
+  //       ) {
+  //         tempMsg.push('収入合算者の〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
+  //       }
+  //     }
+  //   }
 
-    if (roleType === 2) {
-      if (formik.values.p_uploaded_files.S.length === 0) {
-        tempMsg.push('サインをしてください');
-      }
-    }
+  //   if (isSalesPerson === 2) {
+  //     if (formik.values.p_uploaded_files.S.length === 0) {
+  //       tempMsg.push('サインをしてください');
+  //     }
+  //   }
 
-    return tempMsg;
-  }, [application]);
+  //   return tempMsg;
+  // }, [application]);
 
   return (
     <FormikProvider value={formik}>
@@ -289,9 +254,7 @@ export const ApStep13Page = () => {
         <ApPageTitle py={8}>{`最後に内容を確認し\nお申込を完了させましょう。`}</ApPageTitle>
         <ApConfirmGroup label={'はじめに'}>
           <ApConfirmItemGroup label={'同意日'}>
-            {application.p_application_headers.apply_date
-              ? formatJapanDate(application.p_application_headers.apply_date, true)
-              : 'ー'}
+            {p_application_headers.apply_date ? formatJapanDate(p_application_headers.apply_date, true) : 'ー'}
           </ApConfirmItemGroup>
         </ApConfirmGroup>
         {getIndex(1) >= 0 && <ApStep01Info stepIndex={String(getIndex(1) + 1).padStart(2, '0')} />}
@@ -307,11 +270,11 @@ export const ApStep13Page = () => {
         {getIndex(11) >= 0 && <ApStep11Info stepIndex={String(getIndex(11) + 1).padStart(2, '0')} />}
         {getIndex(12) >= 0 && <ApStep12Info stepIndex={String(getIndex(12) + 1).padStart(2, '0')} />}
 
-        {roleType === 2 && (
+        {isSalesPerson && (
           <ApConfirmGroup label={'最後'}>
             <ApConfirmItemGroup label={'本人サイン'}>
               <ApSignatureBoard
-                name="p_uploaded_files.S"
+                name="p_applicant_persons__0.S"
                 showError={showError.value}
                 onChange={() => {
                   showError.onFalse();

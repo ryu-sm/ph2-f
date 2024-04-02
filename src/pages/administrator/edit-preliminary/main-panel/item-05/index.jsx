@@ -10,6 +10,7 @@ import {
   AdEditInput,
   AdEditOutLineInput,
   AdNumericInput,
+  AdPhoneInputField,
   AdSelectCheckbox,
   AdSelectRadios,
   AdZipCodeInput,
@@ -113,6 +114,9 @@ export const Item05 = () => {
     const diffData = {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
       p_residents: values.p_residents,
     };
@@ -899,7 +903,7 @@ export const Item05 = () => {
                           }}
                           field={
                             isEditable ? (
-                              <AdEditInput name={`p_residents[${index}].contact_phone`} convertHalfWidth />
+                              <AdPhoneInputField name={`p_residents[${index}].contact_phone`} convertHalfWidth />
                             ) : (
                               item.contact_phone
                             )

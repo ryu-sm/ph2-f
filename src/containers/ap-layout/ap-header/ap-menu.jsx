@@ -3,14 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ApWrapper } from '../ap-wrapper';
 import { ApFooter } from '../ap-footer';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
-import {
-  applicationAtom,
-  appliedBanksSelector,
-  applyNoSelector,
-  authAtom,
-  displayPdfSelector,
-  preExaminationStatusSelector,
-} from '@/store';
+import { applyNoSelector, authAtom, displayPdfSelector, localApplication, preExaminationStatusSelector } from '@/store';
 import { useBoolean } from '@/hooks';
 import { useMemo } from 'react';
 import { Icons } from '@/assets';
@@ -24,10 +17,10 @@ import { clearStorage } from '@/libs';
 export const ApMenu = ({ menu }) => {
   const navigate = useNavigate();
   const applyNo = useRecoilValue(applyNoSelector);
-  const appliedBanks = useRecoilValue(appliedBanksSelector);
   const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
   const resetAuth = useResetRecoilState(authAtom);
-  const resetApplication = useResetRecoilState(applicationAtom);
+  const resetLocalApplicationInfo = useResetRecoilState(localApplication);
+  const { p_application_banks } = useRecoilValue(localApplication);
   const displayPdf = useRecoilValue(displayPdfSelector);
   const modal = useBoolean();
 
@@ -54,7 +47,7 @@ export const ApMenu = ({ menu }) => {
         label: '日本住宅ローン用PDF',
         icon: <Icons.ApMenuItemPdfIcon />,
         desc: '必要に応じてダウンロードしてください',
-        show: !!applyNo && appliedBanks.includes(MCJ_CODE),
+        show: !!applyNo && p_application_banks.includes(MCJ_CODE),
         onClick: () => {},
       },
       {
@@ -82,12 +75,12 @@ export const ApMenu = ({ menu }) => {
         onClick: () => modal.onTrue(),
       },
     ],
-    [applyNo, appliedBanks, preExaminationStatus, MCJ_CODE]
+    [applyNo, p_application_banks, preExaminationStatus, MCJ_CODE]
   );
 
   const handelLogout = () => {
     resetAuth();
-    resetApplication();
+    resetLocalApplicationInfo();
     clearStorage();
     navigate(routeNames.apStartPage.path);
   };

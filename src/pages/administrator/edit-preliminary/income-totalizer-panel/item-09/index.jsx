@@ -1,7 +1,5 @@
 import { FormikProvider, useFormik } from 'formik';
-
 import { AdGroupRadio } from '@/components/administrator';
-
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { useEffect } from 'react';
@@ -10,10 +8,11 @@ import { Stack } from '@mui/material';
 import { ContentEditFileGroup } from '../../common/content-edit-file-group';
 import { identityVerificationOptions } from './options';
 import { UploadItem } from '../../common/upload-item';
+import { diffObj } from '@/utils';
 
 export const Item09 = () => {
   const {
-    preliminaryInfo: { p_uploaded_files, p_applicant_persons__1 },
+    preliminaryInfo: { p_applicant_persons__1 },
     preliminarySnap,
     setPreliminarySnap,
     handleSave,
@@ -31,44 +30,35 @@ export const Item09 = () => {
   } = preliminarySnap;
 
   const initialValues = {
-    p_uploaded_files: {
-      p_applicant_persons__1__A__01__a: p_uploaded_files.p_applicant_persons__1__A__01__a,
-      p_applicant_persons__1__A__01__b: p_uploaded_files.p_applicant_persons__1__A__01__b,
-      p_applicant_persons__1__A__02: p_uploaded_files.p_applicant_persons__1__A__02,
-      p_applicant_persons__1__A__03__a: p_uploaded_files.p_applicant_persons__1__A__03__a,
-      p_applicant_persons__1__A__03__b: p_uploaded_files.p_applicant_persons__1__A__03__b,
-      p_applicant_persons__1__B__a: p_uploaded_files.p_applicant_persons__1__B__a,
-      p_applicant_persons__1__B__b: p_uploaded_files.p_applicant_persons__1__B__b,
-      p_applicant_persons__1__C__01: p_uploaded_files.p_applicant_persons__1__C__01,
-      p_applicant_persons__1__C__02: p_uploaded_files.p_applicant_persons__1__C__02,
-      p_applicant_persons__1__C__03: p_uploaded_files.p_applicant_persons__1__C__03,
-      p_applicant_persons__1__C__04: p_uploaded_files.p_applicant_persons__1__C__04,
-      p_applicant_persons__1__C__05: p_uploaded_files.p_applicant_persons__1__C__05,
-      p_applicant_persons__1__D__01: p_uploaded_files.p_applicant_persons__1__D__01,
-      p_applicant_persons__1__D__02: p_uploaded_files.p_applicant_persons__1__D__02,
-      p_applicant_persons__1__D__03: p_uploaded_files.p_applicant_persons__1__D__03,
-      p_applicant_persons__1__E: p_uploaded_files.p_applicant_persons__1__E,
-      p_applicant_persons__1__F__01: p_uploaded_files.p_applicant_persons__1__F__01,
-      p_applicant_persons__1__F__02: p_uploaded_files.p_applicant_persons__1__F__02,
-      p_applicant_persons__1__F__03: p_uploaded_files.p_applicant_persons__1__F__03,
-      p_applicant_persons__1__K: p_uploaded_files.p_applicant_persons__1__K,
-
-      p_applicant_persons__1__H__a: p_uploaded_files.p_applicant_persons__1__H__a,
-      p_applicant_persons__1__H__b: p_uploaded_files.p_applicant_persons__1__H__b,
-    },
     p_applicant_persons__1: {
       identity_verification_type: p_applicant_persons__1.identity_verification_type,
+      A__01__a: p_applicant_persons__1.A__01__a,
+      A__01__b: p_applicant_persons__1.A__01__b,
+      A__02: p_applicant_persons__1.A__02,
+      A__03__a: p_applicant_persons__1.A__03__a,
+      A__03__b: p_applicant_persons__1.A__03__b,
+      B__a: p_applicant_persons__1.B__a,
+      B__b: p_applicant_persons__1.B__b,
+      C__01: p_applicant_persons__1.C__01,
+      C__02: p_applicant_persons__1.C__02,
+      C__03: p_applicant_persons__1.C__03,
+      C__04: p_applicant_persons__1.C__04,
+      C__05: p_applicant_persons__1.C__05,
+      D__01: p_applicant_persons__1.D__01,
+      D__02: p_applicant_persons__1.D__02,
+      D__03: p_applicant_persons__1.D__03,
+      E: p_applicant_persons__1.E,
+      F__01: p_applicant_persons__1.F__01,
+      F__02: p_applicant_persons__1.F__02,
+      F__03: p_applicant_persons__1.F__03,
+      K: p_applicant_persons__1.K,
+      H__a: p_applicant_persons__1.H__a,
+      H__b: p_applicant_persons__1.H__b,
     },
   };
 
   const setUpdateData = (values) => {
     const diffData = {
-      p_uploaded_files: {
-        ...values.p_uploaded_files,
-      },
-      p_applicant_persons__1: {
-        identity_verification_type: values.identity_verification_type,
-      },
       ...(changeToIncomeTotalizer && {
         p_application_headers: {
           created_at: p_application_headers?.created_at,
@@ -100,12 +90,14 @@ export const Item09 = () => {
         },
         p_applicant_persons__1: {
           ...preliminarySnap.p_applicant_persons__1,
-          ...values.p_applicant_persons__1,
         },
       }),
       ...(changeJoinGuarantor && {
         p_join_guarantors: p_join_guarantors,
       }),
+      p_applicant_persons__1: {
+        ...diffObj(initialValues.p_applicant_persons__1, values.p_applicant_persons__1),
+      },
     };
     return diffData;
   };
@@ -125,10 +117,6 @@ export const Item09 = () => {
         p_applicant_persons__1: {
           ...pre.p_applicant_persons__1,
           ...formik.values.p_applicant_persons__1,
-        },
-        p_uploaded_files: {
-          ...pre.p_uploaded_files,
-          ...formik.values.p_uploaded_files,
         },
       };
     });
@@ -169,17 +157,17 @@ export const Item09 = () => {
                       isDisabled={!isEditable}
                       upConfig={{
                         title: '運転免許書〈表面〉',
-                        key: `p_uploaded_files.p_applicant_persons__1__A__01__a`,
+                        key: `p_applicant_persons.A__01__a.${p_applicant_persons__1.id}`,
                       }}
-                      name="p_uploaded_files.p_applicant_persons__1__A__01__a"
+                      name="p_applicant_persons__1.A__01__a"
                     />
                     <UploadItem
                       isDisabled={!isEditable}
                       upConfig={{
                         title: '運転免許書〈裏面〉',
-                        key: `p_uploaded_files.p_applicant_persons__1__A__01__b`,
+                        key: `p_applicant_persons.A__01__b.${p_applicant_persons__1.id}`,
                       }}
-                      name="p_uploaded_files.p_applicant_persons__1__A__01__b"
+                      name="p_applicant_persons__1.A__01__b"
                     />
                   </Stack>
                 )}
@@ -188,9 +176,9 @@ export const Item09 = () => {
                     isDisabled={!isEditable}
                     upConfig={{
                       title: 'マイナンバーカード〈表面〉',
-                      key: `p_uploaded_files.p_applicant_persons__1__A__02`,
+                      key: `p_applicant_persons.A__02.${p_applicant_persons__1.id}`,
                     }}
-                    name="p_uploaded_files.p_applicant_persons__1__A__02"
+                    name="p_applicant_persons__1.A__02"
                   />
                 )}
                 {formik.values.p_applicant_persons__1.identity_verification_type === '3' && (
@@ -199,17 +187,17 @@ export const Item09 = () => {
                       isDisabled={!isEditable}
                       upConfig={{
                         title: '住民基本台帳カード〈表面〉',
-                        key: `p_uploaded_files.p_applicant_persons__1__A__03__a`,
+                        key: `p_applicant_persons.A__03__a.${p_applicant_persons__1.id}`,
                       }}
-                      name="p_uploaded_files.p_applicant_persons__1__A__03__a"
+                      name="p_applicant_persons__1.A__03__a"
                     />
                     <UploadItem
                       isDisabled={!isEditable}
                       upConfig={{
                         title: '住民基本台帳カード〈裏面〉',
-                        key: `p_uploaded_files.p_applicant_persons__1__A__03__b`,
+                        key: `p_applicant_persons.A__03__b.${p_applicant_persons__1.id}`,
                       }}
-                      name="p_uploaded_files.p_applicant_persons__1__A__03__b"
+                      name="p_applicant_persons__1.A__03__b"
                     />
                   </Stack>
                 )}
@@ -219,17 +207,17 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__B__a`,
+                  key: `p_applicant_persons.B__a.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__B__a"
+                name="p_applicant_persons__1.B__a"
                 subTitle="健康保険証〈表面〉"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__B__b`,
+                  key: `p_applicant_persons.B__b.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__B__b"
+                name="p_applicant_persons__1.B__b"
                 subTitle="健康保険証〈裏面〉"
               />
             </ContentEditFileGroup>
@@ -237,45 +225,45 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__C__01`,
+                  key: `p_applicant_persons.C__01.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__C__01"
+                name="p_applicant_persons__1.C__01"
                 isMultiple={true}
                 subTitle="源泉徴収票（前年度分）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__C__02`,
+                  key: `p_applicant_persons.C__02.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__C__02"
+                name="p_applicant_persons__1.C__02"
                 isMultiple={true}
                 subTitle="源泉徴収票（前々年度分）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__C__03`,
+                  key: `p_applicant_persons.C__03.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__C__03"
+                name="p_applicant_persons__1.C__03"
                 isMultiple={true}
                 subTitle="確定申告書（1期前）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__C__04`,
+                  key: `p_applicant_persons.C__04.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__C__04"
+                name="p_applicant_persons__1.C__04"
                 isMultiple={true}
                 subTitle="確定申告書（2期前）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__C__05`,
+                  key: `p_applicant_persons.C__05.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__C__05"
+                name="p_applicant_persons__1.C__05"
                 isMultiple={true}
                 subTitle="確定申告書（3期前）"
               />
@@ -284,27 +272,27 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__D__01`,
+                  key: `p_applicant_persons.D__01.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__D__01"
+                name="p_applicant_persons__1.D__01"
                 isMultiple={true}
                 subTitle="会社の決算報告書（1期前）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__D__02`,
+                  key: `p_applicant_persons.D__02.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__D__02"
+                name="p_applicant_persons__1.D__02"
                 isMultiple={true}
                 subTitle="会社の決算報告書（2期前）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__D__03`,
+                  key: `p_applicant_persons.D__03.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__D__03"
+                name="p_applicant_persons__1.D__03"
                 isMultiple={true}
                 subTitle="会社の決算報告書（3期前）"
               />
@@ -313,9 +301,9 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__E`,
+                  key: `p_applicant_persons.E.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__E"
+                name="p_applicant_persons__1.E"
                 isMultiple={true}
                 subTitle="雇用契約書"
               />
@@ -326,27 +314,27 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__F__01`,
+                  key: `p_applicant_persons.F__01.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__F__01"
+                name="p_applicant_persons__1.F__01"
                 isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（1期前）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__F__02`,
+                  key: `p_applicant_persons.F__02.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__F__02"
+                name="p_applicant_persons__1.F__02"
                 isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（2期前）"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__F__03`,
+                  key: `p_applicant_persons.F__03.${p_applicant_persons__1.id}`,
                 }}
-                name="p_uploaded_files.p_applicant_persons__1__F__03"
+                name="p_applicant_persons__1.F__03"
                 isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（3期前）"
               />
@@ -355,17 +343,17 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__H__a`,
+                  key: `p_applicant_persons.H__a.${p_applicant_persons__1.id}`,
                 }}
-                name={'p_uploaded_files.p_applicant_persons__1__H__a'}
+                name={'p_applicant_persons__1.H__a'}
                 subTitle="在留カード 〈表面〉"
               />
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__H__b`,
+                  key: `p_applicant_persons.H__b.${p_applicant_persons__1.id}`,
                 }}
-                name={'p_uploaded_files.p_applicant_persons__1__H__b'}
+                name={'p_applicant_persons__1.H__b'}
                 subTitle="在留カード 〈裏面〉"
               />
             </ContentEditFileGroup>
@@ -373,10 +361,10 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
-                  key: `p_uploaded_files.p_applicant_persons__1__K`,
+                  key: `p_applicant_persons.K.${p_applicant_persons__1.id}`,
                 }}
                 isMultiple={true}
-                name="p_uploaded_files.p_applicant_persons__1__K"
+                name="p_applicant_persons__1.K"
               />
             </ContentEditFileGroup>
           </Stack>

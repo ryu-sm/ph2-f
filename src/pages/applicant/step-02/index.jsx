@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { applicationAtom, authAtom, userEmailSelector } from '@/store';
+import { useEffect, useMemo } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authAtom, localApplication } from '@/store';
 import { FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -26,24 +26,28 @@ import { API_500_ERROR, PREFECTURES } from '@/constant';
 
 import { useNavigate } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
-import { apApplicationFile } from '@/services';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
+import { apGetPapplicantPersonsFiles } from '@/services';
 
 export const ApStep02Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const userEmail = useRecoilValue(userEmailSelector);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
 
-  const { apNextStepId, apPreStepId, p_applicant_persons__0, p_uploaded_files } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+  const {
+    agentSended,
+    user: { email, id },
+  } = useRecoilValue(authAtom);
+
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const { apNextStepId, apPreStepId, p_applicant_persons__0 } = localApplicationInfo;
+
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
         p_applicant_persons__0: {
@@ -66,11 +70,8 @@ export const ApStep02Page = () => {
           city_kana: values.p_applicant_persons__0.city_kana,
           district_kana: values.p_applicant_persons__0.district_kana,
           email: values.p_applicant_persons__0.email,
-        },
-        p_uploaded_files: {
-          ...pre.p_uploaded_files,
-          p_applicant_persons__0__H__a: values.p_uploaded_files.p_applicant_persons__0__H__a,
-          p_applicant_persons__0__H__b: values.p_uploaded_files.p_applicant_persons__0__H__b,
+          H__a: values.p_applicant_persons__0.H__a,
+          H__b: values.p_applicant_persons__0.H__b,
         },
       };
     });
@@ -94,11 +95,9 @@ export const ApStep02Page = () => {
       prefecture_kana: p_applicant_persons__0.prefecture_kana,
       city_kana: p_applicant_persons__0.city_kana,
       district_kana: p_applicant_persons__0.district_kana,
-      email: isSalesPerson ? p_applicant_persons__0.email : p_applicant_persons__0.email || userEmail,
-    },
-    p_uploaded_files: {
-      p_applicant_persons__0__H__a: p_uploaded_files.p_applicant_persons__0__H__a,
-      p_applicant_persons__0__H__b: p_uploaded_files.p_applicant_persons__0__H__b,
+      email: isSalesPerson ? p_applicant_persons__0.email : p_applicant_persons__0.email || email,
+      H__a: p_applicant_persons__0.H__a,
+      H__b: p_applicant_persons__0.H__b,
     },
   };
 
@@ -106,9 +105,6 @@ export const ApStep02Page = () => {
     const diffData = {
       p_applicant_persons__0: {
         ...diffObj(initialValues.p_applicant_persons__0, values.p_applicant_persons__0),
-      },
-      p_uploaded_files: {
-        ...diffObj(initialValues.p_uploaded_files, values.p_uploaded_files),
       },
     };
     return diffData;
@@ -120,7 +116,7 @@ export const ApStep02Page = () => {
     onSubmit: async (values) => {
       try {
         if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -131,22 +127,6 @@ export const ApStep02Page = () => {
       }
     },
   });
-
-  const sendedFile = useCallback(async () => {
-    if (agentSended) {
-      try {
-        const res = await apApplicationFile(applyNo);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__H__a', res.data.p_applicant_persons__0__H__a);
-        formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__H__b', res.data.p_applicant_persons__0__H__b);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  });
-
-  useEffect(() => {
-    sendedFile();
-  }, [agentSended, applyNo]);
 
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
@@ -162,6 +142,23 @@ export const ApStep02Page = () => {
     }
   };
 
+  const fetchPapplicantPersonsFiles = async () => {
+    try {
+      const res = await apGetPapplicantPersonsFiles(id, 0);
+      formik.setFieldValue('p_applicant_persons__0.H__a', res.data?.H__a);
+      formik.setFieldValue('p_applicant_persons__0.H__b', res.data?.H__b);
+      console.log(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    if (agentSended) {
+      fetchPapplicantPersonsFiles();
+    }
+  }, []);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -171,7 +168,12 @@ export const ApStep02Page = () => {
         bottomContent={
           <>
             <ApSaveDraftButton pageInfo={parseVaildData} />
-            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
+            />
           </>
         }
       >
@@ -206,8 +208,8 @@ export const ApStep02Page = () => {
               options={nationalityOptions}
               onChange={(e) => {
                 if (e.target.value === '1') {
-                  formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__H__a', []);
-                  formik.setFieldValue('p_uploaded_files.p_applicant_persons__0__H__b', []);
+                  formik.setFieldValue('p_applicant_persons__0.H__a', []);
+                  formik.setFieldValue('p_applicant_persons__0.H__b', []);
                 }
               }}
             />
@@ -237,10 +239,9 @@ export const ApStep02Page = () => {
                     borderTopLeftRadius={'7px'}
                   >
                     <Stack spacing={'6px'}>
-                      {((formik.touched.p_uploaded_files?.p_applicant_persons__0__H__a &&
-                        formik.errors.p_uploaded_files?.p_applicant_persons__0__H__a) ||
-                        (formik.touched.p_uploaded_files?.p_applicant_persons__0__H__b &&
-                          formik.errors.p_uploaded_files?.p_applicant_persons__0__H__b)) && (
+                      {((formik.touched.p_applicant_persons__0?.H__a && formik.errors.p_applicant_persons__0?.H__a) ||
+                        (formik.touched.p_applicant_persons__0?.H__b &&
+                          formik.errors.p_applicant_persons__0?.H__b)) && (
                         <Typography variant="waring" color={'secondary.main'}>
                           {'※外国籍の場合、在留カードまたは特別永住者証明書を添付することは必須です'}
                         </Typography>
@@ -250,13 +251,13 @@ export const ApStep02Page = () => {
                           <Typography variant="label" color={'text.main'}>
                             〈表面〉
                           </Typography>
-                          <ApImgUpload name="p_uploaded_files.p_applicant_persons__0__H__a" singleFile />
+                          <ApImgUpload name="p_applicant_persons__0.H__a" singleFile />
                         </Stack>
                         <Stack spacing={'6px'}>
                           <Typography variant="label" color={'text.main'}>
                             〈裏面〉
                           </Typography>
-                          <ApImgUpload name="p_uploaded_files.p_applicant_persons__0__H__b" singleFile />
+                          <ApImgUpload name="p_applicant_persons__0.H__b" singleFile />
                         </Stack>
                       </Stack>
                     </Stack>

@@ -52,25 +52,11 @@ export const apAgentSend = async (data) => {
   return await service.post('/application', data);
 };
 
-// TODO :deleted
-export const apApplication = async (apply_no) => {
-  return await service.get(`/application?apply_no=${apply_no}`);
-};
-
 export const apGetSendedApplication = async (c_user_id) => {
   return await service.get(`/application/${c_user_id}`);
 };
-
-export const apApplicationFile = async (apply_no) => {
-  return await service.get(`/application/files?apply_no=${apply_no}`);
-};
-
-export const apPborrowings = async (apply_no) => {
-  return await service.get(`/p_borrowings?apply_no=${apply_no}`);
-};
-
-export const apUpdateApplyInfo = async (apply_no, data) => {
-  return await service.put(`/application?apply_no=${apply_no}`, data);
+export const apUpdateSendedInfo = async (c_user_id, data) => {
+  return await service.put(`/application/${c_user_id}`, data);
 };
 
 //
@@ -157,12 +143,12 @@ export const adGetUpdateHistory = async (p_application_header_id, key) => {
   return await service.get(`/edit_histories/${p_application_header_id}?update_history_key=${key}`);
 };
 
-export const adGetFilesUpdateHistory = async (p_application_header_id, key) => {
-  return await service.get(`/edit_histories/files/${p_application_header_id}?update_history_key=${key}`);
+export const adGetFilesView = async (p_application_header_id, type, category) => {
+  return await service.get(`/files-view/${p_application_header_id}?type=${type}&category=${category}`);
 };
 
-export const adGetFilesView = async (p_application_header_id, category) => {
-  return await service.get(`/files-view/${p_application_header_id}?category=${category}`);
+export const adGetPborrowingsFilesView = async (p_application_header_id) => {
+  return await service.get(`/p_borrowings/files-view/${p_application_header_id}`);
 };
 
 export const adUpdateProvisionalResult = async (data) => {
@@ -266,7 +252,11 @@ export const getOrgsWithCategories = async (categories) => {
 };
 
 export const getChildrenOrgsWithCategory = async (parent_id, category) => {
-  return await service.get(`/orgs/children?parent_id=${parent_id}&category=${category}`);
+  if (parent_id) {
+    return await service.get(`/orgs/children?parent_id=${parent_id}&category=${category}`);
+  } else {
+    return await service.get(`/orgs/children?category=${category}`);
+  }
 };
 
 // TODO:
@@ -285,7 +275,11 @@ export const adUpdatePreliminaryManagerId = async (data) => {
 };
 
 export const adGetAccessSalesPersonOptions = async (orgs_id) => {
-  return await service.get(`/orgs/s_sales_persons?orgs_id=${orgs_id}`);
+  if (orgs_id) {
+    return await service.get(`/orgs/s_sales_persons?orgs_id=${orgs_id}`);
+  } else {
+    return await service.get(`/orgs/s_sales_persons`);
+  }
 };
 
 export const adUpdatePreliminarySalesAreaId = async (data) => {
@@ -300,15 +294,20 @@ export const adUpdatePreliminarySalesExhibitionHallId = async (data) => {
   return await service.put('/preliminary/sales_exhibition_hall_id', data);
 };
 
-// export const adGetAccessOrgs = async (parent_id) => {
-//   return await service.get(`/preliminary/access_args?parent_id${parent_id}`);
-// };
-
 // TODO:delete
 export const adGetSalesPersonOptions = async (parent_id) => {
   return await service.get(`/sales_person_options?parent_id=${parent_id}`);
 };
-// TODO:delete
-export const adGetSalesExhibitionHallOptions = async (parent_id) => {
-  return await service.get(`/sales_exhibition_hall_options?parent_id=${parent_id}`);
+
+// files
+export const apGetPapplicationHeadersFiles = async (c_user_id) => {
+  return await service.get(`/p_application_headers/files?c_user_id=${c_user_id}`);
+};
+
+export const apGetPapplicantPersonsFiles = async (c_user_id, type) => {
+  return await service.get(`/p_applicant_persons/files?c_user_id=${c_user_id}&type=${type}`);
+};
+
+export const apGetPborrowingsFiles = async (c_user_id) => {
+  return await service.get(`/p_borrowings/files?c_user_id=${c_user_id}`);
 };

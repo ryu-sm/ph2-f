@@ -100,12 +100,12 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
   const provisionalAfterResult = useMemo(() => {
     const basicList = [
-      { label: '仮審査否決等', value: '0', enable: false, active: false },
-      { label: '本審査', value: '1', enable: false, active: false },
-      { label: '本審査否決等', value: '2', enable: false, active: false },
-      { label: '融資実行済み', value: '3', enable: false, active: false },
-      { label: '他行借入', value: '4', enable: false, active: false },
-      { label: '自宅購入取止め', value: '5', enable: false, active: false },
+      { label: '仮審査否決等', value: '0', enable: false, active: item.provisional_after_result === '0' },
+      { label: '本審査', value: '1', enable: false, active: item.provisional_after_result === '1' },
+      { label: '本審査否決等', value: '2', enable: false, active: item.provisional_after_result === '2' },
+      { label: '融資実行済み', value: '3', enable: false, active: item.provisional_after_result === '3' },
+      { label: '他行借入', value: '4', enable: false, active: item.provisional_after_result === '4' },
+      { label: '自宅購入取止め', value: '5', enable: false, active: item.provisional_after_result === '5' },
     ];
     return basicList;
   }, []);

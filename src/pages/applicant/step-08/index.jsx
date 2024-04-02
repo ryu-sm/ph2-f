@@ -1,7 +1,7 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { Fragment, useCallback, useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { applicationAtom, authAtom } from '@/store';
+import { Fragment, useEffect, useMemo } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authAtom, localApplication } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { validationSchema } from './validationSchema';
 import {
@@ -43,31 +43,27 @@ import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '@/assets';
 import { cloneDeep } from 'lodash';
-import { useApUpdateApplyInfo, useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
-import { apPborrowings } from '@/services';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
+import { apGetPborrowingsFiles } from '@/services';
 
 export const ApStep08Page = () => {
+  const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
-  const setApplicationInfo = useSetRecoilState(applicationAtom);
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
+
+  const { agentSended, user } = useRecoilValue(authAtom);
   const updateModal = useBoolean(false);
-  const {
-    isMCJ,
-    apNextStepId,
-    apPreStepId,
-    hasIncomeTotalizer,
-    //
-    p_application_headers,
-    p_borrowings,
-  } = useRecoilValue(applicationAtom);
-  const updateApply = useApUpdateApplyInfo();
+
+  const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const { isMCJ, apNextStepId, apPreStepId, hasIncomeTotalizer, p_application_headers, p_borrowings } =
+    localApplicationInfo;
+
   const setLocalData = (values) => {
-    setApplicationInfo((pre) => {
+    setLocalApplicationInfo((pre) => {
       return {
         ...pre,
         p_application_headers: {
@@ -108,6 +104,9 @@ export const ApStep08Page = () => {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
         curr_borrowing_status: values.p_application_headers.curr_borrowing_status,
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
       p_borrowings: values.p_borrowings,
     };
@@ -119,7 +118,7 @@ export const ApStep08Page = () => {
     onSubmit: async (values) => {
       try {
         if (agentSended) {
-          await updateApply(applyNo, setUpdateData(values));
+          await updateSendedInfo(setUpdateData(values));
           updateModal.onTrue();
         } else {
           setLocalData(values);
@@ -130,31 +129,6 @@ export const ApStep08Page = () => {
       }
     },
   });
-
-  const sendedFile = useCallback(async () => {
-    if (formik.values.p_borrowings?.length === 0) return;
-    if (agentSended) {
-      try {
-        const res = await apPborrowings(applyNo);
-        const temp = formik.values.p_borrowings.map((item) => {
-          const sendedData = res.data.find((sended) => sended.id === item.id);
-          if (sendedData) {
-            return { ...item, p_borrowings__I: sendedData?.p_borrowings__I };
-          } else {
-            return item;
-          }
-        });
-
-        formik.setFieldValue('p_borrowings', temp);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  });
-
-  useEffect(() => {
-    sendedFile();
-  }, [agentSended, applyNo, formik.values.p_borrowings?.length]);
 
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
@@ -172,9 +146,29 @@ export const ApStep08Page = () => {
     }
   };
 
+  const fetchPborrowingsFiles = async () => {
+    try {
+      const res = await apGetPborrowingsFiles(user.id);
+      const temp = formik.values.p_borrowings.map((item) => {
+        const files = res.data.find((i) => i.borrowing_id == item.id);
+        if (files) {
+          return { ...item, I: files?.I };
+        } else {
+          return item;
+        }
+      });
+      formik.setFieldValue('p_borrowings', temp);
+      console.log(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
   useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
+    if (agentSended) {
+      fetchPborrowingsFiles();
+    }
+  }, []);
 
   return (
     <FormikProvider value={formik}>
@@ -185,7 +179,12 @@ export const ApStep08Page = () => {
         bottomContent={
           <>
             <ApSaveDraftButton pageInfo={parseVaildData} />
-            <ApStepFooter left={handelLeft} right={formik.handleSubmit} rightLabel={agentSended && '保存'} />
+            <ApStepFooter
+              left={handelLeft}
+              right={formik.handleSubmit}
+              rightLabel={agentSended && '保存'}
+              rightDisable={formik.isSubmitting}
+            />
           </>
         }
       >
@@ -205,7 +204,7 @@ export const ApStep08Page = () => {
                     tempPborrowings = [
                       {
                         id: '',
-                        p_borrowings__I: [],
+                        I: [],
                         self_input: '0',
                         borrower: hasIncomeTotalizer ? '' : '1',
                         type: '',
@@ -232,7 +231,47 @@ export const ApStep08Page = () => {
                   }
 
                   formik.setFieldValue('p_borrowings', tempPborrowings);
+                  formik.setFieldValue(
+                    'p_application_headers.refund_source_type',
+                    p_application_headers.refund_source_type
+                  );
+                  formik.setFieldValue(
+                    'p_application_headers.refund_source_type_other',
+                    p_application_headers.refund_source_type_other
+                  );
+                  formik.setFieldValue(
+                    'p_application_headers.refund_source_content',
+                    p_application_headers.refund_source_content
+                  );
+                  formik.setFieldValue(
+                    'p_application_headers.refund_source_amount',
+                    p_application_headers.refund_source_amount
+                  );
+                  formik.setFieldValue(
+                    'p_application_headers.rent_to_be_paid_land',
+                    p_application_headers.rent_to_be_paid_land
+                  );
+                  formik.setFieldValue(
+                    'p_application_headers.rent_to_be_paid_land_borrower',
+                    p_application_headers.rent_to_be_paid_land_borrower
+                  );
+                  formik.setFieldValue(
+                    'p_application_headers.rent_to_be_paid_house',
+                    p_application_headers.rent_to_be_paid_house
+                  );
+                  formik.setFieldValue(
+                    'p_application_headers.rent_to_be_paid_house_borrower',
+                    p_application_headers.rent_to_be_paid_house_borrower
+                  );
                 } else {
+                  formik.setFieldValue('p_application_headers.refund_source_type', []);
+                  formik.setFieldValue('p_application_headers.refund_source_type_other', '');
+                  formik.setFieldValue('p_application_headers.refund_source_content', '');
+                  formik.setFieldValue('p_application_headers.refund_source_amount', '');
+                  formik.setFieldValue('p_application_headers.rent_to_be_paid_land', '');
+                  formik.setFieldValue('p_application_headers.rent_to_be_paid_land_borrower', '');
+                  formik.setFieldValue('p_application_headers.rent_to_be_paid_house', '');
+                  formik.setFieldValue('p_application_headers.rent_to_be_paid_house_borrower', '');
                   formik.setFieldValue('p_borrowings', []);
                 }
               }}
@@ -309,7 +348,7 @@ export const ApStep08Page = () => {
                                   if (formik.values.p_borrowings[index].type !== '')
                                     arrayHelpers.replace(index, {
                                       id: p_borrowing.id,
-                                      p_borrowings__I: p_borrowing.p_borrowings__I,
+                                      I: p_borrowing.I,
                                       self_input: '0',
                                       borrower: p_borrowing.borrower,
                                       type: e.target.value,
@@ -345,7 +384,7 @@ export const ApStep08Page = () => {
                               px={2}
                             >
                               <Stack spacing={3}>
-                                <ApImgUpload name={`p_borrowings[${index}].p_borrowings__I`} />
+                                <ApImgUpload name={`p_borrowings[${index}].I`} />
                                 <ApCheckox
                                   name={`p_borrowings[${index}].self_input`}
                                   label={'アップロードせず、詳細入力する'}
@@ -564,7 +603,7 @@ export const ApStep08Page = () => {
                           onClick={() => {
                             arrayHelpers.push({
                               id: '',
-                              p_borrowings__I: [],
+                              I: [],
                               self_input: '0',
                               borrower: '',
                               type: '',
