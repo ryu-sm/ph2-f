@@ -13,26 +13,24 @@ export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, ...props 
   const [field, meta, helpers] = useField(props);
   const [searchText, setSearchText] = useState('');
 
-  const { setValue, setTouched } = helpers;
+  const { setValue } = helpers;
   const handleChange = useCallback(
     async (value) => {
       props.onChange && props.onChange(value);
       if (cancelable && value === meta.value) {
         await setValue('');
-        return;
+      } else {
+        await setValue(value);
       }
-      setValue(value);
     },
     [props, setValue, cancelable, meta.value]
   );
   const handlePopoverOpen = (e) => {
     setAnchorEl(e.currentTarget);
-    setTouched(false);
     setSearchText('');
   };
   const handlePopoverClose = () => {
     setAnchorEl(null);
-    setTouched(true);
   };
 
   const { anchorOrigin, transformOrigin, updatePopoverPosition } = usePopoverPositionByClick();
@@ -107,7 +105,7 @@ export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, ...props 
                 cursor: 'pointer',
                 borderBottom: (theme) => `1px solid ${theme.palette.gray[80]}`,
               }}
-              onClick={handlePopoverClose}
+              // onClick={handlePopoverClose}
             >
               <AdArrowUp sx={{ width: 8, height: 8, color: 'gray.80' }} />
             </Stack>

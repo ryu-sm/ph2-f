@@ -59,45 +59,28 @@ export const Item09 = () => {
 
   const setUpdateData = (values) => {
     const diffData = {
+      p_applicant_persons__1: {
+        ...diffObj(initialValues.p_applicant_persons__1, values.p_applicant_persons__1),
+      },
       ...(changeToIncomeTotalizer && {
         p_application_headers: {
-          created_at: p_application_headers?.created_at,
-          apply_date: p_application_headers?.apply_date,
-          move_scheduled_date: p_application_headers?.move_scheduled_date,
-          loan_target: p_application_headers?.loan_target,
-          land_advance_plan: p_application_headers?.land_advance_plan,
-          loan_type: p_application_headers?.loan_type,
-          pair_loan_last_name: p_application_headers?.pair_loan_last_name,
-          pair_loan_first_name: p_application_headers?.pair_loan_first_name,
-          pair_loan_rel_name: p_application_headers?.pair_loan_rel_name,
-          pair_loan_rel: p_application_headers?.pair_loan_rel,
-          join_guarantor_umu: p_application_headers?.join_guarantor_umu,
-          loan_plus: p_application_headers?.loan_plus,
+          ...p_application_headers,
         },
-        p_application_banks,
+        p_application_banks: p_application_banks,
         p_borrowing_details__1: {
-          desired_borrowing_date: p_borrowing_details__1?.desired_borrowing_date,
-          desired_loan_amount: p_borrowing_details__1?.desired_loan_amount,
-          bonus_repayment_amount: p_borrowing_details__1?.bonus_repayment_amount,
-          bonus_repayment_month: p_borrowing_details__1?.bonus_repayment_month,
-          loan_term_year: p_borrowing_details__1?.loan_term_year,
-          repayment_method: p_borrowing_details__1?.repayment_method,
+          ...p_borrowing_details__1,
         },
         p_borrowing_details__2: {
-          desired_borrowing_date: p_borrowing_details__2?.desired_borrowing_date,
-          desired_loan_amount: p_borrowing_details__2?.desired_loan_amount,
-          bonus_repayment_amount: p_borrowing_details__2?.bonus_repayment_amount,
+          ...p_borrowing_details__2,
         },
         p_applicant_persons__1: {
           ...preliminarySnap.p_applicant_persons__1,
+          ...diffObj(initialValues.p_applicant_persons__1, values.p_applicant_persons__1),
         },
       }),
       ...(changeJoinGuarantor && {
         p_join_guarantors: p_join_guarantors,
       }),
-      p_applicant_persons__1: {
-        ...diffObj(initialValues.p_applicant_persons__1, values.p_applicant_persons__1),
-      },
     };
     return diffData;
   };

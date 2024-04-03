@@ -180,11 +180,6 @@ export const AdPhoneInputField = ({ label, showError, ...props }) => {
       >
         <input name={field.name} type="hidden" />
         <Stack spacing={2} direction={'row'} alignItems={'flex-start'}>
-          {label && (
-            <Typography variant="unit" color={'text.main'} lineHeight={'48px'}>
-              {label}
-            </Typography>
-          )}
           <Stack spacing={'2px'}>
             <Stack spacing={'3px'} direction={'row'} alignItems={'center'}>
               {phoneInputs.map((input, index) => (
@@ -244,13 +239,15 @@ export const AdPhoneInputField = ({ label, showError, ...props }) => {
                 </Stack>
               ))}
             </Stack>
-            {isError && (
-              <Typography variant="note" sx={{ fontWeight: 500, color: (theme) => theme.palette.secondary.main }}>
-                ※{meta.error}
-              </Typography>
-            )}
           </Stack>
         </Stack>
+        {isError && (
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+            <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
+              {meta.error}
+            </Typography>
+          </Stack>
+        )}
       </Stack>
     </FormikProvider>
   );

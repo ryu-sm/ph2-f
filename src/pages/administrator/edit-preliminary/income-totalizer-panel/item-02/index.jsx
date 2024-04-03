@@ -72,8 +72,8 @@ export const Item02 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab02SchemaI,
-    validateOnMount: changeToIncomeTotalizer,
-    enableReinitialize: !changeToIncomeTotalizer,
+    // validateOnMount: changeToIncomeTotalizer,
+    // enableReinitialize: true,
     onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
         setInfoGroupTab(3);
@@ -93,6 +93,11 @@ export const Item02 = () => {
         },
       };
     });
+  }, [formik.values]);
+
+  useEffect(() => {
+    formik.validateForm();
+    console.log(formik.values);
   }, [formik.values]);
 
   return (

@@ -37,14 +37,14 @@ import { diffObj } from '@/utils';
 import { PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
-import { tab03Schema, tab03SchemaI } from '../../fullSchema';
+import { tab03SchemaI } from '../../fullSchema';
 import { useSetRecoilState } from 'recoil';
 import { infoGroupTabAtom } from '@/store';
 
 export const Item03 = () => {
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const {
-    preliminaryInfo: { p_application_headers, p_applicant_persons__1 },
+    preliminaryInfo: { p_applicant_persons__1, p_borrowing_details__1 },
     preliminarySnap: { isMCJ, changeToIncomeTotalizer },
     setPreliminarySnap,
     handleSave,
@@ -103,15 +103,15 @@ export const Item03 = () => {
       main_income_source: p_applicant_persons__1?.main_income_source,
       before_last_year_income: p_applicant_persons__1?.before_last_year_income,
     },
+    p_borrowing_details__1: {
+      desired_borrowing_date: p_borrowing_details__1?.desired_borrowing_date,
+    },
   };
 
   const setUpdateData = (values) => {
     const diffData = {
       p_applicant_persons__1: {
         ...diffObj(initialValues.p_applicant_persons__1, values.p_applicant_persons__1),
-      },
-      p_application_headers: {
-        loan_type: p_application_headers?.loan_type,
       },
     };
     return diffData;
@@ -141,6 +141,11 @@ export const Item03 = () => {
         },
       };
     });
+  }, [formik.values]);
+
+  useEffect(() => {
+    formik.validateForm();
+    console.log(formik.values);
   }, [formik.values]);
 
   return (
@@ -966,6 +971,8 @@ export const Item03 = () => {
                 onChange={() => {
                   formik.setFieldValue('p_applicant_persons__1.maternity_paternity_leave_start_date', '');
                   formik.setFieldValue('p_applicant_persons__1.maternity_paternity_leave_end_date', '');
+                  formik.setFieldTouched('p_applicant_persons__1.maternity_paternity_leave_start_date', true);
+                  formik.setFieldTouched('p_applicant_persons__1.maternity_paternity_leave_end_date', true);
                 }}
               />
             ) : (
@@ -975,69 +982,75 @@ export const Item03 = () => {
             )
           }
         />
-        <EditRow
-          label={'取得開始時期'}
-          upConfig={{
-            key: `p_applicant_persons.maternity_paternity_leave_start_date.${p_applicant_persons__1?.id}`,
-            formatJaDate: true,
-          }}
-          hasPleft={isEditable}
-          isLogicRequired
-          field={
-            isEditable ? (
-              <MonthPicker
-                name="p_applicant_persons__1.maternity_paternity_leave_start_date"
-                yearOptions={
-                  formik.values.p_applicant_persons__1.maternity_paternity_leave === '1'
-                    ? leaveStatusUpYearOptions
-                    : leaveStatusDownYearOptions
-                }
-              />
-            ) : (
-              formatJapanDate(formik.values.p_applicant_persons__1.maternity_paternity_leave_start_date, true)
-            )
-          }
-        />
-        <EditRow
-          label={'取得終了時期'}
-          upConfig={{
-            key: `p_applicant_persons.maternity_paternity_leave_end_date.${p_applicant_persons__1?.id}`,
-            formatJaDate: true,
-          }}
-          isLogicRequired
-          hasPleft={isEditable}
-          field={
-            isEditable ? (
-              <MonthPicker
-                name="p_applicant_persons__1.maternity_paternity_leave_end_date"
-                yearOptions={
-                  formik.values.p_applicant_persons__1.maternity_paternity_leave === '1' ||
-                  formik.values.p_applicant_persons__1.maternity_paternity_leave === '2'
-                    ? leaveStatusUpYearOptions
-                    : leaveStatusDownYearOptions
-                }
-              />
-            ) : (
-              formatJapanDate(formik.values.p_applicant_persons__1.maternity_paternity_leave_end_date, true)
-            )
-          }
-        />
-        <EditRow
-          label={'介護休暇の取得状況'}
-          upConfig={{
-            key: `p_applicant_persons.nursing_leave.${p_applicant_persons__1?.id}`,
-            options: nursingLeaveOptions,
-          }}
-          hasPleft={isEditable}
-          field={
-            isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__1.nursing_leave" options={nursingLeaveOptions} cancelable />
-            ) : (
-              nursingLeaveOptions.find((item) => item.value === formik.values.p_applicant_persons__1.nursing_leave)
-                ?.label
-            )
-          }
-        />
+        {formik.values.p_applicant_persons__1.maternity_paternity_leave && (
+          <Stack>
+            <EditRow
+              label={'取得開始時期'}
+              upConfig={{
+                key: `p_applicant_persons.maternity_paternity_leave_start_date.${p_applicant_persons__1?.id}`,
+                formatJaDate: true,
+              }}
+              hasPleft={isEditable}
+              isLogicRequired
+              field={
+                isEditable ? (
+                  <MonthPicker
+                    name="p_applicant_persons__1.maternity_paternity_leave_start_date"
+                    yearOptions={
+                      formik.values.p_applicant_persons__1.maternity_paternity_leave === '1'
+                        ? leaveStatusUpYearOptions
+                        : leaveStatusDownYearOptions
+                    }
+                  />
+                ) : (
+                  formatJapanDate(formik.values.p_applicant_persons__1.maternity_paternity_leave_start_date, true)
+                )
+              }
+            />
+            <EditRow
+              label={'取得終了時期'}
+              upConfig={{
+                key: `p_applicant_persons.maternity_paternity_leave_end_date.${p_applicant_persons__1?.id}`,
+                formatJaDate: true,
+              }}
+              isLogicRequired
+              hasPleft={isEditable}
+              field={
+                isEditable ? (
+                  <MonthPicker
+                    name="p_applicant_persons__1.maternity_paternity_leave_end_date"
+                    yearOptions={
+                      formik.values.p_applicant_persons__1.maternity_paternity_leave === '1' ||
+                      formik.values.p_applicant_persons__1.maternity_paternity_leave === '2'
+                        ? leaveStatusUpYearOptions
+                        : leaveStatusDownYearOptions
+                    }
+                  />
+                ) : (
+                  formatJapanDate(formik.values.p_applicant_persons__1.maternity_paternity_leave_end_date, true)
+                )
+              }
+            />
+          </Stack>
+        )}
+        {isMCJ && (
+          <EditRow
+            label={'介護休暇の取得状況'}
+            upConfig={{
+              key: `p_applicant_persons.nursing_leave.${p_applicant_persons__1?.id}`,
+              options: nursingLeaveOptions,
+            }}
+            hasPleft={isEditable}
+            field={
+              isEditable ? (
+                <AdSelectRadios name="p_applicant_persons__1.nursing_leave" options={nursingLeaveOptions} cancelable />
+              ) : (
+                nursingLeaveOptions.find((item) => item.value === formik.values.p_applicant_persons__1.nursing_leave)
+                  ?.label
+              )
+            }
+          />
+        )}
       </ContentEditGroup>
     </FormikProvider>
   );

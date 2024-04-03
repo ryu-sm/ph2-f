@@ -61,6 +61,7 @@ export const EditTabs = ({}) => {
     if (checkUpdate()) {
       setTempTab(id);
       changeTab.onTrue();
+      return;
     } else {
       if ((id === 3 || id === 1) && byPairLoan) {
         setPreliminaryId(p_application_headers.pair_loan_id);

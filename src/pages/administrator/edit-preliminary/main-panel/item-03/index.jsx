@@ -41,7 +41,7 @@ import { tab03Schema } from '../../fullSchema';
 
 export const Item03 = () => {
   const {
-    preliminaryInfo: { p_applicant_persons__0 },
+    preliminaryInfo: { p_applicant_persons__0, p_borrowing_details__1 },
     preliminarySnap: { isMCJ },
     setPreliminarySnap,
     handleSave,
@@ -100,6 +100,9 @@ export const Item03 = () => {
       main_income_source: p_applicant_persons__0?.main_income_source,
       before_last_year_income: p_applicant_persons__0?.before_last_year_income,
     },
+    p_borrowing_details__1: {
+      desired_borrowing_date: p_borrowing_details__1?.desired_borrowing_date,
+    },
   };
 
   const setUpdateData = (values) => {
@@ -133,7 +136,12 @@ export const Item03 = () => {
   }, [formik.values]);
 
   useEffect(() => {
-    console.log(999, formik.values.p_applicant_persons__0.office_establishment_date);
+    console.log(formik.errors);
+  }, [formik.errors]);
+
+  useEffect(() => {
+    formik.validateForm();
+    console.log(formik.values);
   }, [formik.values]);
 
   return (
@@ -970,6 +978,8 @@ export const Item03 = () => {
                 onChange={() => {
                   formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_start_date', '');
                   formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_end_date', '');
+                  formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', true);
+                  formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', true);
                 }}
               />
             ) : (
