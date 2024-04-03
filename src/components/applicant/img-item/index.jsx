@@ -17,7 +17,7 @@ export const ApImgItem = ({ files }) => {
                 p: 0,
                 borderRadius: 1,
               }}
-              onClick={(e) => handleViewImage(isPdf, index)}
+              // onClick={(e) => handleViewImage(isPdf, index)}
             >
               {isPdf ? (
                 <Avatar

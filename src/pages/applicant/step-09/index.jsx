@@ -22,6 +22,7 @@ import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
+import { adSalesPersonResetPasswordVerifyEmail } from '@/services';
 
 export const ApStep09Page = () => {
   const { updateSendedInfo } = useApplicationContext();
@@ -103,6 +104,7 @@ export const ApStep09Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
+          console.log('debug', values);
           navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
@@ -160,6 +162,9 @@ export const ApStep09Page = () => {
     formik.values.p_application_headers.funding_other_saving_amount,
   ]);
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
