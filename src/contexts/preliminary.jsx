@@ -159,7 +159,7 @@ export const PreliminaryProvider = ({ children }) => {
         return false;
       } else {
         const upList = upDbData.filter((item) => !item.path.includes('src'));
-        return upList > 0;
+        return upList.length > 0;
       }
     } catch (error) {
       toast.error(API_500_ERROR);
