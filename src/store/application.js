@@ -387,7 +387,6 @@ const localApplicationEffect =
                 F__02: [],
                 F__03: [],
                 K: [],
-                // STEP13
                 S: [],
               },
               p_applicant_persons__1: {

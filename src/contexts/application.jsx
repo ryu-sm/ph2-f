@@ -90,6 +90,7 @@ export const ApplicationProvider = ({ children }) => {
         localApplicationInfo: localApplicationInfo,
         updateSendedInfo: updateSendedInfo,
         refreshsendedApllication: refreshsendedApllication,
+        dbData: result.state === 'hasValue' ? result.contents : null,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import { ApLayout, ApStepFooter } from '@/containers';
-import { Fragment, useMemo } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { authAtom, localApplication } from '@/store';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
@@ -113,6 +113,18 @@ export const ApStep06Page = () => {
       navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
+
+  const { dbData } = useApplicationContext();
+
+  useEffect(() => {
+    if (agentSended && dbData) {
+      const newData = {
+        ...formik.values,
+        p_join_guarantors: dbData?.p_join_guarantors,
+      };
+      formik.setValues(newData);
+    }
+  }, [dbData]);
 
   return (
     <FormikProvider value={formik}>

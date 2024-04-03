@@ -201,6 +201,39 @@ export const ApStep04Page = () => {
     }
   }, []);
 
+  const { dbData } = useApplicationContext();
+
+  useEffect(() => {
+    if (agentSended && dbData) {
+      const newData = {
+        ...formik.values,
+        p_applicant_persons__1: {
+          last_name_kanji: dbData?.p_applicant_persons__1?.last_name_kanji,
+          first_name_kanji: dbData?.p_applicant_persons__1?.first_name_kanji,
+          last_name_kana: dbData?.p_applicant_persons__1?.last_name_kana,
+          first_name_kana: dbData?.p_applicant_persons__1?.first_name_kana,
+          gender: dbData?.p_applicant_persons__1?.gender,
+          birthday: dbData?.p_applicant_persons__1?.birthday,
+          nationality: dbData?.p_applicant_persons__1?.nationality,
+          mobile_phone: dbData?.p_applicant_persons__1?.mobile_phone,
+          home_phone: dbData?.p_applicant_persons__1?.home_phone,
+          postal_code: dbData?.p_applicant_persons__1?.postal_code,
+          prefecture_kanji: dbData?.p_applicant_persons__1?.prefecture_kanji,
+          city_kanji: dbData?.p_applicant_persons__1?.city_kanji,
+          district_kanji: dbData?.p_applicant_persons__1?.district_kanji,
+          other_address_kanji: dbData?.p_applicant_persons__1?.other_address_kanji,
+          prefecture_kana: dbData?.p_applicant_persons__1?.prefecture_kana,
+          city_kana: dbData?.p_applicant_persons__1?.city_kana,
+          district_kana: dbData?.p_applicant_persons__1?.district_kana,
+          rel_to_applicant_a_name: dbData?.p_applicant_persons__1?.rel_to_applicant_a_name,
+          H__a: dbData?.p_applicant_persons__1?.H__a,
+          H__b: dbData?.p_applicant_persons__1?.H__b,
+        },
+      };
+      formik.setValues(newData);
+    }
+  }, [dbData]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

@@ -254,6 +254,42 @@ export const ApStep01Page = () => {
     }
   }, [p_application_banks, p_application_headers.loan_type, p_application_headers.join_guarantor_umu, bankMaster]);
 
+  const { dbData } = useApplicationContext();
+
+  useEffect(() => {
+    if (agentSended && dbData) {
+      const newData = {
+        p_application_headers: {
+          move_scheduled_date: dbData?.p_application_headers?.move_scheduled_date,
+          loan_target: dbData?.p_application_headers?.loan_target,
+          loan_target_type: dbData?.p_application_headers?.loan_target_type,
+          land_advance_plan: dbData?.p_application_headers?.land_advance_plan,
+          loan_type: dbData?.p_application_headers?.loan_type,
+          pair_loan_last_name: dbData?.p_application_headers?.pair_loan_last_name,
+          pair_loan_first_name: dbData?.p_application_headers?.pair_loan_first_name,
+          pair_loan_rel_name: dbData?.p_application_headers?.pair_loan_rel_name,
+          join_guarantor_umu: dbData?.p_application_headers?.join_guarantor_umu,
+          loan_plus: dbData?.p_application_headers?.loan_plus,
+        },
+        p_application_banks: dbData?.p_application_banks,
+        p_borrowing_details__1: {
+          desired_borrowing_date: dbData?.p_borrowing_details__1?.desired_borrowing_date,
+          desired_loan_amount: dbData?.p_borrowing_details__1?.desired_loan_amount,
+          bonus_repayment_amount: dbData?.p_borrowing_details__1?.bonus_repayment_amount,
+          bonus_repayment_month: dbData?.p_borrowing_details__1?.bonus_repayment_month,
+          loan_term_year: dbData?.p_borrowing_details__1?.loan_term_year,
+          repayment_method: dbData?.p_borrowing_details__1?.repayment_method,
+        },
+        p_borrowing_details__2: {
+          desired_borrowing_date: dbData?.p_borrowing_details__2?.desired_borrowing_date,
+          desired_loan_amount: dbData?.p_borrowing_details__2?.desired_loan_amount,
+          bonus_repayment_amount: dbData?.p_borrowing_details__2?.bonus_repayment_amount,
+        },
+      };
+      formik.setValues(newData);
+    }
+  }, [dbData]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

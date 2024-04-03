@@ -159,6 +159,38 @@ export const ApStep02Page = () => {
     }
   }, []);
 
+  const { dbData } = useApplicationContext();
+
+  useEffect(() => {
+    if (agentSended && dbData) {
+      const newData = {
+        p_applicant_persons__0: {
+          last_name_kanji: dbData?.p_applicant_persons__0?.last_name_kanji,
+          first_name_kanji: dbData?.p_applicant_persons__0?.first_name_kanji,
+          last_name_kana: dbData?.p_applicant_persons__0?.last_name_kana,
+          first_name_kana: dbData?.p_applicant_persons__0?.first_name_kana,
+          gender: dbData?.p_applicant_persons__0?.gender,
+          birthday: dbData?.p_applicant_persons__0?.birthday,
+          nationality: dbData?.p_applicant_persons__0?.nationality,
+          mobile_phone: dbData?.p_applicant_persons__0?.mobile_phone,
+          home_phone: dbData?.p_applicant_persons__0?.home_phone,
+          postal_code: dbData?.p_applicant_persons__0?.postal_code,
+          prefecture_kanji: dbData?.p_applicant_persons__0?.prefecture_kanji,
+          city_kanji: dbData?.p_applicant_persons__0?.city_kanji,
+          district_kanji: dbData?.p_applicant_persons__0?.district_kanji,
+          other_address_kanji: dbData?.p_applicant_persons__0?.other_address_kanji,
+          prefecture_kana: dbData?.p_applicant_persons__0?.prefecture_kana,
+          city_kana: dbData?.p_applicant_persons__0?.city_kana,
+          district_kana: dbData?.p_applicant_persons__0?.district_kana,
+          email: isSalesPerson ? dbData?.p_applicant_persons__0?.email : dbData?.p_applicant_persons__0?.email || email,
+          H__a: dbData?.p_applicant_persons__0?.H__a,
+          H__b: dbData?.p_applicant_persons__0?.H__b,
+        },
+      };
+      formik.setValues(newData);
+    }
+  }, [dbData]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

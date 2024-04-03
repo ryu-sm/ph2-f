@@ -166,6 +166,36 @@ export const ApStep09Page = () => {
   useEffect(() => {
     console.log(formik.values);
   }, [formik.values]);
+
+  const { dbData } = useApplicationContext();
+
+  useEffect(() => {
+    if (agentSended && dbData) {
+      const newData = {
+        p_application_headers: {
+          required_funds_land_amount: dbData?.p_application_headers?.required_funds_land_amount,
+          required_funds_house_amount: dbData?.p_application_headers?.required_funds_house_amount,
+          required_funds_accessory_amount: dbData?.p_application_headers?.required_funds_accessory_amount,
+          required_funds_additional_amount: dbData?.p_application_headers?.required_funds_additional_amount,
+          required_funds_refinance_loan_balance: dbData?.p_application_headers?.required_funds_refinance_loan_balance,
+          required_funds_upgrade_amount: dbData?.p_application_headers?.required_funds_upgrade_amount,
+          required_funds_loan_plus_amount: dbData?.p_application_headers?.required_funds_loan_plus_amount,
+          required_funds_total_amount: dbData?.p_application_headers?.required_funds_total_amount,
+          funding_saving_amount: dbData?.p_application_headers?.funding_saving_amount,
+          funding_estate_sale_amount: dbData?.p_application_headers?.funding_estate_sale_amount,
+          funding_self_amount: dbData?.p_application_headers?.funding_self_amount,
+          funding_other_saving_amount: dbData?.p_application_headers?.funding_other_saving_amount,
+          funding_relative_donation_amount: dbData?.p_application_headers?.funding_relative_donation_amount,
+          funding_loan_amount: dbData?.p_application_headers?.funding_loan_amount,
+          funding_pair_loan_amount: dbData?.p_application_headers?.funding_pair_loan_amount,
+          funding_other_amount: dbData?.p_application_headers?.funding_other_amount,
+          funding_other_amount_detail: dbData?.p_application_headers?.funding_other_amount_detail,
+          funding_total_amount: dbData?.p_application_headers?.funding_total_amount,
+        },
+      };
+      formik.setValues(newData);
+    }
+  }, [dbData]);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
