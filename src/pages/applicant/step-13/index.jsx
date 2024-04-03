@@ -131,6 +131,7 @@ export const ApStep13Page = () => {
           showError.onTrue();
           return;
         }
+        console.log(88888, localApplicationInfo.p_application_headers.funding_self_amount);
         const sendRes = await apAgentSend({
           ...localApplicationInfo,
           p_applicant_persons__0: {

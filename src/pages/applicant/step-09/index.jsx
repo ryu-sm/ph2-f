@@ -57,6 +57,7 @@ export const ApStep09Page = () => {
           funding_other_amount: values.p_application_headers.funding_other_amount,
           funding_other_amount_detail: values.p_application_headers.funding_other_amount_detail,
           funding_total_amount: values.p_application_headers.funding_total_amount,
+          funding_self_amount: values.p_application_headers.funding_self_amount,
         },
       };
     });
