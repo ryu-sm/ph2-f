@@ -22,8 +22,8 @@ import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { UpAfterResultModal } from './after-result-modal';
-import { dashboardTabStatusAtom, editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { dashboardTabStatusAtom, editMainTabStatusAtom, infoGroupTabAtom, preliminarySelect } from '@/store';
+import { useRecoilRefresher_UNSTABLE, useRecoilValue, useSetRecoilState } from 'recoil';
 import { API_500_ERROR } from '@/constant';
 
 export const AdCaseItem = ({ item }) => {
@@ -59,6 +59,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const refreshPreliminary = useRecoilRefresher_UNSTABLE(preliminarySelect);
   const { refreshPreliminarieList } = useDashboardContext();
   const navigator = useNavigate();
   const pairLoanModal = useBoolean(false);
@@ -93,6 +94,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       onClick: () => {
         setMainTabStatus(1);
         setInfoGroupTab(1);
+        refreshPreliminary();
         navigator(`${routeNames.adManagerEditPreliminaryPage.path}?id=${item.id}`);
       },
     },

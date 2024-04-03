@@ -17,8 +17,8 @@ import { toast } from 'react-toastify';
 import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
-import { authAtom, editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { authAtom, editMainTabStatusAtom, infoGroupTabAtom, preliminarySelect } from '@/store';
+import { useRecoilRefresher_UNSTABLE, useRecoilValue, useSetRecoilState } from 'recoil';
 import { API_500_ERROR } from '@/constant';
 
 export const SpCaseItem = ({ item }) => {
@@ -53,6 +53,7 @@ export const SpCaseItem = ({ item }) => {
 const CaseItem = ({ item, isPairLoan, index }) => {
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const refreshPreliminary = useRecoilRefresher_UNSTABLE(preliminarySelect);
   const {
     salesPerson: { orgs },
   } = useRecoilValue(authAtom);
@@ -87,6 +88,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       onClick: () => {
         setMainTabStatus(1);
         setInfoGroupTab(1);
+        refreshPreliminary();
         navigator(`${routeNames.adSalesPersonEditPreliminaryPage.path}?id=${item.id}`);
       },
     },
