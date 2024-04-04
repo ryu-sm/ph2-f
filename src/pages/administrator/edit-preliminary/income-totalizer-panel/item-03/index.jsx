@@ -806,6 +806,24 @@ export const Item03 = () => {
                     formik.setFieldValue('p_applicant_persons__1.transfer_office_city_kanji', '');
                     formik.setFieldValue('p_applicant_persons__1.transfer_office_district_kanji', '');
                     formik.setFieldValue('p_applicant_persons__1.transfer_office_other_address_kanji', '');
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_name_kanji', false);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_name_kana', false);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_phone', false);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_postal_code', false);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_prefecture_kanji', false);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_city_kanji', false);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_district_kanji', false);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_other_address_kanji', false);
+                  }
+                  if (value === '1') {
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_name_kanji', true);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_name_kana', true);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_phone', true);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_postal_code', true);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_prefecture_kanji', true);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_city_kanji', true);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_district_kanji', true);
+                    formik.setFieldTouched('p_applicant_persons__1.transfer_office_other_address_kanji', true);
                   }
                 }}
               />

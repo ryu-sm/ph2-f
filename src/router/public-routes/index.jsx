@@ -41,6 +41,7 @@ export const publicRoutes = [
     ...routeNames.apResetPasswordPage,
     Element: ApResetPasswordPage,
   },
+  // TODO
   {
     ...routeNames.adDocmentPdfPreviewPage,
     Element: PdfPreviewPage,

@@ -17,7 +17,7 @@ export const ApRepaymentMethodModal = () => {
           元利均等と元金均等の違い
         </Typography>
       </Stack>
-      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'元利均等と元金均等の違い'}>
+      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'元利均等と元金均等の違い'} maxWidth={744}>
         <Stack sx={{ overflowY: 'auto', maxHeight: '40vh', width: 1 }}>
           <Stack flex={1} sx={{ width: 1 }}>
             <ApItemGroup label={'元利均等返済'}>

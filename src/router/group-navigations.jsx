@@ -12,7 +12,7 @@ export const GroupNavigations = ({ group }) => {
   const { pathname } = useLocation();
   const searchParams = useCurrSearchParams();
 
-  if (!isLogined && group === 'applicant') {
+  if (!isLogined && group === 'applicant' && pathname !== routeNames.apUnsubcribedPage.path) {
     return <Navigate to={routeNames.apStartPage.path} replace />;
   }
   if (!isLogined && group === 'manager') {
@@ -25,7 +25,11 @@ export const GroupNavigations = ({ group }) => {
     return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
   }
   if (isLogined && !!user?.id) {
-    if (!applicantRoutes.find((item) => item?.path === pathname) && pathname !== routeNames.apLoginPage.path) {
+    if (
+      !applicantRoutes.find((item) => item?.path === pathname) &&
+      pathname !== routeNames.apLoginPage.path &&
+      pathname !== routeNames.apRegisterPage.path
+    ) {
       console.log(999);
       return <Navigate to={routeNames.apTopPage.path} replace />;
     }

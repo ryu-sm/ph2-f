@@ -15,7 +15,7 @@ export const ApPairLoanModal = () => {
           ペアローンとは？
         </Typography>
       </Stack>
-      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'ペアローンとは？'}>
+      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'ペアローンとは？'} maxWidth={744}>
         <Stack sx={{ overflowY: 'auto', maxHeight: '40vh', width: 1 }}>
           <Stack flex={1} sx={{ width: 1 }}>
             <Box sx={{ px: 6 }}>

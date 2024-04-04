@@ -82,7 +82,7 @@ export const ApMenu = ({ menu }) => {
     resetAuth();
     resetLocalApplicationInfo();
     clearStorage();
-    navigate(routeNames.apStartPage.path);
+    navigate(routeNames.apStartPage.path, { replace: true });
   };
 
   return (

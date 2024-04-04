@@ -16,7 +16,7 @@ export const ApLoanPlusModal = () => {
           住宅ローンプラスとは？
         </Typography>
       </Stack>
-      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'住宅ローンプラスとは'}>
+      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'住宅ローンプラスとは'} maxWidth={744}>
         <Stack sx={{ overflowY: 'auto', maxHeight: '40vh', width: 1 }}>
           <Stack flex={1} sx={{ width: 1 }}>
             <Box sx={{ px: 6, pb: 6 }}>

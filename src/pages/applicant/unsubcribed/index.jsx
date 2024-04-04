@@ -76,7 +76,7 @@ export const ApUnsubcribedPage = () => {
               height={40}
               width={160}
               endIcon={<Icons.ApForwardRightMainIcon />}
-              onClick={() => navigate(routeNames.apStartPage.path)}
+              onClick={() => navigate(routeNames.apStartPage.path, { replace: true })}
             >
               とじる
             </ApLighterButton>

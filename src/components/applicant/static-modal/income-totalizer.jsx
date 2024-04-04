@@ -15,7 +15,7 @@ export const ApIncomeTotalizerModal = () => {
           収入合算とは？
         </Typography>
       </Stack>
-      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'収入合算とは？'}>
+      <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={'収入合算とは？'} maxWidth={744}>
         <Stack sx={{ overflowY: 'auto', maxHeight: '40vh', width: 1 }}>
           <Stack flex={1} sx={{ width: 1 }}>
             <Box sx={{ px: 6 }}>
