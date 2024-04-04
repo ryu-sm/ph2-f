@@ -248,6 +248,7 @@ export const ApStep10Page = () => {
 
   useEffect(() => {
     if (agentSended && dbData) {
+      console.log(dbData);
       const newData = {
         p_applicant_persons__0: {
           identity_verification_type: dbData?.p_applicant_persons__0?.identity_verification_type,
