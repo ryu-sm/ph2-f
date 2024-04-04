@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react';
-import { useField } from 'formik';
-import { Stack, TextField, Typography } from '@mui/material';
-import { NumericFormat } from 'react-number-format';
 import { convertToHalfWidth } from '@/utils';
+import { Stack, TextField, Typography } from '@mui/material';
+import { useField } from 'formik';
+import { useCallback, useMemo } from 'react';
+import { NumberFormatInput } from '../number-format';
 export const ApNumberInputField = ({
   placeholder,
   label,
@@ -21,7 +21,7 @@ export const ApNumberInputField = ({
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const isSuccess = useMemo(() => !isError && !!meta.value && meta.value !== '', [isError, meta.value]);
 
-  const handelBlue = useCallback(
+  const handleBlur = useCallback(
     async (e) => {
       field.onBlur(e);
       props.onBlur && props.onBlur(e);
@@ -39,11 +39,12 @@ export const ApNumberInputField = ({
 
   const handleChange = useCallback(
     async (e) => {
-      e.target.value = e.target.value.replaceAll(',', '');
       props.onChange && props.onChange(e);
+      setValue(e.target.value);
     },
     [field, props, setValue]
   );
+
   return (
     <Stack spacing={'2px'}>
       {label && (
@@ -52,25 +53,15 @@ export const ApNumberInputField = ({
         </Typography>
       )}
       <Stack spacing={2} direction={'row'} alignItems={'center'}>
-        <NumericFormat
+        <TextField
           {...field}
           {...props}
-          customInput={TextField}
-          thousandSeparator={thousandSeparator}
-          autoComplete="off"
-          type="number"
-          placeholder={placeholder}
           value={meta.value}
+          autoComplete="off"
           name={field.name}
           error={isError}
+          placeholder={placeholder}
           sx={{
-            '& input[type="number"]': {
-              '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
-                '-webkit-appearance': 'none',
-                margin: 0,
-              },
-              '-moz-appearance': 'textfield',
-            },
             '& .MuiInputBase-input': {
               textAlign: align || 'right',
               width: width || 1,
@@ -82,17 +73,23 @@ export const ApNumberInputField = ({
               '&&&& fieldset': { border: 'none' },
             }),
           }}
+          InputProps={{
+            inputComponent: NumberFormatInput,
+            onBlur: handleBlur,
+            onFocus: handleFocus,
+            onChange: handleChange,
+          }}
+          inputProps={{
+            inputMode: 'numeric',
+          }}
           onInput={(e) => {
             e.target.value = convertToHalfWidth(e.target.value);
             e.target.value = e.target.value.replace(/[^\d]+/g, '');
             e.target.value = e.target.value.substring(0, maxLength);
             return e;
           }}
-          onBlur={handelBlue}
-          onFocus={handleFocus}
-          onChange={handleChange}
-          onValueChange={async (values) => await setValue(values.value)}
         />
+
         {typeof unit === 'string' ? (
           <Typography variant="unit" color={'text.main'} whiteSpace={'nowrap'}>
             {unit}
