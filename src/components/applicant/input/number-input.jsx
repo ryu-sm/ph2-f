@@ -3,7 +3,6 @@ import { useField } from 'formik';
 import { Stack, TextField, Typography } from '@mui/material';
 import { NumericFormat } from 'react-number-format';
 import { convertToHalfWidth } from '@/utils';
-
 export const ApNumberInputField = ({
   placeholder,
   label,
@@ -59,13 +58,23 @@ export const ApNumberInputField = ({
           customInput={TextField}
           thousandSeparator={thousandSeparator}
           autoComplete="off"
-          type="tel"
+          type="number"
           placeholder={placeholder}
           value={meta.value}
           name={field.name}
           error={isError}
           sx={{
-            '& .MuiInputBase-input': { textAlign: align || 'right', width: width || 1 },
+            '& input[type="number"]': {
+              '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
+                '-webkit-appearance': 'none',
+                margin: 0,
+              },
+              '-moz-appearance': 'textfield',
+            },
+            '& .MuiInputBase-input': {
+              textAlign: align || 'right',
+              width: width || 1,
+            },
             '&&&& fieldset': { border: '1px solid', borderColor: 'primary.40' },
             ...sx,
             ...(isSuccess && {
