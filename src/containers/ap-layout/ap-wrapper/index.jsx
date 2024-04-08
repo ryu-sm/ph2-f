@@ -1,6 +1,7 @@
 import { ApThemeProvider } from '@/styles';
 import { Container } from '@mui/material';
-import Scrollbars from 'react-custom-scrollbars';
+// import Scrollbars from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 export const ApWrapper = ({ children, bgImage, ...props }) => {
   return (

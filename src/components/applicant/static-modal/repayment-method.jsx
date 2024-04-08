@@ -5,7 +5,8 @@ import { ApModalWrapper } from '../modal-wrapper';
 import { useBoolean } from '@/hooks';
 import { ApLighterButton } from '../button';
 import { ApItemGroup } from '../item-group';
-import Scrollbars from 'react-custom-scrollbars';
+// import Scrollbars from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 export const ApRepaymentMethodModal = () => {
   const modal = useBoolean();
