@@ -2,18 +2,18 @@ import { Icons } from '@/assets';
 import { AdSettingPopover } from '@/containers/ad-layout/ad-main-wrapper/setting-popover';
 import { useBoolean, useIsManager } from '@/hooks';
 import { routeNames } from '@/router/settings';
-import { authAtom, dashboardTabStatusAtom, localApplication } from '@/store';
+import { authAtom, dashboardTabStatusAtom, localApplication, preliminarieListSelect } from '@/store';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import { useRecoilRefresher_UNSTABLE, useRecoilState, useResetRecoilState } from 'recoil';
 import { AdChangePasswordModal } from './chang-password';
 
 export const MainHeader = ({ leftContent, rightAddItems }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
+  const refreshPreliminarieList = useRecoilRefresher_UNSTABLE(preliminarieListSelect);
   const resetLocalApplicationInfo = useResetRecoilState(localApplication);
   const [authInfo, setAuthInfo] = useRecoilState(authAtom);
   const [dashboardTabStatus, setDashboardTabStatus] = useRecoilState(dashboardTabStatusAtom);
@@ -186,6 +186,7 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
             <Icons.AdHomeIcon
               sx={{ cursor: 'pointer', width: 17, height: 19 }}
               onClick={() => {
+                refreshPreliminarieList();
                 isManager
                   ? navigate(routeNames.adManagerDashboardPage.path)
                   : navigate(routeNames.adSalesPersonDashboardPage.path);
