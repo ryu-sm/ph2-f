@@ -12,7 +12,7 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
   const { refreshPreliminarieList } = useDashboardContext();
   const queryPairLoanOptions = useCallback(async () => {
     try {
-      const res = await adGetPairLoanOptions(id);
+      const res = await adGetPairLoanOptions(id, isPairLoan ? 1 : 0);
       setPairLoanOptions(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -20,9 +20,7 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
   }, [id]);
 
   useEffect(() => {
-    if (!isPairLoan) {
-      queryPairLoanOptions();
-    }
+    queryPairLoanOptions();
   }, [isPairLoan, id, isOpen]);
 
   const formik = useFormik({

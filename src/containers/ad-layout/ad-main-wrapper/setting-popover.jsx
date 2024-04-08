@@ -1,27 +1,32 @@
 import { Icons } from '@/assets';
-import { useIsManager } from '@/hooks';
+import { useBoolean, useIsManager } from '@/hooks';
 import { clearStorage } from '@/libs';
 import { routeNames } from '@/router/settings';
 import { adManagerLogou, adSalesPersonLogou } from '@/services';
 import { authAtom, preliminarieListAtom } from '@/store';
+import { downloadExcelAsync } from '@/utils';
 import { useTheme } from '@emotion/react';
 import { Box, Button, Popover, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useResetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { AdLogModal } from './download-modal';
 
 export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }) => {
   const navigate = useNavigate();
   const isManager = useIsManager();
   const resetAuth = useResetRecoilState(authAtom);
   const resetPreliminarieList = useResetRecoilState(preliminarieListAtom);
-
+  const { manager, salesPerson } = useRecoilValue(authAtom);
+  const logModal = useBoolean(false);
   const menuItems = [
     ...(isManager
       ? [
           {
             id: 1,
             label: '監視ログダウンロード',
-            onclick: () => {},
+            onclick: () => {
+              logModal.onTrue();
+            },
           },
         ]
       : []),
@@ -40,13 +45,13 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
       label: 'ログアウト',
       onclick: async () => {
         if (isManager) {
-          await adManagerLogou();
+          await adManagerLogou(manager?.email);
           resetAuth();
           resetPreliminarieList();
           clearStorage();
           navigate(routeNames.adManagerLoginPage.path);
         } else {
-          await adSalesPersonLogou();
+          await adSalesPersonLogou(salesPerson?.email);
           resetAuth();
           resetPreliminarieList();
           clearStorage();
@@ -64,6 +69,7 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
       onClose={onClose}
       sx={{ marginTop: 9, '.MuiPopover-paper': { overflow: 'visible', borderRadius: 2 } }}
     >
+      <AdLogModal open={logModal.value} onClose={logModal.onFalse} />
       <Box
         sx={{
           position: 'absolute',

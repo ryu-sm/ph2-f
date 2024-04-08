@@ -23,6 +23,7 @@ export const ApMenu = ({ menu }) => {
   const resetLocalApplicationInfo = useResetRecoilState(localApplication);
   const { p_application_banks } = useRecoilValue(localApplication);
   const displayPdf = useRecoilValue(displayPdfSelector);
+  const { user } = useRecoilValue(authAtom);
   const modal = useBoolean();
 
   const menuItems = useMemo(
@@ -80,7 +81,7 @@ export const ApMenu = ({ menu }) => {
   );
 
   const handelLogout = async () => {
-    await apLogou();
+    await apLogou(user?.email);
     resetAuth();
     resetLocalApplicationInfo();
     clearStorage();

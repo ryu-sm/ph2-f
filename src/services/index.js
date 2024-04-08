@@ -20,16 +20,16 @@ export const apLogin = async (data) => {
   return await service.post('/user/token', data);
 };
 
-export const apLogou = async () => {
-  return await service.delete('/user/token');
+export const apLogou = async (email) => {
+  return await service.delete(`/user/token?email=${email}`);
 };
 
-export const adManagerLogou = async () => {
-  return await service.delete('/manager/token');
+export const adManagerLogou = async (email) => {
+  return await service.delete(`/manager/token?email=${email}`);
 };
 
-export const adSalesPersonLogou = async () => {
-  return await service.delete('/sales-person/token');
+export const adSalesPersonLogou = async (email) => {
+  return await service.delete(`/sales-person/token?email=${email}`);
 };
 
 export const apResetPassword = async (data) => {
@@ -115,8 +115,8 @@ export const adSalesPersonPreliminaries = async (status) => {
   return await service.get(`/sales-person/preliminaries?status=${status}`);
 };
 
-export const adGetPairLoanOptions = async (p_application_header_id) => {
-  return await service.get(`/pair_loan_options?id=${p_application_header_id}`);
+export const adGetPairLoanOptions = async (p_application_header_id, is_seted) => {
+  return await service.get(`/pair_loan_options?id=${p_application_header_id}&is_seted=${is_seted}`);
 };
 
 export const adUnPairLoan = async (data) => {
@@ -176,7 +176,7 @@ export const adUpdatePreExaminationStatus = async (data) => {
 };
 
 export const adDeleteProvisionalResult = async (data) => {
-  return await service.patch(`/manager/provisional_result`, data);
+  return await service.post(`/manager/provisional_result`, data);
 };
 
 export const adAddArchiveFiles = async (data) => {
@@ -322,4 +322,21 @@ export const apGetPapplicantPersonsFiles = async (c_user_id, type) => {
 
 export const apGetPborrowingsFiles = async (c_user_id) => {
   return await service.get(`/p_borrowings/files?c_user_id=${c_user_id}`);
+};
+
+// c_access_logs
+
+export const apGetCaccessLogs = async (start, end) => {
+  if (start && end) {
+    return await service.get(`/c_access_logs?start=${start}&end=${end}`);
+  }
+  if (!start && end) {
+    return await service.get(`/c_access_logs?end=${end}`);
+  }
+  if (start && !end) {
+    return await service.get(`/c_access_logs?start=${start}`);
+  }
+  if (!start && !end) {
+    return await service.get(`/c_access_logs`);
+  }
 };

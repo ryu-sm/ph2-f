@@ -22,7 +22,10 @@ export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => 
   }, [value, activeValue]);
 
   const handleConfirm = async () => {
-    const res = await handleChangePreExaminationStatus(value === 3 && activeValue === 3 ? value - 1 : value);
+    const res = await handleChangePreExaminationStatus(
+      value === 3 && activeValue === 3 ? value - 1 : value,
+      value === 3 && activeValue === 3
+    );
     if (res.status === 400) {
       setErrors(res.data);
       return;
