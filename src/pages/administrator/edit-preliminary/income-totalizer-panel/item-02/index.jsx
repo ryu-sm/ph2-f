@@ -15,7 +15,7 @@ import { diffObj } from '@/utils';
 import { PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
-import { tab02Schema, tab02SchemaI } from '../../fullSchema';
+import { tab02SchemaI } from '../../fullSchema';
 import dayjs from 'dayjs';
 import { infoGroupTabAtom } from '@/store';
 import { useSetRecoilState } from 'recoil';

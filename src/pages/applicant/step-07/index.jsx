@@ -320,7 +320,7 @@ export const ApStep07Page = () => {
           property_region_type: dbData?.p_application_headers?.property_region_type,
           G: dbData?.p_application_headers?.G,
         },
-        p_residents: dbData?.p_residents,
+        p_residents: dbData?.p_residents ? dbData?.p_residents : [],
       };
       formik.setValues(newData);
     }

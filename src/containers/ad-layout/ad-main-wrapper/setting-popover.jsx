@@ -2,6 +2,7 @@ import { Icons } from '@/assets';
 import { useIsManager } from '@/hooks';
 import { clearStorage } from '@/libs';
 import { routeNames } from '@/router/settings';
+import { adManagerLogou, adSalesPersonLogou } from '@/services';
 import { authAtom, preliminarieListAtom } from '@/store';
 import { useTheme } from '@emotion/react';
 import { Box, Button, Popover, Stack, Typography } from '@mui/material';
@@ -37,13 +38,18 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
     {
       id: 4,
       label: 'ログアウト',
-      onclick: () => {
-        resetAuth();
-        resetPreliminarieList();
-        clearStorage();
+      onclick: async () => {
         if (isManager) {
+          await adManagerLogou();
+          resetAuth();
+          resetPreliminarieList();
+          clearStorage();
           navigate(routeNames.adManagerLoginPage.path);
         } else {
+          await adSalesPersonLogou();
+          resetAuth();
+          resetPreliminarieList();
+          clearStorage();
           navigate(routeNames.adSalesPersonLoginPage.path);
         }
       },

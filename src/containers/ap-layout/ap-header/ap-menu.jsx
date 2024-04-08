@@ -13,6 +13,7 @@ import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 import { ApModalWrapper, ApPrimaryButton, ApSecondaryButton } from '@/components';
 import { clearStorage } from '@/libs';
+import { apLogou } from '@/services';
 
 export const ApMenu = ({ menu }) => {
   const navigate = useNavigate();
@@ -78,7 +79,8 @@ export const ApMenu = ({ menu }) => {
     [applyNo, p_application_banks, preExaminationStatus, MCJ_CODE]
   );
 
-  const handelLogout = () => {
+  const handelLogout = async () => {
+    await apLogou();
     resetAuth();
     resetLocalApplicationInfo();
     clearStorage();

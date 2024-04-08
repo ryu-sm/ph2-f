@@ -3,7 +3,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
 import { formatJapanDate, formatMoney } from '@/utils';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   AdEditFullWidthInput,
   AdNumericInput,
@@ -18,8 +18,6 @@ import {
   employmentTypeOptions,
   incomeOptions,
   industryOptions,
-  leaveStatusDownYearOptions,
-  leaveStatusUpYearOptions,
   listedDivisionOptions,
   maternityPaternityLeaveOptions,
   nursingLeaveOptions,
@@ -38,6 +36,7 @@ import { PREFECTURES } from '@/constant';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab03Schema } from '../../fullSchema';
+import { dayjs } from '@/libs';
 
 export const Item03 = () => {
   const {
@@ -134,6 +133,28 @@ export const Item03 = () => {
       };
     });
   }, [formik.values]);
+
+  const basicYear = useMemo(() => {
+    return p_borrowing_details__1?.desired_borrowing_date
+      ? Number(p_borrowing_details__1?.desired_borrowing_date.split('/')[0])
+      : dayjs().year();
+  }, [p_borrowing_details__1?.desired_borrowing_date]);
+
+  const leaveStatusDownYearOptions = Array.from(Array(5), (_, index) => {
+    const year = String(basicYear - index).padStart(2, '0');
+    return {
+      value: `${year}`,
+      label: `${year}`,
+    };
+  });
+
+  const leaveStatusUpYearOptions = Array.from(Array(5), (_, index) => {
+    const year = String(basicYear + index).padStart(2, '0');
+    return {
+      value: `${year}`,
+      label: `${year}`,
+    };
+  });
 
   useEffect(() => {
     console.log(formik.errors);

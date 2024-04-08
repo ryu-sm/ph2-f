@@ -247,6 +247,8 @@ export const Item08 = () => {
         if (formik.values.p_application_headers.s_sales_person_id) {
           const res = await adGetSalesPersonInfo(formik.values.p_application_headers.s_sales_person_id);
           setSalesPersonInfo(res.data);
+        } else {
+          setSalesPersonInfo({});
         }
       } catch (error) {
         toast.error(API_500_ERROR);

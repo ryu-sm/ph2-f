@@ -492,8 +492,6 @@ export const tab03Schema = yup.object({
     maternity_paternity_leave_start_date: yup
       .string()
       .when('maternity_paternity_leave', ([maternity_paternity_leave], field) => {
-        console.log(555, maternity_paternity_leave);
-
         if (!!maternity_paternity_leave) {
           return field.required(YUP_MESSAGES.REQUIRED);
         } else {
@@ -538,40 +536,40 @@ export const tab03Schema = yup.object({
           return field;
         }
       })
-      .test(
-        'desired_borrowing_date_check',
-        YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_END_COLLECT_MATERNITY_LEAVE,
-        (
-          field_value,
-          {
-            options: {
-              context: { p_borrowing_details__1, p_applicant_persons__0 },
-            },
-          }
-        ) => {
-          if (
-            p_applicant_persons__0?.maternity_paternity_leave === '1' ||
-            p_applicant_persons__0?.maternity_paternity_leave === '2'
-          ) {
-            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+      // .test(
+      //   'desired_borrowing_date_check',
+      //   YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_END_COLLECT_MATERNITY_LEAVE,
+      //   (
+      //     field_value,
+      //     {
+      //       options: {
+      //         context: { p_borrowing_details__1, p_applicant_persons__0 },
+      //       },
+      //     }
+      //   ) => {
+      //     if (
+      //       p_applicant_persons__0?.maternity_paternity_leave === '1' ||
+      //       p_applicant_persons__0?.maternity_paternity_leave === '2'
+      //     ) {
+      //       if (!p_borrowing_details__1?.desired_borrowing_date) return true;
 
-            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
-            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
-            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-            console.log(8888, year, month);
-            console.log(9999, year_, month_);
-            if (+year - year_ > 0) {
-              return true;
-            } else if (+year - year_ === 0 && +month - month_ > 0) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            return true;
-          }
-        }
-      )
+      //       const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+      //       const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+      //       const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+      //       console.log(8888, year, month);
+      //       console.log(9999, year_, month_);
+      //       if (+year - year_ > 0) {
+      //         return true;
+      //       } else if (+year - year_ === 0 && +month - month_ > 0) {
+      //         return true;
+      //       } else {
+      //         return false;
+      //       }
+      //     } else {
+      //       return true;
+      //     }
+      //   }
+      // )
       .test(
         'befor_maternity_paternity_leave_end_date',
         YUP_MESSAGES.PLEASE_SELECT_A_DATE_AFTER_ACQUISITION_START_TIME,
@@ -1367,40 +1365,40 @@ export const tab03SchemaI = yup.object({
           return field;
         }
       })
-      .test(
-        'desired_borrowing_date_check',
-        YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_END_COLLECT_MATERNITY_LEAVE,
-        (
-          field_value,
-          {
-            options: {
-              context: { p_borrowing_details__1, p_applicant_persons__1 },
-            },
-          }
-        ) => {
-          if (
-            p_applicant_persons__1?.maternity_paternity_leave === '1' ||
-            p_applicant_persons__1?.maternity_paternity_leave === '2'
-          ) {
-            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+      // .test(
+      //   'desired_borrowing_date_check',
+      //   YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_END_COLLECT_MATERNITY_LEAVE,
+      //   (
+      //     field_value,
+      //     {
+      //       options: {
+      //         context: { p_borrowing_details__1, p_applicant_persons__1 },
+      //       },
+      //     }
+      //   ) => {
+      //     if (
+      //       p_applicant_persons__1?.maternity_paternity_leave === '1' ||
+      //       p_applicant_persons__1?.maternity_paternity_leave === '2'
+      //     ) {
+      //       if (!p_borrowing_details__1?.desired_borrowing_date) return true;
 
-            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
-            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
-            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-            console.log(8888, year, month);
-            console.log(9999, year_, month_);
-            if (+year - year_ > 0) {
-              return true;
-            } else if (+year - year_ === 0 && +month - month_ > 0) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            return true;
-          }
-        }
-      )
+      //       const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+      //       const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+      //       const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+      //       console.log(8888, year, month);
+      //       console.log(9999, year_, month_);
+      //       if (+year - year_ > 0) {
+      //         return true;
+      //       } else if (+year - year_ === 0 && +month - month_ > 0) {
+      //         return true;
+      //       } else {
+      //         return false;
+      //       }
+      //     } else {
+      //       return true;
+      //     }
+      //   }
+      // )
       .test(
         'befor_maternity_paternity_leave_end_date',
         YUP_MESSAGES.PLEASE_SELECT_A_DATE_AFTER_ACQUISITION_START_TIME,

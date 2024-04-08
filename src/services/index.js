@@ -20,6 +20,18 @@ export const apLogin = async (data) => {
   return await service.post('/user/token', data);
 };
 
+export const apLogou = async () => {
+  return await service.delete('/user/token');
+};
+
+export const adManagerLogou = async () => {
+  return await service.delete('/manager/token');
+};
+
+export const adSalesPersonLogou = async () => {
+  return await service.delete('/sales-person/token');
+};
+
 export const apResetPassword = async (data) => {
   return await service.post('/user/password', data);
 };

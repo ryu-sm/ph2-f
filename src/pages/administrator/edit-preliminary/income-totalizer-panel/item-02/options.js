@@ -10,7 +10,6 @@ export const nationalityOptions = [
   { value: '1', label: '日本国籍' },
   { value: '2', label: '外国籍' },
 ];
-
 export const relToApplicantAOptions = [
   { value: '1', label: '配偶者' },
   { value: '2', label: '婚約者' },
@@ -18,7 +17,6 @@ export const relToApplicantAOptions = [
   { value: '4', label: '子' },
   { value: '99', label: 'その他' },
 ];
-
 export const yearOptions = Array.from(Array(48), (_, index) => {
   const year = String(dayjs().year() - 18 - index).padStart(2, '0');
   const startDay = year === '1989' ? 8 : 1;
