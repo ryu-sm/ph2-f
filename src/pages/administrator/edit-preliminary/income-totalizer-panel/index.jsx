@@ -25,11 +25,11 @@ export const IncomeTotalizerDetail = () => {
     return [
       {
         id: 2,
-        label: 'あなたの情報',
+        label: '収入合算者の情報',
       },
       {
         id: 3,
-        label: 'ご職業',
+        label: '収入合算者のご職業',
       },
       {
         id: 9,
