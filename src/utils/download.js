@@ -9,10 +9,10 @@ export const downloadFileAsync = async (url, filename) => {
   a.click();
 
   document.body.removeChild(a);
-  URL.revokeObjectURL(imageUrl);
+  URL.revokeObjectURL(url);
 };
 
-export const downloadImageZipAsync = async (files, zipName) => {
+export const downloadFileZipAsync = async (files, zipName) => {
   const zip = new JSZip();
   const folder = zip.folder(`${zipName}`);
   files.forEach(async (item) => {

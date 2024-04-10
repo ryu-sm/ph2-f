@@ -21,15 +21,15 @@ export const apLogin = async (data) => {
 };
 
 export const apLogou = async (email) => {
-  return await service.delete(`/user/token?email=${email}`);
+  return await service.delete(`/user/token`);
 };
 
 export const adManagerLogou = async (email) => {
-  return await service.delete(`/manager/token?email=${email}`);
+  return await service.delete(`/manager/token`);
 };
 
 export const adSalesPersonLogou = async (email) => {
-  return await service.delete(`/sales-person/token?email=${email}`);
+  return await service.delete(`/sales-person/token`);
 };
 
 export const apResetPassword = async (data) => {
@@ -183,24 +183,24 @@ export const adAddArchiveFiles = async (data) => {
   return await service.post('/sales-person/c_archive_files', data);
 };
 
-export const adGetSalesPersonDocs = async (s_sales_company_org_id) => {
-  return await service.get(`/c_archive_files/${s_sales_company_org_id}`);
+export const adGetSalesPersonDocs = async (s_sales_company_org_ids) => {
+  return await service.get(`/sales-person/c_archive_files?s_sales_company_org_ids=${s_sales_company_org_ids}`);
 };
 
 export const adGetManagerDocs = async () => {
-  return await service.get(`/c_archive_files`);
+  return await service.get(`/manager/c_archive_files`);
 };
 
 export const adGetArchiveFile = async (id) => {
-  return await service.get(`/c_archive_file/${id}`);
+  return await service.get(`/c_archive_files/${id}`);
 };
 
-export const adDeleteArchiveFile = async (id) => {
+export const adDeleteArchiveFiles = async (id) => {
+  return await service.delete(`/c_archive_files/${id}`);
+};
+
+export const adUpdateArchiveFile = async (id) => {
   return await service.delete(`/c_archive_file/${id}`);
-};
-
-export const adUpdateArchiveFile = async (id, data) => {
-  return await service.put(`/c_archive_file/${id}`, data);
 };
 
 export const adUpdateArchiveFileNote = async (id, data) => {

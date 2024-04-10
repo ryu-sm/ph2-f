@@ -6,10 +6,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useIsManager } from '@/hooks/use-is-manager';
 import { useBoolean } from '@/hooks';
 import { widthConfig } from './widthConfig';
-import { downloadImageZipAsync } from '@/utils';
+import { downloadFileZipAsync } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
-import { adDeleteArchiveFile, adGetArchiveFile } from '@/services';
+import { adDeleteArchiveFiles, adGetArchiveFile } from '@/services';
 import { DeleteModal } from './delete-modal';
 import { routeNames } from '@/router/settings';
 export const ListItem = ({ doc, refecth }) => {
@@ -107,7 +107,7 @@ export const ListItem = ({ doc, refecth }) => {
   const handleDownload = async (id) => {
     try {
       const res = await adGetArchiveFile(id);
-      await downloadImageZipAsync(res.data, id);
+      await downloadFileZipAsync(res.data, id);
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -115,7 +115,7 @@ export const ListItem = ({ doc, refecth }) => {
 
   const handleDelete = async (id) => {
     try {
-      await adDeleteArchiveFile(id);
+      await adDeleteArchiveFiles(id);
       toast.success('ファイルを削除しました。');
       await refecth();
       handleCloseModal();
@@ -202,7 +202,7 @@ export const ListItem = ({ doc, refecth }) => {
           borderRight: (theme) => `1px solid ${theme.palette.gray[60]}`,
         }}
       >
-        {item.name === 'file_names' ? doc['file_names'].map((item) => item['name']).join(', ') : doc[item.name]}
+        {item.name === 'file_names' ? doc['file_names'].join('、') : doc[item.name]}
       </Typography>
     );
   };
@@ -287,7 +287,7 @@ export const ListItem = ({ doc, refecth }) => {
         open={openModal}
         onClose={handleCloseModal}
         onDelete={async () => await handleDelete(doc?.id)}
-        file_name={doc['file_names'].map((item) => item['name']).join(', ')}
+        file_name={doc['file_names'].join('、')}
       />
     </Stack>
   );

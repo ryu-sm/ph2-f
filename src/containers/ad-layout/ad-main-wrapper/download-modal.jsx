@@ -21,7 +21,7 @@ export const AdLogModal = ({ open, onClose }) => {
       try {
         const res = await apGetCaccessLogs(values.start, values.end);
         if (res.data.src) {
-          await downloadExcelAsync(res.data.src);
+          await downloadExcelAsync(res.data.src, res.data.name);
         }
         onClose();
       } catch (error) {

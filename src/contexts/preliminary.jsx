@@ -229,13 +229,12 @@ export const PreliminaryProvider = ({ children }) => {
     }
   };
 
-  const handleChangePreExaminationStatus = async (pre_examination_status, is_cancel_confirm = false) => {
+  const handleChangePreExaminationStatus = async (pre_examination_status) => {
     try {
       await adUpdatePreExaminationStatus({
         p_application_header_id: result.contents?.p_application_headers?.id,
         pre_examination_status: pre_examination_status,
-        is_cancel_confirm: is_cancel_confirm,
-        preliminary: pre_examination_status === 3 && !is_cancel_confirm ? result.contents : null,
+        preliminary: pre_examination_status === 3 ? result.contents : null,
       });
       refreshPreliminary();
     } catch (error) {

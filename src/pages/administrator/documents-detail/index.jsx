@@ -35,6 +35,7 @@ export const AdDocumentsDetailPage = () => {
   const fecthData = async () => {
     try {
       const res = await adGetArchiveFile(id);
+      if (!res.data?.length) return navigate(routeNames.adSalesPersonDocumentsPage.path);
       setImages(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -45,10 +46,10 @@ export const AdDocumentsDetailPage = () => {
     fecthData();
   }, []);
 
-  const handleDelete = async (data) => {
+  const handleDelete = async (file_id) => {
     try {
-      const res = await adUpdateArchiveFile(id, data);
-      if (!res.data?.has_files) return navigate(routeNames.adSalesPersonDocumentsPage.path);
+      await adUpdateArchiveFile(file_id);
+      handleCloseModal();
       await fecthData();
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -237,7 +238,7 @@ export const AdDocumentsDetailPage = () => {
                   <DeleteModal
                     open={openModal}
                     onClose={handleCloseModal}
-                    onDelete={async () => await handleDelete(item)}
+                    onDelete={async () => await handleDelete(item?.id)}
                     file_name={item?.name}
                   />
                 </Stack>

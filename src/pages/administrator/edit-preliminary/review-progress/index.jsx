@@ -17,13 +17,17 @@ export const AdReviewProgress = () => {
   const {
     preliminaryInfo: {
       p_application_headers: { pre_examination_status, id, apply_no },
+      p_applicant_persons__0: { last_name_kanji, first_name_kanji },
     },
   } = usePreliminaryContext();
 
   const downloadRowData = async () => {
     try {
       const res = await adGetRowData(id);
-      await downloadExcelAsync(res.data.src, `${apply_no}_申込内容のローデータ.xlsx`);
+      await downloadExcelAsync(
+        res.data.src,
+        `${apply_no}_${last_name_kanji}${first_name_kanji}様__申込内容のローデータ.xlsx`
+      );
     } catch (error) {
       toast.error(API_500_ERROR);
     }

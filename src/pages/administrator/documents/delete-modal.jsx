@@ -27,7 +27,7 @@ export const DeleteModal = ({ file_name, open, onClose, onDelete }) => {
         </Box>
         <Stack px={8} spacing={3}>
           <Typography variant="doc_delete_modal_title" px={3}>
-            {file_name}
+            {`「${file_name}」`}
           </Typography>
           <Typography variant="doc_delete_modal_title" fontWeight={300} px={3}>
             を削除します。よろしいですか？
