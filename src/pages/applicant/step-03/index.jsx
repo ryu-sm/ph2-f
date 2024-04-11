@@ -186,56 +186,65 @@ export const ApStep03Page = () => {
     }
   };
 
-  const { dbData } = useApplicationContext();
+  // const { dbData } = useApplicationContext();
+
+  // useEffect(() => {
+  //   if (agentSended && dbData) {
+  //     const newData = {
+  //       p_applicant_persons__0: {
+  //         office_occupation: dbData?.p_applicant_persons__0?.office_occupation,
+  //         office_occupation_other: dbData?.p_applicant_persons__0?.office_occupation_other,
+  //         office_industry: dbData?.p_applicant_persons__0?.office_industry,
+  //         office_industry_other: dbData?.p_applicant_persons__0?.office_industry_other,
+  //         office_occupation_detail: dbData?.p_applicant_persons__0?.office_occupation_detail,
+  //         office_occupation_detail_other: dbData?.p_applicant_persons__0?.office_occupation_detail_other,
+  //         office_name_kanji: dbData?.p_applicant_persons__0?.office_name_kanji,
+  //         office_department: dbData?.p_applicant_persons__0?.office_department,
+  //         office_phone: dbData?.p_applicant_persons__0?.office_phone,
+  //         office_postal_code: dbData?.p_applicant_persons__0?.office_postal_code,
+  //         office_prefecture_kanji: dbData?.p_applicant_persons__0?.office_prefecture_kanji,
+  //         office_city_kanji: dbData?.p_applicant_persons__0?.office_city_kanji,
+  //         office_district_kanji: dbData?.p_applicant_persons__0?.office_district_kanji,
+  //         office_other_address_kanji: dbData?.p_applicant_persons__0?.office_other_address_kanji,
+  //         office_prefecture_kana: dbData?.p_applicant_persons__0?.office_prefecture_kana,
+  //         office_city_kana: dbData?.p_applicant_persons__0?.office_city_kana,
+  //         office_district_kana: dbData?.p_applicant_persons__0?.office_district_kana,
+  //         office_employee_num: dbData?.p_applicant_persons__0?.office_employee_num,
+  //         office_joining_date: dbData?.p_applicant_persons__0?.office_joining_date,
+  //         last_year_income: dbData?.p_applicant_persons__0?.last_year_income,
+  //         before_last_year_income: dbData?.p_applicant_persons__0?.before_last_year_income,
+  //         last_year_bonus_income: dbData?.p_applicant_persons__0?.last_year_bonus_income,
+  //         income_sources: dbData?.p_applicant_persons__0?.income_sources,
+  //         tax_return: dbData?.p_applicant_persons__0?.tax_return,
+  //         tax_return_reasons: dbData?.p_applicant_persons__0?.tax_return_reasons,
+  //         tax_return_reason_other: dbData?.p_applicant_persons__0?.tax_return_reason_other,
+  //         transfer_office: dbData?.p_applicant_persons__0?.transfer_office,
+  //         transfer_office_name_kanji: dbData?.p_applicant_persons__0?.transfer_office_name_kanji,
+  //         transfer_office_name_kana: dbData?.p_applicant_persons__0?.transfer_office_name_kana,
+  //         transfer_office_phone: dbData?.p_applicant_persons__0?.transfer_office_phone,
+  //         transfer_office_postal_code: dbData?.p_applicant_persons__0?.transfer_office_postal_code,
+  //         transfer_office_prefecture_kanji: dbData?.p_applicant_persons__0?.transfer_office_prefecture_kanji,
+  //         transfer_office_city_kanji: dbData?.p_applicant_persons__0?.transfer_office_city_kanji,
+  //         transfer_office_district_kanji: dbData?.p_applicant_persons__0?.transfer_office_district_kanji,
+  //         transfer_office_other_address_kanji: dbData?.p_applicant_persons__0?.transfer_office_other_address_kanji,
+  //         maternity_paternity_leave: dbData?.p_applicant_persons__0?.maternity_paternity_leave,
+  //         maternity_paternity_leave_start_date: dbData?.p_applicant_persons__0?.maternity_paternity_leave_start_date,
+  //         maternity_paternity_leave_end_date: dbData?.p_applicant_persons__0?.maternity_paternity_leave_end_date,
+  //         nursing_leave: dbData?.p_applicant_persons__0?.nursing_leave,
+  //       },
+  //     };
+  //     formik.setValues(newData);
+  //   }
+  // }, [dbData]);
+
+  const { refreshsendedApllication } = useApplicationContext();
 
   useEffect(() => {
-    if (agentSended && dbData) {
-      const newData = {
-        p_applicant_persons__0: {
-          office_occupation: dbData?.p_applicant_persons__0?.office_occupation,
-          office_occupation_other: dbData?.p_applicant_persons__0?.office_occupation_other,
-          office_industry: dbData?.p_applicant_persons__0?.office_industry,
-          office_industry_other: dbData?.p_applicant_persons__0?.office_industry_other,
-          office_occupation_detail: dbData?.p_applicant_persons__0?.office_occupation_detail,
-          office_occupation_detail_other: dbData?.p_applicant_persons__0?.office_occupation_detail_other,
-          office_name_kanji: dbData?.p_applicant_persons__0?.office_name_kanji,
-          office_department: dbData?.p_applicant_persons__0?.office_department,
-          office_phone: dbData?.p_applicant_persons__0?.office_phone,
-          office_postal_code: dbData?.p_applicant_persons__0?.office_postal_code,
-          office_prefecture_kanji: dbData?.p_applicant_persons__0?.office_prefecture_kanji,
-          office_city_kanji: dbData?.p_applicant_persons__0?.office_city_kanji,
-          office_district_kanji: dbData?.p_applicant_persons__0?.office_district_kanji,
-          office_other_address_kanji: dbData?.p_applicant_persons__0?.office_other_address_kanji,
-          office_prefecture_kana: dbData?.p_applicant_persons__0?.office_prefecture_kana,
-          office_city_kana: dbData?.p_applicant_persons__0?.office_city_kana,
-          office_district_kana: dbData?.p_applicant_persons__0?.office_district_kana,
-          office_employee_num: dbData?.p_applicant_persons__0?.office_employee_num,
-          office_joining_date: dbData?.p_applicant_persons__0?.office_joining_date,
-          last_year_income: dbData?.p_applicant_persons__0?.last_year_income,
-          before_last_year_income: dbData?.p_applicant_persons__0?.before_last_year_income,
-          last_year_bonus_income: dbData?.p_applicant_persons__0?.last_year_bonus_income,
-          income_sources: dbData?.p_applicant_persons__0?.income_sources,
-          tax_return: dbData?.p_applicant_persons__0?.tax_return,
-          tax_return_reasons: dbData?.p_applicant_persons__0?.tax_return_reasons,
-          tax_return_reason_other: dbData?.p_applicant_persons__0?.tax_return_reason_other,
-          transfer_office: dbData?.p_applicant_persons__0?.transfer_office,
-          transfer_office_name_kanji: dbData?.p_applicant_persons__0?.transfer_office_name_kanji,
-          transfer_office_name_kana: dbData?.p_applicant_persons__0?.transfer_office_name_kana,
-          transfer_office_phone: dbData?.p_applicant_persons__0?.transfer_office_phone,
-          transfer_office_postal_code: dbData?.p_applicant_persons__0?.transfer_office_postal_code,
-          transfer_office_prefecture_kanji: dbData?.p_applicant_persons__0?.transfer_office_prefecture_kanji,
-          transfer_office_city_kanji: dbData?.p_applicant_persons__0?.transfer_office_city_kanji,
-          transfer_office_district_kanji: dbData?.p_applicant_persons__0?.transfer_office_district_kanji,
-          transfer_office_other_address_kanji: dbData?.p_applicant_persons__0?.transfer_office_other_address_kanji,
-          maternity_paternity_leave: dbData?.p_applicant_persons__0?.maternity_paternity_leave,
-          maternity_paternity_leave_start_date: dbData?.p_applicant_persons__0?.maternity_paternity_leave_start_date,
-          maternity_paternity_leave_end_date: dbData?.p_applicant_persons__0?.maternity_paternity_leave_end_date,
-          nursing_leave: dbData?.p_applicant_persons__0?.nursing_leave,
-        },
-      };
-      formik.setValues(newData);
+    if (agentSended) {
+      console.log('refresh');
+      refreshsendedApllication();
     }
-  }, [dbData]);
+  }, [agentSended]);
 
   return (
     <FormikProvider value={formik}>

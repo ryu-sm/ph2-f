@@ -262,37 +262,46 @@ export const ApStep11Page = () => {
       fetchPapplicantPersonsFiles();
     }
   }, []);
-  const { dbData } = useApplicationContext();
+  // const { dbData } = useApplicationContext();
+  // useEffect(() => {
+  //   if (agentSended && dbData) {
+  //     const newData = {
+  //       p_applicant_persons__1: {
+  //         identity_verification_type: dbData?.p_applicant_persons__1?.identity_verification_type,
+  //         A__01__a: dbData?.p_applicant_persons__1?.A__01__a,
+  //         A__01__b: dbData?.p_applicant_persons__1?.A__01__b,
+  //         A__02: dbData?.p_applicant_persons__1?.A__02,
+  //         A__03__a: dbData?.p_applicant_persons__1?.A__03__a,
+  //         A__03__b: dbData?.p_applicant_persons__1?.A__03__b,
+  //         B__a: dbData?.p_applicant_persons__1?.B__a,
+  //         B__b: dbData?.p_applicant_persons__1?.B__b,
+  //         C__01: dbData?.p_applicant_persons__1?.C__01,
+  //         C__02: dbData?.p_applicant_persons__1?.C__02,
+  //         C__03: dbData?.p_applicant_persons__1?.C__03,
+  //         C__04: dbData?.p_applicant_persons__1?.C__04,
+  //         C__05: dbData?.p_applicant_persons__1?.C__05,
+  //         D__01: dbData?.p_applicant_persons__1?.D__01,
+  //         D__02: dbData?.p_applicant_persons__1?.D__02,
+  //         D__03: dbData?.p_applicant_persons__1?.D__03,
+  //         E: dbData?.p_applicant_persons__1?.E,
+  //         F__01: dbData?.p_applicant_persons__1?.F__01,
+  //         F__02: dbData?.p_applicant_persons__1?.F__02,
+  //         F__03: dbData?.p_applicant_persons__1?.F__03,
+  //         K: dbData?.p_applicant_persons__1?.K,
+  //       },
+  //     };
+  //     formik.setValues(newData);
+  //   }
+  // }, [dbData]);
+
+  const { refreshsendedApllication } = useApplicationContext();
+
   useEffect(() => {
-    if (agentSended && dbData) {
-      const newData = {
-        p_applicant_persons__1: {
-          identity_verification_type: dbData?.p_applicant_persons__1?.identity_verification_type,
-          A__01__a: dbData?.p_applicant_persons__1?.A__01__a,
-          A__01__b: dbData?.p_applicant_persons__1?.A__01__b,
-          A__02: dbData?.p_applicant_persons__1?.A__02,
-          A__03__a: dbData?.p_applicant_persons__1?.A__03__a,
-          A__03__b: dbData?.p_applicant_persons__1?.A__03__b,
-          B__a: dbData?.p_applicant_persons__1?.B__a,
-          B__b: dbData?.p_applicant_persons__1?.B__b,
-          C__01: dbData?.p_applicant_persons__1?.C__01,
-          C__02: dbData?.p_applicant_persons__1?.C__02,
-          C__03: dbData?.p_applicant_persons__1?.C__03,
-          C__04: dbData?.p_applicant_persons__1?.C__04,
-          C__05: dbData?.p_applicant_persons__1?.C__05,
-          D__01: dbData?.p_applicant_persons__1?.D__01,
-          D__02: dbData?.p_applicant_persons__1?.D__02,
-          D__03: dbData?.p_applicant_persons__1?.D__03,
-          E: dbData?.p_applicant_persons__1?.E,
-          F__01: dbData?.p_applicant_persons__1?.F__01,
-          F__02: dbData?.p_applicant_persons__1?.F__02,
-          F__03: dbData?.p_applicant_persons__1?.F__03,
-          K: dbData?.p_applicant_persons__1?.K,
-        },
-      };
-      formik.setValues(newData);
+    if (agentSended && !changeToIncomeTotalizer && !changeJoinGuarantor) {
+      console.log('refresh');
+      refreshsendedApllication();
     }
-  }, [dbData]);
+  }, [agentSended]);
 
   const identityVerificationOption = [
     {

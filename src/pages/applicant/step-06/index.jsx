@@ -126,6 +126,14 @@ export const ApStep06Page = () => {
     }
   }, [dbData]);
 
+  const { refreshsendedApllication } = useApplicationContext();
+  useEffect(() => {
+    if (agentSended && !changeJoinGuarantor) {
+      console.log('refresh');
+      refreshsendedApllication();
+    }
+  }, [agentSended]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

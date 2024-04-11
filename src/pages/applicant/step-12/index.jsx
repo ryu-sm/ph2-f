@@ -237,23 +237,32 @@ export const ApStep12Page = () => {
       fetchPapplicationHeadersFiles();
     }
   }, []);
-  const { dbData } = useApplicationContext();
+  // const { dbData } = useApplicationContext();
+  // useEffect(() => {
+  //   if (agentSended && dbData) {
+  //     const newData = {
+  //       p_application_headers: {
+  //         sales_company_id: dbData?.p_application_headers?.sales_company_id,
+  //         sales_area_id: dbData?.p_application_headers?.sales_area_id,
+  //         sales_exhibition_hall_id: dbData?.p_application_headers?.sales_exhibition_hall_id,
+  //         vendor_name: dbData?.p_application_headers?.vendor_name,
+  //         vendor_phone: dbData?.p_application_headers?.vendor_phone,
+  //         vendor_business_card: dbData?.p_application_headers?.vendor_business_card,
+  //         J: dbData?.p_application_headers?.J,
+  //       },
+  //     };
+  //     formik.setValues(newData);
+  //   }
+  // }, [dbData]);
+
+  const { refreshsendedApllication } = useApplicationContext();
+
   useEffect(() => {
-    if (agentSended && dbData) {
-      const newData = {
-        p_application_headers: {
-          sales_company_id: dbData?.p_application_headers?.sales_company_id,
-          sales_area_id: dbData?.p_application_headers?.sales_area_id,
-          sales_exhibition_hall_id: dbData?.p_application_headers?.sales_exhibition_hall_id,
-          vendor_name: dbData?.p_application_headers?.vendor_name,
-          vendor_phone: dbData?.p_application_headers?.vendor_phone,
-          vendor_business_card: dbData?.p_application_headers?.vendor_business_card,
-          J: dbData?.p_application_headers?.J,
-        },
-      };
-      formik.setValues(newData);
+    if (agentSended) {
+      console.log('refresh');
+      refreshsendedApllication();
     }
-  }, [dbData]);
+  }, [agentSended]);
 
   return (
     <FormikProvider value={formik}>
