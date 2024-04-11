@@ -1,6 +1,6 @@
 import { API_500_ERROR } from '@/constant';
 import { adGetUpdateHistory } from '@/services';
-import { formatJapanDate, formatMoney } from '@/utils';
+import { formatJapanDate, formatNumber } from '@/utils';
 import { useTheme } from '@emotion/react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
@@ -80,7 +80,7 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
     }
     if (upConfig?.options) return upConfig.options.find((item) => item.value === content)?.label;
     if (upConfig?.formatNumber) {
-      return `${formatMoney(content, upConfig.unit)}`;
+      return `${formatNumber(content, upConfig.unit)}`;
     }
     if (upConfig?.formatJaDate) {
       return formatJapanDate(content, true);

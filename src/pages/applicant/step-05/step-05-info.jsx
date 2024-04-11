@@ -1,6 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApLighterButton } from '@/components';
 import { authAtom, localApplication } from '@/store';
-import { formatJapanDate, formatMoney } from '@/utils';
+import { formatJapanDate, formatNumber } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
@@ -103,7 +103,7 @@ export const ApStep05Info = ({ stepIndex }) => {
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'従業員数'}>
         {p_applicant_persons__1.office_employee_num
-          ? formatMoney(p_applicant_persons__1.office_employee_num, '名')
+          ? formatNumber(p_applicant_persons__1.office_employee_num, '名')
           : 'ー'}
       </ApConfirmItemGroup>
       <ApConfirmItemGroup label={'入社年月'}>
@@ -355,13 +355,13 @@ export const ApStep05Info = ({ stepIndex }) => {
             <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈取得開始時期〉
               {p_applicant_persons__1.maternity_paternity_leave_start_date
-                ? formatJapanDate(p_applicant_persons__1.maternity_paternity_leave_start_date)
+                ? formatJapanDate(p_applicant_persons__1.maternity_paternity_leave_start_date, true)
                 : 'ー'}
             </Typography>
             <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
               〈取得終了時期〉
               {p_applicant_persons__1.maternity_paternity_leave_end_date
-                ? formatJapanDate(p_applicant_persons__1.maternity_paternity_leave_end_date)
+                ? formatJapanDate(p_applicant_persons__1.maternity_paternity_leave_end_date, true)
                 : 'ー'}
             </Typography>
           </Stack>

@@ -1,6 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
 import { authAtom, localApplication } from '@/store';
-import { formatJapanDate, formatMoney } from '@/utils';
+import { formatJapanDate, formatNumber } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
@@ -276,7 +276,7 @@ export const ApStep08Info = ({ stepIndex }) => {
                 <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                   〈完済原資の金額〉
                   {p_application_headers.refund_source_amount
-                    ? formatMoney(p_application_headers.refund_source_amount)
+                    ? formatNumber(p_application_headers.refund_source_amount)
                     : 'ー'}
                 </Typography>
               </Stack>

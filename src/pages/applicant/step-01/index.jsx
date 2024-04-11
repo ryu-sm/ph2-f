@@ -295,7 +295,7 @@ export const ApStep01Page = () => {
   const { refreshsendedApllication } = useApplicationContext();
 
   useEffect(() => {
-    if (agentSended) {
+    if (agentSended && !changeToIncomeTotalizer && !changeJoinGuarantor) {
       console.log('refresh');
       refreshsendedApllication();
     }
@@ -709,7 +709,7 @@ export const ApStep01Page = () => {
                     }
                     align="right"
                     width={140}
-                    maxLength={6}
+                    maxLength={5}
                     onBlur={(e) => {
                       if (!!e.target.value && formik.values.p_borrowing_details__1.bonus_repayment_month === '1') {
                         formik.setFieldValue('p_borrowing_details__1.bonus_repayment_month', '2');
@@ -819,7 +819,7 @@ export const ApStep01Page = () => {
                       }
                       align="right"
                       width={140}
-                      maxLength={6}
+                      maxLength={5}
                     />
                   </Stack>
                 </ApItemGroup>

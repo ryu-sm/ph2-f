@@ -1,5 +1,5 @@
 import { API_500_ERROR } from '@/constant';
-import { useStepId } from '@/hooks';
+import { useBoolean, useStepId } from '@/hooks';
 import { apGetPreExaminationStatus, apGetSendedApplication, apUpdateSendedInfo } from '@/services';
 import { applicationInitialValues, authAtom, localApplication, sendedApllicationSelect } from '@/store';
 import { createContext, useEffect } from 'react';
@@ -14,6 +14,13 @@ import {
 } from 'recoil';
 import { useLocation } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
+import { Icons } from '@/assets';
+
+import { Stack, Typography } from '@mui/material';
+
+import { useNavigate } from 'react-router-dom';
+import { ApModalWrapper, ApPrimaryButton } from '@/components';
+import { ApThemeProvider } from '@/styles';
 
 export const ApplicationContext = createContext({});
 
@@ -24,6 +31,8 @@ export const ApplicationProvider = ({ children }) => {
   const { user, agentSended, applyNo } = useRecoilValue(authAtom);
   const setAuthInfo = useSetRecoilState(authAtom);
   const stepId = useStepId();
+  const modal = useBoolean(false);
+  const navigate = useNavigate();
 
   const { pathname } = useLocation();
 
@@ -83,6 +92,8 @@ export const ApplicationProvider = ({ children }) => {
 
   const refreshsendedApllication = async () => {
     const res = await apGetSendedApplication(user?.id);
+    console.log(res.data.p_application_headers?.created_at);
+
     setLocalApplicationInfo((pre) => {
       return {
         ...pre,
@@ -128,9 +139,17 @@ export const ApplicationProvider = ({ children }) => {
 
   const updateSendedInfo = async (data) => {
     try {
-      await apUpdateSendedInfo(user.id, { ...data, step_id: stepId });
-      await refreshsendedApllication();
+      const res = await apGetPreExaminationStatus(applyNo);
+      console.log(res);
+      if (Number(res.data?.pre_examination_status) >= 3) {
+        modal.onTrue();
+        navigate(routeNames.apTopPage.path);
+      } else {
+        await apUpdateSendedInfo(user.id, { ...data, step_id: stepId });
+        await refreshsendedApllication();
+      }
     } catch (error) {
+      console.log(error);
       toast.error(API_500_ERROR);
     }
   };
@@ -140,6 +159,26 @@ export const ApplicationProvider = ({ children }) => {
       try {
         const res = await apGetPreExaminationStatus(applyNo);
         console.log(res.data);
+        if (
+          Number(res.data?.pre_examination_status) >= 3 &&
+          [
+            routeNames.apStep01Page.path,
+            routeNames.apStep02Page.path,
+            routeNames.apStep03Page.path,
+            routeNames.apStep04Page.path,
+            routeNames.apStep05Page.path,
+            routeNames.apStep06Page.path,
+            routeNames.apStep07Page.path,
+            routeNames.apStep08Page.path,
+            routeNames.apStep09Page.path,
+            routeNames.apStep10Page.path,
+            routeNames.apStep11Page.path,
+            routeNames.apStep12Page.path,
+          ].includes(pathname)
+        ) {
+          modal.onTrue();
+          navigate(routeNames.apTopPage.path);
+        }
         setAuthInfo((pre) => {
           return {
             ...pre,
@@ -171,6 +210,18 @@ export const ApplicationProvider = ({ children }) => {
       }}
     >
       {children}
+      <ApThemeProvider>
+        <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={`お知らせ`}>
+          <Stack spacing={4} alignItems={'center'} sx={{ px: 3 }}>
+            <Typography textAlign={'center'}>
+              住信SBIネット銀行での審査フェーズ（「仮審査中」以降）に入りますと申込内容の修正はできません。
+            </Typography>
+            <ApPrimaryButton width={240} height={40} onClick={modal.onFalse}>
+              閉じる
+            </ApPrimaryButton>
+          </Stack>
+        </ApModalWrapper>
+      </ApThemeProvider>
     </ApplicationContext.Provider>
   );
 };

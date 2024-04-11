@@ -38,6 +38,7 @@ export const ApStep04Page = () => {
   const { updateSendedInfo } = useApplicationContext();
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
+  const [warningText, setWarningText] = useState('');
 
   const updateModal = useBoolean(false);
 
@@ -179,7 +180,7 @@ export const ApStep04Page = () => {
   }, [p_applicant_persons_b_agreement]);
 
   useEffect(() => {
-    if (formik.values.consent && formik.values.confirmation) {
+    if (formik.values.consent == '1' && formik.values.confirmation == '1') {
       formik.setFieldValue('p_applicant_persons_b_agreement', true);
     } else {
       formik.setFieldValue('p_applicant_persons_b_agreement', false);
@@ -247,6 +248,12 @@ export const ApStep04Page = () => {
     }
   }, [agentSended]);
 
+  useEffect(() => {
+    if ((isReadedConsent && formik.errors.consent) || (isReadedConfirmation && formik.errors.confirmation))
+      return setWarningText('同意いただけない場合、本サービスをご利用いただけません。');
+    setWarningText('');
+  }, [formik.errors.consent, formik.errors.confirmation]);
+  console.log(8888888888888);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -267,8 +274,31 @@ export const ApStep04Page = () => {
       >
         <ApUpdateApply isOpen={updateModal.value} onClose={updateModal.onFalse} />
         <ApPageTitle py={8}>{`収入合算者について\n教えてください。`}</ApPageTitle>
-        <Stack alignItems={'center'} sx={{ pb: 6 }}>
+        <Stack alignItems={'center'} spacing={2} sx={{ pb: 2 }}>
           <ApIncomeTotalizerModal />
+          {warningText && formik.touched.consent && formik.touched.confirmation && (
+            <Stack spacing={6} sx={{ width: 1, px: 4, pt: 6 }}>
+              <Box
+                sx={{
+                  py: 2,
+                  px: 4,
+                  bgcolor: (theme) => theme.palette.secondary[20],
+                  border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+                  borderRadius: 2,
+                }}
+              >
+                <Stack spacing={3} direction={'row'} alignItems={'center'}>
+                  <Icons.ApWarningIcon />
+                  <Typography
+                    variant="waring"
+                    sx={{ color: (theme) => theme.palette.secondary.main, textAlign: 'left' }}
+                  >
+                    {warningText}
+                  </Typography>
+                </Stack>
+              </Box>
+            </Stack>
+          )}
         </Stack>
         {(!p_applicant_persons_b_agreement || changeToIncomeTotalizer) && (
           <Stack>

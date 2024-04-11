@@ -526,7 +526,7 @@ export const ApStep08Page = () => {
                                     placeholder={'0'}
                                     unit={'万円'}
                                     width={156}
-                                    maxLength={6}
+                                    maxLength={5}
                                   />
                                 </ApItemGroup>
                                 <ApItemGroup label={'現在の残高'} pb={3} px={2}>
@@ -535,7 +535,7 @@ export const ApStep08Page = () => {
                                     placeholder={'0'}
                                     unit={'万円'}
                                     width={156}
-                                    maxLength={6}
+                                    maxLength={5}
                                   />
                                 </ApItemGroup>
                                 <ApItemGroup label={'年間返済額'} pb={3} px={2}>
@@ -544,7 +544,7 @@ export const ApStep08Page = () => {
                                     placeholder={'0'}
                                     unit={'万円'}
                                     width={156}
-                                    maxLength={6}
+                                    maxLength={5}
                                   />
                                 </ApItemGroup>
 
@@ -769,7 +769,7 @@ export const ApStep08Page = () => {
                               label={'月間の支払金額'}
                               placeholder={'0'}
                               unit={'円'}
-                              maxLength={10}
+                              maxLength={7}
                               width={156}
                             />
                           </Stack>
@@ -788,7 +788,7 @@ export const ApStep08Page = () => {
                               label={'月間の支払金額'}
                               placeholder={'0'}
                               unit={'円'}
-                              maxLength={10}
+                              maxLength={7}
                               width={156}
                             />
                           </Stack>

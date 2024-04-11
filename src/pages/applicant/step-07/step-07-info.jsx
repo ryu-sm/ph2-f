@@ -1,6 +1,6 @@
 import { ApConfirmGroup, ApConfirmItemGroup, ApImgItem, ApLighterButton } from '@/components';
 import { authAtom, localApplication } from '@/store';
-import { formatJapanDate, formatMoney } from '@/utils';
+import { formatJapanDate, formatNumber } from '@/utils';
 import { Stack, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
@@ -124,7 +124,7 @@ export const ApStep07Info = ({ stepIndex }) => {
               <ApConfirmItemGroup label={'売却予定価格'}>
                 {p_application_headers.curr_house_shell_scheduled_price ? (
                   <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                    {formatMoney(p_application_headers.curr_house_shell_scheduled_price)}
+                    {formatNumber(p_application_headers.curr_house_shell_scheduled_price)}
                   </Typography>
                 ) : (
                   'ー'
@@ -152,7 +152,7 @@ export const ApStep07Info = ({ stepIndex }) => {
         <ApConfirmItemGroup label={'現在のお住まいの床面積(MCJ固有項目)'}>
           {p_application_headers.curr_house_floor_area ? (
             <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-              {`${p_application_headers.curr_house_floor_area}㎡`}
+              {`${formatNumber(p_application_headers.curr_house_floor_area, '㎡')}`}
             </Typography>
           ) : (
             'ー'
@@ -316,7 +316,7 @@ export const ApStep07Info = ({ stepIndex }) => {
           <ApConfirmItemGroup label={'生年月日'}>
             {p_residents[0].birthday ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {formatJapanDate(p_residents[0].birthday)}
+                {formatJapanDate(p_residents[0].birthday, true)}
               </Typography>
             ) : (
               'ー'
@@ -419,23 +419,21 @@ export const ApStep07Info = ({ stepIndex }) => {
             〈専有面積〉
             {p_application_headers.property_private_area ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {p_application_headers.property_private_area}
+                {formatNumber(p_application_headers.property_private_area, '㎡')}
               </Typography>
             ) : (
               'ー'
             )}
-            ㎡
           </Typography>
           <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
             〈マンション全体の延べ床面積〉
             {p_application_headers.property_total_floor_area ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {p_application_headers.property_total_floor_area}
+                {formatNumber(p_application_headers.property_total_floor_area, '㎡')}
               </Typography>
             ) : (
               'ー'
             )}
-            ㎡
           </Typography>
         </ApConfirmItemGroup>
       ) : (
@@ -444,23 +442,21 @@ export const ApStep07Info = ({ stepIndex }) => {
             〈土地の敷地面積〉
             {p_application_headers.property_land_area ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {p_application_headers.property_land_area}
+                {formatNumber(p_application_headers.property_land_area, '㎡')}
               </Typography>
             ) : (
               'ー'
             )}
-            ㎡
           </Typography>
           <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
             〈建物の延べ床面積〉
             {p_application_headers.property_floor_area ? (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
-                {p_application_headers.property_floor_area}
+                {formatNumber(p_application_headers.property_floor_area, '㎡')}
               </Typography>
             ) : (
               'ー'
             )}
-            ㎡
           </Typography>
         </ApConfirmItemGroup>
       )}

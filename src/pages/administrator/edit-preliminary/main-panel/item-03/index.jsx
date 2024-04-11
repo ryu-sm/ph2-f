@@ -2,7 +2,7 @@ import { Stack } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
-import { formatJapanDate, formatMoney } from '@/utils';
+import { formatJapanDate, formatNumber } from '@/utils';
 import { useEffect, useMemo } from 'react';
 import {
   AdEditFullWidthInput,
@@ -451,7 +451,7 @@ export const Item03 = () => {
             isEditable ? (
               <AdNumericInput name="p_applicant_persons__0.office_capital_stock" maxLength={13} unit={'万円'} />
             ) : (
-              formatMoney(formik.values.p_applicant_persons__0.office_capital_stock)
+              formatNumber(formik.values.p_applicant_persons__0.office_capital_stock)
             )
           }
         />
@@ -622,7 +622,7 @@ export const Item03 = () => {
             isEditable ? (
               <AdNumericInput name="p_applicant_persons__0.office_employee_num" maxLength={9} unit={'名'} />
             ) : (
-              formatMoney(formik.values.p_applicant_persons__0.office_employee_num, '名')
+              formatNumber(formik.values.p_applicant_persons__0.office_employee_num, '名')
             )
           }
         />
@@ -653,7 +653,7 @@ export const Item03 = () => {
             isEditable ? (
               <AdNumericInput name="p_applicant_persons__0.last_year_income" maxLength={5} unit={'万円'} />
             ) : (
-              formatMoney(formik.values.p_applicant_persons__0.last_year_income)
+              formatNumber(formik.values.p_applicant_persons__0.last_year_income)
             )
           }
         />
@@ -671,7 +671,7 @@ export const Item03 = () => {
                 isEditable ? (
                   <AdNumericInput name="p_applicant_persons__0.last_year_bonus_income" maxLength={5} unit={'万円'} />
                 ) : (
-                  formatMoney(formik.values.p_applicant_persons__0.last_year_bonus_income)
+                  formatNumber(formik.values.p_applicant_persons__0.last_year_bonus_income)
                 )
               }
             />
@@ -687,7 +687,7 @@ export const Item03 = () => {
                 isEditable ? (
                   <AdNumericInput name="p_applicant_persons__0.before_last_year_income" maxLength={5} unit={'万円'} />
                 ) : (
-                  formatMoney(formik.values.p_applicant_persons__0.before_last_year_income)
+                  formatNumber(formik.values.p_applicant_persons__0.before_last_year_income)
                 )
               }
             />

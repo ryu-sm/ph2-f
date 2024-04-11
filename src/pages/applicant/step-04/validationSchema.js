@@ -2,6 +2,8 @@ import { REGEX, YUP_MESSAGES } from '@/constant';
 import { yup } from '@/libs';
 
 export const validationSchema = yup.object({
+  consent: yup.string().required().oneOf(['1'], 'ご確認ください'),
+  confirmation: yup.string().required().oneOf(['1'], 'ご確認ください'),
   p_applicant_persons__1: yup.object({
     last_name_kanji: yup
       .string()

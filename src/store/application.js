@@ -21,6 +21,7 @@ export const applicationInitialValues = {
     // STEP00
     apply_date: '',
     // STEP01
+    created_at: '',
     move_scheduled_date: '',
     loan_target: '',
     loan_target_type: '0',

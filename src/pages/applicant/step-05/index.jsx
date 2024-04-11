@@ -477,7 +477,7 @@ export const ApStep05Page = () => {
             unit={'名'}
             placeholder={'0'}
             width={156}
-            maxLength={9}
+            maxLength={7}
           />
         </ApItemGroup>
         <ApItemGroup label={'入社年月'}>
@@ -505,7 +505,7 @@ export const ApStep05Page = () => {
                     placeholder={'0'}
                     unit={'万円'}
                     width={156}
-                    maxLength={6}
+                    maxLength={5}
                   />
                   {isMCJ && (
                     <ApNumberInputField
@@ -523,7 +523,7 @@ export const ApStep05Page = () => {
                       placeholder={'0'}
                       unit={'万円'}
                       width={156}
-                      maxLength={6}
+                      maxLength={5}
                     />
                   )}
                 </Stack>
@@ -548,7 +548,7 @@ export const ApStep05Page = () => {
                     placeholder={'0'}
                     unit={'万円'}
                     width={156}
-                    maxLength={6}
+                    maxLength={5}
                   />
                 </ApItemGroup>
               )}

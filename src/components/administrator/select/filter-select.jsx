@@ -1,5 +1,5 @@
 import { AdArrowDown } from '@/assets/icons/ad-arrow-down';
-import { formatMoney } from '@/utils';
+import { formatNumber } from '@/utils';
 import { MenuItem, Select, Stack, Typography } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback, useMemo, useRef } from 'react';
@@ -38,7 +38,7 @@ export const FilterSelect = ({ options, unit, width, hasError, isFormatMonet, ..
         ? () => {
             const selectedOption = options.find((option) => option.value === field.value);
             return isFormatMonet ? (
-              <Typography variant="filter_select_render_value">{formatMoney(selectedOption?.value, '')}</Typography>
+              <Typography variant="filter_select_render_value">{formatNumber(selectedOption?.value, '')}</Typography>
             ) : (
               <Typography variant="filter_select_render_value">
                 {unit.includes('日') ? selectedOption?.label : selectedOption?.value}

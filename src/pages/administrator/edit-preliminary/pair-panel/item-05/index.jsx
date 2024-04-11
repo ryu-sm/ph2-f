@@ -2,7 +2,7 @@ import { Stack } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 
-import { formatJapanDate, formatMoney } from '@/utils';
+import { formatJapanDate, formatNumber } from '@/utils';
 import { useEffect, useMemo } from 'react';
 import {
   AdAreaInput,
@@ -402,7 +402,7 @@ export const Item05 = () => {
                     isEditable ? (
                       <AdNumericInput name="p_application_headers.curr_house_shell_scheduled_price" unit={'万円'} />
                     ) : (
-                      formatMoney(formik.values.p_application_headers.curr_house_shell_scheduled_price)
+                      formatNumber(formik.values.p_application_headers.curr_house_shell_scheduled_price)
                     )
                   }
                 />
@@ -1061,7 +1061,7 @@ export const Item05 = () => {
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_land_area" unit={'m²'} />
                 ) : (
-                  formatMoney(formik.values.p_application_headers?.property_land_area, 'm²')
+                  formatNumber(formik.values.p_application_headers?.property_land_area, 'm²')
                 )
               }
             />
@@ -1076,7 +1076,7 @@ export const Item05 = () => {
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_floor_area" unit={'m²'} />
                 ) : (
-                  formatMoney(formik.values.p_application_headers?.property_floor_area, 'm²')
+                  formatNumber(formik.values.p_application_headers?.property_floor_area, 'm²')
                 )
               }
             />
@@ -1094,7 +1094,7 @@ export const Item05 = () => {
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_private_area" unit={'m²'} />
                 ) : (
-                  formatMoney(formik.values.p_application_headers?.property_private_area, 'm²')
+                  formatNumber(formik.values.p_application_headers?.property_private_area, 'm²')
                 )
               }
             />
@@ -1109,7 +1109,7 @@ export const Item05 = () => {
                 isEditable ? (
                   <AdAreaInput name="p_application_headers.property_total_floor_area" unit={'m²'} />
                 ) : (
-                  formatMoney(formik.values.p_application_headers?.property_total_floor_area, 'm²')
+                  formatNumber(formik.values.p_application_headers?.property_total_floor_area, 'm²')
                 )
               }
             />
@@ -1187,7 +1187,7 @@ export const Item05 = () => {
                 unit={'m²'}
               />
             ) : (
-              formatMoney(formik.values.p_application_headers?.property_building_ratio_numerator, 'm²')
+              formatNumber(formik.values.p_application_headers?.property_building_ratio_numerator, 'm²')
             )
           }
         />
@@ -1207,7 +1207,7 @@ export const Item05 = () => {
                 unit={'m²'}
               />
             ) : (
-              formatMoney(formik.values.p_application_headers?.property_building_ratio_denominator, 'm²')
+              formatNumber(formik.values.p_application_headers?.property_building_ratio_denominator, 'm²')
             )
           }
         />
@@ -1223,7 +1223,7 @@ export const Item05 = () => {
             isEditable ? (
               <AdNumericInput name="p_application_headers.property_land_ratio_numerator" maxLength={3} unit={'m²'} />
             ) : (
-              formatMoney(formik.values.p_application_headers?.property_land_ratio_numerator, 'm²')
+              formatNumber(formik.values.p_application_headers?.property_land_ratio_numerator, 'm²')
             )
           }
         />
@@ -1239,7 +1239,7 @@ export const Item05 = () => {
             isEditable ? (
               <AdNumericInput name="p_application_headers.property_land_ratio_denominator" maxLength={3} unit={'m²'} />
             ) : (
-              formatMoney(formik.values.p_application_headers?.property_land_ratio_denominator, 'm²')
+              formatNumber(formik.values.p_application_headers?.property_land_ratio_denominator, 'm²')
             )
           }
         />

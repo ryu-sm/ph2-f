@@ -16,6 +16,7 @@ import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useIsSalesPerson } from '@/hooks';
+import { useLocation } from 'react-router-dom';
 
 export const ApStep01Info = ({ stepIndex }) => {
   const navigate = useNavigate();
@@ -24,9 +25,17 @@ export const ApStep01Info = ({ stepIndex }) => {
     useRecoilValue(localApplication);
   const { agentSended } = useRecoilValue(authAtom);
   const bankMaster = useBankMaster();
+  const { pathname } = useLocation();
 
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={'：お借入のご希望'}>
+      {pathname === routeNames.apConfirmPage.path && (
+        <ApConfirmItemGroup label={'申込日時'}>
+          {`${formatJapanDate(p_application_headers.created_at.split(' ')[0], true)} ${
+            p_application_headers.created_at.split(' ')[1]
+          }`}
+        </ApConfirmItemGroup>
+      )}
       <ApConfirmItemGroup label={'入居予定年月'}>
         {p_application_headers.move_scheduled_date
           ? formatJapanDate(p_application_headers.move_scheduled_date, true)

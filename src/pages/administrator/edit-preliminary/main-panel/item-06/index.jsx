@@ -28,7 +28,7 @@ import {
   includeInExaminationOptions,
 } from './options';
 
-import { diffObj, formatJapanDate, formatMoney } from '@/utils';
+import { diffObj, formatJapanDate, formatNumber } from '@/utils';
 
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
@@ -388,7 +388,7 @@ export const Item06 = () => {
                       isEditable ? (
                         <AdNumericInput name={`p_borrowings[${index}].loan_amount`} unit={'万円'} />
                       ) : (
-                        formatMoney(item.loan_amount)
+                        formatNumber(item.loan_amount)
                       )
                     }
                   />
@@ -403,7 +403,7 @@ export const Item06 = () => {
                       isEditable ? (
                         <AdNumericInput name={`p_borrowings[${index}].curr_loan_balance_amount`} unit={'万円'} />
                       ) : (
-                        formatMoney(item.curr_loan_balance_amount)
+                        formatNumber(item.curr_loan_balance_amount)
                       )
                     }
                   />
@@ -418,7 +418,7 @@ export const Item06 = () => {
                       isEditable ? (
                         <AdNumericInput name={`p_borrowings[${index}].annual_repayment_amount`} unit={'万円'} />
                       ) : (
-                        formatMoney(item.annual_repayment_amount)
+                        formatNumber(item.annual_repayment_amount)
                       )
                     }
                   />
@@ -478,7 +478,7 @@ export const Item06 = () => {
                               unit={'戸（室）'}
                             />
                           ) : (
-                            formatMoney(item.rental_room_num, '戸（室）')
+                            formatNumber(item.rental_room_num, '戸（室）')
                           )
                         }
                       />
@@ -644,7 +644,7 @@ export const Item06 = () => {
                       isEditable ? (
                         <AdNumericInput name="p_application_headers.refund_source_amount" maxLength={6} unit={'万円'} />
                       ) : (
-                        formatMoney(formik.values.p_application_headers.refund_source_amount)
+                        formatNumber(formik.values.p_application_headers.refund_source_amount)
                       )
                     }
                   />
@@ -659,7 +659,7 @@ export const Item06 = () => {
                       isEditable ? (
                         <AdNumericInput name="p_application_headers.rent_to_be_paid_land" maxLength={10} unit={'円'} />
                       ) : (
-                        formatMoney(formik.values.p_application_headers.rent_to_be_paid_land, '円')
+                        formatNumber(formik.values.p_application_headers.rent_to_be_paid_land, '円')
                       )
                     }
                   />
@@ -674,7 +674,7 @@ export const Item06 = () => {
                       isEditable ? (
                         <AdNumericInput name="p_application_headers.rent_to_be_paid_house" maxLength={10} unit={'円'} />
                       ) : (
-                        formatMoney(formik.values.p_application_headers.rent_to_be_paid_house, '円')
+                        formatNumber(formik.values.p_application_headers.rent_to_be_paid_house, '円')
                       )
                     }
                   />

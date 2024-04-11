@@ -1,4 +1,4 @@
-import { authAtom } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { routeNames } from './settings';
@@ -9,6 +9,7 @@ import { managerRoutes } from './manager-routes';
 
 export const GroupNavigations = ({ group }) => {
   const { isLogined, user, manager, salesPerson } = useRecoilValue(authAtom);
+  const { changeToIncomeTotalizer, hasIncomeTotalizer } = useRecoilValue(localApplication);
   const { pathname } = useLocation();
   const searchParams = useCurrSearchParams();
 
@@ -25,9 +26,6 @@ export const GroupNavigations = ({ group }) => {
     return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
   }
   if (isLogined && !!user?.id) {
-    // if (user?.preExaminationStatus >= 3) {
-    //   return <Navigate to={routeNames.apTopPage.path} replace />;
-    // }
     if (
       !applicantRoutes.find((item) => item?.path === pathname) &&
       pathname !== routeNames.apLoginPage.path &&

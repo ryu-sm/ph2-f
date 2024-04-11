@@ -273,7 +273,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.required_funds_land_amount"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                   </ApItemGroup>
@@ -296,7 +296,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.required_funds_house_amount"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                   </ApItemGroup>
@@ -308,7 +308,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.required_funds_accessory_amount"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                   </ApItemGroup>
@@ -320,7 +320,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.required_funds_upgrade_amount"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                   </ApItemGroup>
@@ -332,7 +332,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.required_funds_refinance_loan_balance"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                   </ApItemGroup>
@@ -343,7 +343,7 @@ export const ApStep09Page = () => {
                     name="p_application_headers.required_funds_additional_amount"
                     placeholder={'0'}
                     unit={'万円'}
-                    maxLength={6}
+                    maxLength={5}
                     width={1}
                   />
                 </ApItemGroup>
@@ -353,7 +353,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.required_funds_loan_plus_amount"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                   </ApItemGroup>
@@ -390,7 +390,7 @@ export const ApStep09Page = () => {
                     name="p_application_headers.funding_saving_amount"
                     placeholder={'0'}
                     unit={'万円'}
-                    maxLength={6}
+                    maxLength={5}
                     width={1}
                   />
                 </ApItemGroup>
@@ -418,7 +418,7 @@ export const ApStep09Page = () => {
                     name="p_application_headers.funding_estate_sale_amount"
                     placeholder={'0'}
                     unit={'万円'}
-                    maxLength={6}
+                    maxLength={5}
                     width={1}
                   />
                 </ApItemGroup>
@@ -448,7 +448,7 @@ export const ApStep09Page = () => {
                     name="p_application_headers.funding_other_saving_amount"
                     placeholder={'0'}
                     unit={'万円'}
-                    maxLength={6}
+                    maxLength={5}
                     width={1}
                   />
                 </ApItemGroup>
@@ -476,7 +476,7 @@ export const ApStep09Page = () => {
                     name="p_application_headers.funding_relative_donation_amount"
                     placeholder={'0'}
                     unit={'万円'}
-                    maxLength={6}
+                    maxLength={5}
                     width={1}
                   />
                 </ApItemGroup>
@@ -486,7 +486,7 @@ export const ApStep09Page = () => {
                     name="p_application_headers.funding_loan_amount"
                     placeholder={'0'}
                     unit={'万円'}
-                    maxLength={6}
+                    maxLength={5}
                     width={1}
                   />
                 </ApItemGroup>
@@ -496,7 +496,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.funding_pair_loan_amount"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                   </ApItemGroup>
@@ -526,7 +526,7 @@ export const ApStep09Page = () => {
                       name="p_application_headers.funding_other_amount"
                       placeholder={'0'}
                       unit={'万円'}
-                      maxLength={6}
+                      maxLength={5}
                       width={1}
                     />
                     {Number(formik.values.p_application_headers.funding_other_amount) > 0 && (

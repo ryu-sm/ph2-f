@@ -1,7 +1,7 @@
 import { Modal, Stack, Typography } from '@mui/material';
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
-import { formatJapanDate, formatMoney } from '@/utils';
+import { formatJapanDate, formatNumber } from '@/utils';
 import { useEffect } from 'react';
 import {
   AdEditFullWidthInput,
@@ -447,7 +447,7 @@ export const Item01 = () => {
             isEditable ? (
               <AdNumericInput name="p_borrowing_details__1.desired_loan_amount" maxLength={5} unit={'万円'} />
             ) : (
-              formatMoney(formik.values.p_borrowing_details__1.desired_loan_amount)
+              formatNumber(formik.values.p_borrowing_details__1.desired_loan_amount)
             )
           }
         />
@@ -475,7 +475,7 @@ export const Item01 = () => {
                 }}
               />
             ) : (
-              formatMoney(formik.values.p_borrowing_details__1.bonus_repayment_amount)
+              formatNumber(formik.values.p_borrowing_details__1.bonus_repayment_amount)
             )
           }
         />
@@ -568,7 +568,7 @@ export const Item01 = () => {
                 isEditable ? (
                   <AdNumericInput name="p_borrowing_details__2.desired_loan_amount" maxLength={5} unit={'万円'} />
                 ) : (
-                  formatMoney(formik.values.p_borrowing_details__2.desired_loan_amount)
+                  formatNumber(formik.values.p_borrowing_details__2.desired_loan_amount)
                 )
               }
             />
@@ -583,7 +583,7 @@ export const Item01 = () => {
                 isEditable ? (
                   <AdNumericInput name="p_borrowing_details__2.bonus_repayment_amount" maxLength={5} unit={'万円'} />
                 ) : (
-                  formatMoney(formik.values.p_borrowing_details__2.bonus_repayment_amount)
+                  formatNumber(formik.values.p_borrowing_details__2.bonus_repayment_amount)
                 )
               }
             />

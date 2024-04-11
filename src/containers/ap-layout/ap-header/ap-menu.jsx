@@ -110,7 +110,7 @@ export const ApMenu = ({ menu }) => {
             <Box sx={{ background: (theme) => theme.palette.background.gradation }}>
               <Stack
                 sx={{
-                  pt: 11,
+                  // pt: 11,
                   height: '100dvh',
                   minHeight: '100dvh',
                   overflowY: 'auto',
@@ -118,10 +118,10 @@ export const ApMenu = ({ menu }) => {
                   '&::-webkit-scrollbar': { display: 'none' },
                 }}
               >
-                <Stack flex={1} sx={{ px: 4 }}>
+                <Stack direction={'row'} justifyContent={'flex-end'}>
                   <Button
                     sx={{
-                      position: 'fixed',
+                      // position: 'fixed',
                       top: 0,
                       right: 0,
                       p: 0,
@@ -139,6 +139,8 @@ export const ApMenu = ({ menu }) => {
                   >
                     <Icons.ApHeaderMenuCloseIcon />
                   </Button>
+                </Stack>
+                <Stack flex={1} sx={{ px: 4 }}>
                   <Box
                     sx={{
                       py: 6,
