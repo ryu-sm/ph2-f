@@ -1,6 +1,6 @@
 import { API_500_ERROR } from '@/constant';
 import { useStepId } from '@/hooks';
-import { apGetPapplicationHeadersFiles, apUpdateSendedInfo } from '@/services';
+import { apGetPreExaminationStatus, apUpdateSendedInfo } from '@/services';
 import { applicationInitialValues, authAtom, localApplication, sendedApllicationSelect } from '@/store';
 import { createContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -10,7 +10,9 @@ import {
   useRecoilValue,
   useRecoilValueLoadable,
   useResetRecoilState,
+  useSetRecoilState,
 } from 'recoil';
+import { useLocation } from 'react-router-dom';
 
 export const ApplicationContext = createContext({});
 
@@ -18,8 +20,11 @@ export const ApplicationProvider = ({ children }) => {
   const result = useRecoilValueLoadable(sendedApllicationSelect);
   const refreshsendedApllication = useRecoilRefresher_UNSTABLE(sendedApllicationSelect);
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
-  const { user, agentSended } = useRecoilValue(authAtom);
+  const { user, agentSended, applyNo } = useRecoilValue(authAtom);
+  const setAuthInfo = useSetRecoilState(authAtom);
   const stepId = useStepId();
+
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (agentSended) {
@@ -83,6 +88,32 @@ export const ApplicationProvider = ({ children }) => {
       toast.error(API_500_ERROR);
     }
   };
+
+  const getPreExaminationStatus = async () => {
+    if (applyNo) {
+      try {
+        const res = await apGetPreExaminationStatus(applyNo);
+        console.log(res.data);
+        setAuthInfo((pre) => {
+          return {
+            ...pre,
+            user: {
+              ...pre.user,
+              preExaminationStatus: res.data.pre_examination_status,
+            },
+          };
+        });
+        // refreshsendedApllication();
+      } catch (error) {
+        console.log(error);
+        toast.error(API_500_ERROR);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getPreExaminationStatus();
+  }, [applyNo, pathname]);
 
   return (
     <ApplicationContext.Provider

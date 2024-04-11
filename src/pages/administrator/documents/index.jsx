@@ -170,8 +170,8 @@ export const AdDocumentsPage = () => {
         res = await adGetManagerDocs();
         console.log(res.data);
       } else {
-        const ids = authInfo.salesPerson.orgs.map((item) => item?.s_sales_company_org_id);
-        res = await adGetSalesPersonDocs(ids.join(','));
+        // const ids = authInfo.salesPerson.orgs.map((item) => item?.s_sales_company_org_id);
+        res = await adGetSalesPersonDocs();
         console.log(res.data);
       }
 

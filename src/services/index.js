@@ -183,8 +183,8 @@ export const adAddArchiveFiles = async (data) => {
   return await service.post('/sales-person/c_archive_files', data);
 };
 
-export const adGetSalesPersonDocs = async (s_sales_company_org_ids) => {
-  return await service.get(`/sales-person/c_archive_files?s_sales_company_org_ids=${s_sales_company_org_ids}`);
+export const adGetSalesPersonDocs = async () => {
+  return await service.get(`/sales-person/c_archive_files`);
 };
 
 export const adGetManagerDocs = async () => {
@@ -339,4 +339,8 @@ export const apGetCaccessLogs = async (start, end) => {
   if (!start && !end) {
     return await service.get(`/c_access_logs`);
   }
+};
+
+export const apGetPreExaminationStatus = async (apply_no) => {
+  return await service.get(`/pre_examination_status?apply_no=${apply_no}`);
 };

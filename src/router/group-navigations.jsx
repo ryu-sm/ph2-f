@@ -25,12 +25,14 @@ export const GroupNavigations = ({ group }) => {
     return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
   }
   if (isLogined && !!user?.id) {
+    // if (user?.preExaminationStatus >= 3) {
+    //   return <Navigate to={routeNames.apTopPage.path} replace />;
+    // }
     if (
       !applicantRoutes.find((item) => item?.path === pathname) &&
       pathname !== routeNames.apLoginPage.path &&
       pathname !== routeNames.apRegisterPage.path
     ) {
-      console.log(999);
       return <Navigate to={routeNames.apTopPage.path} replace />;
     }
   }
