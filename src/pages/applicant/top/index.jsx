@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { authAtom, localApplication, preExaminationStatusSelector } from '@/store';
+import { authAtom, localApplication } from '@/store';
 import { ApFooter, ApLayout } from '@/containers';
 import { Box, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
@@ -18,10 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApplicationContext } from '@/hooks';
 
 export const ApTopPage = () => {
-  const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
-
   const {
-    applyNo,
     agentSended,
     user: { hasDraftData },
   } = useRecoilValue(authAtom);
@@ -34,7 +31,13 @@ export const ApTopPage = () => {
     }
   }, [agentSended]);
 
-  const { apCurrStepId, hasJoinGuarantor, hasIncomeTotalizer, p_application_banks } = useRecoilValue(localApplication);
+  const {
+    apCurrStepId,
+    hasJoinGuarantor,
+    hasIncomeTotalizer,
+    p_application_banks,
+    p_application_headers: { pre_examination_status, apply_no },
+  } = useRecoilValue(localApplication);
 
   const topItems = useMemo(
     () => [
@@ -44,7 +47,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon01 />,
         stepPath: routeNames.apStep01Page.path,
         buttonLabel: apCurrStepId === 1 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       {
         id: 2,
@@ -52,7 +55,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon02 />,
         stepPath: routeNames.apStep02Page.path,
         buttonLabel: apCurrStepId < 2 ? '---' : apCurrStepId === 2 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       {
         id: 3,
@@ -60,7 +63,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon03 />,
         stepPath: routeNames.apStep03Page.path,
         buttonLabel: apCurrStepId < 3 ? '---' : apCurrStepId === 3 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       ...(hasIncomeTotalizer
         ? [
@@ -70,7 +73,7 @@ export const ApTopPage = () => {
               stepIcon: <Icons.ApTopStepIdIcon04 />,
               stepPath: routeNames.apStep04Page.path,
               buttonLabel: apCurrStepId < 4 ? '---' : apCurrStepId === 4 ? '入力する' : '修正する',
-              show: preExaminationStatus < parseInt(APPROVAL),
+              show: Number(pre_examination_status) < parseInt(APPROVAL),
             },
             {
               id: 5,
@@ -78,7 +81,7 @@ export const ApTopPage = () => {
               stepIcon: <Icons.ApTopStepIdIcon05 />,
               stepPath: routeNames.apStep05Page.path,
               buttonLabel: apCurrStepId < 5 ? '---' : apCurrStepId === 5 ? '入力する' : '修正する',
-              show: preExaminationStatus < parseInt(APPROVAL),
+              show: Number(pre_examination_status) < parseInt(APPROVAL),
             },
           ]
         : []),
@@ -90,7 +93,7 @@ export const ApTopPage = () => {
               stepIcon: <Icons.ApTopStepIdIcon06 />,
               stepPath: routeNames.apStep06Page.path,
               buttonLabel: apCurrStepId < 6 ? '---' : apCurrStepId === 6 ? '入力する' : '修正する',
-              show: preExaminationStatus < parseInt(APPROVAL),
+              show: Number(pre_examination_status) < parseInt(APPROVAL),
             },
           ]
         : []),
@@ -100,7 +103,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon07 />,
         stepPath: routeNames.apStep07Page.path,
         buttonLabel: apCurrStepId < 7 ? '---' : apCurrStepId === 7 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       {
         id: 8,
@@ -108,7 +111,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon08 />,
         stepPath: routeNames.apStep08Page.path,
         buttonLabel: apCurrStepId < 8 ? '---' : apCurrStepId === 8 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       {
         id: 9,
@@ -116,7 +119,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon09 />,
         stepPath: routeNames.apStep09Page.path,
         buttonLabel: apCurrStepId < 9 ? '---' : apCurrStepId === 9 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       {
         id: 10,
@@ -124,7 +127,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon10 />,
         stepPath: routeNames.apStep10Page.path,
         buttonLabel: apCurrStepId < 10 ? '---' : apCurrStepId === 10 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       ...(hasIncomeTotalizer
         ? [
@@ -134,7 +137,7 @@ export const ApTopPage = () => {
               stepIcon: <Icons.ApTopStepIdIcon11 />,
               stepPath: routeNames.apStep11Page.path,
               buttonLabel: apCurrStepId < 11 ? '---' : apCurrStepId === 11 ? '入力する' : '修正する',
-              show: preExaminationStatus < parseInt(APPROVAL),
+              show: Number(pre_examination_status) < parseInt(APPROVAL),
             },
           ]
         : []),
@@ -144,7 +147,7 @@ export const ApTopPage = () => {
         stepIcon: <Icons.ApTopStepIdIcon12 />,
         stepPath: routeNames.apStep12Page.path,
         buttonLabel: apCurrStepId < 12 ? '---' : apCurrStepId === 12 ? '入力する' : '修正する',
-        show: preExaminationStatus < parseInt(APPROVAL),
+        show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
       {
         id: 13,
@@ -162,14 +165,14 @@ export const ApTopPage = () => {
         buttonLabel: apCurrStepId < 14 ? '---' : '申込内容確認',
         show: true,
       },
-      ...(preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS
+      ...(pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS
         ? [
             {
               id: 15,
               stepTitle: '仮審査結果',
               stepIcon: <Icons.ApTopStepIdIcon15 />,
               stepPath: '',
-              buttonLabel: preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS ? '申込内容確認' : '---',
+              buttonLabel: pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS ? '申込内容確認' : '---',
               show: true,
             },
           ]
@@ -182,27 +185,27 @@ export const ApTopPage = () => {
               stepTitle: '日本住宅ローン用\nPDF出力',
               stepIcon: <Icons.ApTopStepIdIcon16 />,
               stepPath: '',
-              buttonLabel: preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS ? 'ダウンロード' : '---',
+              buttonLabel: pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS ? 'ダウンロード' : '---',
               show: true,
             },
           ]
         : []),
     ],
-    [p_application_banks, preExaminationStatus, hasIncomeTotalizer, hasJoinGuarantor, apCurrStepId]
+    [p_application_banks, pre_examination_status, hasIncomeTotalizer, hasJoinGuarantor, apCurrStepId]
   );
 
   const topLabelText = useMemo(() => {
-    if (preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS) return `審査結果が届きました\nご確認ください`;
+    if (pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS) return `審査結果が届きました\nご確認ください`;
     if (
-      preExaminationStatus === APPROVAL ||
-      preExaminationStatus === DATA_LINKAGE_TO_BANKS ||
-      preExaminationStatus === DISCLOSURE_RESULTS_TO_PARTNER_COMPANIES
+      pre_examination_status === APPROVAL ||
+      pre_examination_status === DATA_LINKAGE_TO_BANKS ||
+      pre_examination_status === DISCLOSURE_RESULTS_TO_PARTNER_COMPANIES
     )
       return `仮審査の結果につきましては、\n提携先企業からお知らせいたします。`;
-    if (!!applyNo) return `お申込完了しています`;
+    if (!!apply_no) return `お申込完了しています`;
     if (hasDraftData) return `前回の続きから\n入力しましょう！`;
     return `STEPに沿って入力してください\n途中保存もできます！`;
-  }, [preExaminationStatus, applyNo, hasDraftData]);
+  }, [pre_examination_status, apply_no, hasDraftData]);
 
   return (
     <ApLayout hasMenu>
@@ -250,8 +253,10 @@ export const ApTopPage = () => {
 
 const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, stepPath, topItems }) => {
   const navigate = useNavigate();
-  const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
-  const { apCurrStepId } = useRecoilValue(localApplication);
+  const {
+    apCurrStepId,
+    p_application_headers: { pre_examination_status },
+  } = useRecoilValue(localApplication);
   const { agentSended } = useRecoilValue(authAtom);
 
   const itemButton = useCallback((id) => {
@@ -267,7 +272,7 @@ const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, st
           <ApPrimaryButton
             height={40}
             width={114}
-            disabled={!(preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS)}
+            disabled={!(pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS)}
             onClick={() => navigate(stepPath)}
           >
             {buttonLabel}
@@ -278,7 +283,7 @@ const TopItem = ({ id, stepNo, isCompleted, stepIcon, stepTitle, buttonLabel, st
           <ApPrimaryButton
             height={40}
             width={114}
-            disabled={!(preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS)}
+            disabled={!(pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS)}
             onClick={() => navigate(stepPath)}
           >
             {buttonLabel}

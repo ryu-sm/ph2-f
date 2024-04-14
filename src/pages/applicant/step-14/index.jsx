@@ -1,14 +1,16 @@
 import { ApPageTitle } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 import { routeNames } from '@/router/settings';
-import { authAtom } from '@/store';
+import { localApplication } from '@/store';
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 export const ApStep14Page = () => {
   const navigate = useNavigate();
-  const { applyNo } = useRecoilValue(authAtom);
+  const {
+    p_application_headers: { apply_no },
+  } = useRecoilValue(localApplication);
 
   return (
     <ApLayout hasMenu hasStepBar pb={18}>
@@ -46,7 +48,7 @@ export const ApStep14Page = () => {
             </Stack>
             <Stack alignItems={'center'} sx={{ p: 3 }}>
               <Typography variant="page_title" color={'text.main'}>
-                {applyNo}
+                {apply_no}
               </Typography>
             </Stack>
           </Stack>

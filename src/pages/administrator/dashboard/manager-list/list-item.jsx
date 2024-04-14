@@ -435,7 +435,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           <FieldItem
             maxWidth={widthConfig[7]}
             minWidth={widthConfig[7]}
-            value={<ProgressStatus status={item.pre_examination_status} />}
+            value={<ProgressStatus status={item.pre_examination_status} id={item?.id} />}
             isText={false}
           />
           <FieldItem

@@ -21,7 +21,7 @@ import { FormikProvider, useFormik } from 'formik';
 import { Box, Stack, Typography } from '@mui/material';
 import { apAgentSend } from '@/services';
 import { Icons } from '@/assets';
-import { useBoolean, useIsSalesPerson } from '@/hooks';
+import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
@@ -29,6 +29,7 @@ import { API_500_ERROR } from '@/constant';
 export const ApStep13Page = () => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
+  const { refreshsendedApllication } = useApplicationContext();
 
   const setAuthInfo = useSetRecoilState(authAtom);
 
@@ -131,7 +132,7 @@ export const ApStep13Page = () => {
           showError.onTrue();
           return;
         }
-        console.log(88888, localApplicationInfo.p_application_headers.funding_self_amount);
+
         const sendRes = await apAgentSend({
           ...localApplicationInfo,
           p_applicant_persons__0: {
@@ -142,10 +143,10 @@ export const ApStep13Page = () => {
         if (isSalesPerson) {
           return navigate(routeNames.adSalesPersonDashboardPage.path);
         }
+        await refreshsendedApllication();
         setAuthInfo((pre) => {
           return {
             ...pre,
-            applyNo: sendRes.data?.apply_no,
             agentSended: true,
           };
         });

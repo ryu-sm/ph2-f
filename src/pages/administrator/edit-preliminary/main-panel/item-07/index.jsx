@@ -466,16 +466,24 @@ export const Item07 = () => {
           }}
           field={
             isEditable ? (
-              <AdNumericInput name="p_application_headers.funding_other_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput
+                name="p_application_headers.funding_other_amount"
+                maxLength={6}
+                unit={'万円'}
+                onChange={() => {
+                  formik.setFieldTouched('p_application_headers.funding_other_amount_detail', true);
+                }}
+              />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_other_amount)
             )
           }
         />
 
-        {!!formik.values.p_application_headers.funding_other_amount && (
+        {Number(formik.values.p_application_headers.funding_other_amount) > 0 && (
           <EditRow
             label={'※詳細を入力ください。'}
+            isLogicRequired
             field={
               isEditable ? (
                 <AdEditFullWidthInput name="p_application_headers.funding_other_amount_detail" convertFullWidth />

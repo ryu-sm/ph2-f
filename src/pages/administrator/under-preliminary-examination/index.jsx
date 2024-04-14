@@ -1,23 +1,28 @@
 import { AdMainWrapper } from '@/containers';
+import { useCurrSearchParams } from '@/hooks';
+import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { authAtom } from '@/store';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
-
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
+import { adGetProvisionalStatus } from '@/services';
+import { useEffect, useState } from 'react';
 export const AdUnderPreliminaryExamination = () => {
-  const status = '3';
-  const LeftContent = () => {
-    const { user } = useRecoilValue(authAtom);
-    return (
-      <Stack spacing={7} direction={'row'} alignItems={'center'}>
-        <Typography variant="main_page_title" color="text.normal" fontWeight={600}>
-          審査状況
-        </Typography>
-        <Typography variant="main_page_title" color="text.normal" fontWeight={600}>
-          {`[ ${user?.name} 様 ]`}
-        </Typography>
-      </Stack>
-    );
+  const p_application_header_id = useCurrSearchParams().get('id');
+  const [provisionalStatusInfo, setProvisionalStatusInfo] = useState(null);
+  const fetchData = async () => {
+    try {
+      const res = await adGetProvisionalStatus(p_application_header_id);
+      console.log(res.data);
+      setProvisionalStatusInfo(res.data);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
   };
+  useEffect(() => {
+    fetchData();
+  }, [p_application_header_id]);
 
   const tableHeaderStyles = {
     fontFamily: 'Hiragino Sans',
@@ -120,12 +125,15 @@ export const AdUnderPreliminaryExamination = () => {
             sx={{
               ...tableCellStyles,
               borderBottom: !isLast && '1px solid #333',
-              bgcolor: (theme) => (status === row.status ? theme.palette.primary.main : 'white'),
+              bgcolor: (theme) =>
+                provisionalStatusInfo?.p_application_banks?.provisional_status === row.status
+                  ? theme.palette.primary.main
+                  : 'white',
               color: 'white',
               textAlign: 'center',
             }}
           >
-            {status === row.status ? '▼' : ''}
+            {provisionalStatusInfo?.p_application_banks?.provisional_status === row.status ? '▼' : ''}
           </TableCell>
         )}
         <TableCell
@@ -139,7 +147,19 @@ export const AdUnderPreliminaryExamination = () => {
     ));
 
   return (
-    <AdMainWrapper leftContent={<LeftContent />} style={{ backgroundColor: '#F8F8F8' }}>
+    <AdMainWrapper
+      leftContent={
+        <Stack spacing={7} direction={'row'} alignItems={'center'}>
+          <Typography variant="main_page_title" color="text.normal" fontWeight={600}>
+            審査状況
+          </Typography>
+          <Typography variant="main_page_title" color="text.normal" fontWeight={600}>
+            {`[ ${provisionalStatusInfo?.p_applicant_persons__0?.last_name_kanji}${provisionalStatusInfo?.p_applicant_persons__0?.first_name_kanji} 様 ]`}
+          </Typography>
+        </Stack>
+      }
+      style={{ backgroundColor: '#F8F8F8' }}
+    >
       <Table>
         <TableHead>
           <TableRow>

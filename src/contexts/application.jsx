@@ -1,17 +1,10 @@
 import { API_500_ERROR } from '@/constant';
 import { useBoolean, useStepId } from '@/hooks';
 import { apGetPreExaminationStatus, apGetSendedApplication, apUpdateSendedInfo } from '@/services';
-import { applicationInitialValues, authAtom, localApplication, sendedApllicationSelect } from '@/store';
+import { applicationInitialValues, authAtom, localApplication } from '@/store';
 import { createContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import {
-  useRecoilRefresher_UNSTABLE,
-  useRecoilState,
-  useRecoilValue,
-  useRecoilValueLoadable,
-  useResetRecoilState,
-  useSetRecoilState,
-} from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useLocation } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { Icons } from '@/assets';
@@ -25,70 +18,17 @@ import { ApThemeProvider } from '@/styles';
 export const ApplicationContext = createContext({});
 
 export const ApplicationProvider = ({ children }) => {
-  const result = useRecoilValueLoadable(sendedApllicationSelect);
-  // const refreshsendedApllication = useRecoilRefresher_UNSTABLE(sendedApllicationSelect);
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
-  const { user, agentSended, applyNo } = useRecoilValue(authAtom);
+  const {
+    p_application_headers: { apply_no },
+  } = localApplicationInfo;
+  const { user } = useRecoilValue(authAtom);
   const setAuthInfo = useSetRecoilState(authAtom);
   const stepId = useStepId();
   const modal = useBoolean(false);
   const navigate = useNavigate();
 
   const { pathname } = useLocation();
-
-  // useEffect(() => {
-  //   if (agentSended && !localApplicationInfo.changeToIncomeTotalizer) {
-  //     console.log('debug', pathname);
-  //     if (result.state === 'hasError') {
-  //       toast.error(API_500_ERROR);
-  //     }
-  //     if (result.state === 'hasValue') {
-  //       setLocalApplicationInfo((pre) => {
-  //         return {
-  //           ...pre,
-  //           p_application_headers: {
-  //             ...applicationInitialValues.p_application_headers,
-  //             ...result.contents.p_application_headers,
-  //           },
-  //           p_borrowing_details__1: {
-  //             ...applicationInitialValues.p_borrowing_details__1,
-  //             ...result.contents.p_borrowing_details__1,
-  //           },
-  //           p_borrowing_details__2: {
-  //             ...applicationInitialValues.p_borrowing_details__2,
-  //             ...result.contents.p_borrowing_details__2,
-  //           },
-  //           p_application_banks: result.contents?.p_application_banks ? result.contents?.p_application_banks : [],
-  //           p_applicant_persons__0: {
-  //             ...applicationInitialValues.p_applicant_persons__0,
-  //             ...result.contents.p_applicant_persons__0,
-  //           },
-  //           p_applicant_persons__1: {
-  //             ...applicationInitialValues.p_applicant_persons__1,
-  //             ...result.contents?.p_applicant_persons__1,
-  //           },
-  //           p_join_guarantors: result.contents?.p_join_guarantors ? result.contents.p_join_guarantors : [],
-  //           p_residents: result.contents?.p_residents ? result.contents?.p_residents : [],
-  //           p_borrowings: result.contents?.p_borrowings ? result.contents?.p_borrowings : [],
-  //           apCurrStepId: 14,
-  //           isMCJ: result.contents.p_application_banks?.length > 1,
-  //           hasIncomeTotalizer:
-  //             result.contents.p_application_headers.loan_type === '3' ||
-  //             result.contents.p_application_headers.loan_type === '4',
-  //           hasJoinGuarantor: result.contents.p_application_headers.join_guarantor_umu === '1',
-  //           changeJoinGuarantor: false,
-  //           changeToIncomeTotalizer: false,
-  //           p_applicant_persons_a_agreement: true,
-  //           p_applicant_persons_b_agreement:
-  //             result.contents.p_application_headers.loan_type === '3' ||
-  //             result.contents.p_application_headers.loan_type === '4'
-  //               ? true
-  //               : false,
-  //         };
-  //       });
-  //     }
-  //   }
-  // }, [result.state, user, agentSended]);
 
   const refreshsendedApllication = async () => {
     const res = await apGetSendedApplication(user?.id);
@@ -139,7 +79,7 @@ export const ApplicationProvider = ({ children }) => {
 
   const updateSendedInfo = async (data) => {
     try {
-      const res = await apGetPreExaminationStatus(applyNo);
+      const res = await apGetPreExaminationStatus(apply_no);
       console.log(res);
       if (Number(res.data?.pre_examination_status) >= 3) {
         modal.onTrue();
@@ -155,9 +95,9 @@ export const ApplicationProvider = ({ children }) => {
   };
 
   const getPreExaminationStatus = async () => {
-    if (applyNo) {
+    if (apply_no) {
       try {
-        const res = await apGetPreExaminationStatus(applyNo);
+        const res = await apGetPreExaminationStatus(apply_no);
         console.log(res.data);
         if (
           Number(res.data?.pre_examination_status) >= 3 &&
@@ -198,7 +138,7 @@ export const ApplicationProvider = ({ children }) => {
 
   useEffect(() => {
     getPreExaminationStatus();
-  }, [applyNo, pathname]);
+  }, [apply_no, pathname]);
 
   return (
     <ApplicationContext.Provider

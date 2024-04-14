@@ -288,7 +288,7 @@ export const ApStep09Info = ({ stepIndex }) => {
                   : 'ー'}
                 万円
               </Typography>
-              {p_application_headers.funding_other_amount && (
+              {Number(p_application_headers.funding_other_amount) > 0 && (
                 <Typography variant="modal_label" color={'text.main'} textAlign={'end'}>
                   {p_application_headers.funding_other_amount_detail || 'ー'}
                 </Typography>

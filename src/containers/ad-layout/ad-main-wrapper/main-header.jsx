@@ -109,7 +109,6 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
                   setAuthInfo((pre) => {
                     return {
                       ...pre,
-                      applyNo: null,
                       agentSended: false,
                     };
                   });

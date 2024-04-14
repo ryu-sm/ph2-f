@@ -344,3 +344,7 @@ export const apGetCaccessLogs = async (start, end) => {
 export const apGetPreExaminationStatus = async (apply_no) => {
   return await service.get(`/pre_examination_status?apply_no=${apply_no}`);
 };
+
+export const adGetProvisionalStatus = async (p_application_header_id) => {
+  return await service.get(`/provisional_status/${p_application_header_id}`);
+};

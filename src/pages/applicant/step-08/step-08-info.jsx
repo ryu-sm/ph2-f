@@ -122,7 +122,7 @@ export const ApStep08Info = ({ stepIndex }) => {
             {p_borrowing.loan_start_date && (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 {p_borrowing.type === '2' ? '〈当初カード契約年月〉' : '〈当初借入年月〉'}
-                {p_borrowing.loan_start_date ? formatJapanDate(p_borrowing.loan_start_date) : 'ー'}
+                {p_borrowing.loan_start_date ? formatJapanDate(p_borrowing.loan_start_date, true) : 'ー'}
               </Typography>
             )}
 
@@ -157,14 +157,14 @@ export const ApStep08Info = ({ stepIndex }) => {
             {p_borrowing.card_expiry_date && p_borrowing.type === '2' && (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 〈カード有効期限〉
-                {p_borrowing.card_expiry_date ? formatJapanDate(p_borrowing.card_expiry_date) : 'ー'}
+                {p_borrowing.card_expiry_date ? formatJapanDate(p_borrowing.card_expiry_date, true) : 'ー'}
               </Typography>
             )}
 
             {p_borrowing.loan_end_date && p_borrowing.type !== '2' && (
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 {p_borrowing.type === '3' ? '〈最終返済年月〉' : '〈最終期限〉'}
-                {p_borrowing.loan_end_date ? formatJapanDate(p_borrowing.loan_end_date) : 'ー'}
+                {p_borrowing.loan_end_date ? formatJapanDate(p_borrowing.loan_end_date, true) : 'ー'}
               </Typography>
             )}
 
@@ -215,7 +215,7 @@ export const ApStep08Info = ({ stepIndex }) => {
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 〈完済（予定）年月〉
                 {p_borrowing.scheduled_loan_payoff_date
-                  ? formatJapanDate(p_borrowing.scheduled_loan_payoff_date)
+                  ? formatJapanDate(p_borrowing.scheduled_loan_payoff_date, true)
                   : 'ー'}
               </Typography>
             )}
@@ -297,9 +297,8 @@ export const ApStep08Info = ({ stepIndex }) => {
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 〈月間の支払金額〉
                 {p_application_headers.rent_to_be_paid_land
-                  ? Number(p_application_headers.rent_to_be_paid_land).toLocaleString()
+                  ? formatNumber(p_application_headers.rent_to_be_paid_land, '円')
                   : 'ー'}
-                円
               </Typography>
 
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
@@ -318,9 +317,8 @@ export const ApStep08Info = ({ stepIndex }) => {
               <Typography variant="modal_label" color={'text.main'} textAlign={'start'}>
                 〈月間の支払金額〉
                 {p_application_headers.rent_to_be_paid_house
-                  ? Number(p_application_headers.rent_to_be_paid_house).toLocaleString()
+                  ? formatNumber(p_application_headers.rent_to_be_paid_house, '円')
                   : 'ー'}
-                円
               </Typography>
             </ApConfirmItemGroup>
           </Stack>

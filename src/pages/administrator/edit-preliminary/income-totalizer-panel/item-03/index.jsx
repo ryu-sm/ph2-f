@@ -178,7 +178,6 @@ export const Item03 = () => {
             key: `p_applicant_persons.office_occupation.${p_applicant_persons__1?.id}`,
             options: occupationOptions,
           }}
-          isRequired
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -189,8 +188,11 @@ export const Item03 = () => {
                   if (value === '12') {
                     formik.setFieldValue('p_applicant_persons__1.office_phone', '');
                   }
-                  if (value === '99') {
+                  if (value !== '99') {
                     formik.setFieldValue('p_applicant_persons__1.office_occupation_other', '');
+                  }
+                  if (value === '99') {
+                    formik.setFieldTouched('p_applicant_persons__1.office_occupation_other', true);
                   }
                 }}
               />
@@ -230,6 +232,9 @@ export const Item03 = () => {
                 options={industryOptions}
                 onChange={(value) => {
                   if (value === '99') {
+                    formik.setFieldTouched('p_applicant_persons__1.office_industry_other', true);
+                  }
+                  if (value !== '99') {
                     formik.setFieldValue('p_applicant_persons__1.office_industry_other', '');
                   }
                 }}
@@ -262,7 +267,6 @@ export const Item03 = () => {
             options: occupationDetailOptions,
           }}
           hasPleft={isEditable}
-          isRequired
           field={
             isEditable ? (
               <AdSelectRadios
@@ -270,6 +274,9 @@ export const Item03 = () => {
                 options={occupationDetailOptions}
                 onChange={(value) => {
                   if (value === '99') {
+                    formik.setFieldTouched('p_applicant_persons__1.office_occupation_detail_other', true);
+                  }
+                  if (value !== '99') {
                     formik.setFieldValue('p_applicant_persons__1.office_occupation_detail_other', '');
                   }
                 }}
@@ -303,7 +310,6 @@ export const Item03 = () => {
             key: `p_applicant_persons.office_employment_type.${p_applicant_persons__1?.id}`,
             options: employmentTypeOptions,
           }}
-          isRequired
           isAddendum
           hasPleft={isEditable}
           field={
@@ -321,7 +327,6 @@ export const Item03 = () => {
           upConfig={{
             key: `p_applicant_persons.office_name_kanji.${p_applicant_persons__1?.id}`,
           }}
-          isRequired
           field={
             isEditable ? (
               <AdEditInput name="p_applicant_persons__1.office_name_kanji" convertFullWidth />
@@ -335,7 +340,6 @@ export const Item03 = () => {
           upConfig={{
             key: `p_applicant_persons.office_name_kana.${p_applicant_persons__1?.id}`,
           }}
-          isRequired
           isAddendum
           field={
             isEditable ? (
@@ -379,7 +383,6 @@ export const Item03 = () => {
           upConfig={{
             key: `p_applicant_persons.office_phone.${p_applicant_persons__1?.id}`,
           }}
-          isRequired
           field={
             isEditable ? (
               <AdPhoneInputField name="p_applicant_persons__1.office_phone" convertHalfWidth />
@@ -393,7 +396,6 @@ export const Item03 = () => {
           upConfig={{
             key: `p_applicant_persons.office_head_location.${p_applicant_persons__1?.id}`,
           }}
-          isRequired
           isAddendum
           field={
             isEditable ? (
@@ -457,7 +459,6 @@ export const Item03 = () => {
           upConfig={{
             key: `p_applicant_persons.office_postal_code.${p_applicant_persons__1?.id}`,
           }}
-          isRequired
           field={
             isEditable ? (
               <AdZipCodeInput
@@ -501,7 +502,6 @@ export const Item03 = () => {
           upConfig={{
             key: `p_applicant_persons.office_prefecture_kanji.${p_applicant_persons__1?.id}`,
           }}
-          isRequired
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -555,7 +555,6 @@ export const Item03 = () => {
           upConfig={{
             key: `p_applicant_persons.office_prefecture_kana.${p_applicant_persons__1?.id}`,
           }}
-          isRequired
           isAddendum
           field={
             isEditable ? (
@@ -614,7 +613,6 @@ export const Item03 = () => {
             formatNumber: true,
             unit: '名',
           }}
-          isRequired
           field={
             isEditable ? (
               <AdNumericInput name="p_applicant_persons__1.office_employee_num" maxLength={9} unit={'名'} />
@@ -645,7 +643,6 @@ export const Item03 = () => {
             formatNumber: true,
             unit: '万円',
           }}
-          isRequired
           field={
             isEditable ? (
               <AdNumericInput name="p_applicant_persons__1.last_year_income" maxLength={6} />
@@ -663,7 +660,6 @@ export const Item03 = () => {
                 formatNumber: true,
                 unit: '万円',
               }}
-              isRequired
               field={
                 isEditable ? (
                   <AdNumericInput name="p_applicant_persons__1.last_year_bonus_income" maxLength={6} />
@@ -679,7 +675,6 @@ export const Item03 = () => {
                 formatNumber: true,
                 unit: '万円',
               }}
-              isRequired
               field={
                 isEditable ? (
                   <AdNumericInput name="p_applicant_persons__1.before_last_year_income" maxLength={6} />
@@ -718,7 +713,6 @@ export const Item03 = () => {
             key: `p_applicant_persons.main_income_source.${p_applicant_persons__1?.id}`,
             options: incomeOptions,
           }}
-          isRequired
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -763,7 +757,6 @@ export const Item03 = () => {
                 mapOptions: true,
                 join: '・',
               }}
-              isLogicRequired
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -792,7 +785,6 @@ export const Item03 = () => {
                 upConfig={{
                   key: `p_applicant_persons.tax_return_reason_other.${p_applicant_persons__1?.id}`,
                 }}
-                isLogicRequired
                 field={
                   isEditable ? (
                     <AdEditInput name="p_applicant_persons__1.tax_return_reason_other" convertFullWidth />
@@ -810,7 +802,6 @@ export const Item03 = () => {
             key: `p_applicant_persons.transfer_office.${p_applicant_persons__1?.id}`,
             options: transferOfficeOptions,
           }}
-          isLogicRequired
           hasPleft={isEditable}
           field={
             isEditable ? (
@@ -861,7 +852,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_name_kanji.${p_applicant_persons__1?.id}`,
               }}
-              isLogicRequired
               field={
                 isEditable ? (
                   <AdEditInput name="p_applicant_persons__1.transfer_office_name_kanji" convertFullWidth />
@@ -875,7 +865,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_name_kana.${p_applicant_persons__1?.id}`,
               }}
-              isLogicRequired
               field={
                 isEditable ? (
                   <AdEditInput name="p_applicant_persons__1.transfer_office_name_kana" convertFullWidth />
@@ -889,7 +878,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_phone.${p_applicant_persons__1?.id}`,
               }}
-              isLogicRequired
               field={
                 isEditable ? (
                   <AdPhoneInputField name="p_applicant_persons__1.transfer_office_phone" convertFullWidth />
@@ -903,7 +891,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_postal_code.${p_applicant_persons__1?.id}`,
               }}
-              isLogicRequired
               field={
                 isEditable ? (
                   <AdZipCodeInput
@@ -935,7 +922,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_prefecture_kanji.${p_applicant_persons__1?.id}`,
               }}
-              isLogicRequired
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -955,7 +941,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_city_kanji.${p_applicant_persons__1?.id}`,
               }}
-              isRequired
               field={
                 isEditable ? (
                   <AdEditInput name="p_applicant_persons__1.transfer_office_city_kanji" convertFullWidth />
@@ -969,7 +954,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_district_kanji.${p_applicant_persons__1?.id}`,
               }}
-              isRequired
               field={
                 isEditable ? (
                   <AdEditInput name="p_applicant_persons__1.transfer_office_district_kanji" convertFullWidth />
@@ -983,7 +967,6 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_other_address_kanji.${p_applicant_persons__1?.id}`,
               }}
-              isRequired
               field={
                 isEditable ? (
                   <AdEditInput name="p_applicant_persons__1.transfer_office_other_address_kanji" convertFullWidth />
@@ -1030,7 +1013,6 @@ export const Item03 = () => {
                 formatJaDate: true,
               }}
               hasPleft={isEditable}
-              isLogicRequired
               field={
                 isEditable ? (
                   <MonthPicker
@@ -1052,7 +1034,6 @@ export const Item03 = () => {
                 key: `p_applicant_persons.maternity_paternity_leave_end_date.${p_applicant_persons__1?.id}`,
                 formatJaDate: true,
               }}
-              isLogicRequired
               hasPleft={isEditable}
               field={
                 isEditable ? (

@@ -52,10 +52,8 @@ export const ApRegisterPage = () => {
               id: payload?.id,
               email: payload?.email,
               salesCompanyOrgId: payload?.s_sales_company_org_id,
-              preExaminationStatus: payload?.pre_examination_status,
               displayPdf: Boolean(payload?.display_pdf),
             },
-            applyNo: payload?.apply_no,
             agentSended: Boolean(payload?.agent_sended),
           };
         });

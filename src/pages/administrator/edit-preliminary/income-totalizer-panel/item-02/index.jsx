@@ -161,6 +161,22 @@ export const Item02 = () => {
         />
 
         <EditRow
+          label={'性別'}
+          upConfig={{
+            key: `p_applicant_persons.gender.${p_applicant_persons__1?.id}`,
+            options: genderOptions,
+          }}
+          hasPleft={isEditable}
+          field={
+            isEditable ? (
+              <AdSelectRadios name="p_applicant_persons__1.gender" options={genderOptions} />
+            ) : (
+              genderOptions.find((item) => item.value === formik.values.p_applicant_persons__1.gender)?.label
+            )
+          }
+        />
+
+        <EditRow
           label={'続柄'}
           upConfig={{
             key: `p_applicant_persons.rel_to_applicant_a_name.${p_applicant_persons__1?.id}`,
@@ -180,22 +196,6 @@ export const Item02 = () => {
               relToApplicantAOptions.find(
                 (item) => item.value === formik.values.p_applicant_persons__1.rel_to_applicant_a_name
               )?.label
-            )
-          }
-        />
-
-        <EditRow
-          label={'性別'}
-          upConfig={{
-            key: `p_applicant_persons.gender.${p_applicant_persons__1?.id}`,
-            options: genderOptions,
-          }}
-          hasPleft={isEditable}
-          field={
-            isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__1.gender" options={genderOptions} />
-            ) : (
-              genderOptions.find((item) => item.value === formik.values.p_applicant_persons__1.gender)?.label
             )
           }
         />
@@ -438,6 +438,7 @@ export const Item02 = () => {
           upConfig={{
             key: `p_applicant_persons.email.${p_applicant_persons__1?.id}`,
           }}
+          isAddendum
           field={
             isEditable ? (
               <AdEditFullWidthInput name="p_applicant_persons__1.email" />

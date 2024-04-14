@@ -3,7 +3,7 @@ import { Stack, Typography } from '@mui/material';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const ProgressStatus = ({ status }) => {
+export const ProgressStatus = ({ status, id }) => {
   const currentStatusItem = useMemo(() => {
     const basicList = [
       {
@@ -45,7 +45,7 @@ export const ProgressStatus = ({ status }) => {
 
   const navigator = useNavigate();
   const handleCheckUnderPreliminary = () => {
-    navigator('/manager/under-preliminary-examination');
+    navigator(`/manager/under-preliminary-examination?id=${id}`);
   };
   return currentStatusItem ? (
     <Stack

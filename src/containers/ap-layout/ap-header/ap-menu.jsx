@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ApWrapper } from '../ap-wrapper';
 import { ApFooter } from '../ap-footer';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { applyNoSelector, authAtom, displayPdfSelector, localApplication, preExaminationStatusSelector } from '@/store';
+import { authAtom, displayPdfSelector, localApplication } from '@/store';
 import { useBoolean } from '@/hooks';
 import { useMemo } from 'react';
 import { Icons } from '@/assets';
@@ -17,11 +17,12 @@ import { apLogou } from '@/services';
 
 export const ApMenu = ({ menu }) => {
   const navigate = useNavigate();
-  const applyNo = useRecoilValue(applyNoSelector);
-  const preExaminationStatus = useRecoilValue(preExaminationStatusSelector);
   const resetAuth = useResetRecoilState(authAtom);
   const resetLocalApplicationInfo = useResetRecoilState(localApplication);
-  const { p_application_banks } = useRecoilValue(localApplication);
+  const {
+    p_application_banks,
+    p_application_headers: { pre_examination_status, apply_no },
+  } = useRecoilValue(localApplication);
   const displayPdf = useRecoilValue(displayPdfSelector);
   const { user } = useRecoilValue(authAtom);
   const modal = useBoolean();
@@ -32,7 +33,7 @@ export const ApMenu = ({ menu }) => {
         label: '審査結果',
         icon: <Icons.ApMenuItemResultIcon />,
         desc: '審査結果はこちらからご覧いただけます',
-        show: displayPdf && preExaminationStatus === DISCLOSURE_RESULTS_TO_APPLICANTS,
+        show: displayPdf && pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS,
         onClick: () => {},
       },
       {
@@ -49,7 +50,7 @@ export const ApMenu = ({ menu }) => {
         label: '日本住宅ローン用PDF',
         icon: <Icons.ApMenuItemPdfIcon />,
         desc: '必要に応じてダウンロードしてください',
-        show: !!applyNo && p_application_banks.includes(MCJ_CODE),
+        show: !!apply_no && p_application_banks.includes(MCJ_CODE),
         onClick: () => {},
       },
       {
@@ -77,7 +78,7 @@ export const ApMenu = ({ menu }) => {
         onClick: () => modal.onTrue(),
       },
     ],
-    [applyNo, p_application_banks, preExaminationStatus, MCJ_CODE]
+    [apply_no, p_application_banks, pre_examination_status, MCJ_CODE]
   );
 
   const handelLogout = async () => {

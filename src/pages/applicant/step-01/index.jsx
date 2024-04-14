@@ -66,7 +66,7 @@ export const ApStep01Page = () => {
   const [authInfo, setAuthInfo] = useRecoilState(authAtom);
   const resetLocalApplicationInfo = useResetRecoilState(localApplication);
 
-  const { applyNo, agentSended } = authInfo;
+  const { agentSended } = authInfo;
   const {
     isMCJ,
     apNextStepId,
@@ -212,7 +212,6 @@ export const ApStep01Page = () => {
         setAuthInfo((pre) => {
           return {
             ...pre,
-            applyNo: null,
             agentSended: false,
           };
         });
@@ -466,7 +465,11 @@ export const ApStep01Page = () => {
             name={'p_application_headers.loan_type'}
             options={loanTypeOptions}
             onChange={(e) => {
-              if (e.target.value !== '2' && formik.values.p_application_headers.loan_type === '2' && !!applyNo) {
+              if (
+                e.target.value !== '2' &&
+                formik.values.p_application_headers.loan_type === '2' &&
+                !!p_application_headers.apply_no
+              ) {
                 delPairLoanModal.onTrue();
               }
               if (

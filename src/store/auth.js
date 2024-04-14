@@ -8,7 +8,6 @@ const authInitialValues = {
     id: null,
     email: null,
     salesCompanyOrgId: null,
-    preExaminationStatus: null,
     displayPdf: true,
     hasDraftData: false,
     provisionalResult: null,
@@ -25,7 +24,6 @@ const authInitialValues = {
     name: null,
     role: null,
   },
-  applyNo: null,
   agentSended: false,
 };
 
@@ -46,14 +44,6 @@ export const authAtom = atom({
   key: 'auth',
   default: authInitialValues,
   effects_UNSTABLE: [localStorageEffect('auth')],
-});
-
-export const provisionalResultSelector = selector({
-  key: 'provisionalResult',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.user?.provisionalResult;
-  },
 });
 
 export const userEmailSelector = selector({
@@ -96,14 +86,6 @@ export const applayTypeSelector = selector({
   },
 });
 
-export const preExaminationStatusSelector = selector({
-  key: 'preExaminationStatus',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.user?.preExaminationStatus;
-  },
-});
-
 export const displayPdfSelector = selector({
   key: 'displayPdf',
   get: ({ get }) => {
@@ -117,14 +99,6 @@ export const hasDraftDataSelector = selector({
   get: ({ get }) => {
     const auth = get(authAtom);
     return auth?.user.hasDraftData;
-  },
-});
-
-export const applyNoSelector = selector({
-  key: 'applyNo',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.applyNo;
   },
 });
 

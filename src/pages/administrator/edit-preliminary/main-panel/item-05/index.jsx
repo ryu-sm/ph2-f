@@ -428,28 +428,28 @@ export const Item05 = () => {
                     )
                   }
                 />
-                <EditRow
-                  label={'持家　ローン残高'}
-                  upConfig={{
-                    key: `p_application_headers.curr_house_loan_balance_type.${p_application_headers?.id}`,
-                    options: currHouseLoanBalanceTypeOptions,
-                  }}
-                  hasPleft={isEditable}
-                  field={
-                    isEditable ? (
-                      <AdSelectRadios
-                        name={'p_application_headers.curr_house_loan_balance_type'}
-                        options={currHouseLoanBalanceTypeOptions}
-                      />
-                    ) : (
-                      currHouseLoanBalanceTypeOptions.find(
-                        (item) => item.value === formik.values.p_application_headers.curr_house_loan_balance_type
-                      )?.label
-                    )
-                  }
-                />
               </Stack>
             )}
+            <EditRow
+              label={'持家　ローン残高'}
+              upConfig={{
+                key: `p_application_headers.curr_house_loan_balance_type.${p_application_headers?.id}`,
+                options: currHouseLoanBalanceTypeOptions,
+              }}
+              hasPleft={isEditable}
+              field={
+                isEditable ? (
+                  <AdSelectRadios
+                    name={'p_application_headers.curr_house_loan_balance_type'}
+                    options={currHouseLoanBalanceTypeOptions}
+                  />
+                ) : (
+                  currHouseLoanBalanceTypeOptions.find(
+                    (item) => item.value === formik.values.p_application_headers.curr_house_loan_balance_type
+                  )?.label
+                )
+              }
+            />
           </Stack>
         )}
 
@@ -602,7 +602,7 @@ export const Item05 = () => {
                         key: `p_residents.last_name_kanji.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={!item?.rel_to_applicant_a_name}
+                      isAddendum={item?.is_applicant === '0'}
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
@@ -617,7 +617,7 @@ export const Item05 = () => {
                         key: `p_residents.first_name_kanji.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={!item?.rel_to_applicant_a_name}
+                      isAddendum={item?.is_applicant === '0'}
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].first_name_kanji`} convertFullWidth />
@@ -632,7 +632,7 @@ export const Item05 = () => {
                         key: `p_residents.last_name_kana.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={!item?.rel_to_applicant_a_name}
+                      isAddendum={item?.is_applicant === '0'}
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
@@ -647,7 +647,7 @@ export const Item05 = () => {
                         key: `p_residents.first_name_kana.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={!item?.rel_to_applicant_a_name}
+                      isAddendum={item?.is_applicant === '0'}
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
@@ -672,7 +672,7 @@ export const Item05 = () => {
                         )
                       }
                     />
-                    {item?.rel_to_applicant_a_name ? (
+                    {item?.is_applicant === '1' ? (
                       <EditRow
                         label={`入居家族${index + 1} 続柄`}
                         upConfig={{
@@ -765,7 +765,7 @@ export const Item05 = () => {
                       }
                     />
 
-                    {isMCJ && item?.rel_to_applicant_a_name && (
+                    {isMCJ && item?.is_applicant === '1' && (
                       <Stack>
                         <EditRow
                           label={`入居家族${index + 1} 住宅金融支援機構（旧：公庫）からの融資の有無`}

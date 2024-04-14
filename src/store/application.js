@@ -12,11 +12,13 @@ export const applicationInitialValues = {
   hasIncomeTotalizer: false,
   changeJoinGuarantor: false,
   changeToIncomeTotalizer: false,
+
   //
   p_applicant_persons_a_agreement: false,
   p_applicant_persons_b_agreement: false,
 
   p_application_headers: {
+    pre_examination_status: '',
     apply_no: '',
     // STEP00
     apply_date: '',

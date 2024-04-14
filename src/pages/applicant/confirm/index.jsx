@@ -86,7 +86,7 @@ export const ApConfirmPage = () => {
     [hasIncomeTotalizer, hasJoinGuarantor]
   );
 
-  const { applyNo, agentSended } = useRecoilValue(authAtom);
+  const { agentSended } = useRecoilValue(authAtom);
 
   const { refreshsendedApllication } = useApplicationContext();
 
@@ -139,7 +139,7 @@ export const ApConfirmPage = () => {
               </Stack>
               <Stack alignItems={'center'} sx={{ p: 3 }}>
                 <Typography variant="page_title" color={'text.main'}>
-                  {applyNo}
+                  {p_application_headers.apply_no}
                 </Typography>
               </Stack>
             </Stack>

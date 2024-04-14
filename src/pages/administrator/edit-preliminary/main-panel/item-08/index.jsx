@@ -140,7 +140,11 @@ export const Item08 = () => {
       formik.values.p_application_headers.sales_area_id,
       formik.values.p_application_headers.sales_company_id
     );
-  }, []);
+  }, [
+    formik.values.p_application_headers.sales_exhibition_hall_id,
+    formik.values.p_application_headers.sales_area_id,
+    formik.values.p_application_headers.sales_company_id,
+  ]);
 
   const checkEnableSalesArea = useMemo(() => {
     if (isManager) return true;

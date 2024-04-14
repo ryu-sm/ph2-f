@@ -11,7 +11,10 @@ export const ApHeader = ({ hasMenu, menu }) => {
   const isSalesPerson = useIsSalesPerson();
 
   const resetLocalApplicationInfo = useResetRecoilState(localApplication);
-  const { isLogined, roleType, applyNo } = useRecoilValue(authAtom);
+  const { isLogined, roleType } = useRecoilValue(authAtom);
+  const {
+    p_application_headers: { apply_no },
+  } = useRecoilValue(localApplication);
   const setAuthInfo = useSetRecoilState(authAtom);
   const { pathname } = useLocation();
   const publicPath = [
@@ -42,7 +45,7 @@ export const ApHeader = ({ hasMenu, menu }) => {
                 if (!publicPath.find((item) => item.path === pathname)) {
                   navigate(routeNames.apTopPage.path);
                 }
-                if (applyNo) {
+                if (!!apply_no) {
                   if (
                     window.confirm(
                       'トップページへ遷移します。\nご入力いただいた情報をまだ保存していない場合、破棄しますが、宜しいでしょうか。'
@@ -77,7 +80,6 @@ export const ApHeader = ({ hasMenu, menu }) => {
                 setAuthInfo((pre) => {
                   return {
                     ...pre,
-                    applyNo: null,
                     agentSended: false,
                   };
                 });

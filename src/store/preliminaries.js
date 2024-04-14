@@ -453,7 +453,7 @@ export const preliminarySelect = selector({
     if (!id) return null;
     const res = await adGetPreliminary(id);
 
-    // console.log(res.data);
+    console.log(res.data?.p_residents);
 
     if (res.error) {
       throw res.error;
