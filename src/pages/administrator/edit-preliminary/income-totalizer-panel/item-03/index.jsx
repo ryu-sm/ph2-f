@@ -1012,6 +1012,7 @@ export const Item03 = () => {
                 key: `p_applicant_persons.maternity_paternity_leave_start_date.${p_applicant_persons__1?.id}`,
                 formatJaDate: true,
               }}
+              isLogicRequired
               hasPleft={isEditable}
               field={
                 isEditable ? (
@@ -1035,6 +1036,7 @@ export const Item03 = () => {
                 formatJaDate: true,
               }}
               hasPleft={isEditable}
+              isLogicRequired
               field={
                 isEditable ? (
                   <MonthPicker
