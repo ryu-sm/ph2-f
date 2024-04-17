@@ -690,9 +690,11 @@ export const Item05 = () => {
                               )}
                             </Stack>
                           ) : (
-                            `${relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label}　${
-                              item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''
-                            }`
+                            `${
+                              item.rel_to_applicant_a
+                                ? relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label
+                                : ''
+                            }　${item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''}`
                           )
                         }
                       />
@@ -724,9 +726,11 @@ export const Item05 = () => {
                               )}
                             </Stack>
                           ) : (
-                            `${relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label}　${
-                              item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''
-                            }`
+                            `${
+                              item.rel_to_applicant_a
+                                ? relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label
+                                : ''
+                            }　${item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''}`
                           )
                         }
                       />
