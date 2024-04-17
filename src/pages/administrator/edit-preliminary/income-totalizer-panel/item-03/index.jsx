@@ -736,10 +736,8 @@ export const Item03 = () => {
                 name="p_applicant_persons__1.tax_return"
                 options={taxReturnOptions}
                 onChange={(value) => {
-                  if (value === '0') {
-                    formik.setFieldValue('p_applicant_persons__1.tax_return_reasons', []);
-                    formik.setFieldValue('p_applicant_persons__1.tax_return_reason_other', '');
-                  }
+                  formik.setFieldValue('p_applicant_persons__1.tax_return_reasons', []);
+                  formik.setFieldValue('p_applicant_persons__1.tax_return_reason_other', '');
                 }}
               />
             ) : (

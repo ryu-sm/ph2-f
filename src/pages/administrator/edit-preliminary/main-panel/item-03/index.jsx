@@ -744,11 +744,10 @@ export const Item03 = () => {
               <AdSelectRadios
                 name="p_applicant_persons__0.tax_return"
                 options={taxReturnOptions}
+                cancelable
                 onChange={(value) => {
-                  if (value === '0') {
-                    formik.setFieldValue('p_applicant_persons__0.tax_return_reasons', []);
-                    formik.setFieldValue('p_applicant_persons__0.tax_return_reason_other', '');
-                  }
+                  formik.setFieldValue('p_applicant_persons__0.tax_return_reasons', []);
+                  formik.setFieldValue('p_applicant_persons__0.tax_return_reason_other', '');
                 }}
               />
             ) : (

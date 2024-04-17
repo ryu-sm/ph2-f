@@ -228,8 +228,7 @@ export const Item05 = () => {
                 unit={'年'}
               />
             ) : (
-              yearNumOptions.find((item) => item.value === formik.values.p_application_headers.curr_house_lived_year)
-                ?.label
+              formatNumber(formik.values.p_application_headers.curr_house_lived_year, '年')
             )
           }
         />
@@ -250,8 +249,7 @@ export const Item05 = () => {
                 unit={'ヶ月'}
               />
             ) : (
-              monthOptions.find((item) => item.value === formik.values.p_application_headers.curr_house_lived_month)
-                ?.label
+              formatNumber(formik.values.p_application_headers.curr_house_lived_month, 'ヶ月')
             )
           }
         />
@@ -669,7 +667,7 @@ export const Item05 = () => {
                           isEditable ? (
                             <AdEditInput name={`p_residents[${index}].rel_to_applicant_a_name`} convertFullWidth />
                           ) : (
-                            item.first_name_kana
+                            item.rel_to_applicant_a_name
                           )
                         }
                         subField={
