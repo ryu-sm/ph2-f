@@ -1,4 +1,4 @@
-import { useBoolean } from '@/hooks';
+import { useBoolean, useIsManager } from '@/hooks';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { Box, Stack, Typography } from '@mui/material';
 
@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { UpdateHistoryModal } from './update-history';
 
 export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPleft, field, subField, upConfig }) => {
+  const isManager = useIsManager();
   const noticeIcon = useMemo(() => {
     return isRequired ? '○' : isLogicRequired ? '△' : '';
   }, [isRequired, isLogicRequired]);
@@ -43,8 +44,8 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
         <Box
           sx={{
             width: 44,
-            bgcolor: isAddendum ? 'secondary.main' : 'gray.20',
-            color: isAddendum ? 'white' : 'gray.100',
+            bgcolor: isAddendum && isManager ? 'secondary.main' : 'gray.20',
+            color: isAddendum && isManager ? 'white' : 'gray.100',
             lineHeight: '35px',
             fontSize: '24px',
             textAlign: 'center',

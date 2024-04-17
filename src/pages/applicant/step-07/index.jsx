@@ -274,58 +274,6 @@ export const ApStep07Page = () => {
     }
   }, []);
 
-  // const { dbData } = useApplicationContext();
-
-  // useEffect(() => {
-  //   if (agentSended && dbData) {
-  //     const newData = {
-  //       ...formik.values,
-  //       p_application_headers: {
-  //         curr_house_lived_year: dbData?.p_application_headers?.curr_house_lived_year,
-  //         curr_house_lived_month: dbData?.p_application_headers?.curr_house_lived_month,
-  //         curr_house_residence_type: dbData?.p_application_headers?.curr_house_residence_type,
-  //         curr_house_floor_area: dbData?.p_application_headers?.curr_house_floor_area,
-  //         curr_house_owner_name: dbData?.p_application_headers?.curr_house_owner_name,
-  //         curr_house_owner_rel: dbData?.p_application_headers?.curr_house_owner_rel,
-  //         curr_house_schedule_disposal_type: dbData?.p_application_headers?.curr_house_schedule_disposal_type,
-  //         curr_house_schedule_disposal_type_other:
-  //           dbData?.p_application_headers?.curr_house_schedule_disposal_type_other,
-  //         curr_house_shell_scheduled_date: dbData?.p_application_headers?.curr_house_shell_scheduled_date,
-  //         curr_house_shell_scheduled_price: dbData?.p_application_headers?.curr_house_shell_scheduled_price,
-  //         curr_house_loan_balance_type: dbData?.p_application_headers?.curr_house_loan_balance_type,
-  //         property_publish_url: dbData?.p_application_headers?.property_publish_url,
-  //         new_house_acquire_reason: dbData?.p_application_headers?.new_house_acquire_reason,
-  //         new_house_acquire_reason_other: dbData?.p_application_headers?.new_house_acquire_reason_other,
-  //         new_house_self_resident: dbData?.p_application_headers?.new_house_self_resident,
-  //         new_house_self_not_resident_reason: dbData?.p_application_headers?.new_house_self_not_resident_reason,
-  //         new_house_planned_resident_overview: dbData?.p_application_headers?.new_house_planned_resident_overview,
-  //         property_business_type: dbData?.p_application_headers?.property_business_type,
-  //         property_prefecture: dbData?.p_application_headers?.property_prefecture,
-  //         property_city: dbData?.p_application_headers?.property_city,
-  //         property_district: dbData?.p_application_headers?.property_district,
-  //         property_apartment_and_room_no: dbData?.p_application_headers?.property_apartment_and_room_no,
-  //         property_private_area: dbData?.p_application_headers?.property_private_area,
-  //         property_total_floor_area: dbData?.p_application_headers?.property_total_floor_area,
-  //         property_land_area: dbData?.p_application_headers?.property_land_area,
-  //         property_floor_area: dbData?.p_application_headers?.property_floor_area,
-  //         property_land_type: dbData?.p_application_headers?.property_land_type,
-  //         property_purchase_type: dbData?.p_application_headers?.property_purchase_type,
-  //         property_planning_area: dbData?.p_application_headers?.property_planning_area,
-  //         property_planning_area_other: dbData?.p_application_headers?.property_planning_area_other,
-  //         property_rebuilding_reason: dbData?.p_application_headers?.property_rebuilding_reason,
-  //         property_rebuilding_reason_other: dbData?.p_application_headers?.property_rebuilding_reason_other,
-  //         property_flat_35_plan: dbData?.p_application_headers?.property_flat_35_plan,
-  //         property_maintenance_type: dbData?.p_application_headers?.property_maintenance_type,
-  //         property_flat_35_tech: dbData?.p_application_headers?.property_flat_35_tech,
-  //         property_region_type: dbData?.p_application_headers?.property_region_type,
-  //         G: dbData?.p_application_headers?.G,
-  //       },
-  //       p_residents: dbData?.p_residents ? dbData?.p_residents : [],
-  //     };
-  //     formik.setValues(newData);
-  //   }
-  // }, [dbData]);
-
   const { refreshsendedApllication } = useApplicationContext();
   useEffect(() => {
     if (agentSended) {
@@ -656,12 +604,13 @@ export const ApStep07Page = () => {
                   formik.setFieldValue('p_residents', [
                     {
                       id: '',
+                      resident_type: '0',
                       last_name_kanji: '',
                       first_name_kanji: '',
                       last_name_kana: '',
                       first_name_kana: '',
                       rel_to_applicant_a_name: '',
-                      nationality: '',
+                      nationality: '1',
                       birthday: '',
                       loan_from_japan_house_finance_agency: '',
                       contact_phone: '',

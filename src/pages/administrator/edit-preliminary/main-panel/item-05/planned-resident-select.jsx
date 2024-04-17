@@ -58,6 +58,7 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
   const basic = {
     id: '',
     one_roof: '',
+    resident_type: '1',
     last_name_kanji: '',
     first_name_kanji: '',
     last_name_kana: '',

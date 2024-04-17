@@ -208,20 +208,6 @@ export const Item05 = () => {
     return conter.join('・');
   }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
 
-  // useEffect(() => {
-  //   const temp00 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a_name !== '');
-  //   const temp01 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '1');
-  //   const temp02 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '2');
-  //   const temp03 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '3');
-  //   const temp04 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '4');
-  //   const temp05 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '5');
-  //   const temp06 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '6');
-  //   const temp99 = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '99');
-  //   const tempNull = formik.values.p_residents.filter((item) => item?.rel_to_applicant_a === '');
-  //   const temp = [...temp00, ...temp01, ...temp02, ...temp03, ...temp04, ...temp05, ...temp06, ...temp99, ...tempNull];
-  //   formik.setFieldValue('p_residents', temp.slice(0, 6));
-  // }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
@@ -602,7 +588,7 @@ export const Item05 = () => {
                         key: `p_residents.last_name_kanji.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={item?.is_applicant === '0'}
+                      isAddendum
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
@@ -617,7 +603,7 @@ export const Item05 = () => {
                         key: `p_residents.first_name_kanji.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={item?.is_applicant === '0'}
+                      isAddendum
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].first_name_kanji`} convertFullWidth />
@@ -632,7 +618,7 @@ export const Item05 = () => {
                         key: `p_residents.last_name_kana.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={item?.is_applicant === '0'}
+                      isAddendum
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
@@ -647,7 +633,7 @@ export const Item05 = () => {
                         key: `p_residents.first_name_kana.${item?.id}`,
                       }}
                       isLogicRequired
-                      isAddendum={item?.is_applicant === '0'}
+                      isAddendum
                       field={
                         isEditable ? (
                           <AdEditFullWidthInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
@@ -672,7 +658,7 @@ export const Item05 = () => {
                         )
                       }
                     />
-                    {item?.is_applicant === '1' ? (
+                    {item?.resident_type === '0' ? (
                       <EditRow
                         label={`入居家族${index + 1} 続柄`}
                         upConfig={{
@@ -754,7 +740,7 @@ export const Item05 = () => {
                         key: `p_residents.birthday.${item?.id}`,
                         formatJaDate: true,
                       }}
-                      isAddendum={!item?.rel_to_applicant_a_name}
+                      isAddendum
                       hasPleft={isEditable}
                       field={
                         isEditable ? (
@@ -765,7 +751,7 @@ export const Item05 = () => {
                       }
                     />
 
-                    {isMCJ && item?.is_applicant === '1' && (
+                    {isMCJ && item?.resident_type === '0' && (
                       <Stack>
                         <EditRow
                           label={`入居家族${index + 1} 住宅金融支援機構（旧：公庫）からの融資の有無`}
