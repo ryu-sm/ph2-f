@@ -1,7 +1,7 @@
 import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
-import { AdEditFullWidthInput, AdEditInput, AdSelectRadios } from '@/components/administrator';
+import { AdEditFullWidthInput, AdPhoneInputField, AdSelectRadios } from '@/components/administrator';
 
 import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
@@ -9,6 +9,7 @@ import { ContentEditGroup } from '../../common/content-edit-group';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   adGetAccessSalesPersonOptions,
+  adGetSalesPersonBelowOrgs,
   adGetSalesPersonInfo,
   getChildrenOrgsWithCategory,
   getOrgsWithCategories,
@@ -28,8 +29,7 @@ export const Item08 = () => {
     handleSave,
   } = usePreliminaryContext();
   const isEditable = false;
-
-  const {} = useRecoilValue(authAtom);
+  const { salesPerson } = useRecoilValue(authAtom);
   const initialValues = {
     p_application_headers: {
       sales_company_id: p_application_headers?.sales_company_id,
@@ -45,6 +45,9 @@ export const Item08 = () => {
     const diffData = {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
     };
     return diffData;
@@ -63,6 +66,31 @@ export const Item08 = () => {
   const [salesPersonOptions, setSalesPersonOptions] = useState([]);
 
   const [accessOrgs, setAccessOrgs] = useState([]);
+
+  const fetchAccessOrgs = async () => {
+    try {
+      const res = await adGetSalesPersonBelowOrgs();
+      const tempAccessOrgs = [];
+      for (let org of res.data) {
+        const resC = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'C');
+        const resB = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'B');
+        const resE = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'E');
+
+        [...resC.data, ...resB.data, ...resE.data].forEach((item) => {
+          tempAccessOrgs.push({ ...item, role: org?.role });
+        });
+      }
+      setAccessOrgs(tempAccessOrgs);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    if (!isManager) {
+      fetchAccessOrgs();
+    }
+  }, [salesPerson.id]);
 
   const fetchSalesCompanyOptions = async () => {
     try {
@@ -112,7 +140,11 @@ export const Item08 = () => {
       formik.values.p_application_headers.sales_area_id,
       formik.values.p_application_headers.sales_company_id
     );
-  }, []);
+  }, [
+    formik.values.p_application_headers.sales_exhibition_hall_id,
+    formik.values.p_application_headers.sales_area_id,
+    formik.values.p_application_headers.sales_company_id,
+  ]);
 
   const checkEnableSalesArea = useMemo(() => {
     if (isManager) return true;
@@ -219,6 +251,8 @@ export const Item08 = () => {
         if (formik.values.p_application_headers.s_sales_person_id) {
           const res = await adGetSalesPersonInfo(formik.values.p_application_headers.s_sales_person_id);
           setSalesPersonInfo(res.data);
+        } else {
+          setSalesPersonInfo({});
         }
       } catch (error) {
         toast.error(API_500_ERROR);
@@ -336,7 +370,7 @@ export const Item08 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_application_headers.vendor_phone" convertHalfWidth />
+              <AdPhoneInputField name="p_application_headers.vendor_phone" convertHalfWidth />
             ) : (
               formik.values.p_application_headers.vendor_phone
             )

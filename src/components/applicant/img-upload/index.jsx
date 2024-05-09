@@ -21,13 +21,16 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
   };
 
   const handleRemoveImage = (index) => {
-    const newValue = meta.value.filter((_, i) => i !== index);
-    setValue(newValue);
+    const newValue = meta.value.filter((f) => f?.owner_type !== 2 && f?.owner_type !== 3).filter((_, i) => i !== index);
+    const unShowValue = meta.value.filter((f) => f?.owner_type === 2 || f?.owner_type === 3);
+    setValue([...newValue, ...unShowValue]);
   };
-
+  if (field.name == 'p_applicant_persons__0.B__a') {
+    console.log(meta.value);
+  }
   return (
     <Stack name={field.name} direction={'row'} spacing={3} sx={{ width: 1 }}>
-      {meta.value.length === 0 && (
+      {meta.value.filter((f) => f?.owner_type !== 2 && f?.owner_type !== 3).length === 0 && (
         <ApPrimaryButton
           width={136}
           height={100}
@@ -45,7 +48,7 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
         </ApPrimaryButton>
       )}
 
-      {meta.value.length > 0 && (
+      {meta.value.filter((f) => f?.owner_type !== 2 && f?.owner_type !== 3).length > 0 && (
         <Stack
           direction={'row'}
           alignItems={'flex-start'}
@@ -53,54 +56,56 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
           sx={{ pb: 1, width: 1, height: 1, maxWidth: '100%' }}
         >
           <Stack direction={'row'} spacing={2} sx={{ minWidth: 136, maxWidth: 'calc(100% - 90px)', overflowX: 'auto' }}>
-            {meta.value?.map((file, index) => {
-              const isPdf = file.name.includes('pdf');
-              return (
-                <Stack key={`image-${file.name}`} spacing={1} sx={{ maxWidth: 136 }}>
-                  <Box
-                    sx={{
-                      width: 136,
-                      minWidth: 136,
-                      height: 100,
-                      bgcolor: 'background.wrapper',
-                      border: 'none',
-                      boxShadow: 0,
-                      p: 0,
-                      borderRadius: 1,
-                    }}
-                    onClick={(e) => handleViewImage(isPdf, index)}
-                  >
-                    {isPdf ? (
-                      <Avatar
-                        variant="square"
-                        alt={file.name}
-                        sx={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain',
-                          bgcolor: 'background.wrapper',
-                          borderRadius: 1,
-                        }}
-                      >
-                        <Icons.ApPdfOutlineBlackIcon sx={{ height: 1, width: 80 }} />
-                      </Avatar>
-                    ) : (
-                      <Avatar
-                        variant="square"
-                        src={file.src}
-                        alt={file.name}
-                        sx={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 1 }}
-                      />
+            {meta.value
+              .filter((f) => f?.owner_type !== 2 && f?.owner_type !== 3)
+              ?.map((file, index) => {
+                const isPdf = file.name.includes('pdf');
+                return (
+                  <Stack key={`image-${file.name}`} spacing={1} sx={{ maxWidth: 136 }}>
+                    <Box
+                      sx={{
+                        width: 136,
+                        minWidth: 136,
+                        height: 100,
+                        bgcolor: 'background.wrapper',
+                        border: 'none',
+                        boxShadow: 0,
+                        p: 0,
+                        borderRadius: 1,
+                      }}
+                      onClick={(e) => handleViewImage(isPdf, index)}
+                    >
+                      {isPdf ? (
+                        <Avatar
+                          variant="square"
+                          alt={file.name}
+                          sx={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                            bgcolor: 'background.wrapper',
+                            borderRadius: 1,
+                          }}
+                        >
+                          <Icons.ApPdfOutlineBlackIcon sx={{ height: 1, width: 80 }} />
+                        </Avatar>
+                      ) : (
+                        <Avatar
+                          variant="square"
+                          src={file.src}
+                          alt={file.name}
+                          sx={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 1 }}
+                        />
+                      )}
+                    </Box>
+                    {isPdf && (
+                      <Typography variant="notify" sx={{ lineHeight: '130%', color: 'text.main', textAlign: 'center' }}>
+                        {file.name}
+                      </Typography>
                     )}
-                  </Box>
-                  {isPdf && (
-                    <Typography variant="notify" sx={{ lineHeight: '130%', color: 'text.main', textAlign: 'center' }}>
-                      {file.name}
-                    </Typography>
-                  )}
-                </Stack>
-              );
-            })}
+                  </Stack>
+                );
+              })}
           </Stack>
           {!singleFile && (
             <Stack sx={{ py: '6px' }}>

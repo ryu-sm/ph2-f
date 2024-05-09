@@ -247,7 +247,9 @@ export const Item04 = () => {
                           )}
                         </Stack>
                       ) : (
-                        relToApplicantAOptions.find((item) => item.value === item.rel_to_applicant_a)?.label
+                        `${relToApplicantAOptions.find((item) => item.value === item.rel_to_applicant_a)?.label}　${
+                          item.rel_to_applicant_a === '99' ? item.rel_to_applicant_a_other : ''
+                        }`
                       )
                     }
                   />
@@ -365,14 +367,7 @@ export const Item04 = () => {
                     hasPleft={isEditable}
                     field={
                       isEditable ? (
-                        <AdSelectRadios
-                          name={`p_join_guarantors[${index}].prefecture_kanji`}
-                          options={PREFECTURES}
-                          handleChangeInit={() => {
-                            formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kana`, '');
-                            formik.setFieldTouched(`p_join_guarantors[${index}].prefecture_kana`, true);
-                          }}
-                        />
+                        <AdSelectRadios name={`p_join_guarantors[${index}].prefecture_kanji`} options={PREFECTURES} />
                       ) : (
                         PREFECTURES.find((item) => item.value === item.prefecture_kanji)?.label
                       )
@@ -386,14 +381,7 @@ export const Item04 = () => {
                     isRequired
                     field={
                       isEditable ? (
-                        <AdEditFullWidthInput
-                          name={`p_join_guarantors[${index}].city_kanji`}
-                          convertFullWidth
-                          handleChangeInit={() => {
-                            formik.setFieldValue(`p_join_guarantors[${index}].city_kana`, '');
-                            formik.setFieldTouched(`p_join_guarantors[${index}].city_kana`, true);
-                          }}
-                        />
+                        <AdEditFullWidthInput name={`p_join_guarantors[${index}].city_kanji`} convertFullWidth />
                       ) : (
                         item.city_kanji
                       )
@@ -407,14 +395,7 @@ export const Item04 = () => {
                     isRequired
                     field={
                       isEditable ? (
-                        <AdEditFullWidthInput
-                          name={`p_join_guarantors[${index}].district_kanji`}
-                          convertFullWidth
-                          handleChangeInit={() => {
-                            formik.setFieldValue(`p_join_guarantors[${index}].district_kana`, '');
-                            formik.setFieldTouched(`p_join_guarantors[${index}].district_kana`, true);
-                          }}
-                        />
+                        <AdEditFullWidthInput name={`p_join_guarantors[${index}].district_kanji`} convertFullWidth />
                       ) : (
                         item.district_kanji
                       )

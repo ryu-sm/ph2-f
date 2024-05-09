@@ -82,11 +82,6 @@ export const Item02 = () => {
     });
   }, [formik.values]);
 
-  // useEffect(() => {
-  //   formik.setFieldTouched('p_applicant_persons__0.mobile_phone', true);
-  //   formik.setFieldTouched('p_applicant_persons__0.home_phone', true);
-  // }, [formik.values.p_applicant_persons__0.mobile_phone, formik.values.p_applicant_persons__0.home_phone]);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
@@ -300,14 +295,7 @@ export const Item02 = () => {
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios
-                name="p_applicant_persons__0.prefecture_kanji"
-                options={PREFECTURES}
-                handleChangeInit={() => {
-                  formik.setFieldValue('p_applicant_persons__0.prefecture_kana', '');
-                  formik.setFieldTouched('p_applicant_persons__0.prefecture_kana', true);
-                }}
-              />
+              <AdSelectRadios name="p_applicant_persons__0.prefecture_kanji" options={PREFECTURES} />
             ) : (
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__0.prefecture_kanji)?.label
             )
@@ -321,14 +309,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditFullWidthInput
-                name="p_applicant_persons__0.city_kanji"
-                convertFullWidth
-                handleChangeInit={() => {
-                  formik.setFieldValue('p_applicant_persons__0.city_kana', '');
-                  formik.setFieldTouched('p_applicant_persons__0.city_kana', true);
-                }}
-              />
+              <AdEditFullWidthInput name="p_applicant_persons__0.city_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.city_kanji
             )
@@ -342,14 +323,7 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditFullWidthInput
-                name="p_applicant_persons__0.district_kanji"
-                convertFullWidth
-                handleChangeInit={() => {
-                  formik.setFieldValue('p_applicant_persons__0.district_kana', '');
-                  formik.setFieldTouched('p_applicant_persons__0.district_kana', true);
-                }}
-              />
+              <AdEditFullWidthInput name="p_applicant_persons__0.district_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__0.district_kanji
             )

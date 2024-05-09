@@ -10,7 +10,7 @@ import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { FilesUpdateHistoryModal } from './files-update-history';
 
-export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig }) => {
+export const UploadItem = ({ name, isDisabled, subTitle, upConfig, isMultiple = true }) => {
   const [field, meta, helpers] = useField(name);
   const { setValue } = helpers;
   const { touched, error } = meta;

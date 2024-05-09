@@ -1,7 +1,8 @@
-import { infoGroupTabAtom } from '@/store';
-import { Box, Button, Grid, Modal, Stack, Typography } from '@mui/material';
+import { infoGroupTabAtom, preliminaryIdAtom } from '@/store';
+import { Grid, Modal, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { Icons } from '@/assets';
 import { Item01 } from './item-01';
 import { Item02 } from './item-02';
 import { Item03 } from './item-03';
@@ -12,17 +13,38 @@ import { Item05 } from './item-05';
 import { Item06 } from './item-06';
 import { Item07 } from './item-07';
 import { Item08 } from './item-08';
-import { Icons } from '@/assets';
-import { useBoolean } from '@/hooks';
+import { useBoolean, useIsManager } from '@/hooks';
+import { Item09 } from './item-09';
+import { adGetUploadFile } from '@/services';
 
 export const PairDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
   const {
-    preliminaryInfo,
     preliminarySnap: { hasJoinGuarantor },
     checkUpdate,
     resetPreliminarySnap,
   } = usePreliminaryContext();
+
+  const preliminaryId = useRecoilValue(preliminaryIdAtom);
+
+  const isManager = useIsManager();
+
+  const [uploadfile, setUploadFile] = useState(1);
+  const fetchUploadFile = async () => {
+    try {
+      const res = await adGetUploadFile(preliminaryId);
+
+      setUploadFile(res.data.upload_file);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!isManager) {
+      fetchUploadFile();
+    }
+  }, [isManager, preliminaryId]);
 
   const infoGroupItems = useMemo(() => {
     return [
@@ -59,16 +81,21 @@ export const PairDetail = () => {
         id: 8,
         label: '担当者情報',
       },
-      {
-        id: 9,
-        label: '書類アップロード',
-      },
+      ...(uploadfile === 1
+        ? [
+            {
+              id: 9,
+              label: '書類アップロード',
+            },
+          ]
+        : []),
+
       {
         id: 10,
         label: '審査結果',
       },
     ];
-  }, [hasJoinGuarantor]);
+  }, [hasJoinGuarantor, uploadfile]);
 
   const changeTab = useBoolean(false);
   const [tempTab, setTempTab] = useState(null);
@@ -115,6 +142,7 @@ export const PairDetail = () => {
           ))}
         </Grid>
       </Stack>
+
       {infoGroupTab === 1 && <Item01 />}
       {infoGroupTab === 2 && <Item02 />}
       {infoGroupTab === 3 && <Item03 />}
@@ -123,6 +151,7 @@ export const PairDetail = () => {
       {infoGroupTab === 6 && <Item06 />}
       {infoGroupTab === 7 && <Item07 />}
       {infoGroupTab === 8 && <Item08 />}
+      {infoGroupTab === 9 && <Item09 />}
 
       <Modal
         open={changeTab.value}

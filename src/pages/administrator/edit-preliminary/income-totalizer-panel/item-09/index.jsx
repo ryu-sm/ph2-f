@@ -212,7 +212,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.C__01.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.C__01"
-                isMultiple={true}
                 subTitle="源泉徴収票（前年度分）"
               />
               <UploadItem
@@ -221,7 +220,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.C__02.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.C__02"
-                isMultiple={true}
                 subTitle="源泉徴収票（前々年度分）"
               />
               <UploadItem
@@ -230,7 +228,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.C__03.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.C__03"
-                isMultiple={true}
                 subTitle="確定申告書（1期前）"
               />
               <UploadItem
@@ -239,7 +236,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.C__04.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.C__04"
-                isMultiple={true}
                 subTitle="確定申告書（2期前）"
               />
               <UploadItem
@@ -248,7 +244,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.C__05.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.C__05"
-                isMultiple={true}
                 subTitle="確定申告書（3期前）"
               />
             </ContentEditFileGroup>
@@ -259,7 +254,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.D__01.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.D__01"
-                isMultiple={true}
                 subTitle="会社の決算報告書（1期前）"
               />
               <UploadItem
@@ -268,7 +262,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.D__02.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.D__02"
-                isMultiple={true}
                 subTitle="会社の決算報告書（2期前）"
               />
               <UploadItem
@@ -277,7 +270,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.D__03.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.D__03"
-                isMultiple={true}
                 subTitle="会社の決算報告書（3期前）"
               />
             </ContentEditFileGroup>
@@ -288,7 +280,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.E.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.E"
-                isMultiple={true}
                 subTitle="雇用契約書"
               />
             </ContentEditFileGroup>
@@ -301,7 +292,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.F__01.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.F__01"
-                isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（1期前）"
               />
               <UploadItem
@@ -310,7 +300,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.F__02.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.F__02"
-                isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（2期前）"
               />
               <UploadItem
@@ -319,7 +308,6 @@ export const Item09 = () => {
                   key: `p_applicant_persons.F__03.${p_applicant_persons__1.id}`,
                 }}
                 name="p_applicant_persons__1.F__03"
-                isMultiple={true}
                 subTitle="会社の決算報告書 または経営する親族の確定申告書（3期前）"
               />
             </ContentEditFileGroup>
@@ -348,7 +336,6 @@ export const Item09 = () => {
                   title: 'その他',
                   key: `p_applicant_persons.K.${p_applicant_persons__1.id}`,
                 }}
-                isMultiple={true}
                 name="p_applicant_persons__1.K"
               />
             </ContentEditFileGroup>

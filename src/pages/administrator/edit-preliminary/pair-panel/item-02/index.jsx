@@ -4,7 +4,7 @@ import { formatJapanDate } from '@/utils';
 import { useEffect } from 'react';
 import {
   AdEditFullWidthInput,
-  AdEditInput,
+  AdPhoneInputField,
   AdSelectRadios,
   AdZipCodeInput,
   DayPicker,
@@ -24,7 +24,6 @@ export const Item02 = () => {
     handleSave,
   } = usePreliminaryContext();
   const isEditable = false;
-
   const initialValues = {
     p_applicant_persons__0: {
       last_name_kanji: p_applicant_persons__0?.last_name_kanji,
@@ -62,6 +61,8 @@ export const Item02 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab02Schema,
+    validateOnChange: false,
+    validateOnMount: true,
     enableReinitialize: true,
     onSubmit: async (values) => {
       await handleSave(setUpdateData(values));
@@ -198,7 +199,11 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.mobile_phone" convertHalfWidth />
+              <AdPhoneInputField
+                name="p_applicant_persons__0.mobile_phone"
+                convertHalfWidth
+                onBlur={() => formik.setFieldTouched('p_applicant_persons__0.home_phone', true)}
+              />
             ) : (
               formik.values.p_applicant_persons__0.mobile_phone
             )
@@ -212,7 +217,11 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.home_phone" convertHalfWidth />
+              <AdPhoneInputField
+                name="p_applicant_persons__0.home_phone"
+                convertHalfWidth
+                onBlur={() => formik.setFieldTouched('p_applicant_persons__0.mobile_phone', true)}
+              />
             ) : (
               formik.values.p_applicant_persons__0.home_phone
             )
@@ -226,7 +235,7 @@ export const Item02 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__0.emergency_contact" convertHalfWidth />
+              <AdPhoneInputField name="p_applicant_persons__0.emergency_contact" convertHalfWidth />
             ) : (
               formik.values.p_applicant_persons__0.emergency_contact
             )

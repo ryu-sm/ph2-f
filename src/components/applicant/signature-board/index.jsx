@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import SignaturePad from 'react-signature-canvas';
 import { ApLighterButton, ApPrimaryButton, ApSecondaryButton } from '../button';
 import { useField } from 'formik';
@@ -11,6 +11,7 @@ import { v4 as uuid4 } from 'uuid';
 export const ApSignatureBoard = ({ showError, onChange, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
+  const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const sigCanvas = useRef(null);
   const isEmpty = useBoolean(true);
 
@@ -34,9 +35,9 @@ export const ApSignatureBoard = ({ showError, onChange, ...props }) => {
 
   return (
     <Stack name={field.name} sx={{ width: 1 }}>
-      {showError && (
+      {isError && (
         <Typography variant="note" sx={{ fontWeight: 500, color: (theme) => theme.palette.secondary.main }}>
-          ※{YUP_MESSAGES.REQUIRED}
+          ※サインしてください。
         </Typography>
       )}
       {meta.value?.length > 0 ? (

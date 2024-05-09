@@ -1,4 +1,4 @@
-import { ApConfirmGroup, ApConfirmItemGroup, ApPageTitle, ApSignatureBoard } from '@/components';
+import { ApConfirmGroup, ApConfirmItemGroup, ApErrorScroll, ApPageTitle, ApSignatureBoard } from '@/components';
 import { ApLayout, ApStepFooter } from '@/containers';
 import { authAtom, localApplication } from '@/store';
 import { formatJapanDate } from '@/utils';
@@ -25,6 +25,7 @@ import { useApplicationContext, useBoolean, useIsSalesPerson } from '@/hooks';
 import { routeNames } from '@/router/settings';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
+import { validationSchema } from './validationSchema';
 
 export const ApStep13Page = () => {
   const navigate = useNavigate();
@@ -43,7 +44,8 @@ export const ApStep13Page = () => {
     p_applicant_persons__1,
     p_application_headers,
   } = localApplicationInfo;
-
+  const errorMsgRef = useRef(null);
+  const [errorMsg, setErrorMsg] = useState(null);
   const showError = useBoolean(false);
   const bottomRef = useRef(null);
   const apSteps = useMemo(
@@ -113,8 +115,6 @@ export const ApStep13Page = () => {
     [apSteps]
   );
 
-  const errorMsgRef = useRef(null);
-
   useEffect(() => {
     if (errorMsgRef.current) {
       errorMsgRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -122,6 +122,10 @@ export const ApStep13Page = () => {
   }, [errorMsgRef.current]);
 
   const initialValues = {
+    isSalesPerson: isSalesPerson,
+    p_application_headers: {
+      loan_type: p_application_headers.loan_type,
+    },
     p_applicant_persons__0: {
       S: p_applicant_persons__0.S,
     },
@@ -129,64 +133,12 @@ export const ApStep13Page = () => {
       S: p_applicant_persons__1.S,
     },
   };
-  // const basicResident = {
-  //   id: '',
-  //   resident_type: '1',
-  //   last_name_kanji: '',
-  //   first_name_kanji: '',
-  //   last_name_kana: '',
-  //   first_name_kana: '',
-  //   rel_to_applicant_a_name: '',
-  //   nationality: '0',
-  //   birthday: '',
-  //   loan_from_japan_house_finance_agency: '',
-  //   contact_phone: '',
-  //   postal_code: '',
-  //   prefecture_kanji: '',
-  //   city_kanji: '',
-  //   district_kanji: '',
-  //   other_address_kanji: '',
-  //   prefecture_kana: '',
-  //   city_kana: '',
-  //   district_kana: '',
-  // };
-  // const parseResidents = (values) => {
-  //   const headerResident = values.p_residents;
-  //   const residents = [];
-  //   const overview = values.p_application_headers.new_house_planned_resident_overview;
-  //   const plannedResidentNum =
-  //     Number(overview.spouse) +
-  //     Number(overview.children) +
-  //     Number(overview.father) +
-  //     Number(overview.mother) +
-  //     Number(overview.brothers_sisters) +
-  //     Number(overview.fiance) +
-  //     Number(overview.others);
-  //   if (values.p_residents.length > 0) {
-  //     if (plannedResidentNum > 1) {
-  //       Array.from({ length: plannedResidentNum >= 5 ? 5 : plannedResidentNum }, () => {
-  //         residents.push(basicResident);
-  //       });
-  //     }
-  //   } else {
-  //     if (plannedResidentNum > 0) {
-  //       Array.from({ length: plannedResidentNum >= 6 ? 6 : plannedResidentNum }, () => {
-  //         residents.push(basicResident);
-  //       });
-  //     }
-  //   }
-  //   return [...headerResident, ...residents];
-  // };
-  const [errorMsg, setErrorMsg] = useState(null);
+  validationSchema;
   const formik = useFormik({
     initialValues,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        // if (errorMsg) {
-        //   showError.onTrue();
-        //   return;
-        // }
-
         await apAgentSend({
           ...localApplicationInfo,
           p_applicant_persons__0: {
@@ -212,10 +164,9 @@ export const ApStep13Page = () => {
         navigate(`/step-id-${apNextStepId}`);
       } catch (error) {
         if (error?.status === 400) {
-          console.log(error.data);
           setErrorMsg(error.data);
           showError.onTrue();
-          bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+          bottomRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
           return;
         }
         toast.error(API_500_ERROR);
@@ -226,86 +177,12 @@ export const ApStep13Page = () => {
   const handelLeft = () => {
     navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
   };
-  // const errorMsg = [];
 
-  // const errorMsg = useMemo(() => {
-  //   const tempMsg = [];
-  //   if (application.p_applicant_persons__0.identity_verification_type === '1') {
-  //     if (
-  //       application.p_uploaded_files.p_applicant_persons__0__A__01__a.length === 0 ||
-  //       application.p_uploaded_files.p_applicant_persons__0__A__01__b.length === 0
-  //     ) {
-  //       tempMsg.push('本人確認書類');
-  //     }
-  //   }
-  //   if (application.p_applicant_persons__0.identity_verification_type === '2') {
-  //     if (application.p_uploaded_files.p_applicant_persons__0__A__02.length === 0) {
-  //       tempMsg.push('本人確認書類');
-  //     }
-  //   }
-  //   if (application.p_applicant_persons__0.identity_verification_type === '3') {
-  //     if (
-  //       application.p_uploaded_files.p_applicant_persons__0__A__03__a.length === 0 ||
-  //       application.p_uploaded_files.p_applicant_persons__0__A__03__b.length === 0
-  //     ) {
-  //       tempMsg.push('本人確認書類');
-  //     }
-  //   }
-
-  //   if (application.hasIncomeTotalizer) {
-  //     if (application.p_applicant_persons__1.identity_verification_type === '1') {
-  //       if (
-  //         application.p_uploaded_files.p_applicant_persons__1__A__01__a.length === 0 ||
-  //         application.p_uploaded_files.p_applicant_persons__1__A__01__b.length === 0
-  //       ) {
-  //         tempMsg.push('収入合算者の本人確認書類');
-  //       }
-  //     }
-  //     if (application.p_applicant_persons__1.identity_verification_type === '2') {
-  //       if (application.p_uploaded_files.p_applicant_persons__1__A__02.length === 0) {
-  //         tempMsg.push('収入合算者の本人確認書類');
-  //       }
-  //     }
-  //     if (application.p_applicant_persons__1.identity_verification_type === '3') {
-  //       if (
-  //         application.p_uploaded_files.p_applicant_persons__1__A__03__a.length === 0 ||
-  //         application.p_uploaded_files.p_applicant_persons__1__A__03__b.length === 0
-  //       ) {
-  //         tempMsg.push('収入合算者の本人確認書類');
-  //       }
-  //     }
-  //   }
-
-  //   if (application.p_applicant_persons__0.nationality === '2') {
-  //     if (
-  //       application.p_uploaded_files.p_applicant_persons__0__H__a.length === 0 ||
-  //       application.p_uploaded_files.p_applicant_persons__0__H__b.length === 0
-  //     ) {
-  //       tempMsg.push('〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
-  //     }
-  //   }
-  //   if (application.p_applicant_persons__1.nationality === '2') {
-  //     if (application.hasIncomeTotalizer) {
-  //       if (
-  //         application.p_uploaded_files.p_applicant_persons__1__H__a.length === 0 ||
-  //         application.p_uploaded_files.p_applicant_persons__1__H__b.length === 0
-  //       ) {
-  //         tempMsg.push('収入合算者の〈現在の国籍〉在留カードまたは特別永住者証明書を添付してください');
-  //       }
-  //     }
-  //   }
-
-  //   if (isSalesPerson === 2) {
-  //     if (formik.values.p_uploaded_files.S.length === 0) {
-  //       tempMsg.push('サインをしてください');
-  //     }
-  //   }
-
-  //   return tempMsg;
-  // }, [application]);
+  console.log(formik.errors);
 
   return (
     <FormikProvider value={formik}>
+      <ApErrorScroll />
       <ApLayout
         hasMenu
         hasStepBar
@@ -342,28 +219,28 @@ export const ApStep13Page = () => {
             <ApConfirmItemGroup label={'申込人 サイン'}>
               <ApSignatureBoard
                 name="p_applicant_persons__0.S"
-                showError={showError.value}
-                onChange={() => {
-                  showError.onFalse();
-                }}
+                // showError={showError.value}
+                // onChange={() => {
+                //   showError.onFalse();
+                // }}
               />
             </ApConfirmItemGroup>
             {hasIncomeTotalizer && (
               <ApConfirmItemGroup label={'収入合算者 サイン'}>
                 <ApSignatureBoard
                   name="p_applicant_persons__1.S"
-                  showError={showError.value}
-                  onChange={() => {
-                    showError.onFalse();
-                  }}
+                  // showError={showError.value}
+                  // onChange={() => {
+                  //   showError.onFalse();
+                  // }}
                 />
               </ApConfirmItemGroup>
             )}
           </ApConfirmGroup>
         )}
         <Box ref={bottomRef}>
-          {showError.value && errorMsg && (
-            <Stack ref={errorMsgRef} spacing={6} sx={{ width: 1, px: 4, pt: 4, pb: 10 }}>
+          {!!errorMsg && (
+            <Stack ref={errorMsgRef} spacing={6} sx={{ width: 1, px: 4, pt: 4, pb: 8 }}>
               <Box
                 sx={{
                   py: 2,
@@ -410,12 +287,6 @@ export const ApStep13Page = () => {
                         </Stack>
                       </Stack>
                     ))}
-                    {/* <Typography
-                    variant="waring"
-                    sx={{ color: (theme) => theme.palette.secondary.main, textAlign: 'left' }}
-                  >
-                    {JSON.stringify(errorMsg)}
-                  </Typography> */}
                   </Stack>
                 </Stack>
               </Box>

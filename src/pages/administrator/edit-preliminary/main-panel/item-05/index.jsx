@@ -3,7 +3,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 
 import { formatJapanDate, formatNumber } from '@/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   AdAreaInput,
   AdEditFullWidthInput,
@@ -125,7 +125,7 @@ export const Item05 = () => {
         loan_type: p_application_headers.loan_type,
       },
       p_applicant_persons__0: {
-        spouse: values.p_application_headers.new_house_planned_resident_overview.spouse_umu ? '1' : '0',
+        spouse: values.p_applicant_persons__0.spouse,
       },
       p_residents: values.p_residents,
     };
@@ -151,7 +151,7 @@ export const Item05 = () => {
         },
         p_applicant_persons__0: {
           ...pre.p_applicant_persons__0,
-          spouse: formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu ? '1' : '0',
+          spouse: formik.values.p_applicant_persons__0.spouse,
         },
         p_residents: formik.values.p_residents,
       };
@@ -813,18 +813,6 @@ export const Item05 = () => {
                                     formik.setFieldValue(`p_residents[${index}].other_address_kanji`, value);
                                     formik.setFieldTouched(`p_residents[${index}].other_address_kanji`, touched);
                                   }}
-                                  // setPrefectureKana={(value, touched) => {
-                                  //   formik.setFieldValue(`p_residents[${index}].prefecture_kana`, value);
-                                  //   formik.setFieldTouched(`p_residents[${index}].prefecture_kana`, touched);
-                                  // }}
-                                  // setCityKana={(value, touched) => {
-                                  //   formik.setFieldValue(`p_residents[${index}].city_kana`, value);
-                                  //   formik.setFieldTouched(`p_residents[${index}].city_kana`, touched);
-                                  // }}
-                                  // setDistrictKana={(value, touched) => {
-                                  //   formik.setFieldValue(`p_residents[${index}].district_kana`, value);
-                                  //   formik.setFieldTouched(`p_residents[${index}].district_kana`, touched);
-                                  // }}
                                 />
                               ) : (
                                 item.postal_code

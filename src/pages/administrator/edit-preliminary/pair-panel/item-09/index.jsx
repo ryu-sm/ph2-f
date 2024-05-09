@@ -17,8 +17,8 @@ export const Item09 = () => {
     preliminaryInfo: { p_applicant_persons__0, p_application_headers, p_borrowings, apply_type },
     setPreliminarySnap,
     handleSave,
-    isEditable,
   } = usePreliminaryContext();
+  const isEditable = false;
 
   const initialValues = {
     p_applicant_persons__0: {

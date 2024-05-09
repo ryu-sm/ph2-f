@@ -130,7 +130,7 @@ export const AdDocsDisplayPopover = ({ open, onClose, anchorEl }) => {
       { label: 'K', title: 'その他', show: p_applicant_persons__1.K?.length > 0 },
     ];
 
-    if (mainTab === 1) {
+    if (mainTab === 1 || mainTab === 3) {
       return files_0.filter((item) => item.show);
     }
     if (mainTab === 2) {

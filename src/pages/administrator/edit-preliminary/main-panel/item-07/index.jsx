@@ -2,7 +2,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
 import { formatNumber } from '@/utils';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { AdEditFullWidthInput, AdNumericInput } from '@/components/administrator';
 import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
@@ -29,7 +29,7 @@ export const Item07 = () => {
       required_funds_refinance_loan_balance: p_application_headers?.required_funds_refinance_loan_balance,
       required_funds_upgrade_amount: p_application_headers?.required_funds_upgrade_amount,
       required_funds_loan_plus_amount: p_application_headers?.required_funds_loan_plus_amount,
-      required_funds_total_amount: p_application_headers?.required_funds_total_amount,
+      // required_funds_total_amount: p_application_headers?.required_funds_total_amount,
       funding_saving_amount: p_application_headers?.funding_saving_amount,
       funding_estate_sale_amount: p_application_headers?.funding_estate_sale_amount,
       funding_other_saving_amount: p_application_headers?.funding_other_saving_amount,
@@ -38,8 +38,8 @@ export const Item07 = () => {
       funding_pair_loan_amount: p_application_headers?.funding_pair_loan_amount,
       funding_other_amount: p_application_headers?.funding_other_amount,
       funding_other_amount_detail: p_application_headers?.funding_other_amount_detail,
-      funding_total_amount: p_application_headers?.funding_total_amount,
       funding_self_amount: p_application_headers?.funding_self_amount,
+      // funding_total_amount: p_application_headers?.funding_total_amount,
       property_building_price: p_application_headers?.property_building_price,
       property_land_price: p_application_headers?.property_land_price,
       property_total_price: p_application_headers?.property_total_price,
@@ -79,26 +79,31 @@ export const Item07 = () => {
       };
     });
   }, [formik.values]);
-
-  useEffect(() => {
-    const tempRequiredFundsTotalAmount =
+  const required_funds_total_amount = useMemo(() => {
+    return (
       Number(formik.values.p_application_headers.required_funds_land_amount) +
       Number(formik.values.p_application_headers.required_funds_house_amount) +
       Number(formik.values.p_application_headers.required_funds_accessory_amount) +
       Number(formik.values.p_application_headers.required_funds_upgrade_amount) +
       Number(formik.values.p_application_headers.required_funds_refinance_loan_balance) +
       Number(formik.values.p_application_headers.required_funds_additional_amount) +
-      Number(formik.values.p_application_headers.required_funds_loan_plus_amount);
-    formik.setFieldValue('p_application_headers.required_funds_total_amount', `${tempRequiredFundsTotalAmount}`);
-  }, [
-    formik.values.p_application_headers.required_funds_land_amount,
-    formik.values.p_application_headers.required_funds_house_amount,
-    formik.values.p_application_headers.required_funds_accessory_amount,
-    formik.values.p_application_headers.required_funds_upgrade_amount,
-    formik.values.p_application_headers.required_funds_refinance_loan_balance,
-    formik.values.p_application_headers.required_funds_additional_amount,
-    formik.values.p_application_headers.required_funds_loan_plus_amount,
-  ]);
+      Number(formik.values.p_application_headers.required_funds_loan_plus_amount)
+    );
+  }, []);
+
+  const funding_total_amount = useMemo(() => {
+    return (
+      Number(formik.values.p_application_headers.funding_saving_amount) +
+      Number(formik.values.p_application_headers.funding_estate_sale_amount) +
+      Number(formik.values.p_application_headers.funding_other_saving_amount) +
+      Number(formik.values.p_application_headers.funding_relative_donation_amount) +
+      Number(formik.values.p_application_headers.funding_loan_amount) +
+      Number(formik.values.p_application_headers.funding_pair_loan_amount) +
+      Number(formik.values.p_application_headers.funding_other_loan_amount) +
+      Number(formik.values.p_application_headers.funding_other_refinance_amount) +
+      Number(formik.values.p_application_headers.funding_other_amount)
+    );
+  }, []);
 
   useEffect(() => {
     const tempFundingSelfAmount =
@@ -113,29 +118,17 @@ export const Item07 = () => {
   ]);
 
   useEffect(() => {
-    const fundingTotalAmountt =
-      Number(formik.values.p_application_headers.funding_saving_amount) +
-      Number(formik.values.p_application_headers.funding_estate_sale_amount) +
-      Number(formik.values.p_application_headers.funding_other_saving_amount) +
-      Number(formik.values.p_application_headers.funding_relative_donation_amount) +
-      Number(formik.values.p_application_headers.funding_loan_amount) +
-      Number(formik.values.p_application_headers.funding_pair_loan_amount) +
-      Number(formik.values.p_application_headers.funding_other_loan_amount) +
-      Number(formik.values.p_application_headers.funding_other_refinance_amount) +
-      Number(formik.values.p_application_headers.funding_other_amount);
-    formik.setFieldValue('p_application_headers.funding_total_amount', `${fundingTotalAmountt}`);
+    const tempPropertyTotalPrice =
+      Number(formik.values.p_application_headers.property_building_price) +
+      Number(formik.values.p_application_headers.property_land_price);
+    formik.setFieldValue(
+      'p_application_headers.property_total_price',
+      tempPropertyTotalPrice ? `${tempPropertyTotalPrice}` : ''
+    );
   }, [
-    formik.values.p_application_headers.funding_saving_amount,
-    formik.values.p_application_headers.funding_estate_sale_amount,
-    formik.values.p_application_headers.funding_other_saving_amount,
-    formik.values.p_application_headers.funding_relative_donation_amount,
-    formik.values.p_application_headers.funding_loan_amount,
-    formik.values.p_application_headers.funding_pair_loan_amount,
-    formik.values.p_application_headers.funding_other_loan_amount,
-    formik.values.p_application_headers.funding_other_refinance_amount,
-    formik.values.p_application_headers.funding_other_amount,
+    formik.values.p_application_headers.property_building_price,
+    formik.values.p_application_headers.property_land_price,
   ]);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>
@@ -317,13 +310,7 @@ export const Item07 = () => {
             unit: '万円',
           }}
           isAddendum
-          field={
-            isEditable ? (
-              <AdNumericInput name="p_application_headers.property_total_price" maxLength={6} unit={'万円'} />
-            ) : (
-              formatNumber(formik.values.p_application_headers.property_total_price)
-            )
-          }
+          field={formatNumber(formik.values.p_application_headers.property_total_price)}
         />
 
         <EditRow
@@ -333,7 +320,7 @@ export const Item07 = () => {
             formatNumber: true,
             unit: '万円',
           }}
-          field={formatNumber(formik.values.p_application_headers.required_funds_total_amount)}
+          field={formatNumber(`${required_funds_total_amount}`)}
         />
 
         <EditRow
@@ -522,7 +509,7 @@ export const Item07 = () => {
             formatNumber: true,
             unit: '万円',
           }}
-          field={formatNumber(formik.values.p_application_headers.funding_total_amount)}
+          field={formatNumber(`${funding_total_amount}`)}
         />
       </ContentEditGroup>
     </FormikProvider>

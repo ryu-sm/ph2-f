@@ -14,14 +14,7 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
   const formik = useFormikContext();
   const [field, meta, helpers] = useField(props);
   const { setValue, setError } = helpers;
-  const handleChange = useCallback(
-    async (value) => {
-      const temp = meta.value.includes(value) ? meta.value.filter((item) => item !== value) : [...meta.value, value];
-      props.onChange && props.onChange(temp);
-      await setValue(temp);
-    },
-    [meta, setValue]
-  );
+
   const handlePopoverOpen = (e) => {
     setAnchorEl(e.currentTarget);
     setError('');
@@ -58,6 +51,7 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
   const basic = {
     id: '',
     one_roof: '',
+    resident_type: '1',
     last_name_kanji: '',
     first_name_kanji: '',
     last_name_kana: '',
@@ -75,9 +69,9 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
     city_kanji: '',
     district_kanji: '',
     other_address_kanji: '',
-    prefecture_kana: '',
-    city_kana: '',
-    district_kana: '',
+    // prefecture_kana: '',
+    // city_kana: '',
+    // district_kana: '',
   };
 
   return (
@@ -175,10 +169,22 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                         arrayHelpers.push({ ...basic, rel_to_applicant_a: '1' });
                       }
                     } else {
+                      if (sun - 1 >= 6) {
+                        setValue({
+                          ...meta.value,
+                          spouse_umu: !meta.value?.spouse_umu,
+                          spouse: meta.value?.spouse_umu ? '' : '1',
+                        });
+                        return;
+                      }
                       const deleteIndex = formik.values.p_residents.findIndex(
                         (item) => item.rel_to_applicant_a === '1'
                       );
-                      arrayHelpers.remove(deleteIndex);
+                      if (deleteIndex === -1) {
+                        arrayHelpers.pop();
+                      } else {
+                        arrayHelpers.remove(deleteIndex);
+                      }
                     }
                     setValue({
                       ...meta.value,
@@ -212,13 +218,26 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                         arrayHelpers.push({ ...basic, rel_to_applicant_a: '2' });
                       }
                     } else {
-                      const deleteIndexList = [];
-                      formik.values.p_residents.forEach((item, index) => {
+                      if (sun - Number(meta.value?.children) >= 6) {
+                        setValue({
+                          ...meta.value,
+                          children_umu: !meta.value?.children_umu,
+                          children: meta.value?.children_umu ? '' : '1',
+                        });
+                        return;
+                      }
+                      const t_list = [];
+                      const u_list = [];
+                      formik.values.p_residents.forEach((item) => {
                         if (item.rel_to_applicant_a === '2') {
-                          deleteIndexList.push(index);
+                          t_list.push(item);
+                        } else {
+                          u_list.push(item);
                         }
                       });
-                      deleteIndexList.forEach((deleteIndex) => arrayHelpers.remove(deleteIndex));
+
+                      const r_list = [...u_list, ...t_list].slice(0, sun - Number(meta.value?.children));
+                      formik.setFieldValue('p_residents', r_list);
                     }
                     setValue({
                       ...meta.value,
@@ -248,17 +267,28 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                   disabled={!meta.value?.children_umu}
                   onClick={() => {
                     if (Number(meta.value?.children) > 1) {
-                      setValue({
-                        ...meta.value,
-                        children: `${Number(meta.value?.children) - 1}`,
-                      });
+                      if (sun - 1 >= 6) {
+                        setValue({
+                          ...meta.value,
+                          children: `${Number(meta.value?.children) - 1}`,
+                        });
+                        return;
+                      }
                       const deleteIndexList = [];
                       formik.values.p_residents.forEach((item, index) => {
                         if (item.rel_to_applicant_a === '2') {
                           deleteIndexList.push(index);
                         }
                       });
-                      arrayHelpers.remove(deleteIndexList[deleteIndexList.length - 1]);
+                      if (deleteIndexList.length > 0) {
+                        arrayHelpers.remove(deleteIndexList[deleteIndexList.length - 1]);
+                      } else {
+                        arrayHelpers.pop();
+                      }
+                      setValue({
+                        ...meta.value,
+                        children: `${Number(meta.value?.children) - 1}`,
+                      });
                     }
                   }}
                 >
@@ -320,13 +350,20 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                       arrayHelpers.push({ ...basic, rel_to_applicant_a: '3' });
                     }
                   } else {
-                    const deleteIndexList = [];
-                    formik.values.p_residents.forEach((item, index) => {
-                      if (item.rel_to_applicant_a === '3') {
-                        deleteIndexList.push(index);
-                      }
-                    });
-                    deleteIndexList.forEach((deleteIndex) => arrayHelpers.remove(deleteIndex));
+                    if (sun - 1 >= 6) {
+                      setValue({
+                        ...meta.value,
+                        father_umu: !meta.value?.father_umu,
+                        father: meta.value?.father_umu ? '' : '1',
+                      });
+                      return;
+                    }
+                    const deleteIndex = formik.values.p_residents.findIndex((item) => item.rel_to_applicant_a === '3');
+                    if (deleteIndex === -1) {
+                      arrayHelpers.pop();
+                    } else {
+                      arrayHelpers.remove(deleteIndex);
+                    }
                   }
                   setValue({
                     ...meta.value,
@@ -360,13 +397,20 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                       arrayHelpers.push({ ...basic, rel_to_applicant_a: '4' });
                     }
                   } else {
-                    const deleteIndexList = [];
-                    formik.values.p_residents.forEach((item, index) => {
-                      if (item.rel_to_applicant_a === '4') {
-                        deleteIndexList.push(index);
-                      }
-                    });
-                    deleteIndexList.forEach((deleteIndex) => arrayHelpers.remove(deleteIndex));
+                    if (sun - 1 >= 6) {
+                      setValue({
+                        ...meta.value,
+                        mother_umu: !meta.value?.mother_umu,
+                        mother: meta.value?.mother_umu ? '' : '1',
+                      });
+                      return;
+                    }
+                    const deleteIndex = formik.values.p_residents.findIndex((item) => item.rel_to_applicant_a === '4');
+                    if (deleteIndex === -1) {
+                      arrayHelpers.pop();
+                    } else {
+                      arrayHelpers.remove(deleteIndex);
+                    }
                   }
                   setValue({
                     ...meta.value,
@@ -400,13 +444,26 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                         arrayHelpers.push({ ...basic, rel_to_applicant_a: '5' });
                       }
                     } else {
-                      const deleteIndexList = [];
-                      formik.values.p_residents.forEach((item, index) => {
+                      if (sun - Number(meta.value?.brothers_sisters) >= 6) {
+                        setValue({
+                          ...meta.value,
+                          brothers_sisters_umu: !meta.value?.brothers_sisters_umu,
+                          brothers_sisters: meta.value?.brothers_sisters_umu ? '' : '1',
+                        });
+                        return;
+                      }
+                      const t_list = [];
+                      const u_list = [];
+                      formik.values.p_residents.forEach((item) => {
                         if (item.rel_to_applicant_a === '5') {
-                          deleteIndexList.push(index);
+                          t_list.push(item);
+                        } else {
+                          u_list.push(item);
                         }
                       });
-                      deleteIndexList.forEach((deleteIndex) => arrayHelpers.remove(deleteIndex));
+
+                      const r_list = [...u_list, ...t_list].slice(0, sun - Number(meta.value?.brothers_sisters));
+                      formik.setFieldValue('p_residents', r_list);
                     }
                     setValue({
                       ...meta.value,
@@ -436,17 +493,28 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                   disabled={!meta.value?.brothers_sisters_umu}
                   onClick={() => {
                     if (Number(meta.value?.brothers_sisters) > 1) {
-                      setValue({
-                        ...meta.value,
-                        brothers_sisters: `${Number(meta.value?.brothers_sisters) - 1}`,
-                      });
+                      if (sun - 1 >= 6) {
+                        setValue({
+                          ...meta.value,
+                          brothers_sisters: `${Number(meta.value?.brothers_sisters) - 1}`,
+                        });
+                        return;
+                      }
                       const deleteIndexList = [];
                       formik.values.p_residents.forEach((item, index) => {
                         if (item.rel_to_applicant_a === '5') {
                           deleteIndexList.push(index);
                         }
                       });
-                      arrayHelpers.remove(deleteIndexList[deleteIndexList.length - 1]);
+                      if (deleteIndexList.length > 0) {
+                        arrayHelpers.remove(deleteIndexList[deleteIndexList.length - 1]);
+                      } else {
+                        arrayHelpers.pop();
+                      }
+                      setValue({
+                        ...meta.value,
+                        brothers_sisters: `${Number(meta.value?.brothers_sisters) - 1}`,
+                      });
                     }
                   }}
                 >
@@ -514,10 +582,22 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                         arrayHelpers.push({ ...basic, rel_to_applicant_a: '6' });
                       }
                     } else {
+                      if (sun - 1 >= 6) {
+                        setValue({
+                          ...meta.value,
+                          fiance_umu: !meta.value?.fiance_umu,
+                          fiance: meta.value?.fiance_umu ? '' : '1',
+                        });
+                        return;
+                      }
                       const deleteIndex = formik.values.p_residents.findIndex(
                         (item) => item.rel_to_applicant_a === '6'
                       );
-                      arrayHelpers.remove(deleteIndex);
+                      if (deleteIndex === -1) {
+                        arrayHelpers.pop();
+                      } else {
+                        arrayHelpers.remove(deleteIndex);
+                      }
                     }
                     setValue({
                       ...meta.value,
@@ -546,13 +626,26 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                         arrayHelpers.push({ ...basic, rel_to_applicant_a: '99' });
                       }
                     } else {
-                      const deleteIndexList = [];
-                      formik.values.p_residents.forEach((item, index) => {
+                      if (sun - Number(meta.value?.others) >= 6) {
+                        setValue({
+                          ...meta.value,
+                          others_umu: !meta.value?.others_umu,
+                          others: meta.value?.others_umu ? '' : '1',
+                        });
+                        return;
+                      }
+                      const t_list = [];
+                      const u_list = [];
+                      formik.values.p_residents.forEach((item) => {
                         if (item.rel_to_applicant_a === '99') {
-                          deleteIndexList.push(index);
+                          t_list.push(item);
+                        } else {
+                          u_list.push(item);
                         }
                       });
-                      deleteIndexList.forEach((deleteIndex) => arrayHelpers.remove(deleteIndex));
+
+                      const r_list = [...u_list, ...t_list].slice(0, sun - Number(meta.value?.others));
+                      formik.setFieldValue('p_residents', r_list);
                     }
                     setValue({
                       ...meta.value,
@@ -582,17 +675,28 @@ export const PlannedResidentSelect = ({ arrayHelpers, ...props }) => {
                   disabled={!meta.value?.others_umu}
                   onClick={() => {
                     if (Number(meta.value?.others) > 1) {
-                      setValue({
-                        ...meta.value,
-                        others: `${Number(meta.value?.others) - 1}`,
-                      });
+                      if (sun - 1 >= 6) {
+                        setValue({
+                          ...meta.value,
+                          others: `${Number(meta.value?.others) - 1}`,
+                        });
+                        return;
+                      }
                       const deleteIndexList = [];
                       formik.values.p_residents.forEach((item, index) => {
                         if (item.rel_to_applicant_a === '99') {
                           deleteIndexList.push(index);
                         }
                       });
-                      arrayHelpers.remove(deleteIndexList[deleteIndexList.length - 1]);
+                      if (deleteIndexList.length > 0) {
+                        arrayHelpers.remove(deleteIndexList[deleteIndexList.length - 1]);
+                      } else {
+                        arrayHelpers.pop();
+                      }
+                      setValue({
+                        ...meta.value,
+                        others: `${Number(meta.value?.others) - 1}`,
+                      });
                     }
                   }}
                 >

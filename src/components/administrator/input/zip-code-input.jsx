@@ -1,5 +1,5 @@
-import { convertToFullWidth, convertToHalfWidth } from '@/utils';
-import { Stack, TextField, Typography } from '@mui/material';
+import { convertToFullWidth } from '@/utils';
+import { Stack, Typography } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback, useState } from 'react';
 import AutosizeInput from 'react-input-autosize';
@@ -19,9 +19,9 @@ export const AdZipCodeInput = ({
   ...props
 }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue, setError } = helpers;
+  const { setValue, setTouched } = helpers;
   const [oldValue, setOldValue] = useState(meta.value);
-
+  const [addrError, setAddrError] = useState(false);
   const inputRef = useRef(null);
 
   const handleAutoFocus = () => {
@@ -52,6 +52,7 @@ export const AdZipCodeInput = ({
             setCityKana && setCityKana(convertToFullWidth(res.data.results[0].kana2), false);
             setDistrictKana && setDistrictKana(convertToFullWidth(res.data.results[0].kana3), false);
           } else {
+            setAddrError(true);
             setPrefectureKanji && setPrefectureKanji('', false);
             setCityKanji && setCityKanji('', false);
             setDistrictKanji && setDistrictKanji('', false);
@@ -61,6 +62,7 @@ export const AdZipCodeInput = ({
             setDistrictKana && setDistrictKana('', false);
           }
         } catch (error) {
+          setAddrError(true);
           setPrefectureKanji && setPrefectureKanji('', false);
           setCityKanji && setCityKanji('', false);
           setDistrictKanji && setDistrictKanji('', false);
@@ -108,20 +110,29 @@ export const AdZipCodeInput = ({
           name={field.name}
           value={meta.value}
           onInput={(e) => {
-            e.target.value = convertToHalfWidth(e.target.value);
             e.target.value = e.target.value.replace(/[^\d-]+/g, '');
             e.target.value = e.target.value.substring(0, 8);
             return e;
           }}
           onChange={handleChange}
           onBlur={handelBlue}
-          onFocus={() => setError('')}
+          onFocus={() => {
+            setTouched(false);
+            setAddrError(false);
+          }}
         />
       </Stack>
       {meta.touched && meta.error && (
         <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
           <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
             {meta.error}
+          </Typography>
+        </Stack>
+      )}
+      {addrError && (
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+          <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
+            住所が取得できませんでした。再度入力してください。
           </Typography>
         </Stack>
       )}

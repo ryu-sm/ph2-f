@@ -52,12 +52,13 @@ export const AdNumericInput = ({ unit, maxLength, width, showZero, ...props }) =
           inputClassName="custom-input-style"
           name={field.name}
           value={meta.value}
-          onInput={(e) => {
-            e.target.value = convertToHalfWidth(e.target.value);
-            e.target.value = e.target.value.replace(/[^\d]+/g, '');
-            e.target.value = e.target.value.substring(0, maxLength);
-            return e;
-          }}
+          // onInput={(e) => {
+          //   e.target.value = convertToHalfWidth(e.target.value);
+          //   e.target.value = e.target.value.replace(/[^\d]+/g, '');
+          //   e.target.value = e.target.value.substring(0, maxLength);
+          //   return e;
+          // }}
+          maxLength={maxLength}
           onBlur={handelBlue}
           onFocus={() => setError('')}
           onValueChange={async (values) => handleChange(values.value)}

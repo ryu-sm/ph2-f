@@ -7,7 +7,6 @@ export * from './edit-outline-input';
 export * from './area-input';
 export * from './zip-code-input';
 export * from './filter-input';
-export * from './filter-numeric-input';
 export * from './link-insert-input';
 export * from './edit-fullwidth-input';
 export * from './phone-input';

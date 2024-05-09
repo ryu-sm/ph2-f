@@ -22,13 +22,13 @@ export const GroupNavigations = ({ group }) => {
     }
     return <Navigate to={routeNames.adManagerLoginPage.path} replace />;
   }
-  if (
-    !isLogined &&
-    group === 'sales-person' &&
-    pathname !== routeNames.adSalesPersonRegisterVerifyEmail.path &&
-    pathname !== routeNames.adSalesPersonRegister.path
-  ) {
-    return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
+  if (!isLogined && group === 'sales-person') {
+    if (
+      pathname !== routeNames.adSalesPersonRegisterVerifyEmail.path &&
+      pathname !== routeNames.adSalesPersonRegister.path
+    ) {
+      return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
+    }
   }
   if (isLogined && !!user?.id) {
     if (

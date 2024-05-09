@@ -106,7 +106,7 @@ export const applicationInitialValues = {
     required_funds_refinance_loan_balance: '',
     required_funds_upgrade_amount: '',
     required_funds_loan_plus_amount: '',
-    required_funds_total_amount: '',
+    // required_funds_total_amount: '',
     funding_saving_amount: '',
     funding_estate_sale_amount: '',
     funding_self_amount: '',
@@ -116,7 +116,7 @@ export const applicationInitialValues = {
     funding_pair_loan_amount: '',
     funding_other_amount: '',
     funding_other_amount_detail: '',
-    funding_total_amount: '',
+    // funding_total_amount: '',
     // STEP12
     sales_company_id: '',
     sales_area_id: '',

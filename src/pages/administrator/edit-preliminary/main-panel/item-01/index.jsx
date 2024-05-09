@@ -27,11 +27,10 @@ import {
 import { useBankMaster } from '@/hooks/use-bank-master';
 import dayjs from 'dayjs';
 import { diffObj } from '@/utils';
-import { MCJ_CODE } from '@/configs';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab01Schema } from '../../fullSchema';
-import { editMainTabStatusAtom, infoGroupTabAtom, joinGuarantorInitialValues } from '@/store';
+import { editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
 import { useSetRecoilState } from 'recoil';
 import { useBoolean } from '@/hooks';
 import { AdPrimaryButton } from '@/components/administrator/button';
@@ -135,16 +134,6 @@ export const Item01 = () => {
       ? '0'
       : p_application_headers.required_funds_loan_plus_amount;
 
-    const required_funds_total_amount = `${
-      Number(required_funds_land_amount) +
-      Number(required_funds_house_amount) +
-      Number(required_funds_accessory_amount) +
-      Number(required_funds_upgrade_amount) +
-      Number(required_funds_refinance_loan_balance) +
-      Number(required_funds_additional_amount) +
-      Number(required_funds_loan_plus_amount)
-    }`;
-
     const funding_saving_amount = p_application_headers.funding_saving_amount;
     const funding_estate_sale_amount = p_application_headers.funding_estate_sale_amount;
     const funding_other_saving_amount = p_application_headers.funding_other_saving_amount;
@@ -157,21 +146,9 @@ export const Item01 = () => {
     const funding_other_refinance_amount = p_application_headers.funding_other_refinance_amount;
     const funding_other_amount = p_application_headers.funding_other_amount;
 
-    const funding_self_amount = `${
-      Number(funding_saving_amount) + Number(funding_estate_sale_amount) + Number(funding_other_saving_amount)
-    }`;
+    const funding_self_amount =
+      Number(funding_saving_amount) + Number(funding_estate_sale_amount) + Number(funding_other_saving_amount);
 
-    const funding_total_amount = `${
-      Number(funding_saving_amount) +
-      Number(funding_estate_sale_amount) +
-      Number(funding_other_saving_amount) +
-      Number(funding_relative_donation_amount) +
-      Number(funding_loan_amount) +
-      Number(funding_pair_loan_amount) +
-      Number(funding_other_loan_amount) +
-      Number(funding_other_refinance_amount) +
-      Number(funding_other_amount)
-    }`;
     return {
       required_funds_land_amount,
       required_funds_house_amount,
@@ -180,7 +157,7 @@ export const Item01 = () => {
       required_funds_refinance_loan_balance,
       required_funds_additional_amount,
       required_funds_loan_plus_amount,
-      required_funds_total_amount,
+
       //
       funding_saving_amount,
       funding_estate_sale_amount,
@@ -191,8 +168,7 @@ export const Item01 = () => {
       funding_other_loan_amount,
       funding_other_refinance_amount,
       funding_other_amount,
-      funding_self_amount,
-      funding_total_amount,
+      funding_self_amount: funding_self_amount ? `${funding_self_amount}` : '',
     };
   };
 
@@ -476,7 +452,7 @@ export const Item01 = () => {
                 isEditable ? (
                   <AdEditFullWidthInput name="p_application_headers.pair_loan_first_name" convertFullWidth />
                 ) : (
-                  formik.values.p_application_headers.pair_loan_last_name
+                  formik.values.p_application_headers.pair_loan_first_name
                 )
               }
             />

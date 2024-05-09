@@ -32,6 +32,7 @@ import { diffObj, formatJapanDate, formatNumber } from '@/utils';
 
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
+import { ContentEditGroupSub } from '../../common/content-edit-group-sub';
 import { AdPrimaryButton } from '@/components/administrator/button';
 import { Icons } from '@/assets';
 import { tab06Schema } from '../../fullSchema';
@@ -44,7 +45,6 @@ export const Item06 = () => {
     handleSave,
   } = usePreliminaryContext();
   const isEditable = false;
-
   const initialValues = {
     p_application_headers: {
       curr_borrowing_status: p_application_headers?.curr_borrowing_status,
@@ -67,6 +67,9 @@ export const Item06 = () => {
       p_application_headers: {
         ...diffObj(initialValues.p_application_headers, values.p_application_headers),
         curr_borrowing_status: values.p_application_headers.curr_borrowing_status,
+        join_guarantor_umu: p_application_headers.join_guarantor_umu,
+        land_advance_plan: p_application_headers.land_advance_plan,
+        loan_type: p_application_headers.loan_type,
       },
       p_borrowings: values.p_borrowings,
     };
@@ -155,12 +158,13 @@ export const Item06 = () => {
           render={(arrayHelpers) => (
             <Fragment>
               {formik.values.p_borrowings.map((item, index) => (
-                <ContentEditGroup
+                <ContentEditGroupSub
                   key={index}
                   label={'現在の借入状況'}
                   subLabel={`（${index + 1}件目）`}
                   hiddenTitle
                   handleDeleteItem={() => arrayHelpers.remove(index)}
+                  maxHeight={'none'}
                 >
                   {hasIncomeTotalizer && (
                     <EditRow
@@ -195,7 +199,7 @@ export const Item06 = () => {
                             if (formik.values.p_borrowings[index].type !== '')
                               arrayHelpers.replace(index, {
                                 id: item.id,
-                                self_input: '0',
+                                self_input: '1',
                                 borrower: '',
                                 type: '',
                                 lender: '',
@@ -384,7 +388,7 @@ export const Item06 = () => {
                     isLogicRequired
                     field={
                       isEditable ? (
-                        <AdNumericInput name={`p_borrowings[${index}].loan_amount`} unit={'万円'} />
+                        <AdNumericInput name={`p_borrowings[${index}].loan_amount`} unit={'万円'} maxLength={5} />
                       ) : (
                         formatNumber(item.loan_amount)
                       )
@@ -399,7 +403,11 @@ export const Item06 = () => {
                     }}
                     field={
                       isEditable ? (
-                        <AdNumericInput name={`p_borrowings[${index}].curr_loan_balance_amount`} unit={'万円'} />
+                        <AdNumericInput
+                          name={`p_borrowings[${index}].curr_loan_balance_amount`}
+                          unit={'万円'}
+                          maxLength={5}
+                        />
                       ) : (
                         formatNumber(item.curr_loan_balance_amount)
                       )
@@ -414,7 +422,11 @@ export const Item06 = () => {
                     }}
                     field={
                       isEditable ? (
-                        <AdNumericInput name={`p_borrowings[${index}].annual_repayment_amount`} unit={'万円'} />
+                        <AdNumericInput
+                          name={`p_borrowings[${index}].annual_repayment_amount`}
+                          unit={'万円'}
+                          maxLength={5}
+                        />
                       ) : (
                         formatNumber(item.annual_repayment_amount)
                       )
@@ -586,11 +598,11 @@ export const Item06 = () => {
                       )
                     }
                   />
-                </ContentEditGroup>
+                </ContentEditGroupSub>
               ))}
 
               {isMCJ && formik.values.p_borrowings.some((item) => item?.scheduled_loan_payoff === '1') && (
-                <Stack>
+                <Stack sx={{ borderTop: (theme) => `1px solid ${theme.palette.gray[70]}` }}>
                   <EditRow
                     label={'完済原資の種類'}
                     upConfig={{
@@ -599,12 +611,21 @@ export const Item06 = () => {
                       mapOptions: true,
                       join: '・',
                     }}
+                    isLogicRequired
                     hasPleft={isEditable}
                     field={
                       isEditable ? (
                         <AdSelectCheckbox
                           name="p_application_headers.refund_source_type"
                           options={refundSourceTypeOptions}
+                          onChange={(values) => {
+                            if (values.includes('99')) {
+                              formik.setFieldTouched('p_application_headers.refund_source_type_other', true);
+                            } else {
+                              formik.setFieldTouched('p_application_headers.refund_source_type_other', false);
+                              formik.setFieldValue('p_application_headers.refund_source_type_other', '');
+                            }
+                          }}
                         />
                       ) : (
                         refundSourceTypeOptions
@@ -618,6 +639,24 @@ export const Item06 = () => {
                       )
                     }
                   />
+                  {formik.values.p_application_headers.refund_source_type.includes('99') && (
+                    <EditRow
+                      label={'完済原資の種類（その他）'}
+                      upConfig={{
+                        key: `p_application_headers.refund_source_type_other.${p_application_headers?.id}`,
+                      }}
+                      field={
+                        isEditable ? (
+                          <AdEditFullWidthInput
+                            name="p_application_headers.refund_source_type_other"
+                            convertFullWidth
+                          />
+                        ) : (
+                          formik.values.p_application_headers.refund_source_type_other
+                        )
+                      }
+                    />
+                  )}
                   <EditRow
                     label={'完済原資の内容'}
                     upConfig={{

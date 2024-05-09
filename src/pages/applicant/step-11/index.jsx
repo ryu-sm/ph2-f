@@ -101,42 +101,10 @@ export const ApStep11Page = () => {
   };
 
   const setUpdateData = (values) => {
-    const newData = {
-      p_applicant_persons__1: {
-        ...values.p_applicant_persons__1,
-        ...(values.p_applicant_persons__1.identity_verification_type === '1'
-          ? {
-              A__01__a: values.p_applicant_persons__1.A__01__a,
-              A__01__b: values.p_applicant_persons__1.A__01__b,
-              A__02: [],
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(values.p_applicant_persons__1.identity_verification_type === '2'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: values.p_applicant_persons__1.A__02,
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(values.p_applicant_persons__1.identity_verification_type === '3'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: [],
-              A__03__a: values.p_applicant_persons__1.A__03__a,
-              A__03__b: values.p_applicant_persons__1.A__03__b,
-            }
-          : {}),
-      },
-    };
     const diffData = {
       p_applicant_persons__1: {
         ...(changeToIncomeTotalizer ? { ...p_applicant_persons__1 } : {}),
-        ...diffObj(initialValues.p_applicant_persons__1, newData.p_applicant_persons__1),
+        ...diffObj(initialValues.p_applicant_persons__1, values.p_applicant_persons__1),
       },
       ...(changeJoinGuarantor ? { p_join_guarantors: p_join_guarantors } : {}),
       p_application_headers: {
@@ -168,34 +136,7 @@ export const ApStep11Page = () => {
   const parseVaildData = useMemo(() => {
     const dataCopy = {
       p_applicant_persons__1: {
-        identity_verification_type: formik.values.p_applicant_persons__1.identity_verification_type,
-        ...(formik.values.p_applicant_persons__1.identity_verification_type === '1'
-          ? {
-              A__01__a: formik.values.p_applicant_persons__1.A__01__a,
-              A__01__b: formik.values.p_applicant_persons__1.A__01__b,
-              A__02: [],
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(formik.values.p_applicant_persons__1.identity_verification_type === '2'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: formik.values.p_applicant_persons__1.A__02,
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(formik.values.p_applicant_persons__1.identity_verification_type === '3'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: [],
-              A__03__a: formik.values.p_applicant_persons__1.A__03__a,
-              A__03__b: formik.values.p_applicant_persons__1.A__03__b,
-            }
-          : {}),
+        ...formik.values.p_applicant_persons__1,
       },
     };
     return dataCopy;
@@ -262,37 +203,6 @@ export const ApStep11Page = () => {
       fetchPapplicantPersonsFiles();
     }
   }, []);
-  // const { dbData } = useApplicationContext();
-  // useEffect(() => {
-  //   if (agentSended && dbData) {
-  //     const newData = {
-  //       p_applicant_persons__1: {
-  //         identity_verification_type: dbData?.p_applicant_persons__1?.identity_verification_type,
-  //         A__01__a: dbData?.p_applicant_persons__1?.A__01__a,
-  //         A__01__b: dbData?.p_applicant_persons__1?.A__01__b,
-  //         A__02: dbData?.p_applicant_persons__1?.A__02,
-  //         A__03__a: dbData?.p_applicant_persons__1?.A__03__a,
-  //         A__03__b: dbData?.p_applicant_persons__1?.A__03__b,
-  //         B__a: dbData?.p_applicant_persons__1?.B__a,
-  //         B__b: dbData?.p_applicant_persons__1?.B__b,
-  //         C__01: dbData?.p_applicant_persons__1?.C__01,
-  //         C__02: dbData?.p_applicant_persons__1?.C__02,
-  //         C__03: dbData?.p_applicant_persons__1?.C__03,
-  //         C__04: dbData?.p_applicant_persons__1?.C__04,
-  //         C__05: dbData?.p_applicant_persons__1?.C__05,
-  //         D__01: dbData?.p_applicant_persons__1?.D__01,
-  //         D__02: dbData?.p_applicant_persons__1?.D__02,
-  //         D__03: dbData?.p_applicant_persons__1?.D__03,
-  //         E: dbData?.p_applicant_persons__1?.E,
-  //         F__01: dbData?.p_applicant_persons__1?.F__01,
-  //         F__02: dbData?.p_applicant_persons__1?.F__02,
-  //         F__03: dbData?.p_applicant_persons__1?.F__03,
-  //         K: dbData?.p_applicant_persons__1?.K,
-  //       },
-  //     };
-  //     formik.setValues(newData);
-  //   }
-  // }, [dbData]);
 
   const { refreshsendedApllication } = useApplicationContext();
 

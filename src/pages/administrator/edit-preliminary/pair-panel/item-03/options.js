@@ -74,6 +74,11 @@ export const transferOfficeOptions = [
   { value: '0', label: 'いいえ' },
 ];
 
+export const jobChangeOfficeOptions = [
+  { value: '1', label: 'あり' },
+  { value: '0', label: 'なし' },
+];
+
 export const taxReturnReasonsOptions = [
   { value: '1', label: '2カ所以上からの給与' },
   { value: '2', label: '事業収入' },

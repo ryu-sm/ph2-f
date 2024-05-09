@@ -34,6 +34,7 @@ export const ApStep10Page = () => {
   const updateModal = useBoolean(false);
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
   const { apNextStepId, apPreStepId, p_applicant_persons__0 } = localApplicationInfo;
+
   const setLocalData = (values) => {
     setLocalApplicationInfo((pre) => {
       return {
@@ -92,41 +93,9 @@ export const ApStep10Page = () => {
   };
 
   const setUpdateData = (values) => {
-    const newData = {
-      p_applicant_persons__0: {
-        ...values.p_applicant_persons__0,
-        ...(values.p_applicant_persons__0.identity_verification_type === '1'
-          ? {
-              A__01__a: values.p_applicant_persons__0.A__01__a,
-              A__01__b: values.p_applicant_persons__0.A__01__b,
-              A__02: [],
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(values.p_applicant_persons__0.identity_verification_type === '2'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: values.p_applicant_persons__0.A__02,
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(values.p_applicant_persons__0.identity_verification_type === '3'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: [],
-              A__03__a: values.p_applicant_persons__0.A__03__a,
-              A__03__b: values.p_applicant_persons__0.A__03__b,
-            }
-          : {}),
-      },
-    };
     const diffData = {
       p_applicant_persons__0: {
-        ...diffObj(initialValues.p_applicant_persons__0, newData.p_applicant_persons__0),
+        ...diffObj(initialValues.p_applicant_persons__0, values.p_applicant_persons__0),
       },
     };
     return diffData;
@@ -152,34 +121,7 @@ export const ApStep10Page = () => {
   const parseVaildData = useMemo(() => {
     const dataCopy = {
       p_applicant_persons__0: {
-        identity_verification_type: formik.values.p_applicant_persons__0.identity_verification_type,
-        ...(formik.values.p_applicant_persons__0.identity_verification_type === '1'
-          ? {
-              A__01__a: formik.values.p_applicant_persons__0.A__01__a,
-              A__01__b: formik.values.p_applicant_persons__0.A__01__b,
-              A__02: [],
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(formik.values.p_applicant_persons__0.identity_verification_type === '2'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: formik.values.p_applicant_persons__0.A__02,
-              A__03__a: [],
-              A__03__b: [],
-            }
-          : {}),
-        ...(formik.values.p_applicant_persons__0.identity_verification_type === '3'
-          ? {
-              A__01__a: [],
-              A__01__b: [],
-              A__02: [],
-              A__03__a: formik.values.p_applicant_persons__0.A__03__a,
-              A__03__b: formik.values.p_applicant_persons__0.A__03__b,
-            }
-          : {}),
+        ...formik.values.p_applicant_persons__0,
       },
     };
     return dataCopy;
@@ -244,48 +186,13 @@ export const ApStep10Page = () => {
     }
   }, []);
 
-  // const { dbData } = useApplicationContext();
-
-  // useEffect(() => {
-  //   if (agentSended && dbData) {
-  //     console.log(dbData);
-  //     const newData = {
-  //       p_applicant_persons__0: {
-  //         identity_verification_type: dbData?.p_applicant_persons__0?.identity_verification_type,
-  //         A__01__a: dbData?.p_applicant_persons__0?.A__01__a,
-  //         A__01__b: dbData?.p_applicant_persons__0?.A__01__b,
-  //         A__02: dbData?.p_applicant_persons__0?.A__02,
-  //         A__03__a: dbData?.p_applicant_persons__0?.A__03__a,
-  //         A__03__b: dbData?.p_applicant_persons__0?.A__03__b,
-  //         B__a: dbData?.p_applicant_persons__0?.B__a,
-  //         B__b: dbData?.p_applicant_persons__0?.B__b,
-  //         C__01: dbData?.p_applicant_persons__0?.C__01,
-  //         C__02: dbData?.p_applicant_persons__0?.C__02,
-  //         C__03: dbData?.p_applicant_persons__0?.C__03,
-  //         C__04: dbData?.p_applicant_persons__0?.C__04,
-  //         C__05: dbData?.p_applicant_persons__0?.C__05,
-  //         D__01: dbData?.p_applicant_persons__0?.D__01,
-  //         D__02: dbData?.p_applicant_persons__0?.D__02,
-  //         D__03: dbData?.p_applicant_persons__0?.D__03,
-  //         E: dbData?.p_applicant_persons__0?.E,
-  //         F__01: dbData?.p_applicant_persons__0?.F__01,
-  //         F__02: dbData?.p_applicant_persons__0?.F__02,
-  //         F__03: dbData?.p_applicant_persons__0?.F__03,
-  //         K: dbData?.p_applicant_persons__0?.K,
-  //       },
-  //     };
-  //     formik.setValues(newData);
-  //   }
-  // }, [dbData]);
-
   const { refreshsendedApllication } = useApplicationContext();
 
   useEffect(() => {
     if (agentSended) {
-      console.log('refresh');
       refreshsendedApllication();
     }
-  }, [agentSended]);
+  }, []);
 
   const identityVerificationOption = [
     {

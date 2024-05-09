@@ -57,11 +57,12 @@ export const AdAreaInput = ({ unit, maxLength, width, ml, ...props }) => {
           inputClassName="custom-input-style"
           name={field.name}
           value={meta.value}
-          onInput={(e) => {
-            e.target.value = convertToHalfWidth(e.target.value);
-            e.target.value = e.target.value.substring(0, maxLength);
-            return e;
-          }}
+          // onInput={(e) => {
+          //   e.target.value = convertToHalfWidth(e.target.value);
+          //   e.target.value = e.target.value.replace(/[^\d]+/g, '');
+          //   e.target.value = e.target.value.substring(0, maxLength);
+          //   return e;
+          // }}
           onBlur={handelBlue}
           onFocus={() => setTouched(false)}
           onValueChange={async (values) => handleChange(values.value)}

@@ -58,10 +58,6 @@ export const AdYmdInput = ({ width, ml, ...props }) => {
           alwaysShowMask
           mask="9999年99月99日"
           maskChar="_"
-          onInput={(e) => {
-            e.target.value = convertToHalfWidth(e.target.value);
-            return e;
-          }}
           value={meta.value}
           onChange={handleChange}
           onBlur={handelBlue}

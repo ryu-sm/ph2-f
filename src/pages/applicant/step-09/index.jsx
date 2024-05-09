@@ -22,7 +22,6 @@ import { routeNames } from '@/router/settings';
 import { diffObj } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
-import { adSalesPersonResetPasswordVerifyEmail } from '@/services';
 
 export const ApStep09Page = () => {
   const { updateSendedInfo } = useApplicationContext();
@@ -47,7 +46,7 @@ export const ApStep09Page = () => {
           required_funds_refinance_loan_balance: values.p_application_headers.required_funds_refinance_loan_balance,
           required_funds_upgrade_amount: values.p_application_headers.required_funds_upgrade_amount,
           required_funds_loan_plus_amount: values.p_application_headers.required_funds_loan_plus_amount,
-          required_funds_total_amount: values.p_application_headers.required_funds_total_amount,
+          // required_funds_total_amount: values.p_application_headers.required_funds_total_amount,
           funding_saving_amount: values.p_application_headers.funding_saving_amount,
           funding_estate_sale_amount: values.p_application_headers.funding_estate_sale_amount,
           funding_other_saving_amount: values.p_application_headers.funding_other_saving_amount,
@@ -56,8 +55,8 @@ export const ApStep09Page = () => {
           funding_pair_loan_amount: values.p_application_headers.funding_pair_loan_amount,
           funding_other_amount: values.p_application_headers.funding_other_amount,
           funding_other_amount_detail: values.p_application_headers.funding_other_amount_detail,
-          funding_total_amount: values.p_application_headers.funding_total_amount,
           funding_self_amount: values.p_application_headers.funding_self_amount,
+          // funding_total_amount: values.p_application_headers.funding_total_amount,
         },
       };
     });
@@ -71,7 +70,7 @@ export const ApStep09Page = () => {
       required_funds_refinance_loan_balance: p_application_headers.required_funds_refinance_loan_balance,
       required_funds_upgrade_amount: p_application_headers.required_funds_upgrade_amount,
       required_funds_loan_plus_amount: p_application_headers.required_funds_loan_plus_amount,
-      required_funds_total_amount: p_application_headers.required_funds_total_amount,
+      // required_funds_total_amount: p_application_headers.required_funds_total_amount,
       funding_saving_amount: p_application_headers.funding_saving_amount,
       funding_estate_sale_amount: p_application_headers.funding_estate_sale_amount,
       funding_self_amount: p_application_headers.funding_self_amount,
@@ -81,7 +80,7 @@ export const ApStep09Page = () => {
       funding_pair_loan_amount: p_application_headers.funding_pair_loan_amount,
       funding_other_amount: p_application_headers.funding_other_amount,
       funding_other_amount_detail: p_application_headers.funding_other_amount_detail,
-      funding_total_amount: p_application_headers.funding_total_amount,
+      // funding_total_amount: p_application_headers.funding_total_amount,
     },
   };
   const setUpdateData = (values) => {
@@ -128,28 +127,52 @@ export const ApStep09Page = () => {
     }
   };
 
-  useEffect(() => {
-    const required_funds_total_amount =
+  const required_funds_total_amount = useMemo(() => {
+    return (
       Number(formik.values.p_application_headers.required_funds_land_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.required_funds_house_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.required_funds_accessory_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.required_funds_upgrade_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.required_funds_refinance_loan_balance.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.required_funds_additional_amount.replaceAll(',', '')) +
-      Number(formik.values.p_application_headers.required_funds_loan_plus_amount.replaceAll(',', ''));
+      Number(formik.values.p_application_headers.required_funds_loan_plus_amount.replaceAll(',', ''))
+    );
+  }, [formik.values]);
 
-    const funding_total_amount =
+  const funding_total_amount = useMemo(() => {
+    return (
       Number(formik.values.p_application_headers.funding_saving_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.funding_estate_sale_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.funding_other_saving_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.funding_relative_donation_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.funding_loan_amount.replaceAll(',', '')) +
       Number(formik.values.p_application_headers.funding_pair_loan_amount.replaceAll(',', '')) +
-      Number(formik.values.p_application_headers.funding_other_amount.replaceAll(',', ''));
-
-    formik.setFieldValue('p_application_headers.required_funds_total_amount', String(required_funds_total_amount));
-    formik.setFieldValue('p_application_headers.funding_total_amount', String(funding_total_amount));
+      Number(formik.values.p_application_headers.funding_other_amount.replaceAll(',', ''))
+    );
   }, [formik.values]);
+
+  // useEffect(() => {
+  //   const required_funds_total_amount =
+  //     Number(formik.values.p_application_headers.required_funds_land_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.required_funds_house_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.required_funds_accessory_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.required_funds_upgrade_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.required_funds_refinance_loan_balance.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.required_funds_additional_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.required_funds_loan_plus_amount.replaceAll(',', ''));
+
+  //   const funding_total_amount =
+  //     Number(formik.values.p_application_headers.funding_saving_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.funding_estate_sale_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.funding_other_saving_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.funding_relative_donation_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.funding_loan_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.funding_pair_loan_amount.replaceAll(',', '')) +
+  //     Number(formik.values.p_application_headers.funding_other_amount.replaceAll(',', ''));
+
+  //   formik.setFieldValue('p_application_headers.required_funds_total_amount', String(required_funds_total_amount));
+  //   formik.setFieldValue('p_application_headers.funding_total_amount', String(funding_total_amount));
+  // }, [formik.values]);
 
   useEffect(() => {
     const funding_self_amount =
@@ -543,7 +566,7 @@ export const ApStep09Page = () => {
                       textAlign: 'right',
                     }}
                   >
-                    {Number(formik.values.p_application_headers.required_funds_total_amount).toLocaleString()}
+                    {Number(required_funds_total_amount).toLocaleString()}
                   </Stack>
                   <Typography variant="unit" color={'text.main'}>
                     万円
@@ -581,7 +604,7 @@ export const ApStep09Page = () => {
                       textAlign: 'right',
                     }}
                   >
-                    {Number(formik.values.p_application_headers.funding_total_amount).toLocaleString()}
+                    {Number(funding_total_amount).toLocaleString()}
                   </Stack>
                   <Typography variant="unit" color={'text.main'}>
                     万円
