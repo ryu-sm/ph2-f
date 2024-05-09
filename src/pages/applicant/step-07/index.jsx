@@ -112,7 +112,10 @@ export const ApStep07Page = () => {
           property_region_type: values.p_application_headers.property_region_type,
           G: values.p_application_headers.G,
         },
-
+        p_applicant_persons__0: {
+          ...pre.p_applicant_persons__0,
+          spouse: p_applicant_persons__0.spouse,
+        },
         p_residents: values.p_residents,
       };
     });
@@ -157,6 +160,9 @@ export const ApStep07Page = () => {
       property_region_type: p_application_headers.property_region_type,
       G: p_application_headers.G,
     },
+    p_applicant_persons__0: {
+      spouse: p_applicant_persons__0.spouse,
+    },
     p_residents,
     isMCJ,
     set_addr_with_application_a: false,
@@ -169,6 +175,9 @@ export const ApStep07Page = () => {
         join_guarantor_umu: p_application_headers.join_guarantor_umu,
         land_advance_plan: p_application_headers.land_advance_plan,
         loan_type: p_application_headers.loan_type,
+      },
+      p_applicant_persons__0: {
+        spouse: values.p_application_headers.new_house_planned_resident_overview.spouse_umu ? '1' : '0',
       },
       p_residents: values.p_residents,
     };
@@ -207,6 +216,13 @@ export const ApStep07Page = () => {
       navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
     }
   };
+
+  useEffect(() => {
+    formik.setFieldValue(
+      'p_applicant_persons__0.spouse',
+      formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu ? '1' : '0'
+    );
+  }, [formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu]);
 
   //
   const age = useMemo(() => {
@@ -281,7 +297,56 @@ export const ApStep07Page = () => {
       refreshsendedApllication();
     }
   }, [agentSended]);
+  // const basicResident = {
+  //   id: '',
+  //   resident_type: '1',
+  //   last_name_kanji: '',
+  //   first_name_kanji: '',
+  //   last_name_kana: '',
+  //   first_name_kana: '',
+  //   rel_to_applicant_a_name: '',
+  //   nationality: '0',
+  //   birthday: '',
+  //   loan_from_japan_house_finance_agency: '',
+  //   contact_phone: '',
+  //   postal_code: '',
+  //   prefecture_kanji: '',
+  //   city_kanji: '',
+  //   district_kanji: '',
+  //   other_address_kanji: '',
+  //   prefecture_kana: '',
+  //   city_kana: '',
+  //   district_kana: '',
+  // };
+  // const parseResidents = (values) => {
+  //   const headerResident = values.p_residents;
+  //   const residents = [];
+  //   const overview = values.p_application_headers.new_house_planned_resident_overview;
+  //   const plannedResidentNum =
+  //     Number(overview.spouse) +
+  //     Number(overview.children) +
+  //     Number(overview.father) +
+  //     Number(overview.mother) +
+  //     Number(overview.brothers_sisters) +
+  //     Number(overview.fiance) +
+  //     Number(overview.others);
 
+  //   if (values.p_residents.length > 0) {
+  //     if (plannedResidentNum > 1) {
+  //       Array.from({ length: plannedResidentNum >= 5 ? 5 : plannedResidentNum }, () => {
+  //         residents.push(basicResident);
+  //       });
+  //     }
+  //   } else {
+  //     if (plannedResidentNum > 0) {
+  //       Array.from({ length: plannedResidentNum >= 6 ? 6 : plannedResidentNum }, () => {
+  //         residents.push(basicResident);
+  //       });
+  //     }
+  //   }
+  //   return [...headerResident, ...residents];
+  // };
+  // console.log(formik.errors);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -619,9 +684,9 @@ export const ApStep07Page = () => {
                       city_kanji: '',
                       district_kanji: '',
                       other_address_kanji: '',
-                      prefecture_kana: '',
-                      city_kana: '',
-                      district_kana: '',
+                      // prefecture_kana: '',
+                      // city_kana: '',
+                      // district_kana: '',
                     },
                   ]);
                 }
@@ -945,9 +1010,9 @@ export const ApStep07Page = () => {
                             formik.setFieldValue('p_residents[0].city_kanji', '');
                             formik.setFieldValue('p_residents[0].district_kanji', '');
                             formik.setFieldValue('p_residents[0].other_address_kanji', '');
-                            formik.setFieldValue('p_residents[0].prefecture_kana', '');
-                            formik.setFieldValue('p_residents[0].city_kana', '');
-                            formik.setFieldValue('p_residents[0].district_kana', '');
+                            // formik.setFieldValue('p_residents[0].prefecture_kana', '');
+                            // formik.setFieldValue('p_residents[0].city_kana', '');
+                            // formik.setFieldValue('p_residents[0].district_kana', '');
                           }
                         }}
                       />
@@ -969,18 +1034,18 @@ export const ApStep07Page = () => {
                           formik.setFieldValue('p_residents[0].other_address_kanji', value);
                           formik.setFieldTouched('p_residents[0].other_address_kanji', touched);
                         }}
-                        setPrefectureKana={(value, touched) => {
-                          formik.setFieldValue('p_residents[0].prefecture_kana', value);
-                          formik.setFieldTouched('p_residents[0].prefecture_kana', touched);
-                        }}
-                        setCityKana={(value, touched) => {
-                          formik.setFieldValue('p_residents[0].city_kana', value);
-                          formik.setFieldTouched('p_residents[0].city_kana', touched);
-                        }}
-                        setDistrictKana={(value, touched) => {
-                          formik.setFieldValue('p_residents[0].district_kana', value);
-                          formik.setFieldTouched('p_residents[0].district_kana', touched);
-                        }}
+                        // setPrefectureKana={(value, touched) => {
+                        //   formik.setFieldValue('p_residents[0].prefecture_kana', value);
+                        //   formik.setFieldTouched('p_residents[0].prefecture_kana', touched);
+                        // }}
+                        // setCityKana={(value, touched) => {
+                        //   formik.setFieldValue('p_residents[0].city_kana', value);
+                        //   formik.setFieldTouched('p_residents[0].city_kana', touched);
+                        // }}
+                        // setDistrictKana={(value, touched) => {
+                        //   formik.setFieldValue('p_residents[0].district_kana', value);
+                        //   formik.setFieldTouched('p_residents[0].district_kana', touched);
+                        // }}
                       />
                       <ApSelectField
                         name="p_residents[0].prefecture_kanji"

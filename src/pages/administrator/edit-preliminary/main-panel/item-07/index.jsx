@@ -8,6 +8,7 @@ import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab07Schema } from '../../fullSchema';
+import { useIsManager } from '@/hooks';
 
 export const Item07 = () => {
   const {
@@ -16,6 +17,8 @@ export const Item07 = () => {
     handleSave,
     isEditable,
   } = usePreliminaryContext();
+
+  const isManager = useIsManager();
 
   const initialValues = {
     p_application_headers: {
@@ -85,8 +88,7 @@ export const Item07 = () => {
       Number(formik.values.p_application_headers.required_funds_upgrade_amount) +
       Number(formik.values.p_application_headers.required_funds_refinance_loan_balance) +
       Number(formik.values.p_application_headers.required_funds_additional_amount) +
-      Number(formik.values.p_application_headers.required_funds_loan_plus_amount) +
-      Number(formik.values.p_application_headers.funding_other_loan_amount);
+      Number(formik.values.p_application_headers.required_funds_loan_plus_amount);
     formik.setFieldValue('p_application_headers.required_funds_total_amount', `${tempRequiredFundsTotalAmount}`);
   }, [
     formik.values.p_application_headers.required_funds_land_amount,
@@ -96,7 +98,6 @@ export const Item07 = () => {
     formik.values.p_application_headers.required_funds_refinance_loan_balance,
     formik.values.p_application_headers.required_funds_additional_amount,
     formik.values.p_application_headers.required_funds_loan_plus_amount,
-    formik.values.p_application_headers.funding_other_loan_amount,
   ]);
 
   useEffect(() => {
@@ -119,6 +120,8 @@ export const Item07 = () => {
       Number(formik.values.p_application_headers.funding_relative_donation_amount) +
       Number(formik.values.p_application_headers.funding_loan_amount) +
       Number(formik.values.p_application_headers.funding_pair_loan_amount) +
+      Number(formik.values.p_application_headers.funding_other_loan_amount) +
+      Number(formik.values.p_application_headers.funding_other_refinance_amount) +
       Number(formik.values.p_application_headers.funding_other_amount);
     formik.setFieldValue('p_application_headers.funding_total_amount', `${fundingTotalAmountt}`);
   }, [
@@ -128,6 +131,8 @@ export const Item07 = () => {
     formik.values.p_application_headers.funding_relative_donation_amount,
     formik.values.p_application_headers.funding_loan_amount,
     formik.values.p_application_headers.funding_pair_loan_amount,
+    formik.values.p_application_headers.funding_other_loan_amount,
+    formik.values.p_application_headers.funding_other_refinance_amount,
     formik.values.p_application_headers.funding_other_amount,
   ]);
 
@@ -385,7 +390,7 @@ export const Item07 = () => {
             unit: '万円',
           }}
           isRequired
-          isAddendum
+          isAddendum={isManager}
           field={formatNumber(formik.values.p_application_headers.funding_self_amount)}
         />
         <EditRow
@@ -396,7 +401,7 @@ export const Item07 = () => {
             unit: '万円',
           }}
           isRequired
-          isAddendum
+          isAddendum={isManager}
           field={
             isEditable ? (
               <AdNumericInput name="p_application_headers.funding_other_loan_amount" maxLength={6} unit={'万円'} />

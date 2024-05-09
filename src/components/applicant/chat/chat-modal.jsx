@@ -30,7 +30,9 @@ export const ApChatModal = ({ open, onClose }) => {
   }, [open]);
 
   const firstUnViewedIndex = useMemo(() => {
-    return messages.findIndex((item) => !item?.viewed?.includes(user?.id));
+    return messages.findIndex((item) => {
+      return !item?.viewed?.find((i) => i.viewed_account_type === 1);
+    });
   }, [messages.length, open]);
 
   const pApplicationHeaderIdIndex = useMemo(() => {
@@ -43,9 +45,9 @@ export const ApChatModal = ({ open, onClose }) => {
   const formik = useFormik({
     initialValues,
     onSubmit: async (values) => {
+      if (!values.message) return;
       const data = {
         c_user_id: user.id,
-        viewed: [user.id],
         p_application_header_id:
           pApplicationHeaderIdIndex === -1 ? null : messages[pApplicationHeaderIdIndex]?.p_application_header_id,
         content: formatApMessage(values.message),

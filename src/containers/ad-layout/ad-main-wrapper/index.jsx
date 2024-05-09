@@ -8,14 +8,14 @@ export const AdMainWrapper = ({ leftContent, rightAddItems, children, style }) =
     <AdThemeProvider>
       <Stack
         sx={{
-          // height: '100dvh',
+          overflowX: 'auto',
           minHeight: '100dvh',
           background: (theme) => theme.palette.gray[60],
           ...style,
         }}
       >
         <MainHeader leftContent={leftContent} rightAddItems={rightAddItems} />
-        <Stack flex={1} pt={10}>
+        <Stack flex={1} pt={10} overflow={'auto'}>
           {children}
         </Stack>
         <MainFooter />

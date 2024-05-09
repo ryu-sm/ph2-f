@@ -12,7 +12,7 @@ import { diffObj } from '@/utils';
 
 export const Item09 = () => {
   const {
-    preliminaryInfo: { p_applicant_persons__1 },
+    preliminaryInfo: { p_applicant_persons__1, apply_type },
     preliminarySnap,
     setPreliminarySnap,
     handleSave,
@@ -52,6 +52,7 @@ export const Item09 = () => {
       F__02: p_applicant_persons__1.F__02,
       F__03: p_applicant_persons__1.F__03,
       K: p_applicant_persons__1.K,
+      S: p_applicant_persons__1.S,
       H__a: p_applicant_persons__1.H__a,
       H__b: p_applicant_persons__1.H__b,
     },
@@ -344,12 +345,18 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
+                  title: 'その他',
                   key: `p_applicant_persons.K.${p_applicant_persons__1.id}`,
                 }}
                 isMultiple={true}
                 name="p_applicant_persons__1.K"
               />
             </ContentEditFileGroup>
+            {apply_type == '2' && (
+              <ContentEditFileGroup category={'S'}>
+                <UploadItem isDisabled={apply_type === '2'} name="p_applicant_persons__1.S" />
+              </ContentEditFileGroup>
+            )}
           </Stack>
         </Stack>
       </ContentEditGroup>

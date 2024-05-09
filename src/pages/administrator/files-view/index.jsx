@@ -62,7 +62,7 @@ export const AdFilesViewPage = () => {
             temp.push({
               ...f,
               title: FILES_CATEGORY[category],
-              subTitle: FILES_SUBTITLE_MAP[f.key],
+              subTitle: FILES_SUBTITLE_MAP[f.key] ? FILES_SUBTITLE_MAP[f.key] : '',
             });
           });
         });
@@ -115,7 +115,10 @@ export const AdFilesViewPage = () => {
   const handleDownload = async () => {
     setIsDownloading(true);
     try {
-      await downloadFileAsync(currentImage.src, currentImage.name);
+      const class_str = `${category}${currentImage.title}${currentImage.subTitle ? ' ' : ''}${currentImage.subTitle}`;
+      const d_name = currentImage.name?.replace('__CLASS__', class_str);
+
+      await downloadFileAsync(currentImage.src, d_name);
     } catch (e) {
       console.error('error：', e);
     } finally {
@@ -181,7 +184,7 @@ export const AdFilesViewPage = () => {
       </Stack>
     );
   };
-
+  console.log(currentImage);
   return (
     <AdThemeProvider>
       {fileItems.length > 0 && (
@@ -334,7 +337,7 @@ export const AdFilesViewPage = () => {
                   <IconButton onClick={() => setRotate((prevState) => --prevState)}>
                     <RotateLeft sx={{ color: 'white' }} />
                   </IconButton>
-                  <IconButton onClick={() => handleDownload()} disabled={isDownloading}>
+                  <IconButton onClick={handleDownload} disabled={isDownloading}>
                     <FileDownload sx={{ color: 'white' }} />
                   </IconButton>
                 </Stack>

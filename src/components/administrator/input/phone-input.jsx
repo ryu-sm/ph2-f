@@ -4,7 +4,7 @@ import { Stack, TextField, Typography } from '@mui/material';
 import { FormikProvider, useField, useFormik } from 'formik';
 import { useCallback, useMemo, useRef } from 'react';
 
-export const AdPhoneInputField = ({ label, showError, ...props }) => {
+export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
@@ -96,11 +96,16 @@ export const AdPhoneInputField = ({ label, showError, ...props }) => {
       let subPhoneNumber = [refOne.current.value, refTwo.current.value, refThree.current.value];
 
       if (subPhoneNumber.length) {
-        phoneInputs?.forEach((_, index) => setValue(convertToHalfWidth(subPhoneNumber?.[index])));
+        phoneInputs?.forEach((_, index) => {
+          setValue(convertToHalfWidth(subPhoneNumber?.[index]));
+        });
 
-        if (!subPhoneNumber.every((sub) => !sub))
+        if (!subPhoneNumber.every((sub) => !sub)) {
           await setValue(subPhoneNumber.map((sub) => convertToHalfWidth(sub)).join('-'));
+        }
       }
+      setTouched(true);
+      onBlur && onBlur();
     }
   }, [setTouched, setValue, formik, phoneInputs]);
 
@@ -182,6 +187,7 @@ export const AdPhoneInputField = ({ label, showError, ...props }) => {
                     onKeyDown={(e) => handleFocusInput(e, input.name)}
                     onFocus={() => {
                       currentIndex.current = index;
+                      setTouched(false);
                     }}
                     onBlur={handleBlur}
                     error={isError}

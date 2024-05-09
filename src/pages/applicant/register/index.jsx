@@ -63,6 +63,9 @@ export const ApRegisterPage = () => {
           case 400:
             setWarningText('このメールアドレスは既に存在しています。別のメールアドレスで登録してください。');
             break;
+          case 408:
+            setWarningText('QRコードの連携会社情報が正しくありません。');
+            break;
           case 407:
             setIsValidToken(false);
             break;

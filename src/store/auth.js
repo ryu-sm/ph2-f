@@ -16,13 +16,11 @@ const authInitialValues = {
     id: null,
     email: null,
     name: null,
-    orgs: null,
   },
   manager: {
     id: null,
     email: null,
     name: null,
-    role: null,
   },
   agentSended: false,
 };

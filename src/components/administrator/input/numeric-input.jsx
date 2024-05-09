@@ -68,7 +68,7 @@ export const AdNumericInput = ({ unit, maxLength, width, showZero, ...props }) =
           </Typography>
         )}
       </Stack>
-      {meta.error && (
+      {meta.touched && meta.error && (
         <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
           <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
             {meta.error}

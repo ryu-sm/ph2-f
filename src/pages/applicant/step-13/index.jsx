@@ -16,7 +16,7 @@ import { ApStep10Info } from '../step-10/step-10-info';
 import { ApStep11Info } from '../step-11/step-11-info';
 import { ApStep12Info } from '../step-12/step-12-info';
 import { useNavigate } from 'react-router-dom';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import { Box, Stack, Typography } from '@mui/material';
 import { apAgentSend } from '@/services';
@@ -40,10 +40,12 @@ export const ApStep13Page = () => {
     hasJoinGuarantor,
     hasIncomeTotalizer,
     p_applicant_persons__0,
+    p_applicant_persons__1,
     p_application_headers,
   } = localApplicationInfo;
 
   const showError = useBoolean(false);
+  const bottomRef = useRef(null);
   const apSteps = useMemo(
     () => [
       {
@@ -123,21 +125,77 @@ export const ApStep13Page = () => {
     p_applicant_persons__0: {
       S: p_applicant_persons__0.S,
     },
+    p_applicant_persons__1: {
+      S: p_applicant_persons__1.S,
+    },
   };
+  // const basicResident = {
+  //   id: '',
+  //   resident_type: '1',
+  //   last_name_kanji: '',
+  //   first_name_kanji: '',
+  //   last_name_kana: '',
+  //   first_name_kana: '',
+  //   rel_to_applicant_a_name: '',
+  //   nationality: '0',
+  //   birthday: '',
+  //   loan_from_japan_house_finance_agency: '',
+  //   contact_phone: '',
+  //   postal_code: '',
+  //   prefecture_kanji: '',
+  //   city_kanji: '',
+  //   district_kanji: '',
+  //   other_address_kanji: '',
+  //   prefecture_kana: '',
+  //   city_kana: '',
+  //   district_kana: '',
+  // };
+  // const parseResidents = (values) => {
+  //   const headerResident = values.p_residents;
+  //   const residents = [];
+  //   const overview = values.p_application_headers.new_house_planned_resident_overview;
+  //   const plannedResidentNum =
+  //     Number(overview.spouse) +
+  //     Number(overview.children) +
+  //     Number(overview.father) +
+  //     Number(overview.mother) +
+  //     Number(overview.brothers_sisters) +
+  //     Number(overview.fiance) +
+  //     Number(overview.others);
+  //   if (values.p_residents.length > 0) {
+  //     if (plannedResidentNum > 1) {
+  //       Array.from({ length: plannedResidentNum >= 5 ? 5 : plannedResidentNum }, () => {
+  //         residents.push(basicResident);
+  //       });
+  //     }
+  //   } else {
+  //     if (plannedResidentNum > 0) {
+  //       Array.from({ length: plannedResidentNum >= 6 ? 6 : plannedResidentNum }, () => {
+  //         residents.push(basicResident);
+  //       });
+  //     }
+  //   }
+  //   return [...headerResident, ...residents];
+  // };
+  const [errorMsg, setErrorMsg] = useState(null);
   const formik = useFormik({
     initialValues,
     onSubmit: async (values) => {
       try {
-        if (errorMsg.length > 0) {
-          showError.onTrue();
-          return;
-        }
+        // if (errorMsg) {
+        //   showError.onTrue();
+        //   return;
+        // }
 
-        const sendRes = await apAgentSend({
+        await apAgentSend({
           ...localApplicationInfo,
           p_applicant_persons__0: {
             ...localApplicationInfo.p_applicant_persons__0,
             S: values.p_applicant_persons__0.S,
+          },
+          p_applicant_persons__1: {
+            ...localApplicationInfo.p_applicant_persons__1,
+            S: values.p_applicant_persons__1.S,
           },
         });
         if (isSalesPerson) {
@@ -153,6 +211,13 @@ export const ApStep13Page = () => {
 
         navigate(`/step-id-${apNextStepId}`);
       } catch (error) {
+        if (error?.status === 400) {
+          console.log(error.data);
+          setErrorMsg(error.data);
+          showError.onTrue();
+          bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
         toast.error(API_500_ERROR);
       }
     },
@@ -161,7 +226,7 @@ export const ApStep13Page = () => {
   const handelLeft = () => {
     navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
   };
-  const errorMsg = [];
+  // const errorMsg = [];
 
   // const errorMsg = useMemo(() => {
   //   const tempMsg = [];
@@ -273,8 +338,8 @@ export const ApStep13Page = () => {
         {getIndex(12) >= 0 && <ApStep12Info stepIndex={String(getIndex(12) + 1).padStart(2, '0')} />}
 
         {isSalesPerson && (
-          <ApConfirmGroup label={'最後'}>
-            <ApConfirmItemGroup label={'本人サイン'}>
+          <ApConfirmGroup label={'サイン'}>
+            <ApConfirmItemGroup label={'申込人 サイン'}>
               <ApSignatureBoard
                 name="p_applicant_persons__0.S"
                 showError={showError.value}
@@ -283,40 +348,80 @@ export const ApStep13Page = () => {
                 }}
               />
             </ApConfirmItemGroup>
+            {hasIncomeTotalizer && (
+              <ApConfirmItemGroup label={'収入合算者 サイン'}>
+                <ApSignatureBoard
+                  name="p_applicant_persons__1.S"
+                  showError={showError.value}
+                  onChange={() => {
+                    showError.onFalse();
+                  }}
+                />
+              </ApConfirmItemGroup>
+            )}
           </ApConfirmGroup>
         )}
-
-        {showError.value && errorMsg.length > 0 && (
-          <Stack ref={errorMsgRef} spacing={6} sx={{ width: 1, px: 4, py: 6 }}>
-            <Box
-              sx={{
-                py: 2,
-                px: 4,
-                bgcolor: (theme) => theme.palette.secondary[20],
-                border: (theme) => `1px solid ${theme.palette.secondary.main}`,
-                borderRadius: 2,
-              }}
-            >
-              <Stack spacing={3} direction={'row'} alignItems={'center'}>
-                <Icons.ApWarningIcon />
-                <Stack>
-                  <Typography
+        <Box ref={bottomRef}>
+          {showError.value && errorMsg && (
+            <Stack ref={errorMsgRef} spacing={6} sx={{ width: 1, px: 4, pt: 4, pb: 10 }}>
+              <Box
+                sx={{
+                  py: 2,
+                  px: 4,
+                  bgcolor: (theme) => theme.palette.secondary[20],
+                  border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+                  borderRadius: 2,
+                }}
+              >
+                <Stack spacing={3} direction={'row'} alignItems={'flex-start'}>
+                  <Icons.ApWarningIcon />
+                  <Stack>
+                    <Typography
+                      variant="waring"
+                      sx={{ color: (theme) => theme.palette.secondary.main, textAlign: 'left' }}
+                    >
+                      以下の項目は必須項目です。
+                    </Typography>
+                    {Object.keys(errorMsg).map((key, index) => (
+                      <Stack key={index}>
+                        <Stack>
+                          <Typography
+                            variant="waring"
+                            sx={{ color: (theme) => theme.palette.secondary.main, textAlign: 'left' }}
+                            lineHeight={'29px'}
+                            textAlign={'start'}
+                          >
+                            {key}
+                          </Typography>
+                        </Stack>
+                        <Stack>
+                          {errorMsg[key].map((sub, index) => (
+                            <Stack sx={{ pl: 4 }} key={index}>
+                              <Typography
+                                variant="waring"
+                                sx={{ color: (theme) => theme.palette.secondary.main, textAlign: 'left' }}
+                                lineHeight={'29px'}
+                                textAlign={'start'}
+                              >
+                                {sub}
+                              </Typography>
+                            </Stack>
+                          ))}
+                        </Stack>
+                      </Stack>
+                    ))}
+                    {/* <Typography
                     variant="waring"
                     sx={{ color: (theme) => theme.palette.secondary.main, textAlign: 'left' }}
                   >
-                    以下の項目は必須項目です。
-                  </Typography>
-                  <Typography
-                    variant="waring"
-                    sx={{ color: (theme) => theme.palette.secondary.main, textAlign: 'left' }}
-                  >
-                    {errorMsg.join(', ')}
-                  </Typography>
+                    {JSON.stringify(errorMsg)}
+                  </Typography> */}
+                  </Stack>
                 </Stack>
-              </Stack>
-            </Box>
-          </Stack>
-        )}
+              </Box>
+            </Stack>
+          )}
+        </Box>
       </ApLayout>
     </FormikProvider>
   );

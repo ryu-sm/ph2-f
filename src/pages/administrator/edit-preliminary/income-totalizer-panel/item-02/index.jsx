@@ -4,7 +4,7 @@ import { formatJapanDate } from '@/utils';
 import { useEffect } from 'react';
 import {
   AdEditFullWidthInput,
-  AdEditInput,
+  AdEditOutLineInput,
   AdPhoneInputField,
   AdSelectRadios,
   AdZipCodeInput,
@@ -19,6 +19,7 @@ import { tab02SchemaI } from '../../fullSchema';
 import dayjs from 'dayjs';
 import { infoGroupTabAtom } from '@/store';
 import { useSetRecoilState } from 'recoil';
+import { Stack } from '@mui/material';
 
 export const Item02 = () => {
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
@@ -54,6 +55,7 @@ export const Item02 = () => {
       email: p_applicant_persons__1?.email,
       rel_to_applicant_a_name: p_applicant_persons__1?.rel_to_applicant_a_name,
       rel_to_applicant_a: p_applicant_persons__1?.rel_to_applicant_a,
+      rel_to_applicant_a_other: p_applicant_persons__1?.rel_to_applicant_a_other,
     },
   };
 
@@ -72,8 +74,9 @@ export const Item02 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab02SchemaI,
-    // validateOnMount: changeToIncomeTotalizer,
-    // enableReinitialize: true,
+    validateOnChange: false,
+    validateOnMount: true,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
         setInfoGroupTab(3);
@@ -191,11 +194,30 @@ export const Item02 = () => {
           }
           subField={
             isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__1.rel_to_applicant_a" options={relToApplicantAOptions} />
+              <Stack direction={'row'} justifyContent={'flex-start'}>
+                <AdSelectRadios
+                  name="p_applicant_persons__1.rel_to_applicant_a"
+                  options={relToApplicantAOptions}
+                  onChange={(value) => {
+                    if (value !== '99') {
+                      formik.setFieldValue('p_applicant_persons__1.rel_to_applicant_a_other', '');
+                    }
+                  }}
+                />
+                {formik.values.p_applicant_persons__1.rel_to_applicant_a === '99' && (
+                  <AdEditOutLineInput name={`p_applicant_persons__1.rel_to_applicant_a_other`} convertFullWidth />
+                )}
+              </Stack>
             ) : (
-              relToApplicantAOptions.find(
-                (item) => item.value === formik.values.p_applicant_persons__1.rel_to_applicant_a_name
-              )?.label
+              `${
+                relToApplicantAOptions.find(
+                  (item) => item.value === formik.values.p_applicant_persons__1.rel_to_applicant_a
+                )?.label
+              }　${
+                formik.values.p_applicant_persons__1.rel_to_applicant_a === '99'
+                  ? formik.values.p_applicant_persons__1.rel_to_applicant_a_other
+                  : ''
+              }`
             )
           }
         />
@@ -223,7 +245,11 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdPhoneInputField name="p_applicant_persons__1.mobile_phone" convertHalfWidth />
+              <AdPhoneInputField
+                name="p_applicant_persons__1.mobile_phone"
+                convertHalfWidth
+                onBlur={() => formik.setFieldTouched('p_applicant_persons__1.home_phone', true)}
+              />
             ) : (
               formik.values.p_applicant_persons__1.mobile_phone
             )
@@ -237,7 +263,11 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdPhoneInputField name="p_applicant_persons__1.home_phone" convertHalfWidth />
+              <AdPhoneInputField
+                name="p_applicant_persons__1.home_phone"
+                convertHalfWidth
+                onBlur={() => formik.setFieldTouched('p_applicant_persons__1.mobile_phone', true)}
+              />
             ) : (
               formik.values.p_applicant_persons__1.home_phone
             )
@@ -329,7 +359,14 @@ export const Item02 = () => {
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__1.prefecture_kanji" options={PREFECTURES} />
+              <AdSelectRadios
+                name="p_applicant_persons__1.prefecture_kanji"
+                options={PREFECTURES}
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__1.prefecture_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__1.prefecture_kana', true);
+                }}
+              />
             ) : (
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__1.prefecture_kanji)?.label
             )
@@ -343,7 +380,14 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditFullWidthInput name="p_applicant_persons__1.city_kanji" convertFullWidth />
+              <AdEditFullWidthInput
+                name="p_applicant_persons__1.city_kanji"
+                convertFullWidth
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__1.city_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__1.city_kana', true);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__1.city_kanji
             )
@@ -357,7 +401,14 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditFullWidthInput name="p_applicant_persons__1.district_kanji" convertFullWidth />
+              <AdEditFullWidthInput
+                name="p_applicant_persons__1.district_kanji"
+                convertFullWidth
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__1.district_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__1.district_kana', true);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__1.district_kanji
             )

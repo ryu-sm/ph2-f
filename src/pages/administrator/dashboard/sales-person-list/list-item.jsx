@@ -1,12 +1,14 @@
-import { Box, Button, Divider, Stack, Typography } from '@mui/material';
+import { Badge, Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { PopoverSelect } from '../common/popover-select';
 import { FieldItem } from '../common/field-item';
-import { formatApplyTime } from '@/utils';
+import { formatApplyTime, formatNumber } from '@/utils';
 import { Icons } from '@/assets';
 import { FormikProvider, useFormik } from 'formik';
 import {
   adGetAccessSalesPersonOptions,
+  adGetSalesPersonBelowOrgs,
+  adGetSalesPersonPreliminariyAccess,
   adUpdatePreliminarySalesAreaId,
   adUpdatePreliminarySalesExhibitionHallId,
   adUpdatePreliminarySalesPersonId,
@@ -20,6 +22,8 @@ import { routeNames } from '@/router/settings';
 import { authAtom, editMainTabStatusAtom, infoGroupTabAtom, preliminarySelect } from '@/store';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue, useSetRecoilState } from 'recoil';
 import { API_500_ERROR } from '@/constant';
+import { useBoolean, useDashboardContext } from '@/hooks';
+import { UnAccessModal } from '../common/un-access-modal';
 
 export const SpCaseItem = ({ item }) => {
   const isPairLoan = useMemo(() => {
@@ -54,9 +58,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const refreshPreliminary = useRecoilRefresher_UNSTABLE(preliminarySelect);
-  const {
-    salesPerson: { orgs },
-  } = useRecoilValue(authAtom);
+  const { refreshPreliminarieList } = useDashboardContext();
+  const { salesPerson } = useRecoilValue(authAtom);
+  const unAccessModal = useBoolean(false);
   const navigator = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -85,7 +89,17 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const letfLinkItems = [
     {
       label: '申込内容の修正・確認',
-      onClick: () => {
+      onClick: async () => {
+        try {
+          const res = await adGetSalesPersonPreliminariyAccess(item.id);
+          console.log(res.data?.access);
+          if (!res.data?.access) {
+            unAccessModal.onTrue();
+            return;
+          }
+        } catch (error) {
+          toast.error(API_500_ERROR);
+        }
         setMainTabStatus(1);
         setInfoGroupTab(1);
         refreshPreliminary();
@@ -94,7 +108,17 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     },
     {
       label: 'メッセージ確認',
-      onClick: () => {
+      onClick: async () => {
+        try {
+          const res = await adGetSalesPersonPreliminariyAccess(item.id);
+          console.log(res.data?.access);
+          if (!res.data?.access) {
+            unAccessModal.onTrue();
+            return;
+          }
+        } catch (error) {
+          toast.error(API_500_ERROR);
+        }
         navigator(`/sales-person/messages-detail?id=${item.id}&type=1`);
       },
     },
@@ -155,8 +179,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
   const fetchAccessOrgs = async () => {
     try {
+      const res = await adGetSalesPersonBelowOrgs();
       const tempAccessOrgs = [];
-      for (let org of orgs) {
+      for (let org of res.data) {
         const resC = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'C');
         const resB = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'B');
         const resE = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'E');
@@ -166,6 +191,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         });
       }
       setAccessOrgs(tempAccessOrgs);
+      console.log(tempAccessOrgs);
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -173,7 +199,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
   useEffect(() => {
     fetchAccessOrgs();
-  }, [orgs]);
+  }, [salesPerson.id]);
 
   const fetchSalesAreaOptions = async (sales_company_id) => {
     try {
@@ -308,6 +334,13 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
   return (
     <FormikProvider value={formik}>
+      <UnAccessModal
+        isOpen={unAccessModal.value}
+        onClose={async () => {
+          unAccessModal.onFalse();
+          await refreshPreliminarieList();
+        }}
+      />
       <Stack
         p={2}
         sx={{
@@ -348,6 +381,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             minWidth={widthConfig[3]}
             textStyle={'case_content_text'}
             value={item.name_kanji}
+            textAlign={'center'}
             isText={true}
           />
           <FieldItem
@@ -372,7 +406,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             fontFamily="Barlow"
             value={
               <Box lineHeight={'25px'}>
-                {item.desired_loan_amount}
+                {formatNumber(item.desired_loan_amount, '')}
                 <Typography variant="case_content_text" fontSize={7} fontFamily={'Noto Sans JP'}>
                   （万円）
                 </Typography>
@@ -397,7 +431,22 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             fontSize={15}
             value={
               checkEnableSalesArea ? (
-                <PopoverSelect name="sales_area_id" options={salesAreaOptions} onChange={handleChangeSalesArea} />
+                <PopoverSelect
+                  name="sales_area_id"
+                  options={salesAreaOptions}
+                  onChange={handleChangeSalesArea}
+                  checkAccess={async () => {
+                    try {
+                      const res = await adGetSalesPersonPreliminariyAccess(item.id);
+                      if (!res.data?.access) {
+                        unAccessModal.onTrue();
+                      }
+                      return res.data?.access;
+                    } catch (error) {
+                      toast.error(API_500_ERROR);
+                    }
+                  }}
+                />
               ) : (
                 salesAreaOptions.find((op) => op.value === formik.values.sales_area_id)?.label
               )
@@ -414,6 +463,17 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                   name="sales_exhibition_hall_id"
                   options={salesExhibitionHallOptions}
                   onChange={handleChangeSalesExhibitionHall}
+                  checkAccess={async () => {
+                    try {
+                      const res = await adGetSalesPersonPreliminariyAccess(item.id);
+                      if (!res.data?.access) {
+                        unAccessModal.onTrue();
+                      }
+                      return res.data?.access;
+                    } catch (error) {
+                      toast.error(API_500_ERROR);
+                    }
+                  }}
                 />
               ) : (
                 salesExhibitionHallOptions.find((op) => op.value === formik.values.sales_exhibition_hall_id)?.label
@@ -426,7 +486,22 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             minWidth={widthConfig[11]}
             value={
               checkEnableSalesPerson ? (
-                <PopoverSelect name="s_sales_person_id" options={salesPersonOptions} onChange={handleSalesPerson} />
+                <PopoverSelect
+                  name="s_sales_person_id"
+                  options={salesPersonOptions}
+                  onChange={handleSalesPerson}
+                  checkAccess={async () => {
+                    try {
+                      const res = await adGetSalesPersonPreliminariyAccess(item.id);
+                      if (!res.data?.access) {
+                        unAccessModal.onTrue();
+                      }
+                      return res.data?.access;
+                    } catch (error) {
+                      toast.error(API_500_ERROR);
+                    }
+                  }}
+                />
               ) : (
                 salesPersonOptions.find((op) => op.value === formik.values.s_sales_person_id)?.label
               )
@@ -499,32 +574,61 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
         <Stack direction={'row'} justifyContent={'space-between'} px={1}>
           <Stack direction={'row'} spacing={'10px'} alignItems={'center'}>
-            {letfLinkItems.map((item, index) => (
+            {letfLinkItems.map((linkItem, index) => (
               <Fragment key={index}>
-                <Button
-                  onClick={item.onClick}
-                  variant="text"
-                  sx={{
-                    mr: '10px',
-                    '&.MuiButtonBase-root:hover': {
-                      bgcolor: 'white',
-                      opacity: 1,
-                      textDecoration: 'underline',
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="case_content_text_edit"
-                    color={'primary.main'}
+                {index === 1 ? (
+                  <Button
+                    onClick={linkItem.onClick}
+                    variant="text"
                     sx={{
-                      '&.MuiTypography-root:hover': {
-                        color: 'blue.100',
+                      mr: '10px',
+                      '&.MuiButtonBase-root:hover': {
+                        bgcolor: 'white',
+                        opacity: 1,
+                        textDecoration: 'underline',
                       },
                     }}
                   >
-                    {item.label}
-                  </Typography>
-                </Button>
+                    <Badge badgeContent={Number(item?.unviewed)} color="error">
+                      <Typography
+                        variant="case_content_text_edit"
+                        color={'primary.main'}
+                        sx={{
+                          '&.MuiTypography-root:hover': {
+                            color: 'blue.100',
+                          },
+                        }}
+                      >
+                        {linkItem.label}
+                      </Typography>
+                    </Badge>
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={linkItem.onClick}
+                    variant="text"
+                    sx={{
+                      mr: '10px',
+                      '&.MuiButtonBase-root:hover': {
+                        bgcolor: 'white',
+                        opacity: 1,
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="case_content_text_edit"
+                      color={'primary.main'}
+                      sx={{
+                        '&.MuiTypography-root:hover': {
+                          color: 'blue.100',
+                        },
+                      }}
+                    >
+                      {linkItem.label}
+                    </Typography>
+                  </Button>
+                )}
                 {index !== letfLinkItems.length - 1 && (
                   <Icons.AdSlashIcon sx={{ color: 'gray.60', width: 12, height: 12 }} />
                 )}

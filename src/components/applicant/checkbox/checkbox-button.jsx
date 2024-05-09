@@ -11,14 +11,14 @@ export const ApCheckboxButton = ({ options, ...props }) => {
     async (e) => {
       field.onChange(e);
       props.onChange && props.onChange(e);
-      const target = e.target.checked ? e.target.value : '';
+      const target = e.target.checked ? e.target.value : '0';
       await setValue(target);
       await setTouched(true);
     },
     [field, meta, props, setValue]
   );
   const calcBorderColor = useMemo(() => {
-    if (!!meta.value) return 'primary.main';
+    if (meta.value !== '' && meta.value !== '0') return 'primary.main';
     if (meta.touched && !!meta.error) return 'secondary.main';
     return 'primary.40';
   }, [meta.touched, meta.error, meta.value]);
@@ -31,7 +31,7 @@ export const ApCheckboxButton = ({ options, ...props }) => {
         sx={{
           px: 3,
           width: 1,
-          bgcolor: !!meta.value ? 'primary.40' : 'white',
+          bgcolor: meta.value !== '' && meta.value !== '0' ? 'primary.40' : 'white',
           borderRadius: 3,
           boxShadow: '0 0 15px rgba(60, 72, 196, 0.1)',
           border: `1px solid`,

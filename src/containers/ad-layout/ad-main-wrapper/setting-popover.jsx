@@ -2,20 +2,29 @@ import { Icons } from '@/assets';
 import { useBoolean, useIsManager } from '@/hooks';
 import { clearStorage } from '@/libs';
 import { routeNames } from '@/router/settings';
-import { adManagerLogou, adSalesPersonLogou } from '@/services';
-import { authAtom, preliminarieListAtom } from '@/store';
+import {
+  adManagerLogou,
+  adManagerPreliminariesFile,
+  adSalesPersonLogou,
+  adSalesPersonPreliminariesFile,
+} from '@/services';
+import { authAtom, preliminarieListAtom, dashboardTabStatusAtom } from '@/store';
 import { downloadExcelAsync } from '@/utils';
 import { useTheme } from '@emotion/react';
 import { Box, Button, Popover, Stack, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { AdLogModal } from './download-modal';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
 
 export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }) => {
   const navigate = useNavigate();
   const isManager = useIsManager();
   const resetAuth = useResetRecoilState(authAtom);
   const resetPreliminarieList = useResetRecoilState(preliminarieListAtom);
+  const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
+  const { pathname } = useLocation();
   const { manager, salesPerson } = useRecoilValue(authAtom);
   const logModal = useBoolean(false);
   const menuItems = [
@@ -35,11 +44,27 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
       label: 'パスワード変更',
       onclick: openChangePassword,
     },
-    {
-      id: 3,
-      label: '管理画面をエクスポート',
-      onclick: () => {},
-    },
+    ...(pathname === routeNames.adManagerDashboardPage.path || pathname === routeNames.adSalesPersonDashboardPage.path
+      ? [
+          {
+            id: 3,
+            label: '管理画面をエクスポート',
+            onclick: async () => {
+              try {
+                if (isManager) {
+                  const res = await adManagerPreliminariesFile(dashboardTabStatus);
+                  await downloadExcelAsync(res.data.src, res.data.name);
+                } else {
+                  const res = await adSalesPersonPreliminariesFile(dashboardTabStatus);
+                  await downloadExcelAsync(res.data.src, res.data.name);
+                }
+              } catch (erorrs) {
+                toast.error(API_500_ERROR);
+              }
+            },
+          },
+        ]
+      : []),
     {
       id: 4,
       label: 'ログアウト',

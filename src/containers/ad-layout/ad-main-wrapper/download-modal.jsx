@@ -14,8 +14,8 @@ import { downloadExcelAsync } from '@/utils';
 export const AdLogModal = ({ open, onClose }) => {
   const formik = useFormik({
     initialValues: {
-      start: '',
-      end: '',
+      start: dayjs().subtract(7, 'day').format('YYYY/MM/DD'),
+      end: dayjs().format('YYYY/MM/DD'),
     },
     onSubmit: async (values) => {
       try {

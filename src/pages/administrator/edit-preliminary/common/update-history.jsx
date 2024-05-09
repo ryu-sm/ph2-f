@@ -78,7 +78,7 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
         .filter((item) => item)
         .join(upConfig.join);
     }
-    if (upConfig?.options) return upConfig.options.find((item) => item.value === content)?.label;
+    if (upConfig?.options) return upConfig.options.find((item) => item.value === content)?.label || content;
     if (upConfig?.formatNumber) {
       return `${formatNumber(content, upConfig.unit)}`;
     }

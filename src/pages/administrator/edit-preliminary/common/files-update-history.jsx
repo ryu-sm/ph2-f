@@ -71,17 +71,6 @@ export const FilesUpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
     if (row.operator_type === 3) return row.s_manager_name;
   };
 
-  const parseContent = (content, operate_type) => {
-    const optins = [
-      { value: 0, label: '申込' },
-      { value: 1, label: '更新' },
-      { value: 2, label: '追加' },
-      { value: 9, label: '削除' },
-    ];
-
-    return `${optins.find((item) => item.value === operate_type)?.label} ${content}`;
-  };
-
   useEffect(() => {
     if (open) fetch();
   }, [upConfig, open]);
@@ -191,7 +180,7 @@ export const FilesUpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
                           pl: 1,
                         }}
                       >
-                        {parseContent(row?.content, row?.operate_type)}
+                        {row?.content ? row?.content : ''}
                       </TableCell>
                     </TableRow>
                   ))}

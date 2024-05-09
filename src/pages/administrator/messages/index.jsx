@@ -13,15 +13,21 @@ import { NewMessageModal } from './new-message-modal';
 export const AdMessagesPages = () => {
   const [messages, setMessages] = useState([]);
   const isManager = useIsManager();
+  const [filterData, setFilterData] = useState([]);
+  const [sortBy, setSortBy] = useState('created_at');
+  const [sortOrder, setSortOrder] = useState('desc');
+
   const { value: open, onTrue: handleOpenModal, onFalse: handleCloseModal } = useBoolean(false);
   const fetchData = async () => {
     try {
       if (isManager) {
         const res = await adGetManagerMessages();
         setMessages(res.data);
+        // setFilterData(res.data);
       } else {
         const res = await adGetSalesPersonMessages();
         setMessages(res.data);
+        // setFilterData(res.data);
       }
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -32,6 +38,29 @@ export const AdMessagesPages = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const sortedData = [...messages].sort((a, b) => {
+      const valueA = a[sortBy];
+      const valueB = b[sortBy];
+
+      if (sortOrder === 'asc') {
+        return valueA > valueB ? 1 : -1;
+      } else {
+        return valueA < valueB ? 1 : -1;
+      }
+    });
+    setFilterData(sortedData);
+  }, [sortBy, sortOrder, messages]);
+
+  const handleSort = (column) => {
+    if (column === sortBy) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('asc');
+    }
+  };
+  console.log(messages);
   return (
     <AdMainWrapper
       leftContent={
@@ -74,12 +103,12 @@ export const AdMessagesPages = () => {
       >
         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} width={'318px'} position={'relative'}>
           <Typography variant="message_filter">申込人</Typography>
-          <AdSortListButton />
+          <AdSortListButton name={'name'} sortBy={sortBy} sortOrder={sortOrder} handleSort={handleSort} />
         </Stack>
 
         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} width={'190px'} position={'relative'}>
           <Typography variant="message_filter">日付</Typography>
-          <AdSortListButton />
+          <AdSortListButton name={'created_at'} sortBy={sortBy} sortOrder={sortOrder} handleSort={handleSort} />
         </Stack>
 
         <Stack
@@ -92,9 +121,11 @@ export const AdMessagesPages = () => {
           <Typography variant="message_filter">連絡内容</Typography>
         </Stack>
       </Stack>
-      {messages.map((item) => (
-        <MessageListItem key={item?.id} item={item} />
-      ))}
+      <Stack sx={{ pb: 8 }}>
+        {filterData.map((item) => (
+          <MessageListItem key={item?.id} item={item} />
+        ))}
+      </Stack>
     </AdMainWrapper>
   );
 };

@@ -47,6 +47,7 @@ export const typography = {
     lineHeight: '100%',
     letterSpacing: '0.6px',
     color: '#E54E75',
+    whiteSpace: 'break-spaces',
   },
   annotation_01: {
     fontFamily: 'Hiragino Sans',

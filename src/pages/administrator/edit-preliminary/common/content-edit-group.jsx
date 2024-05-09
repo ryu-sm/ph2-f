@@ -12,13 +12,14 @@ export const ContentEditGroup = ({
   maxHeight,
   hiddenTitle,
   hiddenLine,
+  isDisabled,
   ...props
 }) => {
   return (
-    <Stack sx={{ width: 1, height: 1, maxHeight: maxHeight || 1 }}>
+    <Stack sx={{ width: 1, height: 1, pb: 3 }}>
       {isEditable && (
         <Stack direction={'row'} justifyContent={'flex-end'} sx={{ width: 1, py: 3 }}>
-          <AdSaveButton onClick={handleSave} />
+          <AdSaveButton onClick={handleSave} isDisabled={isDisabled} />
         </Stack>
       )}
 
@@ -77,7 +78,9 @@ export const ContentEditGroup = ({
           </Typography>
         )}
       </Stack>
-      <Stack sx={{ width: 1, maxHeight: 'calc(100dvh - 420px)', overflow: 'auto', pb: '10px' }}>{children}</Stack>
+      <Stack sx={{ width: 1, overflow: 'auto', pb: '10px', maxHeight: maxHeight || 'calc(100dvh - 420px)' }}>
+        {children}
+      </Stack>
     </Stack>
   );
 };

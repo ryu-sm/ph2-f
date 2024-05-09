@@ -124,43 +124,83 @@ export const ApAreaInputField = ({ label, ...props }) => {
           <Stack spacing={1} direction={'row'} alignItems={'center'}>
             {areaInputs.map((input, index) => (
               <Stack key={index} spacing={1} direction={'row'} alignItems={'center'}>
-                <NumericFormat
-                  customInput={TextField}
-                  thousandSeparator
-                  autoComplete="off"
-                  type="tel"
-                  placeholder={index ? '--' : '---'}
-                  inputRef={input.ref}
-                  name={input.name}
-                  value={input.value}
-                  sx={{
-                    '& .MuiInputBase-input': { textAlign: 'center', width: index ? 22 : 93 },
-                    '&&&& fieldset': { border: '1px solid', borderColor: 'primary.40' },
+                {index === 0 ? (
+                  <NumericFormat
+                    customInput={TextField}
+                    thousandSeparator
+                    autoComplete="off"
+                    type="tel"
+                    placeholder={index ? '--' : '---'}
+                    inputRef={input.ref}
+                    name={input.name}
+                    value={input.value}
+                    sx={{
+                      '& .MuiInputBase-input': { textAlign: 'center', width: index ? 22 : 93 },
+                      '&&&& fieldset': { border: '1px solid', borderColor: 'primary.40' },
 
-                    ...(isSuccess &&
-                      !!input.ref.current?.value && {
-                        '.MuiInputBase-input': {
-                          backgroundColor: (theme) => theme.palette.gray[100],
-                          boxShadow: 'none',
-                        },
-                        '&&&& fieldset': { border: 'none' },
-                      }),
-                  }}
-                  onInput={(e) => {
-                    e.target.value = convertToHalfWidth(e.target.value);
-                    e.target.value = e.target.value.replace(/[^\d]+/g, '');
-                    e.target.value = e.target.value.substring(0, input.maxLength);
-                    return e;
-                  }}
-                  onChange={handleKeyPress}
-                  onKeyDown={(e) => handleFocusInput(e, input.name)}
-                  onFocus={() => {
-                    setTouched(true);
-                    currentIndex.current = index;
-                  }}
-                  onBlur={handleBlur}
-                  error={isError}
-                />
+                      ...(isSuccess &&
+                        !!input.ref.current?.value && {
+                          '.MuiInputBase-input': {
+                            backgroundColor: (theme) => theme.palette.gray[100],
+                            boxShadow: 'none',
+                          },
+                          '&&&& fieldset': { border: 'none' },
+                        }),
+                    }}
+                    onInput={(e) => {
+                      // e.target.value = convertToHalfWidth(e.target.value);
+                      e.target.value = e.target.value.replace(/[^\d]+/g, '');
+                      e.target.value = e.target.value.substring(0, input.maxLength);
+                      return e;
+                    }}
+                    onChange={handleKeyPress}
+                    onKeyDown={(e) => handleFocusInput(e, input.name)}
+                    onFocus={() => {
+                      setTouched(true);
+                      currentIndex.current = index;
+                    }}
+                    onBlur={handleBlur}
+                    error={isError}
+                  />
+                ) : (
+                  <TextField
+                    // customInput={TextField}
+                    // thousandSeparator
+                    autoComplete="off"
+                    // type="tel"
+                    placeholder={index ? '--' : '---'}
+                    inputRef={input.ref}
+                    name={input.name}
+                    value={input.value}
+                    sx={{
+                      '& .MuiInputBase-input': { textAlign: 'center', width: index ? 22 : 93 },
+                      '&&&& fieldset': { border: '1px solid', borderColor: 'primary.40' },
+
+                      ...(isSuccess &&
+                        !!input.ref.current?.value && {
+                          '.MuiInputBase-input': {
+                            backgroundColor: (theme) => theme.palette.gray[100],
+                            boxShadow: 'none',
+                          },
+                          '&&&& fieldset': { border: 'none' },
+                        }),
+                    }}
+                    onInput={(e) => {
+                      // e.target.value = convertToHalfWidth(e.target.value);
+                      e.target.value = e.target.value.replace(/[^\d]+/g, '');
+                      e.target.value = e.target.value.substring(0, input.maxLength);
+                      return e;
+                    }}
+                    onChange={handleKeyPress}
+                    onKeyDown={(e) => handleFocusInput(e, input.name)}
+                    onFocus={() => {
+                      setTouched(true);
+                      currentIndex.current = index;
+                    }}
+                    onBlur={handleBlur}
+                    error={isError}
+                  />
+                )}
                 {index !== areaInputs.length - 1 && (
                   <Typography variant="note" color={'text.main'}>
                     .

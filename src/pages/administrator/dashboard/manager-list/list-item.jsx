@@ -3,11 +3,12 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { PopoverSelect } from '../common/popover-select';
 import { ProgressStatus } from '../common/progress-status';
 import { FieldItem } from '../common/field-item';
-import { formatApplyTime } from '@/utils';
+import { formatApplyTime, formatNumber } from '@/utils';
 import { Icons } from '@/assets';
 import { FormikProvider, useFormik } from 'formik';
 import {
   adGetAccessSalesPersonOptions,
+  adGetManagrPreliminariyAccess,
   adUpdatePreliminaryManagerId,
   adUpdatePreliminarySalesAreaId,
   adUpdatePreliminarySalesExhibitionHallId,
@@ -25,8 +26,10 @@ import { UpAfterResultModal } from './after-result-modal';
 import { dashboardTabStatusAtom, editMainTabStatusAtom, infoGroupTabAtom, preliminarySelect } from '@/store';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue, useSetRecoilState } from 'recoil';
 import { API_500_ERROR } from '@/constant';
+import { UnAccessModal } from '../common/un-access-modal';
 
 export const AdCaseItem = ({ item }) => {
+  console.log(item);
   const isPairLoan = useMemo(() => {
     return item.loan_type === '2' && item.pair_loan_id !== '';
   }, [item]);
@@ -64,6 +67,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const navigator = useNavigate();
   const pairLoanModal = useBoolean(false);
   const afterResultModal = useBoolean(false);
+  const unAccessModal = useBoolean(false);
   const formik = useFormik({
     initialValues: {
       sales_company_id: item?.sales_company_id,
@@ -91,7 +95,17 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const letfLinkItems = [
     {
       label: '申込内容の修正・確認',
-      onClick: () => {
+      onClick: async () => {
+        try {
+          const res = await adGetManagrPreliminariyAccess(item.id);
+          console.log(res.data?.access);
+          if (!res.data?.access) {
+            unAccessModal.onTrue();
+            return;
+          }
+        } catch (error) {
+          toast.error(API_500_ERROR);
+        }
         setMainTabStatus(1);
         setInfoGroupTab(1);
         refreshPreliminary();
@@ -100,19 +114,50 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     },
     {
       label: 'メッセージ確認',
-      onClick: () => {
+      onClick: async () => {
+        try {
+          const res = await adGetManagrPreliminariyAccess(item.id);
+          if (!res.data?.access) {
+            unAccessModal.onTrue();
+            return;
+          }
+        } catch (error) {
+          toast.error(API_500_ERROR);
+        }
         navigator(`/manager/messages-detail?id=${item.id}&type=1`);
       },
     },
     {
       label: 'メモ表示',
-      onClick: () => navigator(`${routeNames.adManagerMemoPage.path}?id=${item?.id}&&name=${item?.name_kanji}`),
+      onClick: async () => {
+        try {
+          const res = await adGetManagrPreliminariyAccess(item.id);
+          if (!res.data?.access) {
+            unAccessModal.onTrue();
+            return;
+          }
+        } catch (error) {
+          toast.error(API_500_ERROR);
+        }
+        navigator(`${routeNames.adManagerMemoPage.path}?id=${item?.id}&&name=${item?.name_kanji}`);
+      },
     },
     ...(item.loan_type === '2'
       ? [
           {
             label: item.pair_loan_id !== '' ? 'ペアローン解除' : 'ペアローン紐付',
-            onClick: pairLoanModal.onTrue,
+            onClick: async () => {
+              try {
+                const res = await adGetManagrPreliminariyAccess(item.id);
+                if (!res.data?.access) {
+                  unAccessModal.onTrue();
+                  return;
+                }
+              } catch (error) {
+                toast.error(API_500_ERROR);
+              }
+              pairLoanModal.onTrue;
+            },
           },
         ]
       : []),
@@ -129,7 +174,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         value: '0',
         enable: item.provisional_after_result === '' && dashboardTabStatus === 1,
         active: item.provisional_after_result === '0',
-        onClick: () => {
+        onClick: async () => {
+          try {
+            const res = await adGetManagrPreliminariyAccess(item.id);
+            if (!res.data?.access) {
+              unAccessModal.onTrue();
+              return;
+            }
+          } catch (error) {
+            toast.error(API_500_ERROR);
+          }
           setAfterResult({
             p_application_header_id: item.id,
             s_bank_id: item.s_bank_id,
@@ -143,7 +197,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         value: '1',
         enable: ['0', '1'].includes(item.provisional_result) && item.provisional_after_result === '',
         active: item.provisional_after_result === '1',
-        onClick: () => {
+        onClick: async () => {
+          try {
+            const res = await adGetManagrPreliminariyAccess(item.id);
+            if (!res.data?.access) {
+              unAccessModal.onTrue();
+              return;
+            }
+          } catch (error) {
+            toast.error(API_500_ERROR);
+          }
           setAfterResult({
             p_application_header_id: item.id,
             s_bank_id: item.s_bank_id,
@@ -157,7 +220,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         value: '2',
         enable: item.provisional_after_result === '1',
         active: item.provisional_after_result === '2',
-        onClick: () => {
+        onClick: async () => {
+          try {
+            const res = await adGetManagrPreliminariyAccess(item.id);
+            if (!res.data?.access) {
+              unAccessModal.onTrue();
+              return;
+            }
+          } catch (error) {
+            toast.error(API_500_ERROR);
+          }
           setAfterResult({
             p_application_header_id: item.id,
             s_bank_id: item.s_bank_id,
@@ -171,7 +243,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         value: '3',
         enable: item.provisional_after_result === '1' && !['4', '5'].includes(item.provisional_after_result),
         active: item.provisional_after_result === '3',
-        onClick: () => {
+        onClick: async () => {
+          try {
+            const res = await adGetManagrPreliminariyAccess(item.id);
+            if (!res.data?.access) {
+              unAccessModal.onTrue();
+              return;
+            }
+          } catch (error) {
+            toast.error(API_500_ERROR);
+          }
           setAfterResult({
             p_application_header_id: item.id,
             s_bank_id: item.s_bank_id,
@@ -185,7 +266,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         value: '4',
         enable: item.provisional_after_result === '1' && !['3', '5'].includes(item.provisional_after_result),
         active: item.provisional_after_result === '4',
-        onClick: () => {
+        onClick: async () => {
+          try {
+            const res = await adGetManagrPreliminariyAccess(item.id);
+            if (!res.data?.access) {
+              unAccessModal.onTrue();
+              return;
+            }
+          } catch (error) {
+            toast.error(API_500_ERROR);
+          }
           setAfterResult({
             p_application_header_id: item.id,
             s_bank_id: item.s_bank_id,
@@ -199,7 +289,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         value: '5',
         enable: item.provisional_after_result === '1' && !['3', '4'].includes(item.provisional_after_result),
         active: item.provisional_after_result === '5',
-        onClick: () => {
+        onClick: async () => {
+          try {
+            const res = await adGetManagrPreliminariyAccess(item.id);
+            if (!res.data?.access) {
+              unAccessModal.onTrue();
+              return;
+            }
+          } catch (error) {
+            toast.error(API_500_ERROR);
+          }
           setAfterResult({
             p_application_header_id: item.id,
             s_bank_id: item.s_bank_id,
@@ -339,6 +438,13 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
   return (
     <FormikProvider value={formik}>
+      <UnAccessModal
+        isOpen={unAccessModal.value}
+        onClose={async () => {
+          unAccessModal.onFalse();
+          await refreshPreliminarieList();
+        }}
+      />
       <UpAfterResultModal
         provisional_after_result={afterResult?.provisional_after_result}
         isOpen={afterResultModal.value}
@@ -400,6 +506,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             minWidth={widthConfig[3]}
             textStyle={'case_content_text'}
             value={item.name_kanji}
+            textAlign={'center'}
             isText={true}
           />
           <FieldItem
@@ -424,7 +531,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             fontFamily="Barlow"
             value={
               <Box lineHeight={'25px'}>
-                {item.desired_loan_amount}
+                {formatNumber(item.desired_loan_amount, '')}
                 <Typography variant="case_content_text" fontSize={7} fontFamily={'Noto Sans JP'}>
                   （万円）
                 </Typography>
@@ -453,7 +560,24 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             maxWidth={widthConfig[9]}
             minWidth={widthConfig[9]}
             fontSize={15}
-            value={<PopoverSelect name="sales_area_id" options={salesAreaOptions} onChange={handleChangeSalesArea} />}
+            value={
+              <PopoverSelect
+                name="sales_area_id"
+                options={salesAreaOptions}
+                onChange={handleChangeSalesArea}
+                checkAccess={async () => {
+                  try {
+                    const res = await adGetManagrPreliminariyAccess(item.id);
+                    if (!res.data?.access) {
+                      unAccessModal.onTrue();
+                    }
+                    return res.data?.access;
+                  } catch (error) {
+                    toast.error(API_500_ERROR);
+                  }
+                }}
+              />
+            }
             isText={false}
           />
           <FieldItem
@@ -465,6 +589,17 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                 name="sales_exhibition_hall_id"
                 options={salesExhibitionHallOptions}
                 onChange={handleChangeSalesExhibitionHall}
+                checkAccess={async () => {
+                  try {
+                    const res = await adGetManagrPreliminariyAccess(item.id);
+                    if (!res.data?.access) {
+                      unAccessModal.onTrue();
+                    }
+                    return res.data?.access;
+                  } catch (error) {
+                    toast.error(API_500_ERROR);
+                  }
+                }}
               />
             }
             isText={false}
@@ -472,7 +607,24 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           <FieldItem
             maxWidth={widthConfig[11]}
             minWidth={widthConfig[11]}
-            value={<PopoverSelect name="s_sales_person_id" options={salesPersonOptions} onChange={handleSalesPerson} />}
+            value={
+              <PopoverSelect
+                name="s_sales_person_id"
+                options={salesPersonOptions}
+                onChange={handleSalesPerson}
+                checkAccess={async () => {
+                  try {
+                    const res = await adGetManagrPreliminariyAccess(item.id);
+                    if (!res.data?.access) {
+                      unAccessModal.onTrue();
+                    }
+                    return res.data?.access;
+                  } catch (error) {
+                    toast.error(API_500_ERROR);
+                  }
+                }}
+              />
+            }
             isText={false}
           />
           <FieldItem
@@ -483,6 +635,17 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                 name="s_manager_id"
                 options={item?.manager_options}
                 onChange={(value) => handleChangeManager(value, item)}
+                checkAccess={async () => {
+                  try {
+                    const res = await adGetManagrPreliminariyAccess(item.id);
+                    if (!res.data?.access) {
+                      unAccessModal.onTrue();
+                    }
+                    return res.data?.access;
+                  } catch (error) {
+                    toast.error(API_500_ERROR);
+                  }
+                }}
               />
             }
             isText={false}

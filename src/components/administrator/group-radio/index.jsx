@@ -16,7 +16,7 @@ export const AdGroupRadio = ({ options, ...props }) => {
     [field, props, setValue]
   );
   return (
-    <Stack ml={8}>
+    <Stack ml={8} minWidth={240}>
       <FormControl>
         <RadioGroup {...field} value={meta.value} onChange={handleChange}>
           {options.map(({ label, value }) => (

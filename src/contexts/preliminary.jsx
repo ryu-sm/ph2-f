@@ -37,6 +37,7 @@ export const PreliminaryProvider = ({ children }) => {
   const preliminaryId = useRecoilValue(preliminaryIdAtom);
   // const { pathname } = useLocation();
   const checkDbModal = useBoolean(false);
+  const modal = useBoolean(false);
 
   // useEffect(() => {
   //   refreshPreliminary();
@@ -48,7 +49,7 @@ export const PreliminaryProvider = ({ children }) => {
       toast.error(API_500_ERROR);
     }
     if (result.state === 'hasValue') {
-      console.log(result.contents);
+      console.log(result.contents.p_application_banks);
       setPreliminarySnap(result.contents);
     }
   }, [result.state, preliminaryId]);
@@ -79,32 +80,12 @@ export const PreliminaryProvider = ({ children }) => {
         Number(temp.fiance) +
         Number(temp.others);
 
-      if (p_residents.length < 6 && plannedResidentNum >= 6) {
-        Array.from({ length: 6 - p_residents.length }, () => {
+      if (p_residents.length < 6 && plannedResidentNum > p_residents.length) {
+        const basicLength = plannedResidentNum >= 6 ? 6 : plannedResidentNum;
+        Array.from({ length: basicLength - p_residents.length }, () => {
           tempArray.push(residentsInitialValues);
         });
       }
-
-      // const temp00 = tempArray.filter((item) => item?.rel_to_applicant_a_name !== '');
-      // const temp01 = tempArray.filter((item) => item?.rel_to_applicant_a === '1');
-      // const temp02 = tempArray.filter((item) => item?.rel_to_applicant_a === '2');
-      // const temp03 = tempArray.filter((item) => item?.rel_to_applicant_a === '3');
-      // const temp04 = tempArray.filter((item) => item?.rel_to_applicant_a === '4');
-      // const temp05 = tempArray.filter((item) => item?.rel_to_applicant_a === '5');
-      // const temp06 = tempArray.filter((item) => item?.rel_to_applicant_a === '6');
-      // const temp99 = tempArray.filter((item) => item?.rel_to_applicant_a === '99');
-      // const temp__ = tempArray.filter((item) => item?.rel_to_applicant_a === '');
-      // const tempArraySorted = [
-      //   ...temp00,
-      //   ...temp01,
-      //   ...temp02,
-      //   ...temp03,
-      //   ...temp04,
-      //   ...temp05,
-      //   ...temp06,
-      //   ...temp99,
-      //   ...temp__,
-      // ];
 
       const dbData = {
         ...preliminaryInitialValues,
@@ -146,6 +127,7 @@ export const PreliminaryProvider = ({ children }) => {
           ...preliminaryInitialValues.p_result,
           ...res.data.p_result,
         },
+        apply_type: res.data?.apply_type,
         isMCJ: res.data.p_application_banks?.length > 1,
         hasIncomeTotalizer: ['3', '4'].includes(res.data.p_application_headers.loan_type),
         hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',
@@ -229,16 +211,21 @@ export const PreliminaryProvider = ({ children }) => {
     }
   };
 
-  const handleChangePreExaminationStatus = async (pre_examination_status) => {
+  const handleChangePreExaminationStatus = async (pre_examination_status, onClose) => {
     try {
       await adUpdatePreExaminationStatus({
         p_application_header_id: result.contents?.p_application_headers?.id,
         pre_examination_status: pre_examination_status,
         preliminary: pre_examination_status === 3 ? result.contents : null,
       });
+      if (pre_examination_status === 4) {
+        onClose();
+        modal.onTrue();
+        return;
+      }
       refreshPreliminary();
     } catch (error) {
-      if (error.status === 400) {
+      if (error.status === 400 || error.status === 403 || error.status === 406) {
         return error;
       }
       toast.error(API_500_ERROR);
@@ -252,6 +239,7 @@ export const PreliminaryProvider = ({ children }) => {
         s_bank_id: result.contents?.p_result?.s_bank_id,
         p_upload_file_id: p_upload_file_id,
       });
+
       refreshPreliminary();
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -306,6 +294,44 @@ export const PreliminaryProvider = ({ children }) => {
             <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }}>
               <AdPrimaryButton height={38} width={150} onClick={handleCloseModal}>
                 とじる
+              </AdPrimaryButton>
+            </Stack>
+          </Stack>
+        </Modal>
+        <Modal
+          open={modal.value}
+          onClose={modal.onFalse}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          disableAutoFocus
+        >
+          <Stack
+            sx={{
+              width: 480,
+              bgcolor: 'white',
+              minWidth: 'auto',
+              maxHeight: '75vh',
+              borderRadius: 1,
+              p: 3,
+            }}
+          >
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+              <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={modal.onFalse} />
+            </Stack>
+            <Stack sx={{ py: 3 }}>
+              <Typography variant="dailog_content" fontWeight={600}>
+                銀行へデータを連携しました。
+              </Typography>
+            </Stack>
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }} spacing={3}>
+              <AdPrimaryButton
+                height={38}
+                width={100}
+                onClick={() => {
+                  modal.onFalse();
+                  refreshPreliminary();
+                }}
+              >
+                OK
               </AdPrimaryButton>
             </Stack>
           </Stack>

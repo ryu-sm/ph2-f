@@ -1,4 +1,4 @@
-import { infoGroupTabAtom } from '@/store';
+import { authAtom, infoGroupTabAtom, preliminaryIdAtom } from '@/store';
 import { Box, Button, Grid, Modal, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -13,9 +13,10 @@ import { Item05 } from './item-05';
 import { Item06 } from './item-06';
 import { Item07 } from './item-07';
 import { Item08 } from './item-08';
-import { useBoolean } from '@/hooks';
+import { useBoolean, useIsManager } from '@/hooks';
 import { Item09 } from './item-09';
 import { Item10 } from './item-10';
+import { adGetUploadFile } from '@/services';
 
 export const MainDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
@@ -25,6 +26,27 @@ export const MainDetail = () => {
     checkUpdate,
     resetPreliminarySnap,
   } = usePreliminaryContext();
+
+  const preliminaryId = useRecoilValue(preliminaryIdAtom);
+
+  const isManager = useIsManager();
+
+  const [uploadfile, setUploadFile] = useState(1);
+  const fetchUploadFile = async () => {
+    try {
+      const res = await adGetUploadFile(preliminaryId);
+
+      setUploadFile(res.data.upload_file);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!isManager) {
+      fetchUploadFile();
+    }
+  }, [isManager, preliminaryId]);
 
   const infoGroupItems = useMemo(() => {
     return [
@@ -61,16 +83,21 @@ export const MainDetail = () => {
         id: 8,
         label: '担当者情報',
       },
-      {
-        id: 9,
-        label: '書類アップロード',
-      },
+      ...(uploadfile === 1
+        ? [
+            {
+              id: 9,
+              label: '書類アップロード',
+            },
+          ]
+        : []),
+
       {
         id: 10,
         label: '審査結果',
       },
     ];
-  }, [hasJoinGuarantor]);
+  }, [hasJoinGuarantor, uploadfile]);
 
   const changeTab = useBoolean(false);
   const [tempTab, setTempTab] = useState(null);
@@ -117,6 +144,7 @@ export const MainDetail = () => {
           ))}
         </Grid>
       </Stack>
+
       {infoGroupTab === 1 && <Item01 />}
       {infoGroupTab === 2 && <Item02 />}
       {infoGroupTab === 3 && <Item03 />}

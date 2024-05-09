@@ -53,16 +53,16 @@ export const ApChangeEmailPage = () => {
           <Stack alignItems={'center'} sx={{ px: 8 }}>
             <Box sx={{ p: 6, width: 1, textAlign: 'center', bgcolor: 'white', borderRadius: '14px' }}>
               <Typography variant="notify" sx={{ color: (theme) => theme.palette.text.main }}>
-                {`メールアドレスの変更が完了しました。\n引き続きサービスをご利用ください。`}
+                {`メールアドレスの変更が完了しました。\n変更後のメールアドレスで再度ログインして\n引き続きご利用ください。`}
               </Typography>
             </Box>
           </Stack>
           <Stack alignItems={'center'} sx={{ pt: 6 }}>
             <ApPrimaryButton
               endIcon={<Icons.ApForwardRightWhiteIcon />}
-              onClick={() => navigate(routeNames.apTopPage.path)}
+              onClick={() => navigate(routeNames.apLoginPage.path)}
             >
-              TOPへ
+              ログイン
             </ApPrimaryButton>
           </Stack>
         </ApLayout>

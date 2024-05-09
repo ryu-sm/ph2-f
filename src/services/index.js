@@ -4,6 +4,10 @@ export const apRegisterVerifyEmail = async (data) => {
   return await service.post('/user/verify-email', data);
 };
 
+export const apSalesPersonRegisterVerifyEmail = async (data) => {
+  return await service.post('/sales-person/verify-email', data);
+};
+
 export const apResetPasswordVerifyEmail = async (data) => {
   return await service.post('/user/password/verify-email', data);
 };
@@ -14,6 +18,10 @@ export const apChangeEmailVerifyEmail = async (data) => {
 
 export const apRegister = async (data) => {
   return await service.post('/user', data);
+};
+
+export const apSalesPersonRegister = async (data) => {
+  return await service.post('/sales-person', data);
 };
 
 export const apLogin = async (data) => {
@@ -111,8 +119,16 @@ export const adManagerPreliminaries = async (status) => {
   return await service.get(`/manager/preliminaries?status=${status}`);
 };
 
+export const adManagerPreliminariesFile = async (status) => {
+  return await service.get(`/manager/preliminaries/file?status=${status}`);
+};
+
 export const adSalesPersonPreliminaries = async (status) => {
   return await service.get(`/sales-person/preliminaries?status=${status}`);
+};
+
+export const adSalesPersonPreliminariesFile = async (status) => {
+  return await service.get(`/sales-person/preliminaries/file?status=${status}`);
 };
 
 export const adGetPairLoanOptions = async (p_application_header_id, is_seted) => {
@@ -347,4 +363,24 @@ export const apGetPreExaminationStatus = async (apply_no) => {
 
 export const adGetProvisionalStatus = async (p_application_header_id) => {
   return await service.get(`/provisional_status/${p_application_header_id}`);
+};
+
+export const adGetUploadFile = async (p_application_header_id) => {
+  return await service.get(`/s_sales_company_orgs/upload_file/${p_application_header_id}`);
+};
+
+export const adGetSalesCompanyId = async () => {
+  return await service.get(`/s_sales_company_org_id`);
+};
+
+export const adGetSalesPersonBelowOrgs = async () => {
+  return await service.get(`/sales-person/below-orgs`);
+};
+
+export const adGetManagrPreliminariyAccess = async (p_application_header_id) => {
+  return await service.get(`/manager/preliminariy/access/${p_application_header_id}`);
+};
+
+export const adGetSalesPersonPreliminariyAccess = async (p_application_header_id) => {
+  return await service.get(`/sales-person/preliminariy/access/${p_application_header_id}`);
 };

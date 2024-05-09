@@ -4,9 +4,12 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { Icons } from '@/assets';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { AdPrimaryButton } from '@/components/administrator/button';
+import { useBoolean } from '@/hooks';
 export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => {
   const { handleChangePreExaminationStatus } = usePreliminaryContext();
   const [errors, setErrors] = useState(null);
+  const [sbiErrors, setSbiErrors] = useState(null);
+
   const title = useMemo(() => {
     if (value === 3 && activeValue === 3) return `承認を解除しますか。\n行った変更が保存されなくなります。`;
     if (value === 0)
@@ -22,112 +25,179 @@ export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => 
   }, [value, activeValue]);
 
   const handleConfirm = async () => {
-    const res = await handleChangePreExaminationStatus(value === 3 && activeValue === 3 ? value - 1 : value);
+    const res = await handleChangePreExaminationStatus(value === 3 && activeValue === 3 ? value - 1 : value, onClose);
+    console.log(res);
     if (res.status === 400) {
       setErrors(res.data);
       return;
     }
+    if (res.status === 403) {
+      setSbiErrors(res.data?.erorrs);
+      return;
+    }
+    if (res.status === 406) {
+      console.log(11);
+      setSbiErrors(res.data?.erorrs);
+      return;
+    }
+
+    onClose();
+  };
+  console.log(sbiErrors);
+
+  const handleErrorClose = () => {
+    setErrors(null);
+    setSbiErrors(null);
     onClose();
   };
 
-  return errors ? (
-    <Modal
-      open={open}
-      onClose={onClose}
-      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      disableAutoFocus
-    >
-      <Stack
-        sx={{
-          width: 430,
-          bgcolor: 'white',
-          minWidth: 'auto',
-          maxHeight: '45vh',
-          borderRadius: 1,
-          p: 3,
-          overflow: 'auto',
-        }}
+  if (errors) {
+    return (
+      <Modal
+        open={open}
+        onClose={handleErrorClose}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        disableAutoFocus
       >
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
-          <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={onClose} />
-        </Stack>
-        <Stack direction={'row'} justifyContent={'center'} spacing={1} pb={2}>
-          <Stack sx={{ pt: '6px' }}>
-            <Icons.AdCircleNotice sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={onClose} />
+        <Stack
+          sx={{
+            width: 430,
+            bgcolor: 'white',
+            minWidth: 'auto',
+            maxHeight: '45vh',
+            borderRadius: 1,
+            p: 3,
+            overflow: 'auto',
+          }}
+        >
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+            <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={handleErrorClose} />
           </Stack>
-          <Stack>
-            <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
-              エラーが発生しました。
-            </Typography>
-            <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
-              以下の項目をご確認ください。
-            </Typography>
-          </Stack>
-        </Stack>
-        <Stack sx={{ py: 3, px: 3 }} overflow={'auto'}>
-          {Object.keys(errors).map((key) => (
-            <Stack key={key}>
-              <Stack>
-                <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
-                  {key}
-                </Typography>
-              </Stack>
-              <Stack>
-                {errors[key].map((sub) => (
-                  <Stack sx={{ pl: 4 }}>
-                    <Typography
-                      variant="dailog_content"
-                      color={'secondary.main'}
-                      lineHeight={'29px'}
-                      textAlign={'start'}
-                    >
-                      {sub}
-                    </Typography>
-                  </Stack>
-                ))}
-              </Stack>
+          <Stack direction={'row'} justifyContent={'center'} spacing={1} pb={2}>
+            <Stack sx={{ pt: '6px' }}>
+              <Icons.AdCircleNotice sx={{ width: 13, height: 12, cursor: 'pointer' }} />
             </Stack>
-          ))}
+            <Stack>
+              <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
+                エラーが発生しました。
+              </Typography>
+              <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
+                以下の項目をご確認ください。
+              </Typography>
+            </Stack>
+          </Stack>
+          <Stack sx={{ py: 3, px: 3 }} overflow={'auto'}>
+            {Object.keys(errors).map((key) => (
+              <Stack key={key}>
+                <Stack>
+                  <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
+                    {key}
+                  </Typography>
+                </Stack>
+                <Stack>
+                  {errors[key].map((sub) => (
+                    <Stack sx={{ pl: 4 }}>
+                      <Typography
+                        variant="dailog_content"
+                        color={'secondary.main'}
+                        lineHeight={'29px'}
+                        textAlign={'start'}
+                      >
+                        {sub}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Stack>
+            ))}
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6, pt: 3 }}>
+            <AdPrimaryButton height={38} width={270} onClick={handleErrorClose}>
+              閉じる
+            </AdPrimaryButton>
+          </Stack>
         </Stack>
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6, pt: 3 }}>
-          <AdPrimaryButton height={38} width={270} onClick={onClose}>
-            閉じる
-          </AdPrimaryButton>
-        </Stack>
-      </Stack>
-    </Modal>
-  ) : (
-    <Modal
-      open={open}
-      onClose={onClose}
-      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      disableAutoFocus
-    >
-      <Stack
-        sx={{
-          width: 430,
-          bgcolor: 'white',
-          minWidth: 'auto',
-          maxHeight: '75vh',
-          borderRadius: 1,
-          p: 3,
-        }}
+      </Modal>
+    );
+  } else if (sbiErrors) {
+    return (
+      <Modal
+        open={open}
+        onClose={handleErrorClose}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        disableAutoFocus
       >
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
-          <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={onClose} />
+        <Stack
+          sx={{
+            width: 480,
+            bgcolor: 'white',
+            minWidth: 'auto',
+            maxHeight: '45vh',
+            borderRadius: 1,
+            p: 3,
+            overflow: 'auto',
+          }}
+        >
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+            <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={handleErrorClose} />
+          </Stack>
+          <Stack direction={'row'} justifyContent={'center'} spacing={1} pb={1}>
+            <Stack sx={{ pt: '6px' }}>
+              <Icons.AdCircleNotice sx={{ width: 13, height: 12, cursor: 'pointer' }} />
+            </Stack>
+            <Stack>
+              <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
+                エラーが発生しました。
+              </Typography>
+            </Stack>
+          </Stack>
+          <Stack sx={{ py: 3, px: 3 }} overflow={'auto'}>
+            <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
+              {JSON.stringify(sbiErrors, null, 2)}
+            </Typography>
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6, pt: 3 }}>
+            <AdPrimaryButton height={38} width={270} onClick={handleErrorClose}>
+              閉じる
+            </AdPrimaryButton>
+          </Stack>
         </Stack>
-        <Stack sx={{ py: 3 }}>
-          <Typography variant="dailog_content">{title}</Typography>
+      </Modal>
+    );
+  } else {
+    return (
+      <Modal
+        open={open}
+        onClose={onClose}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        disableAutoFocus
+      >
+        <Stack
+          sx={{
+            width: 480,
+            bgcolor: 'white',
+            minWidth: 'auto',
+            maxHeight: '75vh',
+            borderRadius: 1,
+            p: 3,
+          }}
+        >
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+            <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={onClose} />
+          </Stack>
+          <Stack sx={{ py: 3 }}>
+            <Typography variant="dailog_content">{title}</Typography>
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }} spacing={3}>
+            <AdPrimaryButton height={38} width={100} onClick={handleConfirm}>
+              OK
+            </AdPrimaryButton>
+            <AdPrimaryButton height={38} width={100} onClick={onClose}>
+              キャンセル
+            </AdPrimaryButton>
+          </Stack>
         </Stack>
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }} spacing={3}>
-          <AdPrimaryButton height={38} width={100} onClick={handleConfirm}>
-            OK
-          </AdPrimaryButton>
-          <AdPrimaryButton height={38} width={100} onClick={onClose}>
-            キャンセル
-          </AdPrimaryButton>
-        </Stack>
-      </Stack>
-    </Modal>
-  );
+      </Modal>
+    );
+  }
 };

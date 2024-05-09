@@ -209,6 +209,8 @@ export const applicationInitialValues = {
     maternity_paternity_leave_start_date: '',
     maternity_paternity_leave_end_date: '',
     nursing_leave: '',
+    // STEP07
+    spouse: '',
     // STEP10
     identity_verification_type: '',
     A__01__a: [],
@@ -319,6 +321,7 @@ export const applicationInitialValues = {
     F__02: [],
     F__03: [],
     K: [],
+    S: [],
   },
   // STEP06
   p_join_guarantors: [],

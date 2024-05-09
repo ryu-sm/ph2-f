@@ -21,6 +21,10 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
 
   const updatedModal = useBoolean(false);
 
+  if (isAddendum && !isManager && !subField) {
+    return <></>;
+  }
+
   return (
     <Stack
       direction={'row'}
@@ -55,23 +59,43 @@ export const EditRow = ({ label, isAddendum, isRequired, isLogicRequired, hasPle
         >
           {isUpdated && '...'}
         </Box>
-        <Stack
-          direction={'row'}
-          alignItems={'center'}
-          bgcolor={'white'}
-          p={'10px'}
-          flex={1}
-          sx={{ pl: hasPleft ? '10px' : 10, width: 1 }}
-          spacing={2}
-        >
-          {[field, subField]
-            .filter((i) => !!i)
-            .map((item, index) => (
-              <Stack key={index} flex={subField ? 0.5 : 1}>
-                {typeof item === 'string' ? <Typography variant="edit_content">{item}</Typography> : item}
-              </Stack>
-            ))}
-        </Stack>
+        {isManager ? (
+          <Stack
+            direction={'row'}
+            alignItems={'center'}
+            bgcolor={'white'}
+            p={'10px'}
+            flex={1}
+            sx={{ pl: hasPleft ? '10px' : 10, width: 1 }}
+            spacing={2}
+          >
+            {[field, subField]
+              .filter((i) => !!i)
+              .map((item, index) => (
+                <Stack key={index} flex={subField ? 0.5 : 1}>
+                  {typeof item === 'string' ? <Typography variant="edit_content">{item}</Typography> : item}
+                </Stack>
+              ))}
+          </Stack>
+        ) : (
+          <Stack
+            direction={'row'}
+            alignItems={'center'}
+            bgcolor={'white'}
+            p={'10px'}
+            flex={1}
+            sx={{ pl: hasPleft ? '10px' : 10, width: 1 }}
+            spacing={2}
+          >
+            {[field]
+              .filter((i) => !!i)
+              .map((item, index) => (
+                <Stack key={index} flex={1}>
+                  {typeof item === 'string' ? <Typography variant="edit_content">{item}</Typography> : item}
+                </Stack>
+              ))}
+          </Stack>
+        )}
       </Stack>
 
       {isUpdated && (

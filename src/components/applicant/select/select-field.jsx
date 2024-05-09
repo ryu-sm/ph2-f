@@ -1,5 +1,5 @@
 import { useField } from 'formik';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { MenuItem, Select, Stack, Typography } from '@mui/material';
 import { Icons } from '@/assets';
 
@@ -13,6 +13,7 @@ export const ApSelectField = ({
   label,
   justifyContent,
   showError = true,
+  handleChangeInit,
   sx,
   ...props
 }) => {
@@ -21,7 +22,7 @@ export const ApSelectField = ({
   const currentValueRef = useRef('');
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const isSuccess = useMemo(() => !isError && !!meta.value && meta.value !== '', [isError, meta.value]);
-
+  const [oldValue, setOldValue] = useState(meta.value);
   const handelBlue = useCallback(
     (e) => {
       field.onBlur(e);
@@ -33,7 +34,7 @@ export const ApSelectField = ({
   const handleFocus = useCallback(
     async (e) => {
       props.onFocus && props.onFocus(e);
-
+      setOldValue(meta.value);
       await setTouched(false);
     },
     [props, setTouched]
@@ -177,6 +178,11 @@ export const ApSelectField = ({
                 value={option.value}
                 className={option.className}
                 disabled={!!disableOptions.find((item) => item.value === option.value)}
+                onClick={() => {
+                  if (option.value !== oldValue) {
+                    handleChangeInit && handleChangeInit();
+                  }
+                }}
               >
                 <Typography
                   sx={{

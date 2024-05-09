@@ -134,6 +134,8 @@ export const ApStep06Page = () => {
     }
   }, [agentSended]);
 
+  console.log(formik.values);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -305,18 +307,30 @@ export const ApStep06Page = () => {
                             placeholder={'----'}
                             width={110}
                             label={'都道府県'}
+                            handleChangeInit={() => {
+                              formik.setFieldValue(`p_join_guarantors[${index}].prefecture_kana`, '');
+                              formik.setFieldTouched(`p_join_guarantors[${index}].prefecture_kana`, true);
+                            }}
                           />
                           <ApTextInputField
                             name={`p_join_guarantors[${index}].city_kanji`}
                             placeholder={'例：港区'}
                             label={'市区郡　（例：港区）'}
                             convertFullWidth
+                            handleChangeInit={() => {
+                              formik.setFieldValue(`p_join_guarantors[${index}].city_kana`, '');
+                              formik.setFieldTouched(`p_join_guarantors[${index}].city_kana`, true);
+                            }}
                           />
                           <ApTextInputField
                             name={`p_join_guarantors[${index}].district_kanji`}
                             placeholder={'例：芝浦４丁目'}
                             label={'町村丁目（例：芝浦４丁目）'}
                             convertFullWidth
+                            handleChangeInit={() => {
+                              formik.setFieldValue(`p_join_guarantors[${index}].district_kana`, '');
+                              formik.setFieldTouched(`p_join_guarantors[${index}].district_kana`, true);
+                            }}
                           />
                           <ApTextInputField
                             name={`p_join_guarantors[${index}].other_address_kanji`}

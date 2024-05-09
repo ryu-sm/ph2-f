@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 
-export const AdSaveButton = ({ onClick, ...props }) => {
+export const AdSaveButton = ({ onClick, isDisabled, ...props }) => {
   return (
     <Button
       sx={{
@@ -14,6 +14,7 @@ export const AdSaveButton = ({ onClick, ...props }) => {
       }}
       onClick={onClick}
       {...props}
+      disabled={isDisabled}
     >
       保存
     </Button>

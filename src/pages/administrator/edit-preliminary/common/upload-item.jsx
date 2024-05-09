@@ -83,15 +83,18 @@ export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig })
 
   return (
     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-      <Stack direction={'row'} flexWrap={'wrap'} maxWidth={240}>
-        <Typography variant="files_subtitle" ml={7}>
-          {subTitle}
-        </Typography>
-      </Stack>
+      {subTitle && (
+        <Stack direction={'row'} flexWrap={'wrap'} maxWidth={240} minWidth={240}>
+          <Typography variant="files_subtitle" ml={0}>
+            {subTitle}
+          </Typography>
+        </Stack>
+      )}
 
-      <Stack>
+      <Stack width={1} alignItems={'flex-end'}>
         <Stack
-          width={'480px'}
+          width={'22vw'}
+          minWidth={350}
           minHeight={'45px'}
           direction={'row'}
           alignItems={'flex-start'}
@@ -103,7 +106,7 @@ export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig })
             {meta.value?.map((file, index) => (
               <Stack key={index} direction={'row'} alignItems={'center'} spacing={'5px'}>
                 <Stack sx={{ width: 15, height: 15 }}>
-                  {file?.owner_type !== '1' && (
+                  {file?.owner_type !== '1' && !isDisabled && (
                     <CancelIcon
                       sx={{ width: 15, height: 15, color: 'gray.70', cursor: 'pointer' }}
                       onClick={() => handleDelete(index)}
@@ -122,7 +125,7 @@ export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig })
               </Stack>
             ))}
           </Stack>
-          <Stack direction={'row'} spacing={2}>
+          <Stack direction={'row'} spacing={2} minWidth={150} justifyContent={'flex-end'}>
             {(isUpdated || isUpdatedBorrowings) && (
               <Box
                 sx={{
@@ -145,6 +148,7 @@ export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig })
             <Button
               disabled={isDisabled}
               sx={{
+                minWidth: '125px',
                 padding: '8px 16px',
                 border: (theme) => `1px solid ${theme.palette.primary.main}`,
                 color: 'primary.main',
@@ -164,9 +168,11 @@ export const UploadItem = ({ isMultiple, name, isDisabled, subTitle, upConfig })
             </Button>
           </Stack>
         </Stack>
-        {!touched && error && (
-          <Stack direction={'row'} textAlign={'right'} flexWrap={'wrap'} width={330}>
-            <Typography variant="files_upload_error">{error}</Typography>
+        {error && (
+          <Stack direction={'row'} textAlign={'right'} flexWrap={'wrap'} width={300}>
+            <Typography variant="files_upload_error" fontWeight={400}>
+              {error}
+            </Typography>
           </Stack>
         )}
       </Stack>

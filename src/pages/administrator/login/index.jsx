@@ -48,19 +48,9 @@ export const AdOrSpLoginPage = () => {
                 id: payload?.id,
                 email: payload?.email,
                 name: payload?.name_kanji,
-                role: payload?.role,
               },
             };
           });
-          const preliminaryId = localStorage.getItem('preliminary_id');
-          if (preliminaryId) {
-            localStorage.removeItem('preliminary_id');
-            navigate(`${routeNames.adManagerEditPreliminaryPage.path}?id=${preliminaryId}`);
-            return;
-          } else {
-            navigate(routeNames.adManagerDashboardPage.path);
-            return;
-          }
         }
         const res = await adSalesPersonLogin(values);
         const { access_token } = res.data;
@@ -75,13 +65,11 @@ export const AdOrSpLoginPage = () => {
               id: payload?.id,
               email: payload?.email,
               name: payload?.name_kanji,
-              orgs: payload?.orgs,
             },
           };
         });
         navigate(routeNames.adSalesPersonDashboardPage.path);
       } catch (error) {
-        console.log(error);
         switch (error?.status) {
           case 400:
             setWarningText('メールアドレスまたはパスワードが正しくありません。');
@@ -124,10 +112,10 @@ export const AdOrSpLoginPage = () => {
           </Typography>
           {warningText && (
             <Stack my={5} direction="row" justifyContent="center" alignItems="center" spacing={1}>
-              <Icons.AdCircleNotice />
-              <Typography variant="login_error" whiteSpace={'nowrap'}>
-                {warningText}
-              </Typography>
+              <Box minWidth={16}>
+                <Icons.AdCircleNotice />
+              </Box>
+              <Typography variant="login_error">{warningText}</Typography>
             </Stack>
           )}
 

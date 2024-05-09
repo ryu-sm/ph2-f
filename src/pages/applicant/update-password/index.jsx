@@ -74,14 +74,14 @@ export const ApUpdatePasswordPage = () => {
           </Stack>
         </Stack>
         <ApModalWrapper open={modal.value} icon={<Icons.ApSmileIcon />} label={`パスワード変更完了`}>
-          <Typography variant="modal_label">{`パスワードの変更が完了しました。\n引き続きご利用ください。`}</Typography>
+          <Typography variant="modal_label">{`パスワードの変更が完了しました。\n変更後のパスワードで再度ログインして引き続きご利用く\nださい。`}</Typography>
           <ApPrimaryButton
             endIcon={<Icons.ApForwardRightWhiteIcon />}
             width={260}
             height={40}
-            onClick={() => navigate(routeNames.apTopPage.path)}
+            onClick={() => navigate(routeNames.apLoginPage.path)}
           >
-            TOPへ
+            ログイン
           </ApPrimaryButton>
         </ApModalWrapper>
       </ApLayout>

@@ -69,6 +69,7 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
           borderTopColor: theme.palette.gray[80],
           boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.15)',
           paddingX: 6,
+          whiteSpace: 'nowrap',
         }}
       >
         {!leftContent && (
@@ -113,6 +114,7 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
                     };
                   });
                   resetLocalApplicationInfo();
+
                   navigate(routeNames.adSalesPersonAgreementPage.path);
                 }}
               >
@@ -147,7 +149,7 @@ export const MainHeader = ({ leftContent, rightAddItems }) => {
                   borderRadius: 0,
                   color: 'primary.main',
                   boxShadow: 'none',
-                  px: 10,
+                  px: 6,
                   py: 2,
                   '&:hover': {
                     opacity: 0.8,

@@ -68,14 +68,8 @@ export const AdNewDocumentsPage = () => {
   };
 
   const handelSave = async () => {
-    const data = {
-      s_sales_person_id: authInfo.salesPerson.id,
-      s_sales_company_org_id: authInfo.salesPerson.orgs[0]?.s_sales_company_org_id,
-      files: images,
-    };
-
     try {
-      await adAddArchiveFiles(data);
+      await adAddArchiveFiles({ files: images });
       navigate(routeNames.adSalesPersonDocumentsPage.path);
     } catch (error) {
       toast.error(API_500_ERROR);

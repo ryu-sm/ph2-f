@@ -83,6 +83,7 @@ export const NewMessageModal = ({ open, onClose, messages }) => {
                 opacity: 0.8,
               },
             }}
+            disabled={!formik.values.applicantId}
             onClick={formik.handleSubmit}
           >
             <Typography variant="message_modal_button">新規作成</Typography>

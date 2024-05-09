@@ -149,14 +149,19 @@ export const ApTopPage = () => {
         buttonLabel: apCurrStepId < 12 ? '---' : apCurrStepId === 12 ? '入力する' : '修正する',
         show: Number(pre_examination_status) < parseInt(APPROVAL),
       },
-      {
-        id: 13,
-        stepTitle: '入力内容確認',
-        stepIcon: <Icons.ApTopStepIdIcon13 />,
-        stepPath: routeNames.apStep13Page.path,
-        buttonLabel: apCurrStepId < 13 ? '---' : apCurrStepId === 13 ? '入力する' : '修正する',
-        show: !agentSended,
-      },
+      ...(!agentSended
+        ? [
+            {
+              id: 13,
+              stepTitle: '入力内容確認',
+              stepIcon: <Icons.ApTopStepIdIcon13 />,
+              stepPath: routeNames.apStep13Page.path,
+              buttonLabel: apCurrStepId < 13 ? '---' : '申込内容確認',
+              show: !agentSended,
+            },
+          ]
+        : []),
+
       {
         id: 14,
         stepTitle: '仮審査申込',
@@ -206,7 +211,6 @@ export const ApTopPage = () => {
     if (hasDraftData) return `前回の続きから\n入力しましょう！`;
     return `STEPに沿って入力してください\n途中保存もできます！`;
   }, [pre_examination_status, apply_no, hasDraftData]);
-
   return (
     <ApLayout hasMenu>
       <Box sx={{ background: (theme) => theme.palette.background.gradation }}>

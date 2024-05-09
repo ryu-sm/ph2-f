@@ -5,7 +5,7 @@ import { FormikProvider, useFormik } from 'formik';
 import { formatJapanDate, formatNumber } from '@/utils';
 import { useEffect, useMemo } from 'react';
 import {
-  AdEditInput,
+  AdEditFullWidthInput,
   AdNumericInput,
   AdPhoneInputField,
   AdSelectCheckbox,
@@ -28,6 +28,7 @@ import {
   taxReturnOptions,
   taxReturnReasonsOptions,
   transferOfficeOptions,
+  jobChangeOfficeOptions,
 } from './options';
 
 import { diffObj } from '@/utils';
@@ -101,6 +102,13 @@ export const Item03 = () => {
       office_capital_stock: p_applicant_persons__1?.office_capital_stock,
       main_income_source: p_applicant_persons__1?.main_income_source,
       before_last_year_income: p_applicant_persons__1?.before_last_year_income,
+
+      job_change: p_applicant_persons__1?.job_change,
+      job_change_office_name_kana: p_applicant_persons__1?.job_change_office_name_kana,
+      job_change_office_name_kanji: p_applicant_persons__1?.job_change_office_name_kanji,
+      prev_office_year_num: p_applicant_persons__1?.prev_office_year_num,
+      prev_office_industry: p_applicant_persons__1?.prev_office_industry,
+      prev_office_industry_other: p_applicant_persons__1?.prev_office_industry_other,
     },
     p_borrowing_details__1: {
       desired_borrowing_date: p_borrowing_details__1?.desired_borrowing_date,
@@ -119,8 +127,11 @@ export const Item03 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab03SchemaI,
-    validateOnMount: changeToIncomeTotalizer,
-    enableReinitialize: !changeToIncomeTotalizer,
+    // validateOnMount: changeToIncomeTotalizer,
+    // enableReinitialize: !changeToIncomeTotalizer,
+    validateOnChange: false,
+    validateOnMount: true,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
         setInfoGroupTab(9);
@@ -188,11 +199,11 @@ export const Item03 = () => {
                   if (value === '12') {
                     formik.setFieldValue('p_applicant_persons__1.office_phone', '');
                   }
-                  if (value !== '99') {
-                    formik.setFieldValue('p_applicant_persons__1.office_occupation_other', '');
-                  }
                   if (value === '99') {
                     formik.setFieldTouched('p_applicant_persons__1.office_occupation_other', true);
+                  } else {
+                    formik.setFieldValue('p_applicant_persons__1.office_occupation_other', '');
+                    formik.setFieldTouched('p_applicant_persons__1.office_occupation_other', false);
                   }
                 }}
               />
@@ -211,7 +222,7 @@ export const Item03 = () => {
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_applicant_persons__1.office_occupation_other" convertFullWidth />
+                <AdEditFullWidthInput name="p_applicant_persons__1.office_occupation_other" convertFullWidth />
               ) : (
                 formik.values.p_applicant_persons__1.office_occupation_other
               )
@@ -233,9 +244,9 @@ export const Item03 = () => {
                 onChange={(value) => {
                   if (value === '99') {
                     formik.setFieldTouched('p_applicant_persons__1.office_industry_other', true);
-                  }
-                  if (value !== '99') {
+                  } else {
                     formik.setFieldValue('p_applicant_persons__1.office_industry_other', '');
+                    formik.setFieldTouched('p_applicant_persons__1.office_industry_other', false);
                   }
                 }}
               />
@@ -253,7 +264,7 @@ export const Item03 = () => {
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_applicant_persons__1.office_industry_other" convertFullWidth />
+                <AdEditFullWidthInput name="p_applicant_persons__1.office_industry_other" convertFullWidth />
               ) : (
                 formik.values.p_applicant_persons__1.office_industry_other
               )
@@ -275,9 +286,9 @@ export const Item03 = () => {
                 onChange={(value) => {
                   if (value === '99') {
                     formik.setFieldTouched('p_applicant_persons__1.office_occupation_detail_other', true);
-                  }
-                  if (value !== '99') {
+                  } else {
                     formik.setFieldValue('p_applicant_persons__1.office_occupation_detail_other', '');
+                    formik.setFieldTouched('p_applicant_persons__1.office_occupation_detail_other', false);
                   }
                 }}
               />
@@ -297,7 +308,7 @@ export const Item03 = () => {
             isLogicRequired
             field={
               isEditable ? (
-                <AdEditInput name="p_applicant_persons__1.office_occupation_detail_other" convertFullWidth />
+                <AdEditFullWidthInput name="p_applicant_persons__1.office_occupation_detail_other" convertFullWidth />
               ) : (
                 formik.values.p_applicant_persons__1.office_occupation_detail_other
               )
@@ -329,7 +340,7 @@ export const Item03 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_name_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_name_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_name_kanji
             )
@@ -343,7 +354,7 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_name_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_name_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_name_kana
             )
@@ -356,7 +367,7 @@ export const Item03 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_department" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_department" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_department
             )
@@ -399,7 +410,7 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_head_location" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_head_location" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_head_location
             )
@@ -448,7 +459,7 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdNumericInput name="p_applicant_persons__1.office_capital_stock" maxLength={13} unit={'万円'} />
+              <AdNumericInput name="p_applicant_persons__1.office_capital_stock" maxLength={10} unit={'万円'} />
             ) : (
               formatNumber(formik.values.p_applicant_persons__1.office_capital_stock)
             )
@@ -505,7 +516,14 @@ export const Item03 = () => {
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__1.office_prefecture_kanji" options={PREFECTURES} />
+              <AdSelectRadios
+                name="p_applicant_persons__1.office_prefecture_kanji"
+                options={PREFECTURES}
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__1.office_prefecture_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__1.office_prefecture_kana', true);
+                }}
+              />
             ) : (
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__1.tax_return)?.label
             )
@@ -518,7 +536,14 @@ export const Item03 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_city_kanji" convertFullWidth />
+              <AdEditFullWidthInput
+                name="p_applicant_persons__1.office_city_kanji"
+                convertFullWidth
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__1.office_city_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__1.office_city_kana', true);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__1.office_city_kanji
             )
@@ -531,7 +556,14 @@ export const Item03 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_district_kanji" convertFullWidth />
+              <AdEditFullWidthInput
+                name="p_applicant_persons__1.office_district_kanji"
+                convertFullWidth
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__1.office_district_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__1.office_district_kana', true);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__1.office_district_kanji
             )
@@ -544,7 +576,7 @@ export const Item03 = () => {
           }}
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_other_address_kanji" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_other_address_kanji" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_other_address_kanji
             )
@@ -558,7 +590,7 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_prefecture_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_prefecture_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_prefecture_kana
             )
@@ -572,7 +604,7 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_city_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_city_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_city_kana
             )
@@ -586,7 +618,7 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_district_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_district_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_district_kana
             )
@@ -600,7 +632,7 @@ export const Item03 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdEditInput name="p_applicant_persons__1.office_other_address_kana" convertFullWidth />
+              <AdEditFullWidthInput name="p_applicant_persons__1.office_other_address_kana" convertFullWidth />
             ) : (
               formik.values.p_applicant_persons__1.office_other_address_kana
             )
@@ -738,6 +770,8 @@ export const Item03 = () => {
                 onChange={(value) => {
                   formik.setFieldValue('p_applicant_persons__1.tax_return_reasons', []);
                   formik.setFieldValue('p_applicant_persons__1.tax_return_reason_other', '');
+                  formik.setFieldTouched('p_applicant_persons__1.tax_return_reasons', true);
+                  formik.setFieldTouched('p_applicant_persons__1.tax_return_reason_other', true);
                 }}
               />
             ) : (
@@ -785,7 +819,7 @@ export const Item03 = () => {
                 }}
                 field={
                   isEditable ? (
-                    <AdEditInput name="p_applicant_persons__1.tax_return_reason_other" convertFullWidth />
+                    <AdEditFullWidthInput name="p_applicant_persons__1.tax_return_reason_other" convertFullWidth />
                   ) : (
                     formik.values.p_applicant_persons__1.tax_return_reason_other
                   )
@@ -852,7 +886,7 @@ export const Item03 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__1.transfer_office_name_kanji" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__1.transfer_office_name_kanji" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__1.transfer_office_name_kanji
                 )
@@ -865,7 +899,7 @@ export const Item03 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__1.transfer_office_name_kana" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__1.transfer_office_name_kana" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__1.transfer_office_name_kana
                 )
@@ -941,7 +975,7 @@ export const Item03 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__1.transfer_office_city_kanji" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__1.transfer_office_city_kanji" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__1.transfer_office_city_kanji
                 )
@@ -954,7 +988,7 @@ export const Item03 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__1.transfer_office_district_kanji" convertFullWidth />
+                  <AdEditFullWidthInput name="p_applicant_persons__1.transfer_office_district_kanji" convertFullWidth />
                 ) : (
                   formik.values.p_applicant_persons__1.transfer_office_district_kanji
                 )
@@ -967,12 +1001,153 @@ export const Item03 = () => {
               }}
               field={
                 isEditable ? (
-                  <AdEditInput name="p_applicant_persons__1.transfer_office_other_address_kanji" convertFullWidth />
+                  <AdEditFullWidthInput
+                    name="p_applicant_persons__1.transfer_office_other_address_kanji"
+                    convertFullWidth
+                  />
                 ) : (
                   formik.values.p_applicant_persons__1.transfer_office_other_address_kanji
                 )
               }
             />
+          </Stack>
+        )}
+        {/* 転職有無 */}
+        <EditRow
+          label={'過去に、転職のご経験はありますか？'}
+          upConfig={{
+            key: `p_applicant_persons.job_change.${p_applicant_persons__1?.id}`,
+            options: jobChangeOfficeOptions,
+          }}
+          hasPleft={isEditable}
+          isAddendum
+          field={
+            isEditable ? (
+              <AdSelectRadios
+                name="p_applicant_persons__1.job_change"
+                options={jobChangeOfficeOptions}
+                onChange={(value) => {
+                  if (value === '0') {
+                    formik.setFieldValue('p_applicant_persons__1.job_change_office_name_kana', '');
+                    formik.setFieldValue('p_applicant_persons__1.job_change_office_name_kanji', '');
+                    formik.setFieldValue('p_applicant_persons__1.prev_office_year_num', '');
+                    formik.setFieldValue('p_applicant_persons__1.prev_office_industry', '');
+                    formik.setFieldValue('p_applicant_persons__1.prev_office_industry_other', '');
+
+                    formik.setFieldTouched('p_applicant_persons__1.job_change_office_name_kana', false);
+                    formik.setFieldTouched('p_applicant_persons__1.job_change_office_name_kanji', false);
+                    formik.setFieldTouched('p_applicant_persons__1.prev_office_year_num', false);
+                    formik.setFieldTouched('p_applicant_persons__1.prev_office_industry', false);
+                    formik.setFieldTouched('p_applicant_persons__1.prev_office_industry_other', false);
+                  }
+                  if (value === '1') {
+                    formik.setFieldTouched('p_applicant_persons__1.job_change_office_name_kana', true);
+                    formik.setFieldTouched('p_applicant_persons__1.job_change_office_name_kanji', true);
+                    formik.setFieldTouched('p_applicant_persons__1.prev_office_year_num', true);
+                    formik.setFieldTouched('p_applicant_persons__1.prev_office_industry', true);
+                    formik.setFieldTouched('p_applicant_persons__1.prev_office_industry_other', true);
+                  }
+                }}
+              />
+            ) : (
+              transferOfficeOptions.find((item) => item.value === formik.values.p_applicant_persons__1.job_change)
+                ?.label
+            )
+          }
+        />
+        {formik.values.p_applicant_persons__1.job_change === '1' && (
+          <Stack>
+            <EditRow
+              label={'前勤務先名'}
+              upConfig={{
+                key: `p_applicant_persons.job_change_office_name_kanji.${p_applicant_persons__1?.id}`,
+              }}
+              isLogicRequired
+              isAddendum
+              field={
+                isEditable ? (
+                  <AdEditFullWidthInput name="p_applicant_persons__1.job_change_office_name_kanji" convertFullWidth />
+                ) : (
+                  formik.values.p_applicant_persons__1.job_change_office_name_kanji
+                )
+              }
+            />
+            <EditRow
+              label={'前勤務先名（フリガナ）'}
+              upConfig={{
+                key: `p_applicant_persons.job_change_office_name_kana.${p_applicant_persons__1?.id}`,
+              }}
+              isLogicRequired
+              isAddendum
+              field={
+                isEditable ? (
+                  <AdEditFullWidthInput name="p_applicant_persons__1.job_change_office_name_kana" convertFullWidth />
+                ) : (
+                  formik.values.p_applicant_persons__1.job_change_office_name_kana
+                )
+              }
+            />
+            <EditRow
+              label={'前勤務先 勤続年数'}
+              upConfig={{
+                key: `p_applicant_persons.prev_office_year_num.${p_applicant_persons__1?.id}`,
+              }}
+              isLogicRequired
+              isAddendum
+              field={
+                isEditable ? (
+                  <AdNumericInput name="p_applicant_persons__1.prev_office_year_num" unit={'年'} maxLength={2} />
+                ) : (
+                  formatNumber(formik.values.p_applicant_persons__1.prev_office_year_num, '年')
+                )
+              }
+            />
+            <EditRow
+              label={'前勤務先 業種'}
+              upConfig={{
+                key: `p_applicant_persons.prev_office_industry.${p_applicant_persons__1?.id}`,
+              }}
+              isLogicRequired
+              isAddendum
+              hasPleft={isEditable}
+              field={
+                isEditable ? (
+                  <AdSelectRadios
+                    name="p_applicant_persons__1.prev_office_industry"
+                    options={industryOptions}
+                    onChange={(value) => {
+                      if (value === '99') {
+                        formik.setFieldTouched('p_applicant_persons__1.prev_office_industry_other', true);
+                      } else {
+                        formik.setFieldValue('p_applicant_persons__1.prev_office_industry_other', '');
+                        formik.setFieldTouched('p_applicant_persons__1.prev_office_industry_other', false);
+                      }
+                    }}
+                  />
+                ) : (
+                  industryOptions.find(
+                    (item) => item.value === formik.values.p_applicant_persons__1.prev_office_industry
+                  )?.label
+                )
+              }
+            />
+            {formik.values.p_applicant_persons__1.prev_office_industry === '99' && (
+              <EditRow
+                label={'前勤務先 業種　その他'}
+                upConfig={{
+                  key: `p_applicant_persons.prev_office_industry_other.${p_applicant_persons__1?.id}`,
+                }}
+                isLogicRequired
+                isAddendum
+                field={
+                  isEditable ? (
+                    <AdEditFullWidthInput name="p_applicant_persons__1.prev_office_industry_other" convertFullWidth />
+                  ) : (
+                    formik.values.p_applicant_persons__1.prev_office_industry_other
+                  )
+                }
+              />
+            )}
           </Stack>
         )}
         <EditRow

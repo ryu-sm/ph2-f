@@ -83,8 +83,8 @@ export const ApNumberInputField = ({
             }),
           }}
           onInput={(e) => {
-            e.target.value = convertToHalfWidth(e.target.value);
-            e.target.value = e.target.value.replace(/[^\d]+/g, '');
+            // e.target.value = convertToHalfWidth(e.target.value);
+            e.target.value = e.target.value.replace(/^(0+)|[^\d]+/g, '');
             e.target.value = e.target.value.substring(0, maxLength);
             return e;
           }}

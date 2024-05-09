@@ -97,6 +97,105 @@ export const Item01 = () => {
     },
   };
 
+  const formik = useFormik({
+    initialValues,
+    validationSchema: tab01Schema,
+    validateOnChange: false,
+    validateOnMount: true,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      if (changeJoinGuarantor || changeToIncomeTotalizer) {
+        changeAfterAction.onTrue();
+        return;
+      }
+      await handleSave(setUpdateData(values));
+    },
+  });
+
+  const parsePlanData = (values) => {
+    const required_funds_land_amount = !['5'].includes(values.p_application_headers.loan_target)
+      ? '0'
+      : p_application_headers.required_funds_land_amount;
+    const required_funds_house_amount = !['1', '2', '3', '4', '5', '6'].includes(
+      values.p_application_headers.loan_target
+    )
+      ? '0'
+      : p_application_headers.required_funds_house_amount;
+    const required_funds_accessory_amount = !['5', '6'].includes(values.p_application_headers.loan_target)
+      ? '0'
+      : p_application_headers.required_funds_accessory_amount;
+    const required_funds_upgrade_amount = [!'8'].includes(values.p_application_headers.loan_target)
+      ? '0'
+      : p_application_headers.required_funds_upgrade_amount;
+    const required_funds_refinance_loan_balance = !['7', '8'].includes(values.p_application_headers.loan_target)
+      ? '0'
+      : p_application_headers.required_funds_refinance_loan_balance;
+    const required_funds_additional_amount = p_application_headers.required_funds_additional_amount;
+    const required_funds_loan_plus_amount = !['1'].includes(values.p_application_headers.loan_plus)
+      ? '0'
+      : p_application_headers.required_funds_loan_plus_amount;
+
+    const required_funds_total_amount = `${
+      Number(required_funds_land_amount) +
+      Number(required_funds_house_amount) +
+      Number(required_funds_accessory_amount) +
+      Number(required_funds_upgrade_amount) +
+      Number(required_funds_refinance_loan_balance) +
+      Number(required_funds_additional_amount) +
+      Number(required_funds_loan_plus_amount)
+    }`;
+
+    const funding_saving_amount = p_application_headers.funding_saving_amount;
+    const funding_estate_sale_amount = p_application_headers.funding_estate_sale_amount;
+    const funding_other_saving_amount = p_application_headers.funding_other_saving_amount;
+    const funding_relative_donation_amount = p_application_headers.funding_relative_donation_amount;
+    const funding_loan_amount = p_application_headers.funding_loan_amount;
+    const funding_pair_loan_amount = !['2'].includes(values.p_application_headers.loan_type)
+      ? '0'
+      : p_application_headers.funding_pair_loan_amount;
+    const funding_other_loan_amount = p_application_headers.funding_other_loan_amount;
+    const funding_other_refinance_amount = p_application_headers.funding_other_refinance_amount;
+    const funding_other_amount = p_application_headers.funding_other_amount;
+
+    const funding_self_amount = `${
+      Number(funding_saving_amount) + Number(funding_estate_sale_amount) + Number(funding_other_saving_amount)
+    }`;
+
+    const funding_total_amount = `${
+      Number(funding_saving_amount) +
+      Number(funding_estate_sale_amount) +
+      Number(funding_other_saving_amount) +
+      Number(funding_relative_donation_amount) +
+      Number(funding_loan_amount) +
+      Number(funding_pair_loan_amount) +
+      Number(funding_other_loan_amount) +
+      Number(funding_other_refinance_amount) +
+      Number(funding_other_amount)
+    }`;
+    return {
+      required_funds_land_amount,
+      required_funds_house_amount,
+      required_funds_accessory_amount,
+      required_funds_upgrade_amount,
+      required_funds_refinance_loan_balance,
+      required_funds_additional_amount,
+      required_funds_loan_plus_amount,
+      required_funds_total_amount,
+      //
+      funding_saving_amount,
+      funding_estate_sale_amount,
+      funding_other_saving_amount,
+      funding_relative_donation_amount,
+      funding_loan_amount,
+      funding_pair_loan_amount,
+      funding_other_loan_amount,
+      funding_other_refinance_amount,
+      funding_other_amount,
+      funding_self_amount,
+      funding_total_amount,
+    };
+  };
+
   const setUpdateData = (values) => {
     const diffData = {
       p_application_headers: {
@@ -104,6 +203,8 @@ export const Item01 = () => {
         land_advance_plan: values.p_application_headers.land_advance_plan,
         join_guarantor_umu: values.p_application_headers.join_guarantor_umu,
         loan_type: values.p_application_headers.loan_type,
+        // 資金計画
+        ...parsePlanData(values),
       },
       p_application_banks: values.p_application_banks,
       p_borrowing_details__1: {
@@ -115,19 +216,6 @@ export const Item01 = () => {
     };
     return diffData;
   };
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema: tab01Schema,
-    enableReinitialize: true,
-    onSubmit: async (values) => {
-      if (changeJoinGuarantor || changeToIncomeTotalizer) {
-        changeAfterAction.onTrue();
-        return;
-      }
-      await handleSave(setUpdateData(values));
-    },
-  });
 
   useEffect(() => {
     setPreliminarySnap((pre) => {
@@ -151,14 +239,6 @@ export const Item01 = () => {
   }, [formik.values]);
 
   const bankMaster = useBankMaster();
-
-  useEffect(() => {
-    if (formik.values.p_application_banks.includes(bankMaster.find((item) => item.code === MCJ_CODE)?.value)) {
-      setPreliminarySnap((pre) => ({ ...pre, isMCJ: true }));
-    } else {
-      setPreliminarySnap((pre) => ({ ...pre, isMCJ: false }));
-    }
-  }, [bankMaster.length, formik.values.p_application_banks.length]);
 
   return (
     <FormikProvider value={formik}>
@@ -191,7 +271,17 @@ export const Item01 = () => {
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectCheckbox name="p_application_banks" options={bankMaster} />
+              <AdSelectCheckbox
+                name="p_application_banks"
+                options={bankMaster}
+                onChange={(values) => {
+                  if (values.length > 1) {
+                    setPreliminarySnap((pre) => ({ ...pre, isMCJ: true }));
+                  } else {
+                    setPreliminarySnap((pre) => ({ ...pre, isMCJ: false }));
+                  }
+                }}
+              />
             ) : (
               bankMaster
                 .map((item) => (formik.values.p_application_banks.includes(item.value) ? item.label : null))

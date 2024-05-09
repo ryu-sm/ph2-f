@@ -1,5 +1,6 @@
 import { useIsManager } from '@/hooks';
 import { authAtom } from '@/store';
+import { formatAdMessage } from '@/utils';
 import { Divider, Stack, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,13 +14,7 @@ export const MessageListItem = ({ item }) => {
       ? navigator(`/manager/messages-detail?id=${item.id}&type=${item.type}`)
       : navigator(`/sales-person/messages-detail?id=${item.id}&type=${item.type}`);
   };
-  const isNew = useMemo(() => {
-    if (isManager) {
-      return !item.viewed.includes(manager?.id);
-    } else {
-      return !item.viewed.includes(salesPerson?.id);
-    }
-  }, [item]);
+
   return (
     <Stack
       bgcolor={'white'}
@@ -33,17 +28,26 @@ export const MessageListItem = ({ item }) => {
       py={4}
       divider={<Divider orientation="vertical" flexItem />}
     >
-      <Stack width={'318px'} direction={'row'} alignItems={'center'} py={4} px={6} position={'relative'}>
-        {isNew && (
-          <Stack
-            sx={{
-              display: 'inline-block',
-              textAlign: 'center',
-              bgcolor: 'secondary.main',
-              width: '31px',
-              borderRadius: 1,
-            }}
-          >
+      <Stack
+        width={'318px'}
+        direction={'row'}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+        py={4}
+        px={6}
+        position={'relative'}
+        spacing={8}
+      >
+        <Stack
+          sx={{
+            display: 'inline-block',
+            textAlign: 'center',
+            bgcolor: 'secondary.main',
+            width: '31px',
+            borderRadius: 1,
+          }}
+        >
+          {item?.unviewed === '1' && (
             <Typography
               sx={{
                 color: 'white',
@@ -56,11 +60,22 @@ export const MessageListItem = ({ item }) => {
             >
               新着
             </Typography>
-          </Stack>
-        )}
-        <Typography variant="message_item_info" color={'primary.main'} marginLeft={item.viewed ? '100px' : '75px'}>
-          {item.name}
-        </Typography>
+          )}
+        </Stack>
+        <Stack
+          sx={{
+            display: 'inline-block',
+            textAlign: 'start',
+            width: 'calc(100% - 31px)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          <Typography variant="message_item_info" color={'primary.main'} textAlign={'start'}>
+            {item.name}
+          </Typography>
+        </Stack>
       </Stack>
       <Stack
         width={'190px'}
@@ -85,12 +100,10 @@ export const MessageListItem = ({ item }) => {
           overflow={'hidden'}
           whiteSpace={'nowrap'}
           textOverflow={'ellipsis'}
-        >
-          {item.content
-            .replace(/<span[^>]*>/g, '')
-            .replace(/<\/span>/g, '')
-            .replace(/<\/br>/g, '')}
-        </Typography>
+          dangerouslySetInnerHTML={{
+            __html: item.content.replace(/<\/br>/g, '').replace(/<br>/g, ''),
+          }}
+        />
       </Stack>
     </Stack>
   );

@@ -22,7 +22,12 @@ export const GroupNavigations = ({ group }) => {
     }
     return <Navigate to={routeNames.adManagerLoginPage.path} replace />;
   }
-  if (!isLogined && group === 'sales-person') {
+  if (
+    !isLogined &&
+    group === 'sales-person' &&
+    pathname !== routeNames.adSalesPersonRegisterVerifyEmail.path &&
+    pathname !== routeNames.adSalesPersonRegister.path
+  ) {
     return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
   }
   if (isLogined && !!user?.id) {
@@ -35,6 +40,11 @@ export const GroupNavigations = ({ group }) => {
     }
   }
   if (isLogined && !!manager?.id) {
+    const preliminaryId = localStorage.getItem('preliminary_id');
+    if (preliminaryId) {
+      localStorage.removeItem('preliminary_id');
+      return <Navigate to={`${routeNames.adManagerEditPreliminaryPage.path}?id=${preliminaryId}`} />;
+    }
     if (!managerRoutes.find((item) => item?.path === pathname)) {
       return <Navigate to={routeNames.adManagerDashboardPage.path} replace />;
     }

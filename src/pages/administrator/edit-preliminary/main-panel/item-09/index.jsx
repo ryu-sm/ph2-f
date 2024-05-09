@@ -10,10 +10,11 @@ import { ContentEditFileGroup } from '../../common/content-edit-file-group';
 import { identityVerificationOptions } from './options';
 import { UploadItem } from '../../common/upload-item';
 import { diffObj } from '@/utils';
+import { tab09Schema } from '../../fullSchema';
 
 export const Item09 = () => {
   const {
-    preliminaryInfo: { p_applicant_persons__0, p_application_headers, p_borrowings },
+    preliminaryInfo: { p_applicant_persons__0, p_application_headers, p_borrowings, apply_type },
     setPreliminarySnap,
     handleSave,
     isEditable,
@@ -70,9 +71,12 @@ export const Item09 = () => {
   };
 
   const formik = useFormik({
+    validationSchema: tab09Schema,
     initialValues,
     validateOnMount: true,
   });
+
+  console.log(formik.errors, formik.isValid);
 
   useEffect(() => {
     setPreliminarySnap((pre) => {
@@ -94,15 +98,17 @@ export const Item09 = () => {
         hiddenTitle
         hiddenLine
         handleSave={() => handleSave(setUpdateData(formik.values))}
+        isDisabled={!formik.isValid}
       >
         <Stack
+          flex={1}
           direction={'row'}
           spacing={4}
           alignItems={'flex-start'}
           justifyContent={'space-between'}
           overflow={'auto'}
         >
-          <Stack flex={1} spacing={4}>
+          <Stack flex={1} width={'50%'} minWidth={660} spacing={4}>
             <ContentEditFileGroup category={'A'}>
               <Stack direction={'row'} justifyContent={'space-between'} alignItems={'start'}>
                 <AdGroupRadio
@@ -111,7 +117,7 @@ export const Item09 = () => {
                 />
 
                 {formik.values.p_applicant_persons__0.identity_verification_type === '1' && (
-                  <Stack spacing={2}>
+                  <Stack spacing={2} width={1}>
                     <UploadItem
                       isDisabled={!isEditable}
                       upConfig={{
@@ -268,7 +274,7 @@ export const Item09 = () => {
               />
             </ContentEditFileGroup>
           </Stack>
-          <Stack flex={1} spacing={4}>
+          <Stack flex={1} width={'50%'} minWidth={660} spacing={4}>
             <ContentEditFileGroup category={'F'}>
               <UploadItem
                 isDisabled={!isEditable}
@@ -346,6 +352,7 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
+                  title: '提携会社の担当者名刺',
                   key: `p_application_headers.J.${p_application_headers.id}`,
                 }}
                 name="p_application_headers.J"
@@ -355,15 +362,18 @@ export const Item09 = () => {
               <UploadItem
                 isDisabled={!isEditable}
                 upConfig={{
+                  title: 'その他',
                   key: `p_applicant_persons.K.${p_applicant_persons__0.id}`,
                 }}
                 name="p_applicant_persons__0.K"
                 isMultiple={true}
               />
             </ContentEditFileGroup>
-            <ContentEditFileGroup category={'S'}>
-              <UploadItem isDisabled={!isEditable} name="S" />
-            </ContentEditFileGroup>
+            {apply_type == '2' && (
+              <ContentEditFileGroup category={'S'}>
+                <UploadItem isDisabled={apply_type === '2'} name="p_applicant_persons__0.S" />
+              </ContentEditFileGroup>
+            )}
           </Stack>
         </Stack>
       </ContentEditGroup>

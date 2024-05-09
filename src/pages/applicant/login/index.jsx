@@ -59,7 +59,7 @@ export const ApLoginPage = () => {
               email: payload?.email,
               salesCompanyOrgId: payload?.s_sales_company_org_id,
               displayPdf: Boolean(payload?.display_pdf),
-              hasDraftData: Boolean(payload.draft),
+              hasDraftData: Boolean(payload.has_draft),
             },
             agentSended: Boolean(payload?.agent_sended),
           };

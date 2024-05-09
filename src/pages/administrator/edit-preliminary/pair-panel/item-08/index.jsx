@@ -29,9 +29,7 @@ export const Item08 = () => {
   } = usePreliminaryContext();
   const isEditable = false;
 
-  const {
-    salesPerson: { orgs },
-  } = useRecoilValue(authAtom);
+  const {} = useRecoilValue(authAtom);
   const initialValues = {
     p_application_headers: {
       sales_company_id: p_application_headers?.sales_company_id,
@@ -65,30 +63,6 @@ export const Item08 = () => {
   const [salesPersonOptions, setSalesPersonOptions] = useState([]);
 
   const [accessOrgs, setAccessOrgs] = useState([]);
-
-  const fetchAccessOrgs = async () => {
-    try {
-      const tempAccessOrgs = [];
-      for (let org of orgs) {
-        const resC = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'C');
-        const resB = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'B');
-        const resE = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'E');
-
-        [...resC.data, ...resB.data, ...resE.data].forEach((item) => {
-          tempAccessOrgs.push({ ...item, role: org?.role });
-        });
-      }
-      setAccessOrgs(tempAccessOrgs);
-    } catch (error) {
-      toast.error(API_500_ERROR);
-    }
-  };
-
-  useEffect(() => {
-    if (!isManager) {
-      fetchAccessOrgs();
-    }
-  }, [orgs]);
 
   const fetchSalesCompanyOptions = async () => {
     try {

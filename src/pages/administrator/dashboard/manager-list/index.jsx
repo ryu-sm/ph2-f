@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import { REGEX } from '@/constant';
 import { yup } from '@/libs';
+import { routeNames } from '@/router/settings';
+import { useNavigate } from 'react-router-dom';
 
 export const ManagerList = () => {
   const { status, preliminarieList, refreshPreliminarieList } = useDashboardContext();
@@ -14,6 +16,8 @@ export const ManagerList = () => {
   useEffect(() => {
     refreshPreliminarieList();
   }, []);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (status === 'hasValue') {

@@ -1,17 +1,14 @@
 import { Icons, apSmileChat } from '@/assets';
 import { useBoolean } from '@/hooks';
 import { apGetMessages, updateMessages } from '@/services';
-import { authAtom } from '@/store';
 import { Avatar, Button, Stack, Typography } from '@mui/material';
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { ApChatModal } from './chat-modal';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
 
 export const ApChat = () => {
   const modal = useBoolean(false);
-  const authInfo = useRecoilValue(authAtom);
   const [messages, setMessages] = useState([]);
 
   const fetchData = async () => {
@@ -24,7 +21,9 @@ export const ApChat = () => {
   };
 
   const hasUnViewed = useMemo(() => {
-    return messages.map((item) => !item['viewed'].includes(authInfo?.user?.id)).filter(Boolean);
+    return messages.find((item) => {
+      return !item?.viewed?.find((i) => i.viewed_account_type === 1);
+    });
   }, [messages]);
 
   useEffect(() => {
@@ -77,7 +76,7 @@ export const ApChat = () => {
           </Typography>
         </Stack>
       </Button>
-      {hasUnViewed.length > 0 && (
+      {hasUnViewed && (
         <>
           <Stack
             sx={{

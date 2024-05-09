@@ -1,3 +1,5 @@
+import { adSalesPersonLogou } from '@/services';
+
 export const routeNames = {
   apStartPage: {
     name: 'apStartPage',
@@ -307,5 +309,14 @@ export const routeNames = {
   adManagerUnderPreliminaryExaminationPage: {
     name: 'adUnderPreliminaryExaminationPage',
     path: '/manager/under-preliminary-examination',
+  },
+
+  adSalesPersonRegisterVerifyEmail: {
+    name: 'adSalesPersonRegisterVerifyEmail',
+    path: '/sales-person/register/verify-email',
+  },
+  adSalesPersonRegister: {
+    name: 'adSalesPersonRegister',
+    path: '/sales-person/register',
   },
 };

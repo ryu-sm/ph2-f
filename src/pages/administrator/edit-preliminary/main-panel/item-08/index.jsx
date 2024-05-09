@@ -9,6 +9,7 @@ import { ContentEditGroup } from '../../common/content-edit-group';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   adGetAccessSalesPersonOptions,
+  adGetSalesPersonBelowOrgs,
   adGetSalesPersonInfo,
   getChildrenOrgsWithCategory,
   getOrgsWithCategories,
@@ -28,9 +29,7 @@ export const Item08 = () => {
     handleSave,
     isEditable,
   } = usePreliminaryContext();
-  const {
-    salesPerson: { orgs },
-  } = useRecoilValue(authAtom);
+  const { salesPerson } = useRecoilValue(authAtom);
   const initialValues = {
     p_application_headers: {
       sales_company_id: p_application_headers?.sales_company_id,
@@ -70,8 +69,9 @@ export const Item08 = () => {
 
   const fetchAccessOrgs = async () => {
     try {
+      const res = await adGetSalesPersonBelowOrgs();
       const tempAccessOrgs = [];
-      for (let org of orgs) {
+      for (let org of res.data) {
         const resC = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'C');
         const resB = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'B');
         const resE = await getChildrenOrgsWithCategory(org?.s_sales_company_org_id, 'E');
@@ -90,7 +90,7 @@ export const Item08 = () => {
     if (!isManager) {
       fetchAccessOrgs();
     }
-  }, [orgs]);
+  }, [salesPerson.id]);
 
   const fetchSalesCompanyOptions = async () => {
     try {

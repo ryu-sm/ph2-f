@@ -6,6 +6,7 @@ import { isWeekend } from '@/utils';
 export const tab01Schema = yup.object({
   p_application_headers: yup.object({
     created_at: yup.string(),
+    loan_type: yup.string(),
     pair_loan_last_name: yup
       .string()
       .max(48)
@@ -38,9 +39,16 @@ export const tab01Schema = yup.object({
         }
       )
       .label('入居予定年月'),
-    loan_target: yup
-      .string()
-      .required('お借入の目的で「物件の購入・建築」を選択する時は、資金の使いみちを選択する必要があります。'),
+    loan_target_type: yup.string(),
+    loan_target: yup.string().when('loan_target_type', ([loan_target_type], field) => {
+      if (loan_target_type === '0') {
+        return field.required(
+          'お借入の目的で「物件の購入・建築」を選択する時は、資金の使いみちを選択する必要があります。'
+        );
+      } else {
+        return field;
+      }
+    }),
     land_advance_plan: yup
       .string()
       .when('loan_target', ([loan_target], field) =>
@@ -50,7 +58,6 @@ export const tab01Schema = yup.object({
             )
           : field
       ),
-    loan_type: yup.string(),
   }),
   // 借入详细
   p_borrowing_details__1: yup.object({
@@ -332,6 +339,7 @@ export const tab03Schema = yup.object({
         return true;
       }
     }),
+    office_employment_type: yup.string(),
     office_name_kanji: yup
       .string()
       .max(48)
@@ -344,8 +352,10 @@ export const tab03Schema = yup.object({
       .string()
       .max(46)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
-
     office_phone: yup.string(),
+    office_head_location: yup
+      .string()
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     office_establishment_date: yup.string().matches(REGEX.YMD, YUP_MESSAGES.DATE_INVALID),
     office_postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
 
@@ -384,7 +394,6 @@ export const tab03Schema = yup.object({
     last_year_income: yup.string(),
     before_last_year_income: yup.string(),
     last_year_bonus_income: yup.string(),
-    p_applicant_persons__1__last_year_bonus_income: yup.string(),
 
     income_sources: yup.array(),
     tax_return: yup.string(),
@@ -450,11 +459,12 @@ export const tab03Schema = yup.object({
       .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH)
       .when('transfer_office', ([transfer_office], field) => {
         if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
+          return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
         } else {
           return field;
         }
-      }),
+      })
+      .label('出向（派遣）先都道府県を選択してください。'),
     transfer_office_city_kanji: yup
       .string()
       .max(20)
@@ -488,6 +498,63 @@ export const tab03Schema = yup.object({
           return field;
         }
       }),
+
+    job_change: yup.string(),
+    job_change_office_name_kanji: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    job_change_office_name_kana: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+
+    prev_office_year_num: yup
+      .string()
+      .max(2)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    prev_office_industry: yup
+      .string()
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
+        } else {
+          return field;
+        }
+      })
+      .label('前勤務先 業種'),
+    prev_office_industry_other: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+
     maternity_paternity_leave: yup.string(),
     maternity_paternity_leave_start_date: yup
       .string()
@@ -495,7 +562,6 @@ export const tab03Schema = yup.object({
         if (!!maternity_paternity_leave) {
           return field.required(YUP_MESSAGES.REQUIRED);
         } else {
-          console.log('666');
           return field;
         }
       })
@@ -522,6 +588,30 @@ export const tab03Schema = yup.object({
             } else {
               return false;
             }
+          } else if (p_applicant_persons__0?.maternity_paternity_leave === '2') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year - year_ > 0) {
+              return true;
+            } else if (+year - year_ === 0 && +month - month_ > -1) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (p_applicant_persons__0?.maternity_paternity_leave === '3') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year - year_ > 0) {
+              return true;
+            } else if (+year - year_ === 0 && +month - month_ > -1) {
+              return true;
+            } else {
+              return false;
+            }
           } else {
             return true;
           }
@@ -536,40 +626,6 @@ export const tab03Schema = yup.object({
           return field;
         }
       })
-      // .test(
-      //   'desired_borrowing_date_check',
-      //   YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_END_COLLECT_MATERNITY_LEAVE,
-      //   (
-      //     field_value,
-      //     {
-      //       options: {
-      //         context: { p_borrowing_details__1, p_applicant_persons__0 },
-      //       },
-      //     }
-      //   ) => {
-      //     if (
-      //       p_applicant_persons__0?.maternity_paternity_leave === '1' ||
-      //       p_applicant_persons__0?.maternity_paternity_leave === '2'
-      //     ) {
-      //       if (!p_borrowing_details__1?.desired_borrowing_date) return true;
-
-      //       const [year, month] = field_value ? field_value?.split('/') : ['', ''];
-      //       const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
-      //       const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-      //       console.log(8888, year, month);
-      //       console.log(9999, year_, month_);
-      //       if (+year - year_ > 0) {
-      //         return true;
-      //       } else if (+year - year_ === 0 && +month - month_ > 0) {
-      //         return true;
-      //       } else {
-      //         return false;
-      //       }
-      //     } else {
-      //       return true;
-      //     }
-      //   }
-      // )
       .test(
         'befor_maternity_paternity_leave_end_date',
         YUP_MESSAGES.PLEASE_SELECT_A_DATE_AFTER_ACQUISITION_START_TIME,
@@ -581,14 +637,49 @@ export const tab03Schema = yup.object({
             },
           }
         ) => {
-          if (p_applicant_persons__0?.maternity_paternity_leave_start_date) {
+          if (
+            p_applicant_persons__0?.maternity_paternity_leave_start_date &&
+            p_applicant_persons__0?.maternity_paternity_leave === '1'
+          ) {
+            const [s_year, s_month] = p_applicant_persons__0?.maternity_paternity_leave_start_date
+              ? p_applicant_persons__0?.maternity_paternity_leave_start_date?.split('/')
+              : ['', ''];
+            const [e_year, e_month] = field_value ? field_value?.split('/') : ['', ''];
+
+            if (+e_year - s_year > 0) {
+              return true;
+            } else if (+e_year - s_year === 0 && +e_month - s_month >= 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (
+            p_applicant_persons__0?.maternity_paternity_leave_start_date &&
+            p_applicant_persons__0?.maternity_paternity_leave === '2'
+          ) {
+            const [s_year, s_month] = p_applicant_persons__0?.maternity_paternity_leave_start_date
+              ? p_applicant_persons__0?.maternity_paternity_leave_start_date?.split('/')
+              : ['', ''];
+            const [e_year, e_month] = field_value ? field_value?.split('/') : ['', ''];
+
+            if (+e_year - s_year > 0) {
+              return true;
+            } else if (+e_year - s_year === 0 && +e_month - s_month > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (
+            p_applicant_persons__0?.maternity_paternity_leave_start_date &&
+            p_applicant_persons__0?.maternity_paternity_leave === '3'
+          ) {
             const [s_year, s_month] = p_applicant_persons__0?.maternity_paternity_leave_start_date
               ? p_applicant_persons__0?.maternity_paternity_leave_start_date?.split('/')
               : ['', ''];
             const [e_year, e_month] = field_value ? field_value?.split('/') : ['', ''];
             if (+e_year - s_year > 0) {
               return true;
-            } else if (+e_year - s_year === 0 && +e_month - s_month > 0) {
+            } else if (+e_year - s_year === 0 && +e_month - s_month >= 0) {
               return true;
             } else {
               return false;
@@ -800,207 +891,35 @@ export const tab06Schema = yup.object({
   hasIncomeTotalizer: yup.boolean(),
   p_borrowings: yup.array(
     yup.object({
-      borrower: yup.string().test(
-        'option-required',
-        YUP_MESSAGES.RADIO_REQUIRED,
-        (
-          field_value,
-          {
-            options: {
-              context: { hasIncomeTotalizer },
-            },
-          }
-        ) => {
-          if (hasIncomeTotalizer) {
-            return !!field_value;
-          } else {
-            return true;
-          }
-        }
-      ),
-      type: yup
-        .string()
-        .when('self_input', ([self_input], field) => {
-          if (self_input === '1') {
-            return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
-          } else {
-            return field;
-          }
-        })
-        .label('お借入の種類'),
+      borrower: yup.string(),
+      type: yup.string(),
       lender: yup
         .string()
         .max(40)
-        .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.SP_KANJI_FULL_WIDTH_HAVE_NUMBER)
-        .when('self_input', ([self_input], field) => {
-          if (self_input === '1') {
-            return field.required(YUP_MESSAGES.REQUIRED);
-          } else {
-            return field;
-          }
-        }),
-      borrowing_from_house_finance_agency: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type === '1') {
-          return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-      loan_start_date: yup
-        .string()
-        .matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
-        .when('self_input', ([self_input], field) => {
-          if (self_input === '1') {
-            return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
-          } else {
-            return field;
-          }
-        })
-        .when('type', ([type], field) => {
-          if (type === '2') {
-            return field.label('当初カード契約年月');
-          } else {
-            return field.label('当初借入年月');
-          }
-        }),
-      loan_amount: yup.string().when('self_input', ([self_input], field) => {
-        if (self_input === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-      curr_loan_balance_amount: yup.string().when('self_input', ([self_input], field) => {
-        if (self_input === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-      annual_repayment_amount: yup.string().when('self_input', ([self_input], field) => {
-        if (self_input === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-
-      loan_end_date: yup
-        .string()
-        .matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED)
-        .when(['self_input', 'type'], ([self_input, type], field) => {
-          if (self_input === '1' && type !== '2') {
-            return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
-          } else {
-            return field;
-          }
-        })
-        .when('type', ([type], field) => {
-          if (type === '2') {
-            return field.label('最終期限');
-          } else {
-            return field.label('最終返済年月');
-          }
-        }),
-      scheduled_loan_payoff: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type !== '4') {
-          return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-      loan_business_target: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type === '4') {
-          return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED).label('お借入の目的');
-        } else {
-          return field;
-        }
-      }),
-      loan_business_target_other: yup.string().when('loan_business_target', ([loan_business_target], field) => {
-        if (loan_business_target === '99') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-
-      loan_purpose: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type === '2') {
-          return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED).label('お借入の目的');
-        } else {
-          return field;
-        }
-      }),
-      loan_purpose_other: yup.string().when('loan_purpose', ([loan_purpose], field) => {
-        if (loan_purpose === '99') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-      category: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type === '2') {
-          return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-
-      card_expiry_date: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type === '2') {
-          return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED).label('カード有効期限');
-        } else {
-          return field;
-        }
-      }),
-      rental_room_num: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type === '3') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-      common_housing: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type === '3') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-
-      estate_setting: yup.string().when(['self_input', 'type'], ([self_input, type], field) => {
-        if (self_input === '1' && type !== '1' && type !== '2') {
-          return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-        } else {
-          return field;
-        }
-      }),
+        .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.SP_KANJI_FULL_WIDTH_HAVE_NUMBER),
+      borrowing_from_house_finance_agency: yup.string(),
+      loan_purpose: yup.string(),
+      loan_start_date: yup.string().matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
+      scheduled_loan_payoff_date: yup.string().matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
+      loan_amount: yup.string(),
+      curr_loan_balance_amount: yup.string(),
+      annual_repayment_amount: yup.string(),
+      loan_end_date: yup.string().matches(REGEX.YM, YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED),
+      scheduled_loan_payoff: yup.string(),
+      loan_business_target: yup.string(),
+      loan_business_target_other: yup.string(),
+      loan_purpose_other: yup.string(),
+      category: yup.string(),
+      card_expiry_date: yup.string(),
+      rental_room_num: yup.string(),
+      common_housing: yup.string(),
+      estate_setting: yup.string(),
+      include_in_examination: yup.string(),
     })
   ),
   p_application_headers: yup.object({
     curr_borrowing_status: yup.string(),
-
-    refund_source_type: yup.array().test(
-      'option-required',
-      YUP_MESSAGES.RADIO_REQUIRED,
-      (
-        field_vale,
-        {
-          options: {
-            context: { isMCJ, p_borrowings },
-          },
-        }
-      ) => {
-        if (isMCJ) {
-          if (p_borrowings?.some((item) => item.scheduled_loan_payoff === '1')) {
-            return !!field_vale.length;
-          }
-          return true;
-        } else {
-          return true;
-        }
-      }
-    ),
+    refund_source_type: yup.array(yup.string()),
     refund_source_type_other: yup.string().when('refund_source_type', ([refund_source_type], field) => {
       if (refund_source_type.includes('99')) {
         return field.required(YUP_MESSAGES.REQUIRED);
@@ -1008,25 +927,10 @@ export const tab06Schema = yup.object({
         return field;
       }
     }),
-
     refund_source_content: yup.string(),
     refund_source_amount: yup.string(),
     rent_to_be_paid_land: yup.string(),
-    rent_to_be_paid_land_borrower: yup.string().when('rent_to_be_paid_land', ([rent_to_be_paid_land], field) => {
-      if (!!rent_to_be_paid_land) {
-        return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-      } else {
-        return field;
-      }
-    }),
     rent_to_be_paid_house: yup.string(),
-    rent_to_be_paid_house_borrower: yup.string().when('rent_to_be_paid_house', ([rent_to_be_paid_house], field) => {
-      if (!!rent_to_be_paid_house) {
-        return field.required(YUP_MESSAGES.RADIO_REQUIRED);
-      } else {
-        return field;
-      }
-    }),
   }),
 });
 
@@ -1214,7 +1118,6 @@ export const tab03SchemaI = yup.object({
     last_year_income: yup.string(),
     before_last_year_income: yup.string(),
     last_year_bonus_income: yup.string(),
-    p_applicant_persons__1__last_year_bonus_income: yup.string(),
 
     income_sources: yup.array(),
     tax_return: yup.string(),
@@ -1280,11 +1183,12 @@ export const tab03SchemaI = yup.object({
       .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH)
       .when('transfer_office', ([transfer_office], field) => {
         if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
+          return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
         } else {
           return field;
         }
-      }),
+      })
+      .label('出向（派遣）先都道府県を選択してください。'),
     transfer_office_city_kanji: yup
       .string()
       .max(20)
@@ -1318,6 +1222,63 @@ export const tab03SchemaI = yup.object({
           return field;
         }
       }),
+
+    job_change: yup.string(),
+    job_change_office_name_kanji: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    job_change_office_name_kana: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+
+    prev_office_year_num: yup
+      .string()
+      .max(2)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+    prev_office_industry: yup
+      .string()
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
+        } else {
+          return field;
+        }
+      })
+      .label('前勤務先 業種'),
+    prev_office_industry_other: yup
+      .string()
+      .max(48)
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
+      .when('job_change', ([job_change], field) => {
+        if (job_change === '1') {
+          return field.required(YUP_MESSAGES.REQUIRED);
+        } else {
+          return field;
+        }
+      }),
+
     maternity_paternity_leave: yup.string(),
     maternity_paternity_leave_start_date: yup
       .string()
@@ -1351,6 +1312,30 @@ export const tab03SchemaI = yup.object({
             } else {
               return false;
             }
+          } else if (p_applicant_persons__1?.maternity_paternity_leave === '2') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year - year_ > 0) {
+              return true;
+            } else if (+year - year_ === 0 && +month - month_ > -1) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (p_applicant_persons__1?.maternity_paternity_leave === '3') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year - year_ > 0) {
+              return true;
+            } else if (+year - year_ === 0 && +month - month_ > -1) {
+              return true;
+            } else {
+              return false;
+            }
           } else {
             return true;
           }
@@ -1365,40 +1350,6 @@ export const tab03SchemaI = yup.object({
           return field;
         }
       })
-      // .test(
-      //   'desired_borrowing_date_check',
-      //   YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_END_COLLECT_MATERNITY_LEAVE,
-      //   (
-      //     field_value,
-      //     {
-      //       options: {
-      //         context: { p_borrowing_details__1, p_applicant_persons__1 },
-      //       },
-      //     }
-      //   ) => {
-      //     if (
-      //       p_applicant_persons__1?.maternity_paternity_leave === '1' ||
-      //       p_applicant_persons__1?.maternity_paternity_leave === '2'
-      //     ) {
-      //       if (!p_borrowing_details__1?.desired_borrowing_date) return true;
-
-      //       const [year, month] = field_value ? field_value?.split('/') : ['', ''];
-      //       const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
-      //       const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-      //       console.log(8888, year, month);
-      //       console.log(9999, year_, month_);
-      //       if (+year - year_ > 0) {
-      //         return true;
-      //       } else if (+year - year_ === 0 && +month - month_ > 0) {
-      //         return true;
-      //       } else {
-      //         return false;
-      //       }
-      //     } else {
-      //       return true;
-      //     }
-      //   }
-      // )
       .test(
         'befor_maternity_paternity_leave_end_date',
         YUP_MESSAGES.PLEASE_SELECT_A_DATE_AFTER_ACQUISITION_START_TIME,
@@ -1410,14 +1361,49 @@ export const tab03SchemaI = yup.object({
             },
           }
         ) => {
-          if (p_applicant_persons__1?.maternity_paternity_leave_start_date) {
+          if (
+            p_applicant_persons__1?.maternity_paternity_leave_start_date &&
+            p_applicant_persons__1?.maternity_paternity_leave === '1'
+          ) {
+            const [s_year, s_month] = p_applicant_persons__1?.maternity_paternity_leave_start_date
+              ? p_applicant_persons__1?.maternity_paternity_leave_start_date?.split('/')
+              : ['', ''];
+            const [e_year, e_month] = field_value ? field_value?.split('/') : ['', ''];
+
+            if (+e_year - s_year > 0) {
+              return true;
+            } else if (+e_year - s_year === 0 && +e_month - s_month >= 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (
+            p_applicant_persons__1?.maternity_paternity_leave_start_date &&
+            p_applicant_persons__1?.maternity_paternity_leave === '2'
+          ) {
+            const [s_year, s_month] = p_applicant_persons__1?.maternity_paternity_leave_start_date
+              ? p_applicant_persons__1?.maternity_paternity_leave_start_date?.split('/')
+              : ['', ''];
+            const [e_year, e_month] = field_value ? field_value?.split('/') : ['', ''];
+
+            if (+e_year - s_year > 0) {
+              return true;
+            } else if (+e_year - s_year === 0 && +e_month - s_month > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (
+            p_applicant_persons__1?.maternity_paternity_leave_start_date &&
+            p_applicant_persons__1?.maternity_paternity_leave === '3'
+          ) {
             const [s_year, s_month] = p_applicant_persons__1?.maternity_paternity_leave_start_date
               ? p_applicant_persons__1?.maternity_paternity_leave_start_date?.split('/')
               : ['', ''];
             const [e_year, e_month] = field_value ? field_value?.split('/') : ['', ''];
             if (+e_year - s_year > 0) {
               return true;
-            } else if (+e_year - s_year === 0 && +e_month - s_month > 0) {
+            } else if (+e_year - s_year === 0 && +e_month - s_month >= 0) {
               return true;
             } else {
               return false;
@@ -1428,5 +1414,49 @@ export const tab03SchemaI = yup.object({
         }
       ),
     nursing_leave: yup.string(),
+  }),
+});
+
+export const tab09Schema = yup.object({
+  p_applicant_persons__0: yup.object({
+    identity_verification_type: yup.string(),
+    A__01__a: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '1') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+    A__01__b: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '1') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+
+    A__02: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '2') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+
+    A__03__a: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '3') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+
+    A__03__b: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '3') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
   }),
 });

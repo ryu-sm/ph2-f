@@ -86,7 +86,9 @@ export const ApStep06Info = ({ stepIndex }) => {
               )}
 
               <Typography variant="sp_value_text" color="b_333">
-                〈担保提供者の住所〉
+                <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>
+                  〈担保提供者の住所〉
+                </Typography>
                 {p_join_guarantor.postal_code ? (
                   <Stack spacing={1} alignItems={'start'} sx={{ px: 4, pt: 1 }}>
                     <Typography variant="modal_label" textAlign={'start'} color={'text.main'}>

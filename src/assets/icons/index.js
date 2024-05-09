@@ -119,6 +119,8 @@ export { AdArrowUp } from './ad-arrow-up';
 export { AdStatusResultIcon } from './ad-status-result';
 export { AdSlashIcon } from './ad-slash';
 export { AdCloseIcon } from './ad-close';
+export { AdCloseIconMain } from './ad-close-main';
+
 export { AdProgressArrowRight } from './ad-progress-arrow-right';
 export { AdExportDocsIcon } from './ad-export-docs';
 

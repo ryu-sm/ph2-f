@@ -5,7 +5,7 @@ import { useField } from 'formik';
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 
-export const PopoverSelect = ({ options = [], onChange, ...props }) => {
+export const PopoverSelect = ({ options = [], onChange, checkAccess, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const [oldValue, setOldValue] = useState(null);
   const { setValue } = helpers;
@@ -13,14 +13,21 @@ export const PopoverSelect = ({ options = [], onChange, ...props }) => {
   const [searchText, setSearchText] = useState('');
   const open = Boolean(anchorEl);
 
-  const handleOpenPopover = (e) => {
+  const handleOpenPopover = async (e) => {
     setAnchorEl(e.currentTarget);
   };
   const handleClosePopover = () => {
     setAnchorEl(null);
   };
 
-  const handleChange = (value) => {
+  const handleChange = async (value) => {
+    if (checkAccess) {
+      const res = await checkAccess();
+      console.log(res);
+      if (!res) {
+        return;
+      }
+    }
     if (oldValue === value) {
       handleClosePopover();
       return;

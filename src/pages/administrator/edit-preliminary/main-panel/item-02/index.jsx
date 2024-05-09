@@ -62,6 +62,8 @@ export const Item02 = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: tab02Schema,
+    validateOnChange: false,
+    validateOnMount: true,
     enableReinitialize: true,
     onSubmit: async (values) => {
       await handleSave(setUpdateData(values));
@@ -79,6 +81,11 @@ export const Item02 = () => {
       };
     });
   }, [formik.values]);
+
+  // useEffect(() => {
+  //   formik.setFieldTouched('p_applicant_persons__0.mobile_phone', true);
+  //   formik.setFieldTouched('p_applicant_persons__0.home_phone', true);
+  // }, [formik.values.p_applicant_persons__0.mobile_phone, formik.values.p_applicant_persons__0.home_phone]);
 
   return (
     <FormikProvider value={formik}>
@@ -198,7 +205,11 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdPhoneInputField name="p_applicant_persons__0.mobile_phone" convertHalfWidth />
+              <AdPhoneInputField
+                name="p_applicant_persons__0.mobile_phone"
+                convertHalfWidth
+                onBlur={() => formik.setFieldTouched('p_applicant_persons__0.home_phone', true)}
+              />
             ) : (
               formik.values.p_applicant_persons__0.mobile_phone
             )
@@ -212,7 +223,11 @@ export const Item02 = () => {
           isLogicRequired
           field={
             isEditable ? (
-              <AdPhoneInputField name="p_applicant_persons__0.home_phone" convertHalfWidth />
+              <AdPhoneInputField
+                name="p_applicant_persons__0.home_phone"
+                convertHalfWidth
+                onBlur={() => formik.setFieldTouched('p_applicant_persons__0.mobile_phone', true)}
+              />
             ) : (
               formik.values.p_applicant_persons__0.home_phone
             )
@@ -285,7 +300,14 @@ export const Item02 = () => {
           hasPleft={isEditable}
           field={
             isEditable ? (
-              <AdSelectRadios name="p_applicant_persons__0.prefecture_kanji" options={PREFECTURES} />
+              <AdSelectRadios
+                name="p_applicant_persons__0.prefecture_kanji"
+                options={PREFECTURES}
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__0.prefecture_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__0.prefecture_kana', true);
+                }}
+              />
             ) : (
               PREFECTURES.find((item) => item.value === formik.values.p_applicant_persons__0.prefecture_kanji)?.label
             )
@@ -299,7 +321,14 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditFullWidthInput name="p_applicant_persons__0.city_kanji" convertFullWidth />
+              <AdEditFullWidthInput
+                name="p_applicant_persons__0.city_kanji"
+                convertFullWidth
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__0.city_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__0.city_kana', true);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__0.city_kanji
             )
@@ -313,7 +342,14 @@ export const Item02 = () => {
           isRequired
           field={
             isEditable ? (
-              <AdEditFullWidthInput name="p_applicant_persons__0.district_kanji" convertFullWidth />
+              <AdEditFullWidthInput
+                name="p_applicant_persons__0.district_kanji"
+                convertFullWidth
+                handleChangeInit={() => {
+                  formik.setFieldValue('p_applicant_persons__0.district_kana', '');
+                  formik.setFieldTouched('p_applicant_persons__0.district_kana', true);
+                }}
+              />
             ) : (
               formik.values.p_applicant_persons__0.district_kanji
             )

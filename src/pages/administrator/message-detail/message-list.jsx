@@ -2,14 +2,11 @@ import { Stack } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import { MessageItem } from './message-item';
 import { useIsManager } from '@/hooks';
-import { useRecoilValue } from 'recoil';
-import { authAtom } from '@/store';
 import { updateMessages } from '@/services';
 import { toast } from 'react-toastify';
 
 export const MessageList = ({ messages = [], applicant, fetchData }) => {
   const isManager = useIsManager();
-  const { manager, salesPerson } = useRecoilValue(authAtom);
   const bottomRef = useRef();
 
   useEffect(() => {
@@ -23,15 +20,20 @@ export const MessageList = ({ messages = [], applicant, fetchData }) => {
 
   const firstUnViewedIndex = () => {
     if (isManager) {
-      return messages.findIndex((item) => !item?.viewed?.includes(manager?.id));
+      return messages.findIndex((item) => {
+        return !item?.viewed?.find((i) => i.viewed_account_type === 3);
+      });
     } else {
-      return messages.findIndex((item) => !item?.viewed?.includes(salesPerson?.id));
+      return messages.findIndex((item) => {
+        return !item?.viewed?.find((i) => i.viewed_account_type === 2);
+      });
     }
   };
 
   const updateMessagesStatus = async () => {
     try {
       const index = firstUnViewedIndex();
+      console.log(index);
       if (index === -1) return;
       const messages_ids = messages.slice(index).map((item) => item['id']);
       if (messages_ids.length > 0) {

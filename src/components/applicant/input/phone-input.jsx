@@ -156,7 +156,7 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
                       }),
                     }}
                     onInput={(e) => {
-                      e.target.value = convertToHalfWidth(e.target.value);
+                      // e.target.value = convertToHalfWidth(e.target.value);
                       e.target.value = e.target.value.replace(/[^\d]+/g, '');
                       e.target.value = e.target.value.substring(0, input.maxLength);
                       return e;

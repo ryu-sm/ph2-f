@@ -246,6 +246,8 @@ export const ApStep03Page = () => {
     }
   }, [agentSended]);
 
+  console.log(formik.values);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -361,7 +363,7 @@ export const ApStep03Page = () => {
             convertFullWidth
           />
         </ApItemGroup>
-        {formik.values.p_applicant_persons__0.office_occupation !== '5' && (
+        {/* {formik.values.p_applicant_persons__0.office_occupation !== '5' && (
           <ApItemGroup label={'所属部課'}>
             <Stack spacing={'6px'}>
               <ApTextInputField
@@ -372,7 +374,17 @@ export const ApStep03Page = () => {
               <ApStarHelp label={'所属部課が無い方は「なし」とご入力ください。'} />
             </Stack>
           </ApItemGroup>
-        )}
+        )} */}
+        <ApItemGroup label={'所属部課'}>
+          <Stack spacing={'6px'}>
+            <ApTextInputField
+              name="p_applicant_persons__0.office_department"
+              placeholder={'例：○○部'}
+              convertFullWidth
+            />
+            <ApStarHelp label={'所属部課が無い方は「なし」とご入力ください。'} />
+          </Stack>
+        </ApItemGroup>
 
         <ApItemGroup label={'勤務先の電話番号'}>
           <Stack spacing={'6px'}>
@@ -423,18 +435,30 @@ export const ApStep03Page = () => {
               placeholder={'----'}
               width={110}
               label={'都道府県'}
+              handleChangeInit={() => {
+                formik.setFieldValue('p_applicant_persons__0.office_prefecture_kana', '');
+                formik.setFieldTouched('p_applicant_persons__0.office_prefecture_kana', true);
+              }}
             />
             <ApTextInputField
               name="p_applicant_persons__0.office_city_kanji"
               placeholder={'例：港区'}
               label={'市区郡　（例：港区）'}
               convertFullWidth
+              handleChangeInit={() => {
+                formik.setFieldValue('p_applicant_persons__0.office_city_kana', '');
+                formik.setFieldTouched('p_applicant_persons__0.office_city_kana', true);
+              }}
             />
             <ApTextInputField
               name="p_applicant_persons__0.office_district_kanji"
               placeholder={'例：芝浦４丁目'}
               label={'町村丁目（例：芝浦４丁目）'}
               convertFullWidth
+              handleChangeInit={() => {
+                formik.setFieldValue('p_applicant_persons__0.office_district_kana', '');
+                formik.setFieldTouched('p_applicant_persons__0.office_district_kana', true);
+              }}
             />
             <ApTextInputField
               name="p_applicant_persons__0.office_other_address_kanji"

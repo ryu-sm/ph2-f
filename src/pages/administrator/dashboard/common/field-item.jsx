@@ -1,6 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 
-export const FieldItem = ({ minWidth, maxWidth, value, isText, textStyle, fontFamily }) => {
+export const FieldItem = ({ minWidth, maxWidth, value, isText, textStyle, fontFamily, textAlign = 'left' }) => {
   return (
     <Stack
       direction={'row'}
@@ -11,7 +11,7 @@ export const FieldItem = ({ minWidth, maxWidth, value, isText, textStyle, fontFa
       maxWidth={maxWidth}
     >
       {isText ? (
-        <Typography variant={textStyle} fontFamily={fontFamily}>
+        <Typography variant={textStyle} fontFamily={fontFamily} textAlign={textAlign}>
           {value}
         </Typography>
       ) : (

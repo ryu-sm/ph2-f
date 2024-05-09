@@ -3,7 +3,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 
 import { formatJapanDate, formatNumber } from '@/utils';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AdAreaInput,
   AdEditFullWidthInput,
@@ -48,6 +48,7 @@ import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { PlannedResidentSelect } from './planned-resident-select';
 import { tab05Schema } from '../../fullSchema';
+import { useIsManager } from '@/hooks';
 
 export const Item05 = () => {
   const {
@@ -57,6 +58,8 @@ export const Item05 = () => {
     handleSave,
     isEditable,
   } = usePreliminaryContext();
+
+  const isManager = useIsManager();
 
   const initialValues = {
     p_application_headers: {
@@ -106,6 +109,9 @@ export const Item05 = () => {
       property_flat_35_tech: p_application_headers?.property_flat_35_tech,
       property_region_type: p_application_headers?.property_region_type,
     },
+    p_applicant_persons__0: {
+      spouse: p_applicant_persons__0.spouse,
+    },
     p_residents,
     isMCJ,
   };
@@ -117,6 +123,9 @@ export const Item05 = () => {
         join_guarantor_umu: p_application_headers.join_guarantor_umu,
         land_advance_plan: p_application_headers.land_advance_plan,
         loan_type: p_application_headers.loan_type,
+      },
+      p_applicant_persons__0: {
+        spouse: values.p_application_headers.new_house_planned_resident_overview.spouse_umu ? '1' : '0',
       },
       p_residents: values.p_residents,
     };
@@ -140,10 +149,21 @@ export const Item05 = () => {
           ...pre.p_application_headers,
           ...formik.values.p_application_headers,
         },
+        p_applicant_persons__0: {
+          ...pre.p_applicant_persons__0,
+          spouse: formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu ? '1' : '0',
+        },
         p_residents: formik.values.p_residents,
       };
     });
   }, [formik.values]);
+
+  useEffect(() => {
+    formik.setFieldValue(
+      'p_applicant_persons__0.spouse',
+      formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu ? '1' : '0'
+    );
+  }, [formik.values.p_application_headers.new_house_planned_resident_overview.spouse_umu]);
 
   const age = useMemo(() => {
     const date = new Date(p_applicant_persons__0.birthday);
@@ -207,6 +227,22 @@ export const Item05 = () => {
 
     return conter.join('・');
   }, [formik.values.p_application_headers.new_house_planned_resident_overview]);
+
+  useEffect(() => {
+    if (formik.values.p_application_headers.new_house_self_resident === '0' && formik.values.p_residents.length > 0) {
+      const headerR = formik.values.p_residents.map((pr) => pr.resident_type);
+      if (!headerR.includes('0')) {
+        const temp = formik.values.p_residents.map((pr, index) => {
+          if (index === 0) {
+            return { ...pr, resident_type: '0' };
+          } else {
+            return pr;
+          }
+        });
+        formik.setFieldValue('p_residents', temp);
+      }
+    }
+  }, [formik.values.p_residents]);
 
   return (
     <FormikProvider value={formik}>
@@ -503,7 +539,19 @@ export const Item05 = () => {
                   if (value !== '0') {
                     formik.setFieldValue('p_application_headers.new_house_self_not_resident_reason', '');
                     formik.setFieldTouched('p_application_headers.new_house_self_not_resident_reason', false);
-                    formik.setFieldValue('p_residents', []);
+                  }
+                  if (value === '0') {
+                    formik.setFieldValue('p_application_headers.new_house_self_not_resident_reason', '');
+                    formik.setFieldTouched('p_application_headers.new_house_self_not_resident_reason', true);
+                    if (formik.values.p_residents.length > 0) {
+                      const tempHeader = formik.values.p_residents.filter((pr) => pr.resident_type === '0');
+                      if (tempHeader.length === 0) {
+                        const temp = formik.values.p_residents.map((pr, index) => {
+                          return { ...pr, resident_type: index === 0 ? '0' : '1' };
+                        });
+                        formik.setFieldValue('p_residents', temp);
+                      }
+                    }
                   }
                 }}
               />
@@ -546,6 +594,7 @@ export const Item05 = () => {
                     <Stack direction={'row'}>
                       <PlannedResidentSelect
                         name="p_application_headers.new_house_planned_resident_overview"
+                        new_house_self_resident={formik.values.p_application_headers.new_house_self_resident}
                         arrayHelpers={arrayHelpers}
                       />
                       {formik.values.p_application_headers.new_house_planned_resident_overview.others_umu && (
@@ -562,366 +611,496 @@ export const Item05 = () => {
                 }
               />
               <Stack>
-                {formik.values.p_residents.map((item, index) => (
-                  <Stack key={index}>
-                    <EditRow
-                      label={`入居家族${index + 1} 現在申込人との同居有無`}
-                      upConfig={{
-                        key: `p_residents.one_roof.${item?.id}`,
-                        options: oneRoofOptions,
-                      }}
-                      isAddendum
-                      hasPleft={isEditable}
-                      field={
-                        isEditable ? (
-                          <AdSelectRadios name={`p_residents[${index}].one_roof`} options={oneRoofOptions} />
-                        ) : (
-                          oneRoofOptions.find((op) => op.value === item.one_roof)?.label
-                        )
-                      }
-                    />
-                    <EditRow
-                      label={`入居家族${index + 1} 姓　漢字`}
-                      upConfig={{
-                        key: `p_residents.last_name_kanji.${item?.id}`,
-                      }}
-                      isLogicRequired
-                      isAddendum
-                      field={
-                        isEditable ? (
-                          <AdEditFullWidthInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
-                        ) : (
-                          item.last_name_kanji
-                        )
-                      }
-                    />
-                    <EditRow
-                      label={`入居家族${index + 1} 名　漢字`}
-                      upConfig={{
-                        key: `p_residents.first_name_kanji.${item?.id}`,
-                      }}
-                      isLogicRequired
-                      isAddendum
-                      field={
-                        isEditable ? (
-                          <AdEditFullWidthInput name={`p_residents[${index}].first_name_kanji`} convertFullWidth />
-                        ) : (
-                          item.first_name_kanji
-                        )
-                      }
-                    />
-                    <EditRow
-                      label={`入居家族${index + 1} 姓　カナ`}
-                      upConfig={{
-                        key: `p_residents.last_name_kana.${item?.id}`,
-                      }}
-                      isLogicRequired
-                      isAddendum
-                      field={
-                        isEditable ? (
-                          <AdEditFullWidthInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
-                        ) : (
-                          item.last_name_kana
-                        )
-                      }
-                    />
-                    <EditRow
-                      label={`入居家族${index + 1} 名　カナ`}
-                      upConfig={{
-                        key: `p_residents.first_name_kana.${item?.id}`,
-                      }}
-                      isLogicRequired
-                      isAddendum
-                      field={
-                        isEditable ? (
-                          <AdEditFullWidthInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
-                        ) : (
-                          item.first_name_kana
-                        )
-                      }
-                    />
-                    <EditRow
-                      label={`入居家族${index + 1} 性別`}
-                      upConfig={{
-                        key: `p_residents.gender.${item?.id}`,
-                        options: genderOptions,
-                      }}
-                      isAddendum
-                      hasPleft={isEditable}
-                      field={
-                        isEditable ? (
-                          <AdSelectRadios name={`p_residents[${index}].gender`} options={genderOptions} />
-                        ) : (
-                          genderOptions.find((op) => op.value === item.gender)?.label
-                        )
-                      }
-                    />
-                    {item?.resident_type === '0' ? (
-                      <EditRow
-                        label={`入居家族${index + 1} 続柄`}
-                        upConfig={{
-                          key: `p_residents.rel_to_applicant_a_name.${item?.id}`,
-                        }}
-                        isLogicRequired
-                        field={
-                          isEditable ? (
-                            <AdEditInput name={`p_residents[${index}].rel_to_applicant_a_name`} convertFullWidth />
-                          ) : (
-                            item.rel_to_applicant_a_name
-                          )
-                        }
-                        subField={
-                          isEditable ? (
-                            <Stack direction={'row'}>
-                              <AdSelectRadios
-                                name={`p_residents[${index}].rel_to_applicant_a`}
-                                options={relToApplicantAOptions}
-                                onChange={(value) => {
-                                  if (value !== '99') {
-                                    formik.setFieldValue(`p_residents[${index}].rel_to_applicant_a_other`, '');
-                                  }
-                                }}
-                              />
-                              {item.rel_to_applicant_a === '99' && (
-                                <AdEditOutLineInput
-                                  name={`p_residents[${index}].rel_to_applicant_a_other`}
+                {formik.values.p_application_headers.new_house_self_resident === '0' && (
+                  <Stack>
+                    {formik.values.p_residents
+                      .filter((pr) => pr.resident_type === '0')
+                      .map((item, index) => (
+                        <Stack key={index}>
+                          <EditRow
+                            label={`入居家族${index + 1} 現在申込人との同居有無`}
+                            upConfig={{
+                              key: `p_residents.one_roof.${item?.id}`,
+                              options: oneRoofOptions,
+                            }}
+                            isAddendum
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <AdSelectRadios name={`p_residents[${index}].one_roof`} options={oneRoofOptions} />
+                              ) : (
+                                oneRoofOptions.find((op) => op.value === item.one_roof)?.label
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 姓　漢字`}
+                            upConfig={{
+                              key: `p_residents.last_name_kanji.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
+                              ) : (
+                                item.last_name_kanji
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 名　漢字`}
+                            upConfig={{
+                              key: `p_residents.first_name_kanji.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput
+                                  name={`p_residents[${index}].first_name_kanji`}
                                   convertFullWidth
                                 />
-                              )}
-                            </Stack>
-                          ) : (
-                            `${
-                              item.rel_to_applicant_a
-                                ? relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label
-                                : ''
-                            }　${item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''}`
-                          )
-                        }
-                      />
-                    ) : (
-                      <EditRow
-                        label={`入居家族${index + 1} 続柄`}
-                        upConfig={{
-                          key: `p_residents.rel_to_applicant_a.${item?.id}`,
-                        }}
-                        isLogicRequired
-                        hasPleft={isEditable}
-                        field={
-                          isEditable ? (
-                            <Stack direction={'row'}>
-                              <AdSelectRadios
-                                name={`p_residents[${index}].rel_to_applicant_a`}
-                                options={relToApplicantAOptions}
-                                onChange={(value) => {
-                                  if (value !== '99') {
-                                    formik.setFieldValue(`p_residents[${index}].rel_to_applicant_a_other`, '');
-                                  }
-                                }}
-                              />
-                              {item.rel_to_applicant_a === '99' && (
-                                <AdEditOutLineInput
-                                  name={`p_residents[${index}].rel_to_applicant_a_other`}
+                              ) : (
+                                item.first_name_kanji
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 姓　カナ`}
+                            upConfig={{
+                              key: `p_residents.last_name_kana.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
+                              ) : (
+                                item.last_name_kana
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 名　カナ`}
+                            upConfig={{
+                              key: `p_residents.first_name_kana.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
+                              ) : (
+                                item.first_name_kana
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 性別`}
+                            upConfig={{
+                              key: `p_residents.gender.${item?.id}`,
+                              options: genderOptions,
+                            }}
+                            isAddendum
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <AdSelectRadios name={`p_residents[${index}].gender`} options={genderOptions} />
+                              ) : (
+                                genderOptions.find((op) => op.value === item.gender)?.label
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 続柄`}
+                            upConfig={{
+                              key: `p_residents.rel_to_applicant_a_name.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            field={
+                              isEditable ? (
+                                <AdEditInput name={`p_residents[${index}].rel_to_applicant_a_name`} convertFullWidth />
+                              ) : (
+                                item.rel_to_applicant_a_name
+                              )
+                            }
+                            subField={
+                              isEditable ? (
+                                <Stack direction={'row'}>
+                                  <AdSelectRadios
+                                    name={`p_residents[${index}].rel_to_applicant_a`}
+                                    options={relToApplicantAOptions}
+                                    onChange={(value) => {
+                                      if (value !== '99') {
+                                        formik.setFieldValue(`p_residents[${index}].rel_to_applicant_a_other`, '');
+                                      }
+                                    }}
+                                  />
+                                  {item.rel_to_applicant_a === '99' && (
+                                    <AdEditOutLineInput
+                                      name={`p_residents[${index}].rel_to_applicant_a_other`}
+                                      convertFullWidth
+                                    />
+                                  )}
+                                </Stack>
+                              ) : (
+                                `${
+                                  item.rel_to_applicant_a
+                                    ? relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label
+                                    : ''
+                                }　${item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''}`
+                              )
+                            }
+                          />
+
+                          <EditRow
+                            label={`入居家族${index + 1} 生年月日`}
+                            upConfig={{
+                              key: `p_residents.birthday.${item?.id}`,
+                              formatJaDate: true,
+                            }}
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <DayPicker name={`p_residents[${index}].birthday`} />
+                              ) : (
+                                formatJapanDate(item.birthday, true)
+                              )
+                            }
+                          />
+
+                          <EditRow
+                            label={`入居家族${index + 1} 住宅金融支援機構（旧：公庫）からの融資の有無`}
+                            upConfig={{
+                              key: `p_residents.loan_from_japan_house_finance_agency.${item?.id}`,
+                              options: loanFromJapanHouseFinanceAgencyOptions,
+                            }}
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <AdSelectRadios
+                                  name={`p_residents[${index}].loan_from_japan_house_finance_agency`}
+                                  options={loanFromJapanHouseFinanceAgencyOptions}
+                                  cancelable
+                                />
+                              ) : (
+                                loanFromJapanHouseFinanceAgencyOptions.find(
+                                  (op) => op.value === item?.loan_from_japan_house_finance_agency
+                                )?.label
+                              )
+                            }
+                          />
+
+                          <EditRow
+                            label={`入居家族${index + 1} 郵便番号`}
+                            upConfig={{
+                              key: `p_residents.postal_code.${item?.id}`,
+                            }}
+                            field={
+                              isEditable ? (
+                                <AdZipCodeInput
+                                  name={`p_residents[${index}].postal_code`}
+                                  setPrefectureKanji={(value, touched) => {
+                                    formik.setFieldValue(`p_residents[${index}].prefecture_kanji`, value);
+                                    formik.setFieldTouched(`p_residents[${index}].prefecture_kanji`, touched);
+                                  }}
+                                  setCityKanji={(value, touched) => {
+                                    formik.setFieldValue(`p_residents[${index}].city_kanji`, value);
+                                    formik.setFieldTouched(`p_residents[${index}].city_kanji`, touched);
+                                  }}
+                                  setDistrictKanji={(value, touched) => {
+                                    formik.setFieldValue(`p_residents[${index}].district_kanji`, value);
+                                    formik.setFieldTouched(`p_residents[${index}].district_kanji`, touched);
+                                  }}
+                                  setOtherAddressKanji={(value, touched) => {
+                                    formik.setFieldValue(`p_residents[${index}].other_address_kanji`, value);
+                                    formik.setFieldTouched(`p_residents[${index}].other_address_kanji`, touched);
+                                  }}
+                                  // setPrefectureKana={(value, touched) => {
+                                  //   formik.setFieldValue(`p_residents[${index}].prefecture_kana`, value);
+                                  //   formik.setFieldTouched(`p_residents[${index}].prefecture_kana`, touched);
+                                  // }}
+                                  // setCityKana={(value, touched) => {
+                                  //   formik.setFieldValue(`p_residents[${index}].city_kana`, value);
+                                  //   formik.setFieldTouched(`p_residents[${index}].city_kana`, touched);
+                                  // }}
+                                  // setDistrictKana={(value, touched) => {
+                                  //   formik.setFieldValue(`p_residents[${index}].district_kana`, value);
+                                  //   formik.setFieldTouched(`p_residents[${index}].district_kana`, touched);
+                                  // }}
+                                />
+                              ) : (
+                                item.postal_code
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 都道府県`}
+                            upConfig={{
+                              key: `p_residents.prefecture_kanji.${item?.id}`,
+                              options: PREFECTURES,
+                            }}
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <AdSelectRadios
+                                  name={`p_residents[${index}].prefecture_kanji`}
+                                  options={PREFECTURES}
+                                  cancelable
+                                />
+                              ) : (
+                                PREFECTURES.find((op) => op.value === item?.prefecture_kanji)?.label
+                              )
+                            }
+                          />
+
+                          <EditRow
+                            label={`入居家族${index + 1} 市区郡`}
+                            upConfig={{
+                              key: `p_residents.city_kanji.${item?.id}`,
+                            }}
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].city_kanji`} convertFullWidth />
+                              ) : (
+                                item.city_kanji
+                              )
+                            }
+                          />
+
+                          <EditRow
+                            label={`入居家族${index + 1} 町村丁目`}
+                            upConfig={{
+                              key: `p_residents.district_kanji.${item?.id}`,
+                            }}
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].district_kanji`} convertFullWidth />
+                              ) : (
+                                item.district_kanji
+                              )
+                            }
+                          />
+
+                          <EditRow
+                            label={`入居家族${index + 1} 丁目以下・建物名・部屋番号`}
+                            upConfig={{
+                              key: `p_residents.other_address_kanji.${item?.id}`,
+                            }}
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput
+                                  name={`p_residents[${index}].other_address_kanji`}
                                   convertFullWidth
                                 />
-                              )}
-                            </Stack>
-                          ) : (
-                            `${
-                              item.rel_to_applicant_a
-                                ? relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label
-                                : ''
-                            }　${item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''}`
-                          )
-                        }
-                      />
-                    )}
+                              ) : (
+                                item.other_address_kanji
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 電話番号`}
+                            upConfig={{
+                              key: `p_residents.contact_phone.${item?.id}`,
+                            }}
+                            field={
+                              isEditable ? (
+                                <AdPhoneInputField name={`p_residents[${index}].contact_phone`} convertHalfWidth />
+                              ) : (
+                                item.contact_phone
+                              )
+                            }
+                          />
 
-                    <EditRow
-                      label={`入居家族${index + 1} 生年月日`}
-                      upConfig={{
-                        key: `p_residents.birthday.${item?.id}`,
-                        formatJaDate: true,
-                      }}
-                      isAddendum
-                      hasPleft={isEditable}
-                      field={
-                        isEditable ? (
-                          <DayPicker name={`p_residents[${index}].birthday`} />
-                        ) : (
-                          formatJapanDate(item.birthday, true)
-                        )
-                      }
-                    />
-
-                    {isMCJ && item?.resident_type === '0' && (
-                      <Stack>
-                        <EditRow
-                          label={`入居家族${index + 1} 住宅金融支援機構（旧：公庫）からの融資の有無`}
-                          upConfig={{
-                            key: `p_residents.loan_from_japan_house_finance_agency.${item?.id}`,
-                            options: loanFromJapanHouseFinanceAgencyOptions,
-                          }}
-                          hasPleft={isEditable}
-                          field={
-                            isEditable ? (
-                              <AdSelectRadios
-                                name={`p_residents[${index}].loan_from_japan_house_finance_agency`}
-                                options={loanFromJapanHouseFinanceAgencyOptions}
-                                cancelable
-                              />
-                            ) : (
-                              loanFromJapanHouseFinanceAgencyOptions.find(
-                                (op) => op.value === item?.loan_from_japan_house_finance_agency
-                              )?.label
-                            )
-                          }
-                        />
-
-                        <EditRow
-                          label={`入居家族${index + 1} 郵便番号`}
-                          upConfig={{
-                            key: `p_residents.postal_code.${item?.id}`,
-                          }}
-                          field={
-                            isEditable ? (
-                              <AdZipCodeInput
-                                name={`p_residents[${index}].postal_code`}
-                                setPrefectureKanji={(value, touched) => {
-                                  formik.setFieldValue(`p_residents[${index}].prefecture_kanji`, value);
-                                  formik.setFieldTouched(`p_residents[${index}].prefecture_kanji`, touched);
-                                }}
-                                setCityKanji={(value, touched) => {
-                                  formik.setFieldValue(`p_residents[${index}].city_kanji`, value);
-                                  formik.setFieldTouched(`p_residents[${index}].city_kanji`, touched);
-                                }}
-                                setDistrictKanji={(value, touched) => {
-                                  formik.setFieldValue(`p_residents[${index}].district_kanji`, value);
-                                  formik.setFieldTouched(`p_residents[${index}].district_kanji`, touched);
-                                }}
-                                setOtherAddressKanji={(value, touched) => {
-                                  formik.setFieldValue(`p_residents[${index}].other_address_kanji`, value);
-                                  formik.setFieldTouched(`p_residents[${index}].other_address_kanji`, touched);
-                                }}
-                                setPrefectureKana={(value, touched) => {
-                                  formik.setFieldValue(`p_residents[${index}].prefecture_kana`, value);
-                                  formik.setFieldTouched(`p_residents[${index}].prefecture_kana`, touched);
-                                }}
-                                setCityKana={(value, touched) => {
-                                  formik.setFieldValue(`p_residents[${index}].city_kana`, value);
-                                  formik.setFieldTouched(`p_residents[${index}].city_kana`, touched);
-                                }}
-                                setDistrictKana={(value, touched) => {
-                                  formik.setFieldValue(`p_residents[${index}].district_kana`, value);
-                                  formik.setFieldTouched(`p_residents[${index}].district_kana`, touched);
-                                }}
-                              />
-                            ) : (
-                              item.postal_code
-                            )
-                          }
-                        />
-                        <EditRow
-                          label={`入居家族${index + 1} 都道府県`}
-                          upConfig={{
-                            key: `p_residents.prefecture_kanji.${item?.id}`,
-                            options: PREFECTURES,
-                          }}
-                          hasPleft={isEditable}
-                          field={
-                            isEditable ? (
-                              <AdSelectRadios
-                                name={`p_residents[${index}].prefecture_kanji`}
-                                options={PREFECTURES}
-                                cancelable
-                              />
-                            ) : (
-                              PREFECTURES.find((op) => op.value === item?.prefecture_kanji)?.label
-                            )
-                          }
-                        />
-
-                        <EditRow
-                          label={`入居家族${index + 1} 市区郡`}
-                          upConfig={{
-                            key: `p_residents.city_kanji.${item?.id}`,
-                          }}
-                          field={
-                            isEditable ? (
-                              <AdEditFullWidthInput name={`p_residents[${index}].city_kanji`} convertFullWidth />
-                            ) : (
-                              item.city_kanji
-                            )
-                          }
-                        />
-
-                        <EditRow
-                          label={`入居家族${index + 1} 町村丁目`}
-                          upConfig={{
-                            key: `p_residents.district_kanji.${item?.id}`,
-                          }}
-                          field={
-                            isEditable ? (
-                              <AdEditFullWidthInput name={`p_residents[${index}].district_kanji`} convertFullWidth />
-                            ) : (
-                              item.district_kanji
-                            )
-                          }
-                        />
-
-                        <EditRow
-                          label={`入居家族${index + 1} 丁目以下・建物名・部屋番号`}
-                          upConfig={{
-                            key: `p_residents.other_address_kanji.${item?.id}`,
-                          }}
-                          field={
-                            isEditable ? (
-                              <AdEditFullWidthInput
-                                name={`p_residents[${index}].other_address_kanji`}
-                                convertFullWidth
-                              />
-                            ) : (
-                              item.other_address_kanji
-                            )
-                          }
-                        />
-                        <EditRow
-                          label={`入居家族${index + 1} 電話番号`}
-                          upConfig={{
-                            key: `p_residents.contact_phone.${item?.id}`,
-                          }}
-                          field={
-                            isEditable ? (
-                              <AdPhoneInputField name={`p_residents[${index}].contact_phone`} convertHalfWidth />
-                            ) : (
-                              item.contact_phone
-                            )
-                          }
-                        />
-
-                        <EditRow
-                          label={`入居家族${index + 1} 国籍`}
-                          upConfig={{
-                            key: `p_residents.nationality.${item?.id}`,
-                            options: nationalityOptions,
-                          }}
-                          hasPleft={isEditable}
-                          field={
-                            isEditable ? (
-                              <AdSelectRadios
-                                name={`p_residents[${index}].nationality`}
-                                options={nationalityOptions}
-                                cancelable
-                              />
-                            ) : (
-                              nationalityOptions.find((op) => op.value === item?.nationality)?.label
-                            )
-                          }
-                        />
-                      </Stack>
-                    )}
+                          <EditRow
+                            label={`入居家族${index + 1} 国籍`}
+                            upConfig={{
+                              key: `p_residents.nationality.${item?.id}`,
+                              options: nationalityOptions,
+                            }}
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <AdSelectRadios
+                                  name={`p_residents[${index}].nationality`}
+                                  options={nationalityOptions}
+                                  cancelable
+                                />
+                              ) : (
+                                nationalityOptions.find((op) => op.value === item?.nationality)?.label
+                              )
+                            }
+                          />
+                        </Stack>
+                      ))}
                   </Stack>
-                ))}
+                )}
               </Stack>
+
+              {isManager && (
+                <Stack>
+                  {formik.values.p_residents
+                    .filter((pr) => {
+                      if (formik.values.p_application_headers.new_house_self_resident === '0') {
+                        return pr.resident_type === '1';
+                      } else {
+                        return pr.resident_type === '1' || pr.resident_type === '0';
+                      }
+                    })
+                    .map((item, i) => {
+                      const step = formik.values.p_application_headers.new_house_self_resident === '0' ? 1 : 0;
+                      const index = i + step;
+                      return (
+                        <Stack key={index}>
+                          <EditRow
+                            label={`入居家族${index + 1} 現在申込人との同居有無`}
+                            upConfig={{
+                              key: `p_residents.one_roof.${item?.id}`,
+                              options: oneRoofOptions,
+                            }}
+                            isAddendum
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <AdSelectRadios name={`p_residents[${index}].one_roof`} options={oneRoofOptions} />
+                              ) : (
+                                oneRoofOptions.find((op) => op.value === item.one_roof)?.label
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 姓　漢字`}
+                            upConfig={{
+                              key: `p_residents.last_name_kanji.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            isAddendum
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].last_name_kanji`} convertFullWidth />
+                              ) : (
+                                item.last_name_kanji
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 名　漢字`}
+                            upConfig={{
+                              key: `p_residents.first_name_kanji.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            isAddendum
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput
+                                  name={`p_residents[${index}].first_name_kanji`}
+                                  convertFullWidth
+                                />
+                              ) : (
+                                item.first_name_kanji
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 姓　カナ`}
+                            upConfig={{
+                              key: `p_residents.last_name_kana.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            isAddendum
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].last_name_kana`} convertFullWidth />
+                              ) : (
+                                item.last_name_kana
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 名　カナ`}
+                            upConfig={{
+                              key: `p_residents.first_name_kana.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            isAddendum
+                            field={
+                              isEditable ? (
+                                <AdEditFullWidthInput name={`p_residents[${index}].first_name_kana`} convertFullWidth />
+                              ) : (
+                                item.first_name_kana
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 性別`}
+                            upConfig={{
+                              key: `p_residents.gender.${item?.id}`,
+                              options: genderOptions,
+                            }}
+                            isAddendum
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <AdSelectRadios name={`p_residents[${index}].gender`} options={genderOptions} />
+                              ) : (
+                                genderOptions.find((op) => op.value === item.gender)?.label
+                              )
+                            }
+                          />
+                          <EditRow
+                            label={`入居家族${index + 1} 続柄`}
+                            upConfig={{
+                              key: `p_residents.rel_to_applicant_a.${item?.id}`,
+                            }}
+                            isLogicRequired
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <Stack direction={'row'}>
+                                  <AdSelectRadios
+                                    name={`p_residents[${index}].rel_to_applicant_a`}
+                                    options={relToApplicantAOptions}
+                                    onChange={(value) => {
+                                      if (value !== '99') {
+                                        formik.setFieldValue(`p_residents[${index}].rel_to_applicant_a_other`, '');
+                                      }
+                                    }}
+                                  />
+                                  {item.rel_to_applicant_a === '99' && (
+                                    <AdEditOutLineInput
+                                      name={`p_residents[${index}].rel_to_applicant_a_other`}
+                                      convertFullWidth
+                                    />
+                                  )}
+                                </Stack>
+                              ) : (
+                                `${
+                                  item.rel_to_applicant_a
+                                    ? relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label
+                                    : ''
+                                }　${item.rel_to_applicant_a === '99' ? `${item.rel_to_applicant_a_other}` : ''}`
+                              )
+                            }
+                          />
+
+                          <EditRow
+                            label={`入居家族${index + 1} 生年月日`}
+                            upConfig={{
+                              key: `p_residents.birthday.${item?.id}`,
+                              formatJaDate: true,
+                            }}
+                            isAddendum
+                            hasPleft={isEditable}
+                            field={
+                              isEditable ? (
+                                <DayPicker name={`p_residents[${index}].birthday`} />
+                              ) : (
+                                formatJapanDate(item.birthday, true)
+                              )
+                            }
+                          />
+                        </Stack>
+                      );
+                    })}
+                </Stack>
+              )}
             </Stack>
           )}
         />

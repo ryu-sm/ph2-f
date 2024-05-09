@@ -41,7 +41,6 @@ export const ApStep12Page = () => {
   const {
     agentSended,
     user: { salesCompanyOrgId, id },
-    salesPerson,
   } = useRecoilValue(authAtom);
 
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
@@ -140,9 +139,9 @@ export const ApStep12Page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (salesCompanyOrgId) {
+      if (salesCompanyOrgId || p_application_headers.sales_company_id) {
         try {
-          const res = await getOrgsInfos(salesCompanyOrgId);
+          const res = await getOrgsInfos(salesCompanyOrgId || p_application_headers.sales_company_id);
 
           setOrgsC([{ value: res.data?.sales_company_id, label: res.data?.sales_company_name }]);
           if (res.data?.sales_company_id) {

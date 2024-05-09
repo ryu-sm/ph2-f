@@ -33,7 +33,7 @@ export const EditTabs = ({}) => {
     return [
       {
         value: 1,
-        label: byPairLoan ? '申込人A' : '申込人',
+        label: byPairLoan ? '申込人A' : '申込人A',
       },
       ...(hasIncomeTotalizer
         ? [
@@ -113,7 +113,7 @@ export const EditTabs = ({}) => {
               <Typography
                 variant="applicant_name"
                 fontWeight={item.value === mainTabStatus ? 600 : 300}
-                color={item.value === mainTabStatus ? 'gray.100' : 'primary.main'}
+                color={'gray.100'}
               >
                 {item.label}
               </Typography>

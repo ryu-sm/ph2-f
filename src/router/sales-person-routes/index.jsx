@@ -6,6 +6,8 @@ import {
   AdMessagesDetailPage,
   AdMessagesPages,
   AdNewDocumentsPage,
+  AdRegisterPage,
+  AdRegisterVerifyEmailPage,
   DashboardPage,
   EditPreliminary,
 } from '@/pages/administrator';
@@ -58,6 +60,14 @@ export const salesPersonAdRoutes = [
   {
     ...routeNames.adSalesPersonMessagesDetailPage,
     Element: AdMessagesDetailPage,
+  },
+  {
+    ...routeNames.adSalesPersonRegisterVerifyEmail,
+    Element: AdRegisterVerifyEmailPage,
+  },
+  {
+    ...routeNames.adSalesPersonRegister,
+    Element: AdRegisterPage,
   },
 ];
 

@@ -5,18 +5,23 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button, Popover, Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
 import SearchIcon from '@mui/icons-material/Search';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, ...props }) => {
+export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, handleChangeInit, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
   const [searchText, setSearchText] = useState('');
 
+  const [oldValue, setOldValue] = useState(meta.value);
+
   const { setValue } = helpers;
   const handleChange = useCallback(
     async (value) => {
       props.onChange && props.onChange(value);
+      if (value !== oldValue) {
+        handleChangeInit && handleChangeInit();
+      }
       if (cancelable && value === meta.value) {
         await setValue('');
       } else {
@@ -26,6 +31,7 @@ export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, ...props 
     [props, setValue, cancelable, meta.value]
   );
   const handlePopoverOpen = (e) => {
+    setOldValue(meta.value);
     setAnchorEl(e.currentTarget);
     setSearchText('');
   };
@@ -38,7 +44,7 @@ export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, ...props 
     return searchText ? options.filter((option) => option.label.includes(searchText)) : options;
   }, [options, searchText]);
   return (
-    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} flex={1} spacing={2}>
+    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} spacing={2}>
       <Stack direction={'row'} alignItems={'center'} spacing={'10px'}>
         <Button
           name={field.name}

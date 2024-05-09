@@ -25,16 +25,7 @@ export const validationSchema = yup.object({
           }
         }
       ),
-      type: yup
-        .string()
-        .when('self_input', ([self_input], field) => {
-          if (self_input === '1') {
-            return field.required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED);
-          } else {
-            return field;
-          }
-        })
-        .label('お借入の種類'),
+      type: yup.string().required(YUP_MESSAGES.DROPDOWN_SELECT_REQUIRED).label('お借入の種類'),
       lender: yup
         .string()
         .max(40)

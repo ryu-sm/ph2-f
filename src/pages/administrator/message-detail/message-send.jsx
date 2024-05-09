@@ -28,7 +28,7 @@ export const MessageSend = ({ fetchData, applicant }) => {
   const handleSendMessage = async () => {
     const data = {
       c_user_id: applicant?.type === '0' ? applicant?.id : null,
-      viewed: [isManager ? manager?.id : salesPerson?.id],
+      // viewed: [isManager ? manager?.id : salesPerson?.id],
       p_application_header_id: applicant?.type === '1' ? applicant?.id : null,
       content: formatAdMessage(formik.values.message),
     };

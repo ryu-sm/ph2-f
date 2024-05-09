@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useField } from 'formik';
 import { Stack, TextField, Typography } from '@mui/material';
 
@@ -15,6 +15,7 @@ export const ApTextInputField = ({
   sx,
   multiline = false,
   maxRows = 1,
+  handleChangeInit,
   ...props
 }) => {
   const [field, meta, helpers] = useField(props);
@@ -22,13 +23,16 @@ export const ApTextInputField = ({
 
   const isError = useMemo(() => meta.touched && !!meta.error, [meta.touched, meta.error]);
   const isSuccess = useMemo(() => !isError && !!meta.value && meta.value !== '', [isError, meta.value]);
+  const [oldValue, setOldValue] = useState(meta.value);
 
   const handelBlue = useCallback(
     async (e) => {
       field.onBlur(e);
       props.onBlur && props.onBlur(e);
       let value = autoTrim ? e.target.value?.toString().trim() : e.target.value?.toString();
-
+      if (value !== oldValue) {
+        handleChangeInit && handleChangeInit();
+      }
       if (convertKatakana) {
         value = toKatakana(value);
       }
@@ -43,6 +47,7 @@ export const ApTextInputField = ({
 
   const handleFocus = useCallback(
     async (e) => {
+      setOldValue(meta.value);
       props.onFocus && props.onFocus(e);
       await setTouched(false);
     },

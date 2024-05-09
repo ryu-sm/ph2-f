@@ -170,29 +170,6 @@ export const ApStep08Page = () => {
     }
   }, []);
 
-  // const { dbData } = useApplicationContext();
-
-  // useEffect(() => {
-  //   if (agentSended && dbData) {
-  //     const newData = {
-  //       ...formik.values,
-  //       p_application_headers: {
-  //         curr_borrowing_status: dbData?.p_application_headers?.curr_borrowing_status,
-  //         refund_source_type: dbData?.p_application_headers?.refund_source_type,
-  //         refund_source_type_other: dbData?.p_application_headers?.refund_source_type_other,
-  //         refund_source_content: dbData?.p_application_headers?.refund_source_content,
-  //         refund_source_amount: dbData?.p_application_headers?.refund_source_amount,
-  //         rent_to_be_paid_land: dbData?.p_application_headers?.rent_to_be_paid_land,
-  //         rent_to_be_paid_land_borrower: dbData?.p_application_headers?.rent_to_be_paid_land_borrower,
-  //         rent_to_be_paid_house: dbData?.p_application_headers?.rent_to_be_paid_house,
-  //         rent_to_be_paid_house_borrower: dbData?.p_application_headers?.rent_to_be_paid_house_borrower,
-  //       },
-  //       p_borrowings: dbData?.p_borrowings,
-  //     };
-  //     formik.setValues(newData);
-  //   }
-  // }, [dbData]);
-
   const { refreshsendedApllication } = useApplicationContext();
   useEffect(() => {
     if (agentSended) {

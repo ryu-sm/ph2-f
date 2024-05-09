@@ -1,12 +1,20 @@
 import { convertToFullWidth, convertToHalfWidth } from '@/utils';
 import { Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRef } from 'react';
 
-export const AdEditFullWidthInput = ({ convertFullWidth, convertHalfWidth, autoTrim = true, ml, ...props }) => {
+export const AdEditFullWidthInput = ({
+  handleChangeInit,
+  convertFullWidth,
+  convertHalfWidth,
+  autoTrim = true,
+  ml,
+  ...props
+}) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
+  const [oldValue, setOldValue] = useState(meta.value);
 
   const inputRef = useRef(null);
 
@@ -27,6 +35,9 @@ export const AdEditFullWidthInput = ({ convertFullWidth, convertHalfWidth, autoT
       }
       if (convertFullWidth) {
         value = convertToFullWidth(value);
+      }
+      if (value !== oldValue) {
+        handleChangeInit && handleChangeInit();
       }
       await setTouched(true);
       await setValue(value);
@@ -83,7 +94,10 @@ export const AdEditFullWidthInput = ({ convertFullWidth, convertHalfWidth, autoT
           value={meta.value}
           onChange={handleChange}
           onBlur={handelBlue}
-          onFocus={() => setTouched(false)}
+          onFocus={() => {
+            setOldValue(meta.value);
+            setTouched(false);
+          }}
         />
       </Stack>
       {meta.touched && meta.error && (
