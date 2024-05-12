@@ -52,7 +52,6 @@ export const ApLoginPage = () => {
             ...pre,
             isLogined: true,
             roleType: payload?.role_type,
-            applayType: 1,
             user: {
               ...pre.user,
               id: payload?.id,
@@ -60,6 +59,16 @@ export const ApLoginPage = () => {
               salesCompanyOrgId: payload?.s_sales_company_org_id,
               displayPdf: Boolean(payload?.display_pdf),
               hasDraftData: Boolean(payload.has_draft),
+            },
+            salesPerson: {
+              id: null,
+              email: null,
+              name: null,
+            },
+            manager: {
+              id: null,
+              email: null,
+              name: null,
             },
             agentSended: Boolean(payload?.agent_sended),
           };

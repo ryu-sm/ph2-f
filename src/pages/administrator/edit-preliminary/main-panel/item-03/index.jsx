@@ -165,7 +165,7 @@ export const Item03 = () => {
   });
 
   useEffect(() => {
-    console.log(p_applicant_persons__0);
+    console.log(formik.errors);
   }, [formik.errors]);
 
   useEffect(() => {

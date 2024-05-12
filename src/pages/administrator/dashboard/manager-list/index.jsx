@@ -1,14 +1,13 @@
-import { LinearProgress, Stack } from '@mui/material';
+import { LinearProgress, Stack, Typography } from '@mui/material';
 import { HeaderFilter } from '../common/header-filter';
 import { AdCaseItem } from './list-item';
 import { widthConfig } from '../common/width-config';
 import { useDashboardContext } from '@/hooks';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import { REGEX } from '@/constant';
 import { yup } from '@/libs';
-import { routeNames } from '@/router/settings';
-import { useNavigate } from 'react-router-dom';
+import { InboxOutlined } from '@mui/icons-material';
 
 export const ManagerList = () => {
   const { status, preliminarieList, refreshPreliminarieList } = useDashboardContext();
@@ -16,8 +15,6 @@ export const ManagerList = () => {
   useEffect(() => {
     refreshPreliminarieList();
   }, []);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (status === 'hasValue') {
@@ -115,20 +112,36 @@ export const ManagerList = () => {
         <HeaderFilter />
         {status === 'loading' && <LinearProgress />}
         {status === 'hasValue' && (
-          <Stack
-            p={3}
-            width={1}
-            spacing={3}
-            minWidth={Object.values(widthConfig).reduce((acc, curr) => acc + curr, 0) + 40}
-            overflow={'auto'}
-          >
-            {data.map((item) => (
-              <AdCaseItem
-                key={`${item.id}${item.provisional_after_result}${item.pair_loan_data?.provisional_after_result}`}
-                item={item}
-              />
-            ))}
-          </Stack>
+          <Fragment>
+            {data.length > 0 ? (
+              <Stack
+                p={3}
+                width={1}
+                spacing={3}
+                minWidth={Object.values(widthConfig).reduce((acc, curr) => acc + curr, 0) + 40}
+                overflow={'auto'}
+              >
+                {data.map((item) => (
+                  <AdCaseItem
+                    key={`${item.id}${item.provisional_after_result}${item.pair_loan_data?.provisional_after_result}`}
+                    item={item}
+                  />
+                ))}
+              </Stack>
+            ) : (
+              <Stack flex={1} alignContent={'center'} justifyContent={'center'}>
+                <InboxOutlined
+                  sx={{
+                    width: 80,
+                    height: 70,
+                    ml: 'calc(50% - 50px)',
+                    color: '#d8d8d8',
+                  }}
+                />
+                <Typography sx={{ color: '#7d7d7d', textAlign: 'center' }}>案件がありません。</Typography>
+              </Stack>
+            )}
+          </Fragment>
         )}
       </Stack>
     </FormikProvider>

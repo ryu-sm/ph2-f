@@ -39,8 +39,8 @@ export const AdEditFullWidthInput = ({
       if (value !== oldValue) {
         handleChangeInit && handleChangeInit();
       }
-      await setTouched(true);
       await setValue(value);
+      await setTouched(true);
     },
     [field, props]
   );

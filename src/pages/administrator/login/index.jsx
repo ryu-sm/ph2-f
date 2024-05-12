@@ -44,31 +44,60 @@ export const AdOrSpLoginPage = () => {
               ...pre,
               isLogined: true,
               roleType: payload?.role_type,
+              user: {
+                id: null,
+                email: null,
+                salesCompanyOrgId: null,
+                displayPdf: true,
+                hasDraftData: false,
+                provisionalResult: null,
+              },
+              salesPerson: {
+                id: null,
+                email: null,
+                name: null,
+              },
               manager: {
                 id: payload?.id,
                 email: payload?.email,
                 name: payload?.name_kanji,
               },
+              agentSended: false,
             };
           });
+        } else {
+          const res = await adSalesPersonLogin(values);
+          const { access_token } = res.data;
+          setToken(access_token);
+          const payload = jwtDecode(access_token);
+          setAuthInfo((pre) => {
+            return {
+              ...pre,
+              isLogined: true,
+              roleType: payload?.role_type,
+              user: {
+                id: null,
+                email: null,
+                salesCompanyOrgId: null,
+                displayPdf: true,
+                hasDraftData: false,
+                provisionalResult: null,
+              },
+              salesPerson: {
+                id: payload?.id,
+                email: payload?.email,
+                name: payload?.name_kanji,
+              },
+              manager: {
+                id: null,
+                email: null,
+                name: null,
+              },
+              agentSended: false,
+            };
+          });
+          navigate(routeNames.adSalesPersonDashboardPage.path);
         }
-        const res = await adSalesPersonLogin(values);
-        const { access_token } = res.data;
-        setToken(access_token);
-        const payload = jwtDecode(access_token);
-        setAuthInfo((pre) => {
-          return {
-            ...pre,
-            isLogined: true,
-            roleType: payload?.role_type,
-            salesPerson: {
-              id: payload?.id,
-              email: payload?.email,
-              name: payload?.name_kanji,
-            },
-          };
-        });
-        navigate(routeNames.adSalesPersonDashboardPage.path);
       } catch (error) {
         switch (error?.status) {
           case 400:

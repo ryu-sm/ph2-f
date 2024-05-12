@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button, Popover, Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
 import SearchIcon from '@mui/icons-material/Search';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, handleChangeInit, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);

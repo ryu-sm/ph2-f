@@ -3,7 +3,6 @@ import { atom, selector } from 'recoil';
 const authInitialValues = {
   isLogined: false,
   roleType: 1,
-  applayType: 1,
   user: {
     id: null,
     email: null,
@@ -73,14 +72,6 @@ export const roleTypeSelector = selector({
   get: ({ get }) => {
     const auth = get(authAtom);
     return auth?.roleType;
-  },
-});
-
-export const applayTypeSelector = selector({
-  key: 'applayType',
-  get: ({ get }) => {
-    const auth = get(authAtom);
-    return auth?.applayType;
   },
 });
 

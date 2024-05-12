@@ -29,7 +29,6 @@ import { API_500_ERROR } from '@/constant';
 import { UnAccessModal } from '../common/un-access-modal';
 
 export const AdCaseItem = ({ item }) => {
-  console.log(item);
   const isPairLoan = useMemo(() => {
     return item.loan_type === '2' && item.pair_loan_id !== '';
   }, [item]);
