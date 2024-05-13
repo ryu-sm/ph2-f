@@ -83,7 +83,7 @@ export const validationSchema = yup.object({
     property_city: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
     property_district: yup
       .string()
-      .max(20)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.SP_KANJI_FULL_WIDTH_HAVE_NUMBER),
     property_apartment_and_room_no: yup
       .string()

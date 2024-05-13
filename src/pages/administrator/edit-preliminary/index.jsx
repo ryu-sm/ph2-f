@@ -13,8 +13,9 @@ import { PreliminaryProvider } from '@/contexts/preliminary';
 import { AdPrimaryButton } from '@/components/administrator/button';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
-import { adGetManagrPreliminariyAccess, adGetSalesPersonPreliminariyAccess } from '@/services';
+import { adGetSalesPersonPreliminariyAccess } from '@/services';
 import { UnAccessModal } from '../dashboard/common/un-access-modal';
+import { Icons } from '@/assets';
 
 const Content = () => {
   const isManager = useIsManager();
@@ -44,15 +45,7 @@ const Content = () => {
   const [access, setAccess] = useState(true);
   const checkAccess = async () => {
     try {
-      if (isManager) {
-        const res = await adGetManagrPreliminariyAccess(p_application_header_id);
-
-        if (!res.data?.access) {
-          setAccess(false);
-          unAccessModal.onTrue();
-          return;
-        }
-      } else {
+      if (!isManager) {
         try {
           const res = await adGetSalesPersonPreliminariyAccess(p_application_header_id);
 
@@ -108,6 +101,24 @@ const Content = () => {
         {status === 'hasValue' && access && (
           <Stack>
             {isManager && <AdReviewProgress />}
+            {!isManager && Number(preliminaryInfo.p_result.pre_examination_status) >= 3 && (
+              <Stack
+                direction={'row'}
+                alignItems={'center'}
+                justifyContent={'start'}
+                borderBottom={'1px solid'}
+                borderColor={'gray.80'}
+                spacing={1}
+                pt={'10px'}
+                pb={'5px'}
+                px={10}
+              >
+                <Icons.AdCircleNotice />
+                <Typography variant="dailog_content" color="secondary.main" lineHeight={'32px'}>
+                  住信SBIネット銀行での審査フェーズ（「仮審査中」以降）に入りますと申込内容の修正はできません。
+                </Typography>
+              </Stack>
+            )}
             <EditTabs />
           </Stack>
         )}

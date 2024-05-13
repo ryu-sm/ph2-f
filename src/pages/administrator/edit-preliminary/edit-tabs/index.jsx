@@ -14,7 +14,6 @@ import { ExaminationResultButtons } from '../common/examination-result-buttons';
 
 export const EditTabs = ({}) => {
   const {
-    // preliminaryInfo: { p_application_headers },
     preliminarySnap: { hasIncomeTotalizer, p_application_headers },
     checkUpdate,
     resetPreliminarySnap,

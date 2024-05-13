@@ -976,6 +976,7 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_city_kanji.${p_applicant_persons__0?.id}`,
               }}
+              isLogicRequired
               field={
                 isEditable ? (
                   <AdEditFullWidthInput name="p_applicant_persons__0.transfer_office_city_kanji" convertFullWidth />
@@ -989,6 +990,7 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_district_kanji.${p_applicant_persons__0?.id}`,
               }}
+              isLogicRequired
               field={
                 isEditable ? (
                   <AdEditFullWidthInput name="p_applicant_persons__0.transfer_office_district_kanji" convertFullWidth />
@@ -1002,6 +1004,7 @@ export const Item03 = () => {
               upConfig={{
                 key: `p_applicant_persons.transfer_office_other_address_kanji.${p_applicant_persons__0?.id}`,
               }}
+              isLogicRequired
               field={
                 isEditable ? (
                   <AdEditFullWidthInput

@@ -89,7 +89,7 @@ export const Item07 = () => {
       Number(formik.values.p_application_headers.required_funds_additional_amount) +
       Number(formik.values.p_application_headers.required_funds_loan_plus_amount)
     );
-  }, []);
+  }, [formik.values]);
 
   const funding_total_amount = useMemo(() => {
     return (
@@ -103,7 +103,7 @@ export const Item07 = () => {
       Number(formik.values.p_application_headers.funding_other_refinance_amount) +
       Number(formik.values.p_application_headers.funding_other_amount)
     );
-  }, []);
+  }, [formik.values]);
 
   useEffect(() => {
     const tempFundingSelfAmount =
@@ -475,6 +475,9 @@ export const Item07 = () => {
         {Number(formik.values.p_application_headers.funding_other_amount) > 0 && (
           <EditRow
             label={'※詳細を入力ください。'}
+            upConfig={{
+              key: `p_application_headers.funding_other_amount_detail.${p_application_headers?.id}`,
+            }}
             isLogicRequired
             field={
               isEditable ? (

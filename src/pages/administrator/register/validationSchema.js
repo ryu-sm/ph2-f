@@ -2,7 +2,7 @@ import { REGEX, YUP_MESSAGES } from '@/constant';
 import { yup } from '@/libs';
 
 export const validationSchema = yup.object({
-  name: yup.string().required().label('お名前'),
+  // name: yup.string().required().label('お名前'),
   password: yup
     .string()
     .required()

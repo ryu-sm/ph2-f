@@ -13,8 +13,20 @@ export const ProgressStatus = ({ status, id }) => {
         strokeColor: '#C5D5FF',
       },
       {
-        values: ['1', '2', '3'],
+        values: ['1'],
         label: '書類不備対応中',
+        fillColor: '#D5D2FF',
+        strokeColor: '#C5D5FF',
+      },
+      {
+        values: ['2'],
+        label: '内容確認',
+        fillColor: '#D5D2FF',
+        strokeColor: '#C5D5FF',
+      },
+      {
+        values: ['3'],
+        label: '承認',
         fillColor: '#D5D2FF',
         strokeColor: '#C5D5FF',
       },
@@ -51,6 +63,7 @@ export const ProgressStatus = ({ status, id }) => {
     <Stack
       direction={'row'}
       alignItems={'center'}
+      justifyContent={'start'}
       spacing={'2px'}
       onClick={currentStatusItem?.values.includes('4') ? handleCheckUnderPreliminary : () => {}}
       sx={{ cursor: currentStatusItem?.values.includes('4') ? 'pointer' : 'default' }}

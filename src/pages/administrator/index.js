@@ -14,3 +14,4 @@ export { AdMessagesDetailPage } from './message-detail';
 export { AdUnderPreliminaryExamination } from './under-preliminary-examination';
 export { AdRegisterVerifyEmailPage } from './register-verify-email';
 export { AdRegisterPage } from './register';
+export { AdSalesPersonUpdateOrg } from './update-org';

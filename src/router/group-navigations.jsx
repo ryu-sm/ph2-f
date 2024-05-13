@@ -25,7 +25,8 @@ export const GroupNavigations = ({ group }) => {
   if (!isLogined && group === 'sales-person') {
     if (
       pathname !== routeNames.adSalesPersonRegisterVerifyEmail.path &&
-      pathname !== routeNames.adSalesPersonRegister.path
+      pathname !== routeNames.adSalesPersonRegister.path &&
+      pathname !== routeNames.adSalesPersonUpdateOrg.path
     ) {
       return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
     }

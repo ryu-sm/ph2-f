@@ -42,7 +42,7 @@ export const validationSchema = yup.object({
 
     office_prefecture_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
     office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
-    office_district_kanji: yup.string().max(40).matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI),
+    office_district_kanji: yup.string().max(60).matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI),
     office_other_address_kanji: yup
       .string()
       .max(99)
@@ -135,7 +135,7 @@ export const validationSchema = yup.object({
       }),
     transfer_office_district_kanji: yup
       .string()
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI)
       .when('transfer_office', ([transfer_office], field) => {
         if (transfer_office === '1') {

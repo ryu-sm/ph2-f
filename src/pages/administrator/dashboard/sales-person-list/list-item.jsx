@@ -142,26 +142,30 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       title: 'みらいバンク支店',
       label: '書類確認中',
       bgcolor: ['0'].includes(item?.pre_examination_status) ? '#C5D5FF' : 'gray.20',
+      fontWeight: ['0'].includes(item?.pre_examination_status) ? 500 : 300,
     },
     {
       value: '1',
       title: '申込人',
       label: '書類不備対応中',
-      bgcolor: ['1', '2', '3'].includes(item?.pre_examination_status) ? '#C5D5FF' : 'gray.20',
+      bgcolor: ['1', '2'].includes(item?.pre_examination_status) ? '#C5D5FF' : 'gray.20',
+      fontWeight: ['1', '2'].includes(item?.pre_examination_status) ? 500 : 300,
     },
     {
-      value: '4',
+      value: '3',
       title: '住信SBIネット銀行',
-      label: ['4'].includes(item?.pre_examination_status)
+      label: ['3', '4'].includes(item?.pre_examination_status)
         ? `仮審査中（${item?.provisional_status ? item?.provisional_status : 0}/5）`
         : '仮審査中',
-      bgcolor: ['4'].includes(item?.pre_examination_status) ? '#DF8550' : 'gray.20',
+      bgcolor: ['3', '4'].includes(item?.pre_examination_status) ? '#DF8550' : 'gray.20',
+      fontWeight: ['3', '4'].includes(item?.pre_examination_status) ? 500 : 300,
     },
     {
       value: '5',
       title: 'みらいバンク支店',
       label: '提携会社へ仮審査結果公開',
       bgcolor: ['5', '6'].includes(item?.pre_examination_status) ? '#ACEAB1' : 'gray.20',
+      fontWeight: ['5', '6'].includes(item?.pre_examination_status) ? 500 : 300,
     },
   ];
 
@@ -526,7 +530,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
 
         <Stack direction={'row'} px={2} mb={2}>
           {reviewProgress.map((item, index) => (
-            <Stack key={item.value} flex={item.value === 4 ? 1.5 : 1}>
+            <Stack key={item.value} flex={item.value === '4' ? 1.5 : 1}>
               <Typography variant="manager_progress_item_title" width={'100%'} textAlign={'center'} color={'text.main'}>
                 {item.title}
               </Typography>
@@ -553,10 +557,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                     clipPath: checkClipPath(index),
                   }}
                 >
-                  <Typography variant="manager_progress_item">{item.label}</Typography>
+                  <Typography
+                    variant="manager_progress_item"
+                    fontWeight={item.fontWeight}
+                    color={item.value === '3' ? 'white' : 'gray.100'}
+                  >
+                    {item.label}
+                  </Typography>
                 </Box>
               </Box>
-              {item.value === '4' && (
+              {item.value === '3' && (
                 <Stack direction={'row'} spacing={2} mt={2} justifyContent={'center'}>
                   {['1', '2', '3', '4', '5'].map((step) => (
                     <Box

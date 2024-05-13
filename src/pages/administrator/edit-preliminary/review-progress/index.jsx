@@ -1,5 +1,5 @@
 import { useTheme } from '@emotion/react';
-import { Button, Grid, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { Fragment, useCallback, useMemo, useState } from 'react';
 import { Icons } from '@/assets';
 
@@ -8,10 +8,11 @@ import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { AdSecondaryButton } from '@/components/administrator/button';
 import { UpdateModal } from './update-modal';
 import { useBoolean } from '@/hooks';
-import { adGetRowData } from '@/services';
+import { adGetManagerRole, adGetRowData } from '@/services';
 import { downloadExcelAsync } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
+import { UnOperateAccessModal } from '../common/un-operate-access-modal';
 
 export const AdReviewProgress = () => {
   const {
@@ -32,6 +33,8 @@ export const AdReviewProgress = () => {
       toast.error(API_500_ERROR);
     }
   };
+
+  const unAccessModal = useBoolean(false);
 
   const activeValue = useMemo(() => {
     return pre_examination_status ? Number(pre_examination_status) : -1;
@@ -142,7 +145,16 @@ export const AdReviewProgress = () => {
                 },
               }}
               disabled={checkIsDisabled(item.value)}
-              onClick={() => {
+              onClick={async () => {
+                try {
+                  const res = await adGetManagerRole();
+                  if (res.data?.role === 1) {
+                    unAccessModal.onTrue();
+                    return;
+                  }
+                } catch (error) {
+                  toast.error(API_500_ERROR);
+                }
                 setClickValue(item.value);
                 updateModal.onTrue();
               }}
@@ -215,6 +227,7 @@ export const AdReviewProgress = () => {
 
         <AdDocsDisplayPopover open={open} onClose={handlePopoverClose} anchorEl={anchorEl} />
       </Stack>
+      <UnOperateAccessModal isOpen={unAccessModal.value} onClose={unAccessModal.onFalse} />
     </Stack>
   );
 };

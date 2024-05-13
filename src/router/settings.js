@@ -319,4 +319,8 @@ export const routeNames = {
     name: 'adSalesPersonRegister',
     path: '/sales-person/register',
   },
+  adSalesPersonUpdateOrg: {
+    name: 'adSalesPersonUpdateOrg',
+    path: '/sales-person/update-org',
+  },
 };

@@ -6,12 +6,37 @@ import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useIsSalesPerson } from '@/hooks';
+import { useMemo } from 'react';
 
 export const ApStep09Info = ({ stepIndex }) => {
   const navigate = useNavigate();
   const isSalesPerson = useIsSalesPerson();
   const { p_application_headers } = useRecoilValue(localApplication);
   const { agentSended } = useRecoilValue(authAtom);
+
+  const required_funds_total_amount = useMemo(() => {
+    return (
+      Number(p_application_headers.required_funds_land_amount.replaceAll(',', '')) +
+      Number(p_application_headers.required_funds_house_amount.replaceAll(',', '')) +
+      Number(p_application_headers.required_funds_accessory_amount.replaceAll(',', '')) +
+      Number(p_application_headers.required_funds_upgrade_amount.replaceAll(',', '')) +
+      Number(p_application_headers.required_funds_refinance_loan_balance.replaceAll(',', '')) +
+      Number(p_application_headers.required_funds_additional_amount.replaceAll(',', '')) +
+      Number(p_application_headers.required_funds_loan_plus_amount.replaceAll(',', ''))
+    );
+  }, [p_application_headers]);
+
+  const funding_total_amount = useMemo(() => {
+    return (
+      Number(p_application_headers.funding_saving_amount.replaceAll(',', '')) +
+      Number(p_application_headers.funding_estate_sale_amount.replaceAll(',', '')) +
+      Number(p_application_headers.funding_other_saving_amount.replaceAll(',', '')) +
+      Number(p_application_headers.funding_relative_donation_amount.replaceAll(',', '')) +
+      Number(p_application_headers.funding_loan_amount.replaceAll(',', '')) +
+      Number(p_application_headers.funding_pair_loan_amount.replaceAll(',', '')) +
+      Number(p_application_headers.funding_other_amount.replaceAll(',', ''))
+    );
+  }, [p_application_headers]);
 
   return (
     <ApConfirmGroup stepIndex={stepIndex} label={`：資金計画`}>
@@ -306,9 +331,7 @@ export const ApStep09Info = ({ stepIndex }) => {
           </Stack>
           <Stack sx={{ px: 2, py: 1, bgcolor: 'white' }}>
             <Typography variant="modal_label" color={'text.main'} textAlign={'end'}>
-              {p_application_headers.required_funds_total_amount
-                ? Number(p_application_headers.required_funds_total_amount).toLocaleString()
-                : 'ー'}
+              {required_funds_total_amount ? Number(required_funds_total_amount).toLocaleString() : 'ー'}
               万円
             </Typography>
           </Stack>
@@ -321,9 +344,7 @@ export const ApStep09Info = ({ stepIndex }) => {
           </Stack>
           <Stack sx={{ px: 2, py: 1, bgcolor: 'white' }}>
             <Typography variant="modal_label" color={'text.main'} textAlign={'end'}>
-              {p_application_headers.funding_total_amount
-                ? Number(p_application_headers.funding_total_amount).toLocaleString()
-                : 'ー'}
+              {funding_total_amount ? Number(funding_total_amount).toLocaleString() : 'ー'}
               万円
             </Typography>
           </Stack>

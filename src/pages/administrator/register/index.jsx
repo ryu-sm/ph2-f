@@ -24,14 +24,18 @@ export const AdRegisterPage = () => {
   console.log(jwtDecode(token));
   const formik = useFormik({
     initialValues: {
-      name: '',
+      // name: '',
       password: '',
       password_confirm: '',
     },
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const data = { name: values.name, password: values.password, token: token };
+        const data = {
+          // name: values.name,
+          password: values.password,
+          token: token,
+        };
         const res = await apSalesPersonRegister(data);
         const { access_token } = res.data;
         setToken(access_token);
@@ -105,11 +109,11 @@ export const AdRegisterPage = () => {
             )}
 
             <FormikProvider value={formik}>
-              <Stack alignItems={'flex-start'} width={'100%'} mb={4}>
+              {/* <Stack alignItems={'flex-start'} width={'100%'} mb={4}>
                 <Typography variant="login_input">お名前</Typography>
                 <AdFieldInput placeholder="入力してください" name="name" showPwdVerify={true} />
-              </Stack>
-              <Stack alignItems={'flex-start'} width={'100%'}>
+              </Stack> */}
+              <Stack alignItems={'flex-start'} width={'100%'} mb={4}>
                 <Typography variant="login_input">パスワード</Typography>
                 <AdPwdInput placeholder="入力してください" name="password" showPwdVerify={true} />
               </Stack>

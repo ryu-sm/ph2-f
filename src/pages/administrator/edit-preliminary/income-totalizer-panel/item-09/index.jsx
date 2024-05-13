@@ -9,6 +9,7 @@ import { ContentEditFileGroup } from '../../common/content-edit-file-group';
 import { identityVerificationOptions } from './options';
 import { UploadItem } from '../../common/upload-item';
 import { diffObj } from '@/utils';
+import { tab09SchemaI } from '../../fullSchema';
 
 export const Item09 = () => {
   const {
@@ -89,6 +90,7 @@ export const Item09 = () => {
   const formik = useFormik({
     initialValues,
     validateOnMount: true,
+    validationSchema: tab09SchemaI,
     onSubmit: (values) => {
       handleSave(setUpdateData(values));
     },
@@ -105,6 +107,8 @@ export const Item09 = () => {
       };
     });
   }, [formik.values]);
+
+  console.log(p_applicant_persons__1);
 
   return (
     <FormikProvider value={formik}>

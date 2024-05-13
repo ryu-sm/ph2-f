@@ -91,6 +91,15 @@ export const adManagerLogin = async (data) => {
 export const adSalesPersonLogin = async (data) => {
   return await service.post('/sales-person/token', data);
 };
+
+export const adSalesPersonAzureLogin = async (code) => {
+  return await service.post(`/azure/sales-person/login/${code}`);
+};
+
+export const adSalesPersonSalesCompanyOrgId = async (data) => {
+  return await service.post('/azure/sales-person/s_sales_company_org', data);
+};
+
 export const adManagerResetPasswordVerifyEmail = async (data) => {
   return await service.post('/manager/password/verify-email', data);
 };
@@ -279,6 +288,10 @@ export const getOrgsWithCategories = async (categories) => {
   return await service.get(`/orgs/category?categories=${categories}`);
 };
 
+export const getAzureOrgsWithCategory = async (category) => {
+  return await service.get(`/azure/orgs/${category}`);
+};
+
 export const getChildrenOrgsWithCategory = async (parent_id, category) => {
   if (parent_id) {
     return await service.get(`/orgs/children?parent_id=${parent_id}&category=${category}`);
@@ -377,10 +390,10 @@ export const adGetSalesPersonBelowOrgs = async () => {
   return await service.get(`/sales-person/below-orgs`);
 };
 
-export const adGetManagrPreliminariyAccess = async (p_application_header_id) => {
-  return await service.get(`/manager/preliminariy/access/${p_application_header_id}`);
-};
-
 export const adGetSalesPersonPreliminariyAccess = async (p_application_header_id) => {
   return await service.get(`/sales-person/preliminariy/access/${p_application_header_id}`);
+};
+
+export const adGetManagerRole = async () => {
+  return await service.get(`/manager/role`);
 };

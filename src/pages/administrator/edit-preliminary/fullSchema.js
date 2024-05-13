@@ -286,7 +286,7 @@ export const tab02Schema = yup.object({
     district_kanji: yup
       .string()
       .required(YUP_MESSAGES.REQUIRED)
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     other_address_kanji: yup
       .string()
@@ -301,7 +301,7 @@ export const tab02Schema = yup.object({
     city_kana: yup.string().max(20).matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
     district_kana: yup
       .string()
-      .max(30)
+      .max(60)
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
     other_address_kana: yup
       .string()
@@ -347,7 +347,7 @@ export const tab03Schema = yup.object({
     office_name_kana: yup
       .string()
       .max(48)
-      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
     office_department: yup
       .string()
       .max(46)
@@ -363,7 +363,7 @@ export const tab03Schema = yup.object({
     office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
     office_district_kanji: yup
       .string()
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     office_other_address_kanji: yup
       .string()
@@ -380,7 +380,7 @@ export const tab03Schema = yup.object({
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
     office_district_kana: yup
       .string()
-      .max(30)
+      .max(60)
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
     office_other_address_kana: yup
       .string()
@@ -478,7 +478,7 @@ export const tab03Schema = yup.object({
       }),
     transfer_office_district_kanji: yup
       .string()
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
       .when('transfer_office', ([transfer_office], field) => {
         if (transfer_office === '1') {
@@ -588,26 +588,58 @@ export const tab03Schema = yup.object({
             } else {
               return false;
             }
-          } else if (p_applicant_persons__0?.maternity_paternity_leave === '2') {
+          } else {
+            return true;
+          }
+        }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_PAST_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__0 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__0?.maternity_paternity_leave === '2') {
             if (!p_borrowing_details__1?.desired_borrowing_date) return true;
             const [year, month] = field_value ? field_value?.split('/') : ['', ''];
             const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
             const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-            if (+year - year_ > 0) {
+            if (+year_ - year > 0) {
               return true;
-            } else if (+year - year_ === 0 && +month - month_ > -1) {
+            } else if (+year_ - year === 0 && +month_ - month >= 0) {
               return true;
             } else {
               return false;
             }
-          } else if (p_applicant_persons__0?.maternity_paternity_leave === '3') {
+          } else {
+            return true;
+          }
+        }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_PAST_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__0 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__0?.maternity_paternity_leave === '3') {
             if (!p_borrowing_details__1?.desired_borrowing_date) return true;
             const [year, month] = field_value ? field_value?.split('/') : ['', ''];
             const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
             const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-            if (+year - year_ > 0) {
+            if (+year_ - year > 0) {
               return true;
-            } else if (+year - year_ === 0 && +month - month_ > -1) {
+            } else if (+year_ - year === 0 && +month_ - month >= 0) {
               return true;
             } else {
               return false;
@@ -688,6 +720,62 @@ export const tab03Schema = yup.object({
             return true;
           }
         }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__0 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__0?.maternity_paternity_leave === '2') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year - year_ > 0) {
+              return true;
+            } else if (+year - year_ === 0 && +month - month_ > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_PAST_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__0 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__0?.maternity_paternity_leave === '3') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year_ - year > 0) {
+              return true;
+            } else if (+year_ - year === 0 && +month_ - month >= 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        }
       ),
     nursing_leave: yup.string(),
   }),
@@ -744,13 +832,30 @@ export const tab04Schema = yup.object({
       district_kanji: yup
         .string()
         .required(YUP_MESSAGES.REQUIRED)
-        .max(40)
+        .max(60)
         .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
       other_address_kanji: yup
         .string()
         .required(YUP_MESSAGES.REQUIRED)
         .max(99)
         .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
+
+      prefecture_kana: yup
+        .string()
+        .max(8)
+        .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+      city_kana: yup
+        .string()
+        .max(20)
+        .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
+      district_kana: yup
+        .string()
+        .max(60)
+        .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+      other_address_kana: yup
+        .string()
+        .max(138)
+        .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
       email: yup.string(),
     })
   ),
@@ -835,7 +940,7 @@ export const tab05Schema = yup.object({
     property_city: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.SP_KANJI_FULL_WIDTH),
     property_district: yup
       .string()
-      .max(20)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.SP_KANJI_FULL_WIDTH_HAVE_NUMBER),
     property_apartment_and_room_no: yup
       .string()
@@ -876,7 +981,7 @@ export const tab05Schema = yup.object({
       city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
       district_kanji: yup
         .string()
-        .max(40)
+        .max(60)
         .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
       other_address_kanji: yup
         .string()
@@ -1013,7 +1118,7 @@ export const tab02SchemaI = yup.object({
     district_kanji: yup
       .string()
       .required(YUP_MESSAGES.REQUIRED)
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     other_address_kanji: yup
       .string()
@@ -1028,7 +1133,7 @@ export const tab02SchemaI = yup.object({
     city_kana: yup.string().max(20).matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
     district_kana: yup
       .string()
-      .max(30)
+      .max(60)
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
     other_address_kana: yup
       .string()
@@ -1073,7 +1178,7 @@ export const tab03SchemaI = yup.object({
     office_name_kana: yup
       .string()
       .max(48)
-      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
+      .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
     office_department: yup
       .string()
       .max(46)
@@ -1087,7 +1192,7 @@ export const tab03SchemaI = yup.object({
     office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
     office_district_kanji: yup
       .string()
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     office_other_address_kanji: yup
       .string()
@@ -1104,7 +1209,7 @@ export const tab03SchemaI = yup.object({
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_SPACE, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_SPACE),
     office_district_kana: yup
       .string()
-      .max(30)
+      .max(60)
       .matches(REGEX.KANA_HALF_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANA_HALF_WIDTH_HAVE_NUMBER),
     office_other_address_kana: yup
       .string()
@@ -1202,7 +1307,7 @@ export const tab03SchemaI = yup.object({
       }),
     transfer_office_district_kanji: yup
       .string()
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
       .when('transfer_office', ([transfer_office], field) => {
         if (transfer_office === '1') {
@@ -1312,26 +1417,58 @@ export const tab03SchemaI = yup.object({
             } else {
               return false;
             }
-          } else if (p_applicant_persons__1?.maternity_paternity_leave === '2') {
+          } else {
+            return true;
+          }
+        }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_PAST_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__1 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__1?.maternity_paternity_leave === '2') {
             if (!p_borrowing_details__1?.desired_borrowing_date) return true;
             const [year, month] = field_value ? field_value?.split('/') : ['', ''];
             const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
             const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-            if (+year - year_ > 0) {
+            if (+year_ - year > 0) {
               return true;
-            } else if (+year - year_ === 0 && +month - month_ > -1) {
+            } else if (+year_ - year === 0 && +month_ - month >= 0) {
               return true;
             } else {
               return false;
             }
-          } else if (p_applicant_persons__1?.maternity_paternity_leave === '3') {
+          } else {
+            return true;
+          }
+        }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_PAST_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__1 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__1?.maternity_paternity_leave === '3') {
             if (!p_borrowing_details__1?.desired_borrowing_date) return true;
             const [year, month] = field_value ? field_value?.split('/') : ['', ''];
             const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
             const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
-            if (+year - year_ > 0) {
+            if (+year_ - year > 0) {
               return true;
-            } else if (+year - year_ === 0 && +month - month_ > -1) {
+            } else if (+year_ - year === 0 && +month_ - month >= 0) {
               return true;
             } else {
               return false;
@@ -1412,6 +1549,62 @@ export const tab03SchemaI = yup.object({
             return true;
           }
         }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_FUTURE_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__1 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__1?.maternity_paternity_leave === '2') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year - year_ > 0) {
+              return true;
+            } else if (+year - year_ === 0 && +month - month_ > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        }
+      )
+      .test(
+        'desired_borrowing_date_check',
+        YUP_MESSAGES.SPECIFY_A_PAST_TIME_TO_START_COLLECT_MATERNITY_LEAVE,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_borrowing_details__1, p_applicant_persons__1 },
+            },
+          }
+        ) => {
+          if (p_applicant_persons__1?.maternity_paternity_leave === '3') {
+            if (!p_borrowing_details__1?.desired_borrowing_date) return true;
+            const [year, month] = field_value ? field_value?.split('/') : ['', ''];
+            const year_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).year();
+            const month_ = dayjs(p_borrowing_details__1?.desired_borrowing_date).month();
+            if (+year_ - year > 0) {
+              return true;
+            } else if (+year_ - year === 0 && +month_ - month >= 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        }
       ),
     nursing_leave: yup.string(),
   }),
@@ -1419,6 +1612,50 @@ export const tab03SchemaI = yup.object({
 
 export const tab09Schema = yup.object({
   p_applicant_persons__0: yup.object({
+    identity_verification_type: yup.string(),
+    A__01__a: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '1') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+    A__01__b: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '1') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+
+    A__02: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '2') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+
+    A__03__a: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '3') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+
+    A__03__b: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
+      if (identity_verification_type === '3') {
+        return field.min(1, 'この書類は必須な書類なので、アップロードしてください。');
+      } else {
+        return field;
+      }
+    }),
+  }),
+});
+
+export const tab09SchemaI = yup.object({
+  p_applicant_persons__1: yup.object({
     identity_verification_type: yup.string(),
     A__01__a: yup.array(yup.object()).when('identity_verification_type', ([identity_verification_type], field) => {
       if (identity_verification_type === '1') {

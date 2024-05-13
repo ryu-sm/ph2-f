@@ -203,7 +203,7 @@ export const Item04 = () => {
                           cancelable
                         />
                       ) : (
-                        genderOptions.find((item) => item.value === item.gender)?.label
+                        genderOptions.find((op) => op.value === item.gender)?.label
                       )
                     }
                   />
@@ -247,7 +247,7 @@ export const Item04 = () => {
                           )}
                         </Stack>
                       ) : (
-                        `${relToApplicantAOptions.find((item) => item.value === item.rel_to_applicant_a)?.label}　${
+                        `${relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label}　${
                           item.rel_to_applicant_a === '99' ? item.rel_to_applicant_a_other : ''
                         }`
                       )
@@ -369,7 +369,7 @@ export const Item04 = () => {
                       isEditable ? (
                         <AdSelectRadios name={`p_join_guarantors[${index}].prefecture_kanji`} options={PREFECTURES} />
                       ) : (
-                        PREFECTURES.find((item) => item.value === item.prefecture_kanji)?.label
+                        PREFECTURES.find((op) => op.value === item.prefecture_kanji)?.label
                       )
                     }
                   />

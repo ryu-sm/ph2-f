@@ -76,11 +76,6 @@ export const ApStep03Info = ({ stepIndex }) => {
       <ApConfirmItemGroup label={'勤務先名'}>
         {p_applicant_persons__0.office_name_kanji ? p_applicant_persons__0.office_name_kanji : 'ー'}
       </ApConfirmItemGroup>
-      {p_applicant_persons__0.office_occupation !== '5' && (
-        <ApConfirmItemGroup label={'所属部課'}>
-          {p_applicant_persons__0.office_department ? p_applicant_persons__0.office_department : 'ー'}
-        </ApConfirmItemGroup>
-      )}
       <ApConfirmItemGroup label={'所属部課'}>
         {p_applicant_persons__0.office_department ? p_applicant_persons__0.office_department : 'ー'}
       </ApConfirmItemGroup>

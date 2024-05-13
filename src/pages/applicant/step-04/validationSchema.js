@@ -54,7 +54,7 @@ export const validationSchema = yup.object({
     district_kanji: yup
       .string()
       .required(YUP_MESSAGES.REQUIRED)
-      .max(40)
+      .max(60)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI),
     other_address_kanji: yup
       .string()
