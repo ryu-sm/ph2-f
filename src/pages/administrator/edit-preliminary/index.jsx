@@ -1,11 +1,11 @@
 import { AdMainWrapper } from '@/containers';
 import { useBoolean, useCurrSearchParams, useIsManager } from '@/hooks';
 
-import { preliminaryIdAtom } from '@/store';
+import { infoGroupTabAtom, preliminaryIdAtom } from '@/store';
 import { LinearProgress, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AdReviewProgress } from './review-progress';
 import { EditTabs } from './edit-tabs';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
@@ -27,7 +27,7 @@ const Content = () => {
   useEffect(() => {
     setPreliminaryId(p_application_header_id);
   }, []);
-
+  const infoGroupTab = useRecoilValue(infoGroupTabAtom);
   const { status, preliminaryInfo } = usePreliminaryContext();
 
   const fullNmae = useMemo(() => {
@@ -101,24 +101,26 @@ const Content = () => {
         {status === 'hasValue' && access && (
           <Stack>
             {isManager && <AdReviewProgress />}
-            {!isManager && Number(preliminaryInfo.p_result.pre_examination_status) >= 3 && (
-              <Stack
-                direction={'row'}
-                alignItems={'center'}
-                justifyContent={'start'}
-                borderBottom={'1px solid'}
-                borderColor={'gray.80'}
-                spacing={1}
-                pt={'10px'}
-                pb={'5px'}
-                px={10}
-              >
-                <Icons.AdCircleNotice />
-                <Typography variant="dailog_content" color="secondary.main" lineHeight={'32px'}>
-                  住信SBIネット銀行での審査フェーズ（「仮審査中」以降）に入りますと申込内容の修正はできません。
-                </Typography>
-              </Stack>
-            )}
+            {!isManager &&
+              Number(preliminaryInfo.p_result.pre_examination_status) >= 3 &&
+              ![8, 10].includes(infoGroupTab) && (
+                <Stack
+                  direction={'row'}
+                  alignItems={'center'}
+                  justifyContent={'start'}
+                  borderBottom={'1px solid'}
+                  borderColor={'gray.80'}
+                  spacing={1}
+                  pt={'10px'}
+                  pb={'5px'}
+                  px={10}
+                >
+                  <Icons.AdCircleNotice />
+                  <Typography variant="dailog_content" color="secondary.main" lineHeight={'32px'}>
+                    住信SBIネット銀行での審査フェーズ（「仮審査中」以降）に入りますと申込内容の修正はできません。
+                  </Typography>
+                </Stack>
+              )}
             <EditTabs />
           </Stack>
         )}

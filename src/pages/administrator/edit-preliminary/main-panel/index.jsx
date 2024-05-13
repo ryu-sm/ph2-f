@@ -21,7 +21,6 @@ import { adGetUploadFile } from '@/services';
 export const MainDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
   const {
-    preliminaryInfo,
     preliminarySnap: { hasJoinGuarantor },
     checkUpdate,
     resetPreliminarySnap,

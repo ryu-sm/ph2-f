@@ -27,7 +27,6 @@ export const Item08 = () => {
     preliminaryInfo: { p_application_headers },
     setPreliminarySnap,
     handleSave,
-    isEditable,
   } = usePreliminaryContext();
   const { salesPerson } = useRecoilValue(authAtom);
   const initialValues = {
@@ -40,6 +39,7 @@ export const Item08 = () => {
       vendor_phone: p_application_headers?.vendor_phone,
     },
   };
+  const isEditable = true;
 
   const setUpdateData = (values) => {
     const diffData = {
