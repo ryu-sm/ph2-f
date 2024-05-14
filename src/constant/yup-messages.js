@@ -60,7 +60,7 @@ export const YUP_MESSAGES = {
   ZIP_CODE: '郵便番号は〇〇〇-〇〇〇〇の形式で入力してください。',
   EMAIL: 'メールアドレスの形式が正しくありません。',
 
-  PLEASE_SELECT_A_DATE_AFTER_ACQUISITION_START_TIME: '取得開始時期以降の日を指定してください。',
+  PLEASE_SELECT_A_DATE_AFTER_ACQUISITION_START_TIME: '取得開始時期以降の年月を指定してください。',
   LOAN_TERM_LIMIT: '借入時満18歳以上満65歳以下・完済時満80歳未満の方がご利用いただけます。',
   ERROR_AREA: '建物の延べ床面積は土地の敷地面積より小さい数字を入力してください。',
   ERROR_AREA_SECOND: 'マンション全体の延べ床面積は専有面積より小さい数字を入力してください。',

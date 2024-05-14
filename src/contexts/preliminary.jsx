@@ -4,6 +4,7 @@ import { API_500_ERROR } from '@/constant';
 import { useBoolean } from '@/hooks';
 import {
   adDeleteProvisionalResult,
+  adGetManagerRole,
   adGetPreliminary,
   adUpdateApproverConfirmation,
   adUpdatePreExaminationStatus,
@@ -23,8 +24,7 @@ import { AdThemeProvider } from '@/styles/ad-theme';
 import { Modal, Stack, Typography } from '@mui/material';
 import deepDiff from 'deep-diff';
 
-import { createContext, useEffect, useMemo } from 'react';
-// import { useLocation } from 'react-router-dom';
+import { createContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil';
 
@@ -245,6 +245,20 @@ export const PreliminaryProvider = ({ children }) => {
       toast.error(API_500_ERROR);
     }
   };
+  const [managerRole, setManagerRole] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await adGetManagerRole();
+        setManagerRole(res.data?.role);
+      } catch (error) {
+        setManagerRole(null);
+        toast.error(API_500_ERROR);
+      }
+    };
+    fetchData();
+  }, [preliminarySnap]);
 
   return (
     <PreliminaryContext.Provider
@@ -253,6 +267,7 @@ export const PreliminaryProvider = ({ children }) => {
         preliminaryInfo: result.state === 'hasValue' ? result.contents : null,
         preliminarySnap: preliminarySnap,
         isEditable: isEditable,
+        managerRole: managerRole,
         setPreliminarySnap: setPreliminarySnap,
         refreshPreliminary: refreshPreliminary,
         resetPreliminarySnap: resetPreliminarySnap,

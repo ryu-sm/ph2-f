@@ -26,6 +26,56 @@ export const AdOrSpLoginPage = () => {
   const [azureErrText, setAzureErrText] = useState('');
   const setAuthInfo = useSetRecoilState(authAtom);
   const code = useCurrSearchParams().get('code');
+  console.log(code);
+  console.log(isManager);
+
+  useEffect(() => {
+    const azureID = async () => {
+      if (code && !isManager) {
+        const res = await adSalesPersonAzureLogin(code);
+        if (res.status == 200) {
+          const { access_token } = res.data;
+          setToken(access_token);
+          const payload = jwtDecode(access_token);
+          setAuthInfo((pre) => {
+            return {
+              ...pre,
+              isLogined: true,
+              roleType: payload?.role_type,
+              user: {
+                id: null,
+                email: null,
+                salesCompanyOrgId: null,
+                displayPdf: true,
+                hasDraftData: false,
+                provisionalResult: null,
+              },
+              salesPerson: {
+                id: payload?.id,
+                email: payload?.email,
+                name: payload?.name_kanji,
+              },
+              manager: {
+                id: null,
+                email: null,
+                name: null,
+              },
+              agentSended: false,
+            };
+          });
+
+          console.log(999);
+
+          navigate(routeNames.adSalesPersonDashboardPage.path);
+        }
+        if (res.status == 202) {
+          navigate(`${routeNames.adSalesPersonUpdateOrg.path}?sales_person_id=${res.data?.sales_person_id}`);
+        }
+      }
+    };
+
+    azureID();
+  }, [code, isManager]);
 
   const formik = useFormik({
     initialValues: {
@@ -68,76 +118,37 @@ export const AdOrSpLoginPage = () => {
             };
           });
         } else {
-          if (code) {
-            const res = await adSalesPersonAzureLogin(code);
-            if (res.status == 200) {
-              const { access_token } = res.data;
-              setToken(access_token);
-              const payload = jwtDecode(access_token);
-              setAuthInfo((pre) => {
-                return {
-                  ...pre,
-                  isLogined: true,
-                  roleType: payload?.role_type,
-                  user: {
-                    id: null,
-                    email: null,
-                    salesCompanyOrgId: null,
-                    displayPdf: true,
-                    hasDraftData: false,
-                    provisionalResult: null,
-                  },
-                  salesPerson: {
-                    id: payload?.id,
-                    email: payload?.email,
-                    name: payload?.name_kanji,
-                  },
-                  manager: {
-                    id: null,
-                    email: null,
-                    name: null,
-                  },
-                  agentSended: false,
-                };
-              });
-              navigate(routeNames.adSalesPersonDashboardPage.path);
-            }
-            if (res.status == 202) {
-              navigate(`${routeNames.adSalesPersonUpdateOrg.path}?sales_person_id=${res.data?.sales_person_id}`);
-            }
-          } else {
-            const res = await adSalesPersonLogin(values);
-            const { access_token } = res.data;
-            setToken(access_token);
-            const payload = jwtDecode(access_token);
-            setAuthInfo((pre) => {
-              return {
-                ...pre,
-                isLogined: true,
-                roleType: payload?.role_type,
-                user: {
-                  id: null,
-                  email: null,
-                  salesCompanyOrgId: null,
-                  displayPdf: true,
-                  hasDraftData: false,
-                  provisionalResult: null,
-                },
-                salesPerson: {
-                  id: payload?.id,
-                  email: payload?.email,
-                  name: payload?.name_kanji,
-                },
-                manager: {
-                  id: null,
-                  email: null,
-                  name: null,
-                },
-                agentSended: false,
-              };
-            });
-            navigate(routeNames.adSalesPersonDashboardPage.path);
-          }
+          const res = await adSalesPersonLogin(values);
+          const { access_token } = res.data;
+          setToken(access_token);
+          const payload = jwtDecode(access_token);
+          setAuthInfo((pre) => {
+            return {
+              ...pre,
+              isLogined: true,
+              roleType: payload?.role_type,
+              user: {
+                id: null,
+                email: null,
+                salesCompanyOrgId: null,
+                displayPdf: true,
+                hasDraftData: false,
+                provisionalResult: null,
+              },
+              salesPerson: {
+                id: payload?.id,
+                email: payload?.email,
+                name: payload?.name_kanji,
+              },
+              manager: {
+                id: null,
+                email: null,
+                name: null,
+              },
+              agentSended: false,
+            };
+          });
+          navigate(routeNames.adSalesPersonDashboardPage.path);
         }
       } catch (error) {
         switch (error?.status) {

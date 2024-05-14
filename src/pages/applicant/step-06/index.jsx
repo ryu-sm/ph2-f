@@ -129,10 +129,14 @@ export const ApStep06Page = () => {
   const { refreshsendedApllication } = useApplicationContext();
   useEffect(() => {
     if (agentSended && !changeJoinGuarantor) {
-      console.log('refresh');
       refreshsendedApllication();
     }
-  }, [agentSended]);
+  }, []);
+  useEffect(() => {
+    if (agentSended) {
+      formik.setValues(initialValues);
+    }
+  }, [localApplicationInfo]);
 
   console.log(formik.values);
 

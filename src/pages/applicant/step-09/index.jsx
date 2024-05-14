@@ -166,10 +166,15 @@ export const ApStep09Page = () => {
   const { refreshsendedApllication } = useApplicationContext();
   useEffect(() => {
     if (agentSended) {
-      console.log('refresh');
       refreshsendedApllication();
     }
-  }, [agentSended]);
+  }, []);
+  useEffect(() => {
+    if (agentSended) {
+      formik.setValues(initialValues);
+    }
+  }, [localApplicationInfo]);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

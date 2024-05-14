@@ -178,8 +178,6 @@ export const ApStep13Page = () => {
     navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apPreStepId}`);
   };
 
-  console.log(formik.errors);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

@@ -117,7 +117,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           {
             label: item.pair_loan_id !== '' ? 'ペアローン解除' : 'ペアローン紐付',
             onClick: async () => {
-              pairLoanModal.onTrue;
+              pairLoanModal.onTrue();
             },
           },
         ]

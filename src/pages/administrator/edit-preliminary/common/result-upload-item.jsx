@@ -1,12 +1,9 @@
-import { useBoolean } from '@/hooks';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { useField } from 'formik';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import { ImgPreview } from './img-preview';
-import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
+import { MAX_SIZE_FILE } from '@/configs';
 
 export const ResultUploadItem = ({ name, isDisabled }) => {
   const [field, meta, helpers] = useField(name);

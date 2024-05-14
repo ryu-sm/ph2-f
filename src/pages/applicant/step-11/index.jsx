@@ -208,10 +208,14 @@ export const ApStep11Page = () => {
 
   useEffect(() => {
     if (agentSended && !changeToIncomeTotalizer && !changeJoinGuarantor) {
-      console.log('refresh');
       refreshsendedApllication();
     }
-  }, [agentSended]);
+  }, []);
+  useEffect(() => {
+    if (agentSended) {
+      formik.setValues(initialValues);
+    }
+  }, [localApplicationInfo]);
 
   const identityVerificationOption = [
     {

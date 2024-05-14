@@ -1,15 +1,12 @@
 import { Icons } from '@/assets';
-import { useBoolean, useIsManager } from '@/hooks';
+import { useIsManager } from '@/hooks';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
-import { adGetManagerRole } from '@/services';
 import { Button, Stack, Typography } from '@mui/material';
 import { useMemo } from 'react';
-import { UnOperateAccessModal } from './un-operate-access-modal';
-import { toast } from 'react-toastify';
-import { API_500_ERROR } from '@/constant';
 
 export const ExaminationResultButtons = () => {
   const {
+    managerRole,
     preliminaryInfo: { p_result },
     preliminarySnap: { p_application_headers },
     handleChangeProvisionalResult,
@@ -17,7 +14,6 @@ export const ExaminationResultButtons = () => {
     handleChangePreExaminationStatus,
   } = usePreliminaryContext();
 
-  const unAccessModal = useBoolean(false);
   const isManager = useIsManager();
 
   const provisionalResultItems = useMemo(() => {
@@ -63,16 +59,6 @@ export const ExaminationResultButtons = () => {
         value: '1',
         status: 'disabled',
         onClick: async () => {
-          try {
-            const res = await adGetManagerRole();
-            if (res.data?.role === 1) {
-              unAccessModal.onTrue();
-              return;
-            }
-          } catch (error) {
-            toast.error(API_500_ERROR);
-          }
-
           await handleChangeApproverConfirmation(1);
         },
       },
@@ -81,15 +67,6 @@ export const ExaminationResultButtons = () => {
         value: '5',
         status: 'disabled',
         onClick: async () => {
-          try {
-            const res = await adGetManagerRole();
-            if (res.data?.role === 1) {
-              unAccessModal.onTrue();
-              return;
-            }
-          } catch (error) {
-            toast.error(API_500_ERROR);
-          }
           await handleChangePreExaminationStatus(5);
         },
       },
@@ -98,21 +75,15 @@ export const ExaminationResultButtons = () => {
         value: '6',
         status: 'disabled',
         onClick: async () => {
-          try {
-            const res = await adGetManagerRole();
-            if (res.data?.role === 1) {
-              unAccessModal.onTrue();
-              return;
-            }
-          } catch (error) {
-            toast.error(API_500_ERROR);
-          }
           await handleChangePreExaminationStatus(6);
         },
       },
     ];
 
     return basic.map((item) => {
+      // if (managerRole === 1) {
+      //   return item;
+      // }
       if (item.value === '1' && !!p_result.provisional_result && p_result.approver_confirmation !== '1') {
         return { ...item, status: 'clickable' };
       }
@@ -134,6 +105,8 @@ export const ExaminationResultButtons = () => {
       return item;
     });
   }, [p_result]);
+
+  console.log(preExaminationStatusItems);
 
   const preExaminationStatusSalesPersonItems = useMemo(() => {
     const basic = [
@@ -214,7 +187,7 @@ export const ExaminationResultButtons = () => {
           {preExaminationStatusItems.map((item, index) => (
             <Stack direction="row" alignItems="center" key={index}>
               <Button
-                disabled={item.status !== 'clickable'}
+                disabled={managerRole === 1 || item.status !== 'clickable'}
                 onClick={item.onClick}
                 sx={{
                   bgcolor:
@@ -233,7 +206,12 @@ export const ExaminationResultButtons = () => {
                   },
                   '&:disabled': {
                     color: 'white',
-                    border: 'none',
+                    border: (theme) =>
+                      managerRole === 1
+                        ? item.status !== 'clickable'
+                          ? 'none'
+                          : `1px solid ${theme?.palette?.secondary?.main}`
+                        : 'none',
                     bgcolor:
                       item.status === 'actived' ? 'secondary.main' : item.status === 'clickable' ? 'white' : 'gray.80',
                   },
@@ -285,7 +263,6 @@ export const ExaminationResultButtons = () => {
           ))}
         </Stack>
       )}
-      <UnOperateAccessModal isOpen={unAccessModal.value} onClose={unAccessModal.onFalse} />
     </Stack>
   );
 };

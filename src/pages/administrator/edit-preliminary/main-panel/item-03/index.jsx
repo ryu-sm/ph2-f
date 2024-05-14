@@ -1171,11 +1171,26 @@ export const Item03 = () => {
                 name="p_applicant_persons__0.maternity_paternity_leave"
                 options={maternityPaternityLeaveOptions}
                 cancelable
-                onChange={() => {
-                  formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_start_date', '');
-                  formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_end_date', '');
-                  formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', true);
-                  formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', true);
+                onChange={(value) => {
+                  if (value === '') {
+                    formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_start_date', '');
+                    formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_end_date', '');
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', false);
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', false);
+                  } else {
+                    formik.setFieldValue(
+                      'p_applicant_persons__0.maternity_paternity_leave_start_date',
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave_start_date ||
+                        p_applicant_persons__0.maternity_paternity_leave_start_date
+                    );
+                    formik.setFieldValue(
+                      'p_applicant_persons__0.maternity_paternity_leave_end_date',
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave_end_date ||
+                        p_applicant_persons__0.maternity_paternity_leave_end_date
+                    );
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', true);
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', true);
+                  }
                 }}
               />
             ) : (

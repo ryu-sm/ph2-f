@@ -18,13 +18,14 @@ export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, handleCha
   const { setValue } = helpers;
   const handleChange = useCallback(
     async (value) => {
-      props.onChange && props.onChange(value);
       if (value !== oldValue) {
         handleChangeInit && handleChangeInit();
       }
       if (cancelable && value === meta.value) {
         await setValue('');
+        props.onChange && props.onChange('');
       } else {
+        props.onChange && props.onChange(value);
         await setValue(value);
       }
     },

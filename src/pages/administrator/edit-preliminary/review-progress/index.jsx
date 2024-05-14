@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 import { Button, Stack, Typography } from '@mui/material';
-import { Fragment, useCallback, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { Icons } from '@/assets';
 
 import { AdDocsDisplayPopover } from './docs-display-popover';
@@ -8,14 +8,14 @@ import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { AdSecondaryButton } from '@/components/administrator/button';
 import { UpdateModal } from './update-modal';
 import { useBoolean } from '@/hooks';
-import { adGetManagerRole, adGetRowData } from '@/services';
+import { adGetRowData } from '@/services';
 import { downloadExcelAsync } from '@/utils';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
-import { UnOperateAccessModal } from '../common/un-operate-access-modal';
 
 export const AdReviewProgress = () => {
   const {
+    managerRole,
     preliminaryInfo: {
       p_application_headers: { pre_examination_status, id, apply_no },
       p_applicant_persons__0: { last_name_kanji, first_name_kanji },
@@ -33,8 +33,6 @@ export const AdReviewProgress = () => {
       toast.error(API_500_ERROR);
     }
   };
-
-  const unAccessModal = useBoolean(false);
 
   const activeValue = useMemo(() => {
     return pre_examination_status ? Number(pre_examination_status) : -1;
@@ -89,6 +87,9 @@ export const AdReviewProgress = () => {
 
   const checkIsDisabled = useCallback(
     (value) => {
+      if ((value === 3 || value === 4) && managerRole === 1) {
+        return true;
+      }
       if (value === 5 || value === 6) {
         return true;
       }
@@ -146,15 +147,6 @@ export const AdReviewProgress = () => {
               }}
               disabled={checkIsDisabled(item.value)}
               onClick={async () => {
-                try {
-                  const res = await adGetManagerRole();
-                  if (res.data?.role === 1) {
-                    unAccessModal.onTrue();
-                    return;
-                  }
-                } catch (error) {
-                  toast.error(API_500_ERROR);
-                }
                 setClickValue(item.value);
                 updateModal.onTrue();
               }}
@@ -227,7 +219,6 @@ export const AdReviewProgress = () => {
 
         <AdDocsDisplayPopover open={open} onClose={handlePopoverClose} anchorEl={anchorEl} />
       </Stack>
-      <UnOperateAccessModal isOpen={unAccessModal.value} onClose={unAccessModal.onFalse} />
     </Stack>
   );
 };

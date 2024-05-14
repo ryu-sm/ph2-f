@@ -131,7 +131,7 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
             >
               {pairLoanOptions.map((item, index) => (
                 <MenuItem key={index} value={item.value}>
-                  <Typography variant="input_style" color="normal">
+                  <Typography variant="input_style" color="normal" fontWeight={600}>
                     {item.label}
                   </Typography>
                 </MenuItem>

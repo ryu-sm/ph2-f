@@ -7,7 +7,7 @@ import AutosizeInput from 'react-input-autosize';
 import './autosize-style.css';
 import { useRef } from 'react';
 
-export const AdNumericInput = ({ unit, maxLength, width, showZero, ...props }) => {
+export const AdNumericInput = ({ unit, maxLength, width, defaultZero, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setError } = helpers;
 
@@ -23,8 +23,13 @@ export const AdNumericInput = ({ unit, maxLength, width, showZero, ...props }) =
     async (e) => {
       field.onBlur(e);
       props.onBlur && props.onBlur(e);
+      if (defaultZero) {
+        if (e.target.value === '') {
+          await setValue('0');
+        }
+      }
     },
-    [field, props]
+    [field, props, setValue]
   );
 
   const handleChange = useCallback(

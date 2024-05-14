@@ -99,9 +99,9 @@ export const Item07 = () => {
       Number(formik.values.p_application_headers.funding_relative_donation_amount) +
       Number(formik.values.p_application_headers.funding_loan_amount) +
       Number(formik.values.p_application_headers.funding_pair_loan_amount) +
+      Number(formik.values.p_application_headers.funding_other_amount) +
       Number(formik.values.p_application_headers.funding_other_loan_amount) +
-      Number(formik.values.p_application_headers.funding_other_refinance_amount) +
-      Number(formik.values.p_application_headers.funding_other_amount)
+      Number(formik.values.p_application_headers.funding_other_refinance_amount)
     );
   }, [formik.values]);
 
@@ -142,7 +142,12 @@ export const Item07 = () => {
             }}
             field={
               isEditable ? (
-                <AdNumericInput name="p_application_headers.required_funds_land_amount" maxLength={6} unit={'万円'} />
+                <AdNumericInput
+                  name="p_application_headers.required_funds_land_amount"
+                  maxLength={6}
+                  unit={'万円'}
+                  defaultZero
+                />
               ) : (
                 formatNumber(formik.values.p_application_headers.required_funds_land_amount)
               )
@@ -159,7 +164,12 @@ export const Item07 = () => {
             }}
             field={
               isEditable ? (
-                <AdNumericInput name="p_application_headers.required_funds_house_amount" maxLength={6} unit={'万円'} />
+                <AdNumericInput
+                  name="p_application_headers.required_funds_house_amount"
+                  maxLength={6}
+                  unit={'万円'}
+                  defaultZero
+                />
               ) : (
                 formatNumber(formik.values.p_application_headers.required_funds_house_amount)
               )
@@ -180,6 +190,7 @@ export const Item07 = () => {
                   name="p_application_headers.required_funds_accessory_amount"
                   maxLength={6}
                   unit={'万円'}
+                  defaultZero
                 />
               ) : (
                 formatNumber(formik.values.p_application_headers.required_funds_accessory_amount)
@@ -201,6 +212,7 @@ export const Item07 = () => {
                   name="p_application_headers.required_funds_upgrade_amount"
                   maxLength={6}
                   unit={'万円'}
+                  defaultZero
                 />
               ) : (
                 formatNumber(formik.values.p_application_headers.required_funds_upgrade_amount)
@@ -222,6 +234,7 @@ export const Item07 = () => {
                   name="p_application_headers.required_funds_refinance_loan_balance"
                   maxLength={6}
                   unit={'万円'}
+                  defaultZero
                 />
               ) : (
                 formatNumber(formik.values.p_application_headers.required_funds_refinance_loan_balance)
@@ -243,6 +256,7 @@ export const Item07 = () => {
                 name="p_application_headers.required_funds_additional_amount"
                 maxLength={6}
                 unit={'万円'}
+                defaultZero
               />
             ) : (
               formatNumber(formik.values.p_application_headers.required_funds_additional_amount)
@@ -263,6 +277,7 @@ export const Item07 = () => {
                   name="p_application_headers.required_funds_loan_plus_amount"
                   maxLength={6}
                   unit={'万円'}
+                  defaultZero
                 />
               ) : (
                 formatNumber(formik.values.p_application_headers.required_funds_loan_plus_amount)
@@ -332,7 +347,12 @@ export const Item07 = () => {
           }}
           field={
             isEditable ? (
-              <AdNumericInput name="p_application_headers.funding_saving_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput
+                name="p_application_headers.funding_saving_amount"
+                maxLength={6}
+                unit={'万円'}
+                defaultZero
+              />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_saving_amount)
             )
@@ -347,7 +367,12 @@ export const Item07 = () => {
           }}
           field={
             isEditable ? (
-              <AdNumericInput name="p_application_headers.funding_estate_sale_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput
+                name="p_application_headers.funding_estate_sale_amount"
+                maxLength={6}
+                unit={'万円'}
+                defaultZero
+              />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_estate_sale_amount)
             )
@@ -362,7 +387,12 @@ export const Item07 = () => {
           }}
           field={
             isEditable ? (
-              <AdNumericInput name="p_application_headers.funding_other_saving_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput
+                name="p_application_headers.funding_other_saving_amount"
+                maxLength={6}
+                unit={'万円'}
+                defaultZero
+              />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_other_saving_amount)
             )
@@ -391,7 +421,12 @@ export const Item07 = () => {
           isAddendum={isManager}
           field={
             isEditable ? (
-              <AdNumericInput name="p_application_headers.funding_other_loan_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput
+                name="p_application_headers.funding_other_loan_amount"
+                maxLength={6}
+                unit={'万円'}
+                defaultZero
+              />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_other_loan_amount)
             )
@@ -411,6 +446,7 @@ export const Item07 = () => {
                 name="p_application_headers.funding_relative_donation_amount"
                 maxLength={6}
                 unit={'万円'}
+                defaultZero
               />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_relative_donation_amount)
@@ -426,7 +462,12 @@ export const Item07 = () => {
           }}
           field={
             isEditable ? (
-              <AdNumericInput name="p_application_headers.funding_loan_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput
+                name="p_application_headers.funding_loan_amount"
+                maxLength={6}
+                unit={'万円'}
+                defaultZero
+              />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_loan_amount)
             )
@@ -442,7 +483,12 @@ export const Item07 = () => {
             }}
             field={
               isEditable ? (
-                <AdNumericInput name="p_application_headers.funding_pair_loan_amount" maxLength={6} unit={'万円'} />
+                <AdNumericInput
+                  name="p_application_headers.funding_pair_loan_amount"
+                  maxLength={6}
+                  unit={'万円'}
+                  defaultZero
+                />
               ) : (
                 formatNumber(formik.values.p_application_headers.funding_pair_loan_amount)
               )
@@ -462,6 +508,7 @@ export const Item07 = () => {
                 name="p_application_headers.funding_other_amount"
                 maxLength={6}
                 unit={'万円'}
+                defaultZero
                 onChange={() => {
                   formik.setFieldTouched('p_application_headers.funding_other_amount_detail', true);
                 }}
@@ -499,7 +546,12 @@ export const Item07 = () => {
           isAddendum
           field={
             isEditable ? (
-              <AdNumericInput name="p_application_headers.funding_other_refinance_amount" maxLength={6} unit={'万円'} />
+              <AdNumericInput
+                name="p_application_headers.funding_other_refinance_amount"
+                maxLength={6}
+                unit={'万円'}
+                defaultZero
+              />
             ) : (
               formatNumber(formik.values.p_application_headers.funding_other_refinance_amount)
             )

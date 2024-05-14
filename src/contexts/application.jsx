@@ -8,12 +8,11 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useLocation } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { Icons } from '@/assets';
-
 import { Stack, Typography } from '@mui/material';
-
 import { useNavigate } from 'react-router-dom';
 import { ApModalWrapper, ApPrimaryButton } from '@/components';
 import { ApThemeProvider } from '@/styles';
+import deepDiff from 'deep-diff';
 
 export const ApplicationContext = createContext({});
 
@@ -32,11 +31,10 @@ export const ApplicationProvider = ({ children }) => {
 
   const refreshsendedApllication = async () => {
     const res = await apGetSendedApplication(user?.id);
-    console.log(res.data.p_application_headers?.created_at);
 
     setLocalApplicationInfo((pre) => {
       return {
-        ...pre,
+        ...applicationInitialValues,
         p_application_headers: {
           ...applicationInitialValues.p_application_headers,
           ...res.data?.p_application_headers,
@@ -77,6 +75,63 @@ export const ApplicationProvider = ({ children }) => {
     });
   };
 
+  const checkeDbUpdate = async () => {
+    try {
+      const res = await apGetSendedApplication(user?.id);
+      const dbData = {
+        ...applicationInitialValues,
+        p_application_headers: {
+          ...applicationInitialValues.p_application_headers,
+          ...res.data?.p_application_headers,
+        },
+        p_borrowing_details__1: {
+          ...applicationInitialValues.p_borrowing_details__1,
+          ...res.data?.p_borrowing_details__1,
+        },
+        p_borrowing_details__2: {
+          ...applicationInitialValues.p_borrowing_details__2,
+          ...res.data?.p_borrowing_details__2,
+        },
+        p_application_banks: res.data?.p_application_banks ? res.data?.p_application_banks : [],
+        p_applicant_persons__0: {
+          ...applicationInitialValues.p_applicant_persons__0,
+          ...res.data?.p_applicant_persons__0,
+        },
+        p_applicant_persons__1: {
+          ...applicationInitialValues.p_applicant_persons__1,
+          ...res.data?.p_applicant_persons__1,
+        },
+        p_join_guarantors: res.data?.p_join_guarantors ? res.data?.p_join_guarantors : [],
+        p_residents: res.data?.p_residents ? res.data?.p_residents : [],
+        p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : [],
+        apCurrStepId: 14,
+        isMCJ: res.data?.p_application_banks?.length > 1,
+        hasIncomeTotalizer:
+          res.data?.p_application_headers.loan_type === '3' || res.data?.p_application_headers.loan_type === '4',
+        hasJoinGuarantor: res.data?.p_application_headers.join_guarantor_umu === '1',
+        changeJoinGuarantor: false,
+        changeToIncomeTotalizer: false,
+        p_applicant_persons_a_agreement: true,
+        p_applicant_persons_b_agreement:
+          res.data?.p_application_headers.loan_type === '3' || res.data?.p_application_headers.loan_type === '4'
+            ? true
+            : false,
+      };
+
+      const upDbData = deepDiff(localApplicationInfo, dbData);
+      console.log('upData', upDbData);
+      if (upDbData === undefined) {
+        return false;
+      } else {
+        const upList = upDbData.filter((item) => !item.path.includes('src'));
+        return upList.length > 0;
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(API_500_ERROR);
+    }
+  };
+
   const updateSendedInfo = async (data) => {
     try {
       const res = await apGetPreExaminationStatus(apply_no);
@@ -85,6 +140,8 @@ export const ApplicationProvider = ({ children }) => {
         modal.onTrue();
         navigate(routeNames.apTopPage.path);
       } else {
+        const isUp = await checkeDbUpdate();
+        console.log('isUp', isUp);
         await apUpdateSendedInfo(user.id, { ...data, step_id: stepId });
         await refreshsendedApllication();
       }
