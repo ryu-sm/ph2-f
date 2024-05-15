@@ -84,6 +84,7 @@ export const ApAgreementPage = () => {
             s_sales_person_id: salesPerson.id,
             vendor_name: resonse.data?.name_kanji,
             vendor_phone: resonse.data?.mobile_phone,
+            vendor_business_card: '0',
           },
         };
       });

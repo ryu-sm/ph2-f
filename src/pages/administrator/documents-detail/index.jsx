@@ -36,6 +36,7 @@ export const AdDocumentsDetailPage = () => {
     try {
       const res = await adGetArchiveFile(id);
       if (!res.data?.length) return navigate(routeNames.adSalesPersonDocumentsPage.path);
+      console.log(res.data);
       setImages(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
@@ -63,7 +64,7 @@ export const AdDocumentsDetailPage = () => {
   const handleFileClick = (file) => {
     localStorage.setItem('fileData', file.src);
     localStorage.setItem('fileName', file.name);
-    window.open(`http://localhost:5173/${isManager ? 'manager' : 'sales-person'}/docment-pdf-preview`);
+    window.open(file.src, '_blank', 'noopener,noreferrer');
   };
 
   return (

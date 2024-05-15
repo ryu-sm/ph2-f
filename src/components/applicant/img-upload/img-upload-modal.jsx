@@ -4,7 +4,7 @@ import { Icons } from '@/assets';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, ErrorCode } from 'react-dropzone';
 import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
 import { v4 as uuid4 } from 'uuid';
 import { toast } from 'react-toastify';
@@ -35,9 +35,18 @@ export const ApImageUploadModal = ({ isOpen, onClose, singleFile, setImages }) =
           });
       }
       if (rejectedFiles.length > 0) {
-        toast.error(`許容容量 (${Math.round(MAX_SIZE_FILE / 1000 / 1000)}MB) を超えています`, {
-          position: 'top-right',
-        });
+        if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.FileInvalidType)))) {
+          return toast.error(`アップロードファイルは不正です。（ ※アップロード可能拡張子：png、jpg、jpeg、pdfです。）`);
+        }
+        if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.FileTooLarge)))) {
+          return toast.error(`許容容量 (${Math.round(MAX_SIZE_FILE / 1000 / 1000)}MB) を超えています`);
+        }
+        if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.FileTooSmall)))) {
+          return toast.error(`ファイルの容量は小さいすぎです。`);
+        }
+        if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.TooManyFiles)))) {
+          return toast.error(`ファイルの数が多いすぎです。`);
+        }
       }
       onClose();
     },

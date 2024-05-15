@@ -3,7 +3,7 @@ import { ALLOWED_IMAGE_TYPES, MAX_SIZE_FILE } from '@/configs';
 import { AdMainWrapper } from '@/containers';
 import { Button, Stack, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, ErrorCode } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import { ImgPreview } from './img-preview';
 import { useBoolean, useIsManager } from '@/hooks';
@@ -40,10 +40,20 @@ export const AdNewDocumentsPage = () => {
           console.error('Error in converting files to Base64:', error);
         });
     }
+
     if (rejectedFiles.length > 0) {
-      toast.error(`許容容量 (${Math.round(MAX_SIZE_FILE / 1000 / 1000)}MB) を超えています`, {
-        position: 'top-right',
-      });
+      if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.FileInvalidType)))) {
+        return toast.error(`アップロードファイルは不正です。（ ※アップロード可能拡張子：png、jpg、jpeg、pdfです。）`);
+      }
+      if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.FileTooLarge)))) {
+        return toast.error(`許容容量 (${Math.round(MAX_SIZE_FILE / 1000 / 1000)}MB) を超えています`);
+      }
+      if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.FileTooSmall)))) {
+        return toast.error(`ファイルの容量は小さいすぎです。`);
+      }
+      if (rejectedFiles.find((item) => item.errors.find((e) => e.code.includes(ErrorCode.TooManyFiles)))) {
+        return toast.error(`ファイルの数が多いすぎです。`);
+      }
     }
   }, []);
 
@@ -70,6 +80,7 @@ export const AdNewDocumentsPage = () => {
   const handelSave = async () => {
     try {
       await adAddArchiveFiles({ files: images });
+      toast.success('ファイルをアップロードしました。');
       navigate(routeNames.adSalesPersonDocumentsPage.path);
     } catch (error) {
       toast.error(API_500_ERROR);
