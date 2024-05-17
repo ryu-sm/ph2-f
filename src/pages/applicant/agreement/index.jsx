@@ -52,12 +52,16 @@ export const ApAgreementPage = () => {
   const fetchSalesCompanyId = async () => {
     try {
       const res = await adGetSalesCompanyId();
+      console.log(res.data);
       let orgsCId = '';
       let orgsBId = '';
       let orgsEId = '';
       // C
       const orgsC = res.data.filter((item) => item?.category === 'C');
-      orgsCId = orgsC[0].id;
+      const uniqueOrgsC = [...new Set(orgsC.map((item) => item?.id))];
+      if (uniqueOrgsC?.length === 1) {
+        orgsCId = orgsC[0].id;
+      }
       // B
       const orgsB = res.data.filter((item) => item?.category === 'B');
       const uniqueOrgsB = [...new Set(orgsB.map((item) => item?.id))];

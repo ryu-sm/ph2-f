@@ -141,3 +141,4 @@ export { ApChatOtherIcon } from './ap-chat-other';
 export { ApChatUserIcon } from './ap-chat-user';
 export { AdLinkIcon } from './ad-link-icon';
 export { AdTrashIcon } from './ad-trash-icon';
+export { AdArrowRight } from './ad-arrow-right';

@@ -15,6 +15,7 @@ const authInitialValues = {
     id: null,
     email: null,
     name: null,
+    type: null,
   },
   manager: {
     id: null,

@@ -16,6 +16,7 @@ import { Item08 } from './item-08';
 import { useBoolean, useIsManager } from '@/hooks';
 import { Item09 } from './item-09';
 import { adGetUploadFile } from '@/services';
+import { Item10 } from './item-10';
 
 export const PairDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
@@ -152,6 +153,7 @@ export const PairDetail = () => {
       {infoGroupTab === 7 && <Item07 />}
       {infoGroupTab === 8 && <Item08 />}
       {infoGroupTab === 9 && <Item09 />}
+      {infoGroupTab === 10 && <Item10 />}
 
       <Modal
         open={changeTab.value}

@@ -1,5 +1,3 @@
-import { adSalesPersonLogou } from '@/services';
-
 export const routeNames = {
   apStartPage: {
     name: 'apStartPage',
@@ -319,8 +317,8 @@ export const routeNames = {
     name: 'adSalesPersonRegister',
     path: '/sales-person/register',
   },
-  adSalesPersonUpdateOrg: {
-    name: 'adSalesPersonUpdateOrg',
-    path: '/sales-person/update-org',
+  adSalesPersonAzureLogout: {
+    name: 'adSalesPersonAzureLogout',
+    path: '/azure-logout',
   },
 };

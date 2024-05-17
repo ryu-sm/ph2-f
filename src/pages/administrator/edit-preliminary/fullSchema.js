@@ -464,41 +464,16 @@ export const tab03Schema = yup.object({
           return field;
         }
       })
-      .label('出向（派遣）先都道府県を選択してください。'),
-    transfer_office_city_kanji: yup
-      .string()
-      .max(20)
-      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH)
-      .when('transfer_office', ([transfer_office], field) => {
-        if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
+      .label('出向（派遣）先都道府県'),
+    transfer_office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
     transfer_office_district_kanji: yup
       .string()
       .max(40)
-      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
-      .when('transfer_office', ([transfer_office], field) => {
-        if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     transfer_office_other_address_kanji: yup
       .string()
       .max(99)
-      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
-      .when('transfer_office', ([transfer_office], field) => {
-        if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     job_change: yup.string(),
     job_change_office_name_kanji: yup
       .string()
@@ -1321,41 +1296,16 @@ export const tab03SchemaI = yup.object({
           return field;
         }
       })
-      .label('出向（派遣）先都道府県を選択してください。'),
-    transfer_office_city_kanji: yup
-      .string()
-      .max(20)
-      .matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH)
-      .when('transfer_office', ([transfer_office], field) => {
-        if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
+      .label('出向（派遣）先都道府県'),
+    transfer_office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
     transfer_office_district_kanji: yup
       .string()
       .max(40)
-      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
-      .when('transfer_office', ([transfer_office], field) => {
-        if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     transfer_office_other_address_kanji: yup
       .string()
       .max(99)
-      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER)
-      .when('transfer_office', ([transfer_office], field) => {
-        if (transfer_office === '1') {
-          return field.required(YUP_MESSAGES.REQUIRED);
-        } else {
-          return field;
-        }
-      }),
-
+      .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
     job_change: yup.string(),
     job_change_office_name_kanji: yup
       .string()

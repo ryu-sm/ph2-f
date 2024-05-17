@@ -4,7 +4,7 @@ import { ApLayout } from '@/containers';
 import { useBoolean } from '@/hooks';
 import { clearStorage } from '@/libs';
 import { routeNames } from '@/router/settings';
-import { apUnsubcribed } from '@/services';
+import { adGetUserSalesCompanyOrgId, apUnsubcribed } from '@/services';
 import { authAtom, localApplication } from '@/store';
 import { Box, Stack, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
@@ -20,10 +20,12 @@ export const ApUnsubcribedPage = () => {
 
   const handleUnsubcribed = useCallback(async () => {
     try {
+      const res = await adGetUserSalesCompanyOrgId();
       await apUnsubcribed();
       resetAuth();
       resetLocalApplicationInfo();
       clearStorage();
+      localStorage.setItem('s_sales_company_org_id', res.data?.s_sales_company_org_id);
       modal.onTrue();
     } catch (error) {
       switch (error?.status) {

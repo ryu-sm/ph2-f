@@ -24,19 +24,23 @@ export const apSalesPersonRegister = async (data) => {
   return await service.post('/sales-person', data);
 };
 
+export const apSalesPersonAzureRegister = async (data) => {
+  return await service.post('/azure/sales-person', data);
+};
+
 export const apLogin = async (data) => {
   return await service.post('/user/token', data);
 };
 
-export const apLogou = async (email) => {
+export const apLogout = async () => {
   return await service.delete(`/user/token`);
 };
 
-export const adManagerLogou = async (email) => {
+export const adManagerLogout = async () => {
   return await service.delete(`/manager/token`);
 };
 
-export const adSalesPersonLogou = async (email) => {
+export const adSalesPersonLogout = async () => {
   return await service.delete(`/sales-person/token`);
 };
 
@@ -288,8 +292,8 @@ export const getOrgsWithCategories = async (categories) => {
   return await service.get(`/orgs/category?categories=${categories}`);
 };
 
-export const getAzureOrgsWithCategory = async (category) => {
-  return await service.get(`/azure/orgs/${category}`);
+export const getRegisterOrgsWithCategory = async (s_sales_company_org_id, category) => {
+  return await service.get(`/register/orgs/${category}?s_sales_company_org_id=${s_sales_company_org_id}`);
 };
 
 export const getChildrenOrgsWithCategory = async (parent_id, category) => {
@@ -396,4 +400,8 @@ export const adGetSalesPersonPreliminariyAccess = async (p_application_header_id
 
 export const adGetManagerRole = async () => {
   return await service.get(`/manager/role`);
+};
+
+export const adGetUserSalesCompanyOrgId = async () => {
+  return await service.get(`/user/s_sales_company_org_id`);
 };

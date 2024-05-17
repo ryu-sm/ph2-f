@@ -1,5 +1,6 @@
 import { routeNames } from '../settings';
 import {
+  AdAzureLogout,
   AdDocumentsDetailPage,
   AdDocumentsPage,
   AdFilesViewPage,
@@ -8,7 +9,6 @@ import {
   AdNewDocumentsPage,
   AdRegisterPage,
   AdRegisterVerifyEmailPage,
-  AdSalesPersonUpdateOrg,
   DashboardPage,
   EditPreliminary,
 } from '@/pages/administrator';
@@ -71,8 +71,8 @@ export const salesPersonAdRoutes = [
     Element: AdRegisterPage,
   },
   {
-    ...routeNames.adSalesPersonUpdateOrg,
-    Element: AdSalesPersonUpdateOrg,
+    ...routeNames.adSalesPersonAzureLogout,
+    Element: AdAzureLogout,
   },
 ];
 

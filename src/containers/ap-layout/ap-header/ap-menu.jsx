@@ -13,7 +13,7 @@ import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 import { ApModalWrapper, ApPrimaryButton, ApSecondaryButton } from '@/components';
 import { clearStorage } from '@/libs';
-import { apLogou } from '@/services';
+import { apLogout } from '@/services';
 
 export const ApMenu = ({ menu }) => {
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ export const ApMenu = ({ menu }) => {
   );
 
   const handelLogout = async () => {
-    await apLogou(user?.email);
+    await apLogout();
     resetAuth();
     resetLocalApplicationInfo();
     clearStorage();

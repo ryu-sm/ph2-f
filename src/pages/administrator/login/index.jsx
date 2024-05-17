@@ -5,19 +5,26 @@ import { useCurrSearchParams, useIsManager } from '@/hooks';
 import { authAtom } from '@/store';
 import { Avatar, Box, Button, Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { validationSchema } from './validationSchema';
 import { Icons, adBackground, adLogoCompany } from '@/assets';
 import { AdEmailInput, AdPwdInput } from '@/components/administrator';
-import { adManagerLogin, adSalesPersonAzureLogin, adSalesPersonLogin } from '@/services';
+import {
+  adManagerLogin,
+  adSalesPersonAzureLogin,
+  adSalesPersonLogin,
+  apSalesPersonAzureRegister,
+  getRegisterOrgsWithCategory,
+} from '@/services';
 import { setToken } from '@/libs';
 import { jwtDecode } from 'jwt-decode';
 import { routeNames } from '@/router/settings';
 import { TERM_OF_SERVICE } from '@/configs';
 import { toast } from 'react-toastify';
 import { TOKEN_INVALID } from '@/constant';
+import { OrgsSelect } from './orgs-select';
 
 export const AdOrSpLoginPage = () => {
   const navigate = useNavigate();
@@ -26,50 +33,112 @@ export const AdOrSpLoginPage = () => {
   const [azureErrText, setAzureErrText] = useState('');
   const setAuthInfo = useSetRecoilState(authAtom);
   const code = useCurrSearchParams().get('code');
+  const [orgs, setOrgs] = useState([]);
+  const [uploadOrg, setUploadOrg] = useState(false);
   console.log(code);
   console.log(isManager);
+
+  const azureFormik = useFormik({
+    initialValues: { s_sales_company_org_id: '', email: '', name: '' },
+    onSubmit: async (values) => {
+      const res = await apSalesPersonAzureRegister(values);
+      if (res.status == 200) {
+        const { access_token } = res.data;
+        setToken(access_token);
+        const payload = jwtDecode(access_token);
+        setAuthInfo((pre) => {
+          return {
+            ...pre,
+            isLogined: true,
+            roleType: payload?.role_type,
+            user: {
+              id: null,
+              email: null,
+              salesCompanyOrgId: null,
+              displayPdf: true,
+              hasDraftData: false,
+              provisionalResult: null,
+            },
+            salesPerson: {
+              id: payload?.id,
+              email: payload?.email,
+              name: payload?.name_kanji,
+              type: payload?.type,
+            },
+            manager: {
+              id: null,
+              email: null,
+              name: null,
+            },
+            agentSended: false,
+          };
+        });
+
+        navigate(routeNames.adSalesPersonDashboardPage.path);
+      }
+    },
+  });
+
+  const fetchData = async (s_sales_company_org_id) => {
+    try {
+      const res = await getRegisterOrgsWithCategory(s_sales_company_org_id, 'C');
+      console.log(res.data);
+      setOrgs(res.data);
+    } catch (error) {
+      console.log(error);
+      toast.error(API_500_ERROR);
+    }
+  };
 
   useEffect(() => {
     const azureID = async () => {
       if (code && !isManager) {
-        const res = await adSalesPersonAzureLogin(code);
-        if (res.status == 200) {
-          const { access_token } = res.data;
-          setToken(access_token);
-          const payload = jwtDecode(access_token);
-          setAuthInfo((pre) => {
-            return {
-              ...pre,
-              isLogined: true,
-              roleType: payload?.role_type,
-              user: {
-                id: null,
-                email: null,
-                salesCompanyOrgId: null,
-                displayPdf: true,
-                hasDraftData: false,
-                provisionalResult: null,
-              },
-              salesPerson: {
-                id: payload?.id,
-                email: payload?.email,
-                name: payload?.name_kanji,
-              },
-              manager: {
-                id: null,
-                email: null,
-                name: null,
-              },
-              agentSended: false,
-            };
-          });
+        try {
+          const res = await adSalesPersonAzureLogin(code);
+          if (res.status == 200) {
+            const { access_token } = res.data;
+            setToken(access_token);
+            const payload = jwtDecode(access_token);
+            setAuthInfo((pre) => {
+              return {
+                ...pre,
+                isLogined: true,
+                roleType: payload?.role_type,
+                user: {
+                  id: null,
+                  email: null,
+                  salesCompanyOrgId: null,
+                  displayPdf: true,
+                  hasDraftData: false,
+                  provisionalResult: null,
+                },
+                salesPerson: {
+                  id: payload?.id,
+                  email: payload?.email,
+                  name: payload?.name_kanji,
+                  type: payload?.type,
+                },
+                manager: {
+                  id: null,
+                  email: null,
+                  name: null,
+                },
+                agentSended: false,
+              };
+            });
 
-          console.log(999);
+            console.log(999);
 
-          navigate(routeNames.adSalesPersonDashboardPage.path);
-        }
-        if (res.status == 202) {
-          navigate(`${routeNames.adSalesPersonUpdateOrg.path}?sales_person_id=${res.data?.sales_person_id}`);
+            navigate(routeNames.adSalesPersonDashboardPage.path);
+          }
+          if (res.status == 202) {
+            azureFormik.setFieldValue('email', res.data.email);
+            azureFormik.setFieldValue('name', res.data.name);
+            fetchData(res.data.s_sales_company_org_id);
+            setUploadOrg(true);
+          }
+        } catch (error) {
+          setAzureErrText(`エラーが発生しました。\nAzureADに登録されているメールアドレスを取得できません。`);
         }
       }
     };
@@ -139,6 +208,7 @@ export const AdOrSpLoginPage = () => {
                 id: payload?.id,
                 email: payload?.email,
                 name: payload?.name_kanji,
+                type: payload?.type,
               },
               manager: {
                 id: null,
@@ -179,8 +249,8 @@ export const AdOrSpLoginPage = () => {
   }, []);
 
   return (
-    <AdAuthWrapper bgImage={`url(${adBackground})`}>
-      {!azureErrText ? (
+    <AdAuthWrapper bgImage={!code || uploadOrg ? `url(${adBackground})` : 'none'}>
+      {uploadOrg && !azureErrText && (
         <Box display={'flex'} justifyContent={'center'} alignItems={'center'} minHeight={'100vh'}>
           <Stack
             boxShadow={'0px 2px 8px rgba(0, 0, 0, 0.15)'}
@@ -189,96 +259,151 @@ export const AdOrSpLoginPage = () => {
             width={'430px'}
             justifyContent={'center'}
             alignItems={'center'}
-            p={10}
+            py={10}
           >
             <Avatar src={adLogoCompany} variant="square" sx={{ height: '64px', width: '272px' }} />
             <Typography variant="login_title" my={5}>
-              ログイン
+              連携会社登録
             </Typography>
-            {warningText && (
-              <Stack my={5} direction="row" justifyContent="center" alignItems="center" spacing={1}>
-                <Box minWidth={16}>
-                  <Icons.AdCircleNotice />
-                </Box>
-                <Typography variant="login_error">{warningText}</Typography>
-              </Stack>
-            )}
 
-            <FormikProvider value={formik}>
-              <Stack alignItems={'flex-start'} width={'100%'} mb={4}>
-                <Typography variant="login_input">メールアドレス</Typography>
-                <AdEmailInput placeholder="入力してください" name="email" />
-              </Stack>
-              <Stack alignItems={'flex-start'} width={'100%'} mb={10}>
-                <Typography variant="login_input">パスワード</Typography>
-                <AdPwdInput placeholder="入力してください" name="password" />
+            <FormikProvider value={azureFormik}>
+              <Stack alignItems={'center'} spacing={6}>
+                <OrgsSelect name="s_sales_company_org_id" options={orgs} />
+                <Button
+                  sx={{
+                    bgcolor: 'white',
+                    boxShadow: 'none',
+                    width: '200px',
+                    height: '36px',
+                    marginBottom: 5,
+                    borderRadius: '2px',
+                    minHeight: '36px',
+                    border: '1px solid',
+                    borderColor: (theme) => theme.palette.primary.main,
+                    '&:hover': {
+                      bgcolor: 'white',
+                      border: '1px solid',
+                      borderColor: (theme) => theme.palette.primary.main,
+                      opacity: 0.8,
+                    },
+                  }}
+                  disabled={azureFormik.isSubmitting || !azureFormik.values.s_sales_company_org_id}
+                  onClick={() => azureFormik.handleSubmit()}
+                >
+                  <Typography variant="login_button" color="primary.main">
+                    登録する
+                  </Typography>
+                </Button>
               </Stack>
             </FormikProvider>
-            <Button
-              disabled={formik.isSubmitting}
-              sx={{
-                bgcolor: 'white',
-                boxShadow: 'none',
-                width: '200px',
-                height: '36px',
-                marginBottom: 5,
-                borderRadius: '2px',
-                minHeight: '36px',
-                border: '1px solid',
-                borderColor: (theme) => theme.palette.primary.main,
-                '&:hover': {
-                  bgcolor: 'white',
-                  border: '1px solid',
-                  borderColor: (theme) => theme.palette.primary.main,
-                  opacity: 0.8,
-                },
-              }}
-              onClick={() => formik.handleSubmit()}
-            >
-              <Typography variant="login_button" color="primary.main">
-                ログイン
-              </Typography>
-            </Button>
-
-            <Typography variant="login_footer">
-              パスワードを忘れた方はこ
-              <Typography
-                variant="login_footer_link"
-                color="primary.main"
-                onClick={() => {
-                  isManager
-                    ? navigate(routeNames.adManagerResetPasswordVerifyEmailPage.path)
-                    : navigate(routeNames.adSalesPersonResetPasswordVerifyEmailPage.path);
-                }}
-              >
-                ちらから再設定
-              </Typography>
-              をお願いします
-            </Typography>
-
-            {!isManager && (
-              <Stack sx={{ mt: 2 }}>
-                <Typography
-                  component={Link}
-                  variant="login_footer_link"
-                  color="primary.main"
-                  fontWeight={700}
-                  target="_blank"
-                  href={TERM_OF_SERVICE}
-                  sx={{ textDecorationLine: 'none' }}
-                >
-                  利用規約
-                </Typography>
-              </Stack>
-            )}
           </Stack>
         </Box>
-      ) : (
-        <Stack flex={1} alignItems={'center'} justifyContent={'center'} pt={'45dvh'}>
-          <Typography variant="login_error" textAlign={'center'} lineHeight={'120%'} fontSize={30} fontWeight={500}>
-            {azureErrText}
-          </Typography>
-        </Stack>
+      )}
+      {!uploadOrg && (
+        <Fragment>
+          {!azureErrText ? (
+            <Box display={'flex'} justifyContent={'center'} alignItems={'center'} minHeight={'100vh'}>
+              {!code && (
+                <Stack
+                  boxShadow={'0px 2px 8px rgba(0, 0, 0, 0.15)'}
+                  bgcolor={'white'}
+                  borderRadius={'5px'}
+                  width={'430px'}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  p={10}
+                >
+                  <Avatar src={adLogoCompany} variant="square" sx={{ height: '64px', width: '272px' }} />
+                  <Typography variant="login_title" my={5}>
+                    ログイン
+                  </Typography>
+                  {warningText && (
+                    <Stack my={5} direction="row" justifyContent="center" alignItems="center" spacing={1}>
+                      <Box minWidth={16}>
+                        <Icons.AdCircleNotice />
+                      </Box>
+                      <Typography variant="login_error">{warningText}</Typography>
+                    </Stack>
+                  )}
+
+                  <FormikProvider value={formik}>
+                    <Stack alignItems={'flex-start'} width={'100%'} mb={4}>
+                      <Typography variant="login_input">メールアドレス</Typography>
+                      <AdEmailInput placeholder="入力してください" name="email" />
+                    </Stack>
+                    <Stack alignItems={'flex-start'} width={'100%'} mb={10}>
+                      <Typography variant="login_input">パスワード</Typography>
+                      <AdPwdInput placeholder="入力してください" name="password" />
+                    </Stack>
+                  </FormikProvider>
+                  <Button
+                    disabled={formik.isSubmitting}
+                    sx={{
+                      bgcolor: 'white',
+                      boxShadow: 'none',
+                      width: '200px',
+                      height: '36px',
+                      marginBottom: 5,
+                      borderRadius: '2px',
+                      minHeight: '36px',
+                      border: '1px solid',
+                      borderColor: (theme) => theme.palette.primary.main,
+                      '&:hover': {
+                        bgcolor: 'white',
+                        border: '1px solid',
+                        borderColor: (theme) => theme.palette.primary.main,
+                        opacity: 0.8,
+                      },
+                    }}
+                    onClick={() => formik.handleSubmit()}
+                  >
+                    <Typography variant="login_button" color="primary.main">
+                      ログイン
+                    </Typography>
+                  </Button>
+
+                  <Typography variant="login_footer">
+                    パスワードを忘れた方はこ
+                    <Typography
+                      variant="login_footer_link"
+                      color="primary.main"
+                      onClick={() => {
+                        isManager
+                          ? navigate(routeNames.adManagerResetPasswordVerifyEmailPage.path)
+                          : navigate(routeNames.adSalesPersonResetPasswordVerifyEmailPage.path);
+                      }}
+                    >
+                      ちらから再設定
+                    </Typography>
+                    をお願いします
+                  </Typography>
+
+                  {!isManager && (
+                    <Stack sx={{ mt: 2 }}>
+                      <Typography
+                        component={Link}
+                        variant="login_footer_link"
+                        color="primary.main"
+                        fontWeight={700}
+                        target="_blank"
+                        href={TERM_OF_SERVICE}
+                        sx={{ textDecorationLine: 'none' }}
+                      >
+                        利用規約
+                      </Typography>
+                    </Stack>
+                  )}
+                </Stack>
+              )}
+            </Box>
+          ) : (
+            <Stack flex={1} alignItems={'center'} justifyContent={'center'} pt={'45dvh'}>
+              <Typography variant="login_error" textAlign={'center'} lineHeight={'120%'} fontSize={30} fontWeight={500}>
+                {azureErrText}
+              </Typography>
+            </Stack>
+          )}
+        </Fragment>
       )}
     </AdAuthWrapper>
   );

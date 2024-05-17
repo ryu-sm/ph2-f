@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 
 import { jwtDecode } from 'jwt-decode';
 import { TERM_OF_SERVICE } from '@/configs';
+import { routeNames } from '@/router/settings';
+import { API_500_ERROR } from '@/constant';
 
 export const AdRegisterVerifyEmailPage = () => {
   const [sended, setSended] = useState(false);
@@ -134,6 +136,19 @@ export const AdRegisterVerifyEmailPage = () => {
                 登録する
               </Typography>
             </Button>
+            <Stack sx={{ mt: 6 }} direction={'row'} alignItems={'center'}>
+              <Typography
+                component={Link}
+                variant="login_footer_link"
+                color="primary.main"
+                fontWeight={700}
+                href={routeNames.adSalesPersonLoginPage.path}
+                sx={{ textDecorationLine: 'none' }}
+              >
+                既にアカウントをお持ちの方
+              </Typography>
+              <Icons.AdArrowRight sx={{ width: 17 }} />
+            </Stack>
             <Stack sx={{ mt: 6 }}>
               <Typography
                 component={Link}

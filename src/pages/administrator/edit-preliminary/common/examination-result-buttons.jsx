@@ -1,8 +1,10 @@
 import { Icons } from '@/assets';
 import { useIsManager } from '@/hooks';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
+import { editMainTabStatusAtom } from '@/store';
 import { Button, Stack, Typography } from '@mui/material';
 import { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 
 export const ExaminationResultButtons = () => {
   const {
@@ -15,6 +17,7 @@ export const ExaminationResultButtons = () => {
   } = usePreliminaryContext();
 
   const isManager = useIsManager();
+  const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
 
   const provisionalResultItems = useMemo(() => {
     const basic = [
@@ -187,7 +190,7 @@ export const ExaminationResultButtons = () => {
           {preExaminationStatusItems.map((item, index) => (
             <Stack direction="row" alignItems="center" key={index}>
               <Button
-                disabled={managerRole === 1 || item.status !== 'clickable'}
+                disabled={managerRole === 1 || item.status !== 'clickable' || mainTabStatus === 3}
                 onClick={item.onClick}
                 sx={{
                   bgcolor:
@@ -207,7 +210,7 @@ export const ExaminationResultButtons = () => {
                   '&:disabled': {
                     color: 'white',
                     border: (theme) =>
-                      managerRole === 1
+                      managerRole === 1 || mainTabStatus === 3
                         ? item.status !== 'clickable'
                           ? 'none'
                           : `1px solid ${theme?.palette?.secondary?.main}`

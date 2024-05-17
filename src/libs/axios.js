@@ -38,7 +38,12 @@ service.interceptors.response.use(
       }
       if (payload?.role_type === 2) {
         localStorage.setItem('TOKEN_INVALID', true);
-        window.location.href = routeNames.adSalesPersonLoginPage.path;
+        if (payload?.salesPerson?.type === 2) {
+          console.log(8888, payload?.salesPerson?.type);
+          window.location.href = routeNames.adSalesPersonAzureLogout.path;
+        } else {
+          window.location.href = routeNames.adSalesPersonLoginPage.path;
+        }
       }
 
       if (payload?.role_type === 3) {

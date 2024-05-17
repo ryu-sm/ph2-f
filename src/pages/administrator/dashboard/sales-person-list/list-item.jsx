@@ -529,10 +529,10 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         <Divider sx={{ my: 1 }} />
 
         <Stack direction={'row'} px={2} mb={2}>
-          {reviewProgress.map((item, index) => (
-            <Stack key={item.value} flex={item.value === '4' ? 1.5 : 1}>
+          {reviewProgress.map((rp, index) => (
+            <Stack key={rp.value} flex={rp.value === '4' ? 1.5 : 1}>
               <Typography variant="manager_progress_item_title" width={'100%'} textAlign={'center'} color={'text.main'}>
-                {item.title}
+                {rp.title}
               </Typography>
               <Box
                 sx={{
@@ -553,27 +553,27 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                     left: '2px',
                     right: '1px',
                     bottom: '1px',
-                    bgcolor: item.bgcolor,
+                    bgcolor: rp.bgcolor,
                     clipPath: checkClipPath(index),
                   }}
                 >
                   <Typography
                     variant="manager_progress_item"
-                    fontWeight={item.fontWeight}
-                    color={item.value === '3' ? 'white' : 'gray.100'}
+                    fontWeight={rp.fontWeight}
+                    color={rp.value === '3' && ['3', '4'].includes(item?.pre_examination_status) ? 'white' : 'gray.100'}
                   >
-                    {item.label}
+                    {rp.label}
                   </Typography>
                 </Box>
               </Box>
-              {item.value === '3' && (
+              {rp.value === '3' && (
                 <Stack direction={'row'} spacing={2} mt={2} justifyContent={'center'}>
                   {['1', '2', '3', '4', '5'].map((step) => (
                     <Box
                       key={step}
                       height={6}
                       width={'65px'}
-                      bgcolor={step === item.provisional_status ? 'primary.amin' : 'gray.40'}
+                      bgcolor={step === item.provisional_status ? 'primary.main' : '#DBD9D9'}
                     />
                   ))}
                 </Stack>

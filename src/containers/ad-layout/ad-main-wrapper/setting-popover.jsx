@@ -1,32 +1,25 @@
 import { Icons } from '@/assets';
 import { useBoolean, useIsManager } from '@/hooks';
-import { clearStorage } from '@/libs';
 import { routeNames } from '@/router/settings';
-import {
-  adManagerLogou,
-  adManagerPreliminariesFile,
-  adSalesPersonLogou,
-  adSalesPersonPreliminariesFile,
-} from '@/services';
-import { authAtom, preliminarieListAtom, dashboardTabStatusAtom } from '@/store';
+import { adManagerPreliminariesFile, adSalesPersonPreliminariesFile } from '@/services';
+import { authAtom, dashboardTabStatusAtom } from '@/store';
 import { downloadExcelAsync } from '@/utils';
 import { useTheme } from '@emotion/react';
 import { Box, Button, Popover, Stack, Typography } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useLocation } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import { AdLogModal } from './download-modal';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
+import { LogoutModal } from './logout-modal';
 
 export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }) => {
-  const navigate = useNavigate();
   const isManager = useIsManager();
-  const resetAuth = useResetRecoilState(authAtom);
-  const resetPreliminarieList = useResetRecoilState(preliminarieListAtom);
   const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
   const { pathname } = useLocation();
-  const { manager, salesPerson } = useRecoilValue(authAtom);
   const logModal = useBoolean(false);
+  const logoutModal = useBoolean(false);
+  const { salesPerson } = useRecoilValue(authAtom);
   const menuItems = [
     ...(isManager
       ? [
@@ -39,11 +32,16 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
           },
         ]
       : []),
-    {
-      id: 2,
-      label: 'パスワード変更',
-      onclick: openChangePassword,
-    },
+
+    ...(salesPerson.type !== 2
+      ? [
+          {
+            id: 2,
+            label: 'パスワード変更',
+            onclick: openChangePassword,
+          },
+        ]
+      : []),
     ...(pathname === routeNames.adManagerDashboardPage.path || pathname === routeNames.adSalesPersonDashboardPage.path
       ? [
           {
@@ -69,19 +67,7 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
       id: 4,
       label: 'ログアウト',
       onclick: async () => {
-        if (isManager) {
-          await adManagerLogou(manager?.email);
-          resetAuth();
-          resetPreliminarieList();
-          clearStorage();
-          navigate(routeNames.adManagerLoginPage.path);
-        } else {
-          await adSalesPersonLogou(salesPerson?.email);
-          resetAuth();
-          resetPreliminarieList();
-          clearStorage();
-          navigate(routeNames.adSalesPersonLoginPage.path);
-        }
+        logoutModal.onTrue();
       },
     },
   ];
@@ -141,6 +127,7 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
           );
         })}
       </Stack>
+      <LogoutModal isOpen={logoutModal.value} onClose={logoutModal.onFalse} />
     </Popover>
   );
 };
