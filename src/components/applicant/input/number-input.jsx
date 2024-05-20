@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useField } from 'formik';
 import { Stack, TextField, Typography } from '@mui/material';
 import { NumericFormat } from 'react-number-format';
@@ -15,6 +15,7 @@ export const ApNumberInputField = ({
   thousandSeparator = true,
   ...props
 }) => {
+  const inputRef = useRef(null);
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
 
@@ -44,6 +45,15 @@ export const ApNumberInputField = ({
     },
     [field, props, setValue]
   );
+
+  useEffect(() => {
+    if (inputRef.current) {
+      const length = `${Number(meta.value).toLocaleString()}`.length;
+      console.log(length);
+      inputRef.current.setSelectionRange(length, length);
+    }
+  }, [meta.value]);
+
   return (
     <Stack spacing={'2px'}>
       {label && (
@@ -55,6 +65,7 @@ export const ApNumberInputField = ({
         <NumericFormat
           {...field}
           {...props}
+          inputRef={inputRef}
           customInput={TextField}
           thousandSeparator={thousandSeparator}
           autoComplete="off"
@@ -86,6 +97,10 @@ export const ApNumberInputField = ({
             // e.target.value = convertToHalfWidth(e.target.value);
             e.target.value = e.target.value.replace(/^(0+)|[^\d]+/g, '');
             e.target.value = e.target.value.substring(0, maxLength);
+            return e;
+          }}
+          onCompositionUpdate={(e) => {
+            e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
             return e;
           }}
           onBlur={handelBlue}

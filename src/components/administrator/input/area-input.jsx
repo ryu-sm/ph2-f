@@ -1,9 +1,8 @@
-import { convertToFullWidth, convertToHalfWidth } from '@/utils';
-import { Stack, TextField, Typography } from '@mui/material';
+import { convertToHalfWidth } from '@/utils';
+import { Stack, Typography } from '@mui/material';
 import { useField } from 'formik';
 import { useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
-// import AutosizeInput from 'react-input-autosize';
 import AutosizeInput from 'react-input-autosize';
 
 import './autosize-style.css';
@@ -52,17 +51,20 @@ export const AdAreaInput = ({ unit, maxLength, width, ml, ...props }) => {
           customInput={AutosizeInput}
           thousandSeparator
           decimalScale={2}
-          fixedDecimalScale={true}
           getInputRef={inputRef}
           inputClassName="custom-input-style"
           name={field.name}
           value={meta.value}
-          // onInput={(e) => {
-          //   e.target.value = convertToHalfWidth(e.target.value);
-          //   e.target.value = e.target.value.replace(/[^\d]+/g, '');
-          //   e.target.value = e.target.value.substring(0, maxLength);
-          //   return e;
-          // }}
+          onInput={(e) => {
+            e.target.value = e.target.value.replace(/[^\d|^\.]+/g, '');
+            return e;
+          }}
+          onCompositionUpdate={async (e) => {
+            console.log(e);
+            e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+            return e;
+          }}
+          isAllowed={(values) => +values.value <= 9999999.99}
           onBlur={handelBlue}
           onFocus={() => setTouched(false)}
           onValueChange={async (values) => handleChange(values.value)}
@@ -74,7 +76,7 @@ export const AdAreaInput = ({ unit, maxLength, width, ml, ...props }) => {
         )}
       </Stack>
       {meta.touched && meta.error && (
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={350}>
           <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
             {meta.error}
           </Typography>

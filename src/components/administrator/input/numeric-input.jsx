@@ -57,13 +57,15 @@ export const AdNumericInput = ({ unit, maxLength, width, defaultZero, ...props }
           inputClassName="custom-input-style"
           name={field.name}
           value={meta.value}
-          // onInput={(e) => {
-          //   e.target.value = convertToHalfWidth(e.target.value);
-          //   e.target.value = e.target.value.replace(/[^\d]+/g, '');
-          //   e.target.value = e.target.value.substring(0, maxLength);
-          //   return e;
-          // }}
-          maxLength={maxLength}
+          onInput={(e) => {
+            e.target.value = e.target.value.replace(/[^\d]+/g, '');
+            e.target.value = e.target.value.substring(0, maxLength);
+            return e;
+          }}
+          onCompositionUpdate={(e) => {
+            e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+            return e;
+          }}
           onBlur={handelBlue}
           onFocus={() => setError('')}
           onValueChange={async (values) => handleChange(values.value)}
@@ -75,7 +77,7 @@ export const AdNumericInput = ({ unit, maxLength, width, defaultZero, ...props }
         )}
       </Stack>
       {meta.touched && meta.error && (
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={350}>
           <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
             {meta.error}
           </Typography>

@@ -65,7 +65,7 @@ export const AdEditInput = ({ convertFullWidth, convertHalfWidth, autoTrim = tru
         />
       </Stack>
       {meta.touched && meta.error && (
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={350}>
           <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
             {meta.error}
           </Typography>

@@ -37,7 +37,7 @@ export const ApAreaInputField = ({ label, ...props }) => {
       {
         name: 'firstCode',
         ref: refOne,
-        maxLength: 9,
+        maxLength: 7,
         value: formik.values.firstCode,
       },
       {
@@ -102,7 +102,7 @@ export const ApAreaInputField = ({ label, ...props }) => {
 
   const handleFocusInput = useCallback(
     (e, name) => {
-      if (e.key !== 'Backspace' && name === 'firstCode' && refOne.current?.value.length === 9) {
+      if (e.key === 'tab') {
         handleNextInput();
       }
       if (e.key === 'Backspace' && refTwo.current?.value === '') handleBackInput();
@@ -153,6 +153,10 @@ export const ApAreaInputField = ({ label, ...props }) => {
                       e.target.value = e.target.value.substring(0, input.maxLength);
                       return e;
                     }}
+                    onCompositionUpdate={async (e) => {
+                      e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+                      return e;
+                    }}
                     onChange={handleKeyPress}
                     onKeyDown={(e) => handleFocusInput(e, input.name)}
                     onFocus={() => {
@@ -189,6 +193,10 @@ export const ApAreaInputField = ({ label, ...props }) => {
                       // e.target.value = convertToHalfWidth(e.target.value);
                       e.target.value = e.target.value.replace(/[^\d]+/g, '');
                       e.target.value = e.target.value.substring(0, input.maxLength);
+                      return e;
+                    }}
+                    onCompositionUpdate={async (e) => {
+                      e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
                       return e;
                     }}
                     onChange={handleKeyPress}

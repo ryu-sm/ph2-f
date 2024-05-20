@@ -78,10 +78,10 @@ export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
   }, [phoneInputs]);
 
   const handleKeyPress = useCallback(
-    async (value) => {
-      if (value.length === 4) handleNextInput();
+    async (e) => {
+      if (e.target.value.length === 4) handleNextInput();
 
-      if (value.length === 0) handleBackInput();
+      if (e.target.value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value || refThree.current?.value) {
         return await setValue(`${refOne.current?.value}-${refTwo.current?.value}-${refThree.current?.value}`);
@@ -111,12 +111,8 @@ export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
 
   const handleFocusInput = useCallback(
     (e, name) => {
-      if (e.key !== 'Backspace') {
-        if (
-          (name === 'phoneOne' && refOne.current?.value.length === 4) ||
-          (name === 'phoneTwo' && refTwo.current?.value.length === 4)
-        )
-          handleNextInput();
+      if (e.key === 'tab') {
+        handleNextInput();
       }
       if (
         e.key === 'Backspace' &&
@@ -178,9 +174,12 @@ export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
                       },
                     }}
                     onInput={(e) => {
-                      // e.target.value = convertToHalfWidth(e.target.value);
                       e.target.value = e.target.value.replace(/[^\d]+/g, '');
                       e.target.value = e.target.value.substring(0, input.maxLength);
+                      return e;
+                    }}
+                    onCompositionUpdate={async (e) => {
+                      e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
                       return e;
                     }}
                     onChange={handleKeyPress}
@@ -203,7 +202,7 @@ export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
           </Stack>
         </Stack>
         {isError && (
-          <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={320}>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} minWidth={350}>
             <Typography variant="edit_content" textAlign={'start'} color={'secondary.main'}>
               {meta.error}
             </Typography>

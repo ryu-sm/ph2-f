@@ -171,8 +171,7 @@ export const ApZipCodeInputField = ({
 
   const handleFocusInput = useCallback(
     async (e, name) => {
-      if (e.key !== 'Backspace' && name === 'firstCode' && refOne.current?.value.length === 3) {
-        setTouched(false);
+      if (e.key === 'tab') {
         handleNextInput();
       }
       if (e.key === 'Backspace' && refTwo.current?.value === '') handleBackInput();
@@ -216,6 +215,10 @@ export const ApZipCodeInputField = ({
                     // e.target.value = convertToHalfWidth(e.target.value);
                     e.target.value = e.target.value.replace(/[^\d]+/g, '');
                     e.target.value = e.target.value.substring(0, input.maxLength);
+                    return e;
+                  }}
+                  onCompositionUpdate={(e) => {
+                    e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
                     return e;
                   }}
                   onChange={handleKeyPress}
