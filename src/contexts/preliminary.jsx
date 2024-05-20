@@ -35,13 +35,10 @@ export const PreliminaryProvider = ({ children }) => {
   const refreshPreliminary = useRecoilRefresher_UNSTABLE(preliminarySelect);
   const [preliminarySnap, setPreliminarySnap] = useRecoilState(preliminarySnapAtom);
   const preliminaryId = useRecoilValue(preliminaryIdAtom);
-  // const { pathname } = useLocation();
   const checkDbModal = useBoolean(false);
   const modal = useBoolean(false);
+  const [pairLoanData, setPairLoanData] = useState({});
 
-  // useEffect(() => {
-  //   refreshPreliminary();
-  // }, [pathname]);
   const infoGroup = useRecoilValue(infoGroupTabAtom);
   const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
   useEffect(() => {
@@ -51,6 +48,11 @@ export const PreliminaryProvider = ({ children }) => {
     if (result.state === 'hasValue') {
       console.log(result.contents.p_application_banks);
       setPreliminarySnap(result.contents);
+      if (result.contents.p_application_headers.loan_type === '2') {
+        fetchPairLoanData(result.contents.p_application_headers.pair_loan_id);
+      }
+      console.log(result.contents.p_application_headers.loan_type);
+      console.log(result.contents.p_application_headers.pair_loan_id);
     }
   }, [result.state, preliminaryId]);
 
@@ -62,6 +64,82 @@ export const PreliminaryProvider = ({ children }) => {
     const upData = deepDiff(result.contents, preliminarySnap);
     console.log('upData', upData);
     return Boolean(upData);
+  };
+
+  const fetchPairLoanData = async (pair_loan_id) => {
+    try {
+      const res = await adGetPreliminary(pair_loan_id);
+      const temp = res.data?.p_application_headers?.new_house_planned_resident_overview;
+
+      const p_residents = res.data?.p_residents || [];
+      const tempArray = [...p_residents];
+      const plannedResidentNum =
+        Number(temp.spouse) +
+        Number(temp.children) +
+        Number(temp.father) +
+        Number(temp.mother) +
+        Number(temp.brothers_sisters) +
+        Number(temp.fiance) +
+        Number(temp.others);
+
+      if (p_residents.length < 6 && plannedResidentNum > p_residents.length) {
+        const basicLength = plannedResidentNum >= 6 ? 6 : plannedResidentNum;
+        Array.from({ length: basicLength - p_residents.length }, () => {
+          tempArray.push(residentsInitialValues);
+        });
+      }
+
+      const tempPairLoanData = {
+        ...preliminaryInitialValues,
+        p_uploaded_files: {
+          ...preliminaryInitialValues.p_uploaded_files,
+          ...res.data.p_uploaded_files,
+        },
+        p_application_headers: {
+          ...preliminaryInitialValues.p_application_headers,
+          ...res.data.p_application_headers,
+        },
+        p_borrowing_details__1: {
+          ...preliminaryInitialValues.p_borrowing_details__1,
+          ...res.data.p_borrowing_details__1,
+        },
+        p_borrowing_details__2: {
+          ...preliminaryInitialValues.p_borrowing_details__2,
+          ...res.data.p_borrowing_details__2,
+        },
+        p_application_banks: res.data?.p_application_banks
+          ? res.data?.p_application_banks
+          : preliminaryInitialValues.p_application_banks,
+        p_applicant_persons__0: {
+          ...preliminaryInitialValues.p_applicant_persons__0,
+          ...res.data.p_applicant_persons__0,
+        },
+        p_applicant_persons__1: {
+          ...preliminaryInitialValues.p_applicant_persons__1,
+          ...res.data.p_applicant_persons__1,
+        },
+        p_join_guarantors: res.data?.p_join_guarantors
+          ? res.data.p_join_guarantors
+          : preliminaryInitialValues.p_join_guarantors,
+        p_residents: tempArray,
+        p_activities: res.data?.p_activities ? res.data?.p_activities : [],
+        p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : [],
+        p_result: {
+          ...preliminaryInitialValues.p_result,
+          ...res.data.p_result,
+        },
+        apply_type: res.data?.apply_type,
+        isMCJ: res.data.p_application_banks?.length > 1,
+        hasIncomeTotalizer: ['3', '4'].includes(res.data.p_application_headers.loan_type),
+        hasJoinGuarantor: res.data.p_application_headers.join_guarantor_umu === '1',
+        changeJoinGuarantor: false,
+        changeToIncomeTotalizer: false,
+      };
+
+      setPairLoanData(tempPairLoanData);
+    } catch (error) {
+      toast.error(API_500_ERROR);
+    }
   };
 
   const checkeDbUpdate = async () => {
@@ -121,7 +199,6 @@ export const PreliminaryProvider = ({ children }) => {
           : preliminaryInitialValues.p_join_guarantors,
         p_residents: tempArray,
         p_activities: res.data?.p_activities ? res.data?.p_activities : [],
-        // files_p_activities: res.data?.files_p_activities ? res.data?.files_p_activities : [],
         p_borrowings: res.data?.p_borrowings ? res.data?.p_borrowings : [],
         p_result: {
           ...preliminaryInitialValues.p_result,
@@ -265,6 +342,7 @@ export const PreliminaryProvider = ({ children }) => {
       value={{
         status: result.state,
         preliminaryInfo: result.state === 'hasValue' ? result.contents : null,
+        pairLoanDataInfo: pairLoanData,
         preliminarySnap: preliminarySnap,
         isEditable: isEditable,
         managerRole: managerRole,

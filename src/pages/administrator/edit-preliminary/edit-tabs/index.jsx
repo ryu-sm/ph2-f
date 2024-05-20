@@ -57,13 +57,13 @@ export const EditTabs = ({}) => {
 
   const [tempTab, setTempTab] = useState(null);
   const handleChangeMainTab = (id) => {
-    if (checkUpdate()) {
+    if (checkUpdate() && mainTabStatus !== 3) {
       setTempTab(id);
       changeTab.onTrue();
       return;
     } else {
       if ((id === 3 || id === 1) && byPairLoan) {
-        setPreliminaryId(p_application_headers.pair_loan_id);
+        // setPreliminaryId(p_application_headers.pair_loan_id);
       }
 
       setMainTabStatus(id);

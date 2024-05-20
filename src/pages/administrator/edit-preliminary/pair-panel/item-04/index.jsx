@@ -29,7 +29,7 @@ export const Item04 = () => {
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const {
-    preliminaryInfo: { p_join_guarantors },
+    pairLoanDataInfo: { p_join_guarantors },
     preliminarySnap: {
       changeJoinGuarantor,
       changeToIncomeTotalizer,
@@ -98,15 +98,15 @@ export const Item04 = () => {
     },
   });
 
-  useEffect(() => {
-    console.log('debug', formik.values.p_join_guarantors);
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_join_guarantors: formik.values.p_join_guarantors,
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   console.log('debug', formik.values.p_join_guarantors);
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_join_guarantors: formik.values.p_join_guarantors,
+  //     };
+  //   });
+  // }, [formik.values]);
 
   useEffect(() => {
     console.log(formik.values);
@@ -203,7 +203,7 @@ export const Item04 = () => {
                           cancelable
                         />
                       ) : (
-                        genderOptions.find((item) => item.value === item.gender)?.label
+                        genderOptions.find((op) => op.value === item.gender)?.label
                       )
                     }
                   />
@@ -247,7 +247,7 @@ export const Item04 = () => {
                           )}
                         </Stack>
                       ) : (
-                        `${relToApplicantAOptions.find((item) => item.value === item.rel_to_applicant_a)?.label}　${
+                        `${relToApplicantAOptions.find((op) => op.value === item.rel_to_applicant_a)?.label}　${
                           item.rel_to_applicant_a === '99' ? item.rel_to_applicant_a_other : ''
                         }`
                       )
@@ -369,7 +369,7 @@ export const Item04 = () => {
                       isEditable ? (
                         <AdSelectRadios name={`p_join_guarantors[${index}].prefecture_kanji`} options={PREFECTURES} />
                       ) : (
-                        PREFECTURES.find((item) => item.value === item.prefecture_kanji)?.label
+                        PREFECTURES.find((op) => op.value === item.prefecture_kanji)?.label
                       )
                     }
                   />

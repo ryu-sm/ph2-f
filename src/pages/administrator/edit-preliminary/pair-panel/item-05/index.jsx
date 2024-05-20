@@ -52,7 +52,7 @@ import { useIsManager } from '@/hooks';
 
 export const Item05 = () => {
   const {
-    preliminaryInfo: { p_application_headers, p_applicant_persons__0, p_residents },
+    pairLoanDataInfo: { p_application_headers, p_applicant_persons__0, p_residents },
     preliminarySnap: { isMCJ },
     setPreliminarySnap,
     handleSave,
@@ -141,22 +141,22 @@ export const Item05 = () => {
     },
   });
 
-  useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_application_headers: {
-          ...pre.p_application_headers,
-          ...formik.values.p_application_headers,
-        },
-        p_applicant_persons__0: {
-          ...pre.p_applicant_persons__0,
-          spouse: formik.values.p_applicant_persons__0.spouse,
-        },
-        p_residents: formik.values.p_residents,
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_application_headers: {
+  //         ...pre.p_application_headers,
+  //         ...formik.values.p_application_headers,
+  //       },
+  //       p_applicant_persons__0: {
+  //         ...pre.p_applicant_persons__0,
+  //         spouse: formik.values.p_applicant_persons__0.spouse,
+  //       },
+  //       p_residents: formik.values.p_residents,
+  //     };
+  //   });
+  // }, [formik.values]);
 
   useEffect(() => {
     formik.setFieldValue(

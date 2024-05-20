@@ -14,7 +14,7 @@ import { tab09Schema } from '../../fullSchema';
 
 export const Item09 = () => {
   const {
-    preliminaryInfo: { p_applicant_persons__0, p_application_headers, p_borrowings, apply_type },
+    pairLoanDataInfo: { p_applicant_persons__0, p_application_headers, p_borrowings, apply_type },
     setPreliminarySnap,
     handleSave,
   } = usePreliminaryContext();
@@ -76,18 +76,18 @@ export const Item09 = () => {
     validateOnMount: true,
   });
 
-  useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_applicant_persons__0: {
-          ...pre.p_applicant_persons__0,
-          ...formik.values.p_applicant_persons__0,
-        },
-        p_borrowings: formik.values.p_borrowings,
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_applicant_persons__0: {
+  //         ...pre.p_applicant_persons__0,
+  //         ...formik.values.p_applicant_persons__0,
+  //       },
+  //       p_borrowings: formik.values.p_borrowings,
+  //     };
+  //   });
+  // }, [formik.values]);
 
   return (
     <FormikProvider value={formik}>

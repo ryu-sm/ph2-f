@@ -39,6 +39,7 @@ import { Icons } from '@/assets';
 export const Item01 = () => {
   const {
     preliminaryInfo: {
+      pair_loan_data,
       p_application_headers,
       p_application_banks,
       p_borrowing_details__1,

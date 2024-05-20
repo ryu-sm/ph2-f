@@ -24,7 +24,7 @@ export const Item08 = () => {
   const isManager = useIsManager();
   const [salesPersonInfo, setSalesPersonInfo] = useState({});
   const {
-    preliminaryInfo: { p_application_headers },
+    pairLoanDataInfo: { p_application_headers },
     setPreliminarySnap,
     handleSave,
   } = usePreliminaryContext();
@@ -233,17 +233,17 @@ export const Item08 = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_application_headers: {
-          ...pre.p_application_headers,
-          ...formik.values.p_application_headers,
-        },
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_application_headers: {
+  //         ...pre.p_application_headers,
+  //         ...formik.values.p_application_headers,
+  //       },
+  //     };
+  //   });
+  // }, [formik.values]);
 
   useEffect(() => {
     const fetchData = async () => {

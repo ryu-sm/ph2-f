@@ -39,7 +39,7 @@ import { tab06Schema } from '../../fullSchema';
 
 export const Item06 = () => {
   const {
-    preliminaryInfo: { p_application_headers, p_borrowings },
+    pairLoanDataInfo: { p_application_headers, p_borrowings },
     preliminarySnap: { isMCJ, hasIncomeTotalizer },
     setPreliminarySnap,
     handleSave,
@@ -85,18 +85,28 @@ export const Item06 = () => {
     },
   });
 
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_application_headers: {
+  //         ...pre.p_application_headers,
+  //         ...formik.values.p_application_headers,
+  //       },
+  //       p_borrowings: formik.values.p_borrowings,
+  //     };
+  //   });
+  // }, [formik.values]);
+
   useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_application_headers: {
-          ...pre.p_application_headers,
-          ...formik.values.p_application_headers,
-        },
-        p_borrowings: formik.values.p_borrowings,
-      };
-    });
-  }, [formik.values]);
+    if (formik.values.p_borrowings.length === 0) {
+      formik.setFieldValue('p_application_headers.curr_borrowing_status', '0');
+    } else {
+      formik.setFieldValue('p_application_headers.curr_borrowing_status', '1');
+    }
+  }, [formik.values.p_borrowings.length]);
+
+  console.log(formik.values);
 
   return (
     <FormikProvider value={formik}>
@@ -178,7 +188,7 @@ export const Item06 = () => {
                         isEditable ? (
                           <AdSelectRadios name={`p_borrowings[${index}].borrower`} options={borrowerOptions} />
                         ) : (
-                          borrowerOptions.find((item) => item.value === item.borrower)?.label
+                          borrowerOptions.find((op) => op.value === item.borrower)?.label
                         )
                       }
                     />
@@ -225,7 +235,7 @@ export const Item06 = () => {
                           }}
                         />
                       ) : (
-                        typeOptions.find((item) => item.value === item.type)?.label
+                        typeOptions.find((op) => op.value === item.type)?.label
                       )
                     }
                   />
@@ -256,7 +266,7 @@ export const Item06 = () => {
                           isEditable ? (
                             <AdSelectRadios name={`p_borrowings[${index}].loan_purpose`} options={loanPurposeOptions} />
                           ) : (
-                            loanPurposeOptions.find((item) => item.value === item.loan_purpose)?.label
+                            loanPurposeOptions.find((op) => op.value === item.loan_purpose)?.label
                           )
                         }
                       />
@@ -297,7 +307,7 @@ export const Item06 = () => {
                               options={loanBusinessTargetOptions}
                             />
                           ) : (
-                            loanBusinessTargetOptions.find((item) => item.value === item.loan_business_target)?.label
+                            loanBusinessTargetOptions.find((op) => op.value === item.loan_business_target)?.label
                           )
                         }
                       />
@@ -336,8 +346,7 @@ export const Item06 = () => {
                             options={houseFinanceAgency}
                           />
                         ) : (
-                          houseFinanceAgency.find((item) => item.value === item.borrowing_from_house_finance_agency)
-                            ?.label
+                          houseFinanceAgency.find((op) => op.value === item.borrowing_from_house_finance_agency)?.label
                         )
                       }
                     />
@@ -354,7 +363,7 @@ export const Item06 = () => {
                         isEditable ? (
                           <AdSelectRadios name={`p_borrowings[${index}].category`} options={categoryOptions} />
                         ) : (
-                          categoryOptions.find((item) => item.value === item.category)?.label
+                          categoryOptions.find((op) => op.value === item.category)?.label
                         )
                       }
                     />
@@ -506,7 +515,7 @@ export const Item06 = () => {
                               options={commonHousingOptions}
                             />
                           ) : (
-                            commonHousingOptions.find((item) => item.value === item.common_housing)?.label
+                            commonHousingOptions.find((op) => op.value === item.common_housing)?.label
                           )
                         }
                       />
@@ -527,7 +536,7 @@ export const Item06 = () => {
                             options={estateSettingOptions}
                           />
                         ) : (
-                          estateSettingOptions.find((item) => item.value === item.estate_setting)?.label
+                          estateSettingOptions.find((op) => op.value === item.estate_setting)?.label
                         )
                       }
                     />
@@ -552,7 +561,7 @@ export const Item06 = () => {
                               }
                             />
                           ) : (
-                            estateSettingOptions.find((item) => item.value === item.scheduled_loan_payoff)?.label
+                            estateSettingOptions.find((op) => op.value === item.scheduled_loan_payoff)?.label
                           )
                         }
                       />
@@ -594,7 +603,7 @@ export const Item06 = () => {
                           options={includeInExaminationOptions}
                         />
                       ) : (
-                        estateSettingOptions.find((item) => item.value === item.include_in_examination)?.label
+                        estateSettingOptions.find((op) => op.value === item.include_in_examination)?.label
                       )
                     }
                   />
@@ -629,12 +638,10 @@ export const Item06 = () => {
                         />
                       ) : (
                         refundSourceTypeOptions
-                          .map((item) =>
-                            formik.values.p_application_headers.refund_source_type.includes(item.value)
-                              ? item.label
-                              : null
+                          .map((op) =>
+                            formik.values.p_application_headers.refund_source_type.includes(op.value) ? op.label : null
                           )
-                          .filter((item) => item)
+                          .filter((i) => i)
                           .join('・')
                       )
                     }

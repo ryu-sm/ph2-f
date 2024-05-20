@@ -38,7 +38,7 @@ import { Icons } from '@/assets';
 
 export const Item01 = () => {
   const {
-    preliminaryInfo: {
+    pairLoanDataInfo: {
       p_application_headers,
       p_application_banks,
       p_borrowing_details__1,
@@ -49,6 +49,7 @@ export const Item01 = () => {
     setPreliminarySnap,
     handleSave,
   } = usePreliminaryContext();
+
   const isEditable = false;
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
@@ -192,26 +193,26 @@ export const Item01 = () => {
     return diffData;
   };
 
-  useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_application_headers: {
-          ...pre.p_application_headers,
-          ...formik.values.p_application_headers,
-        },
-        p_application_banks: formik.values.p_application_banks,
-        p_borrowing_details__1: {
-          ...pre.p_borrowing_details__1,
-          ...formik.values.p_borrowing_details__1,
-        },
-        p_borrowing_details__2: {
-          ...pre.p_borrowing_details__2,
-          ...formik.values.p_borrowing_details__2,
-        },
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_application_headers: {
+  //         ...pre.p_application_headers,
+  //         ...formik.values.p_application_headers,
+  //       },
+  //       p_application_banks: formik.values.p_application_banks,
+  //       p_borrowing_details__1: {
+  //         ...pre.p_borrowing_details__1,
+  //         ...formik.values.p_borrowing_details__1,
+  //       },
+  //       p_borrowing_details__2: {
+  //         ...pre.p_borrowing_details__2,
+  //         ...formik.values.p_borrowing_details__2,
+  //       },
+  //     };
+  //   });
+  // }, [formik.values]);
 
   const bankMaster = useBankMaster();
 

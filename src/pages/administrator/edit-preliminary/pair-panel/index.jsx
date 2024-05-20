@@ -1,4 +1,4 @@
-import { infoGroupTabAtom, preliminaryIdAtom } from '@/store';
+import { editMainTabStatusAtom, infoGroupTabAtom, preliminaryIdAtom } from '@/store';
 import { Grid, Modal, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -19,6 +19,7 @@ import { adGetUploadFile } from '@/services';
 import { Item10 } from './item-10';
 
 export const PairDetail = () => {
+  const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
   const {
     preliminarySnap: { hasJoinGuarantor },
@@ -101,7 +102,7 @@ export const PairDetail = () => {
   const changeTab = useBoolean(false);
   const [tempTab, setTempTab] = useState(null);
   const handleChangeGroupTab = (id) => {
-    if (checkUpdate()) {
+    if (checkUpdate() && mainTabStatus !== 3) {
       setTempTab(id);
       changeTab.onTrue();
     } else {

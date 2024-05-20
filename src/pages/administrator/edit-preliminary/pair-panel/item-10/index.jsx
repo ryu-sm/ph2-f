@@ -9,7 +9,7 @@ import { useIsManager } from '@/hooks';
 
 export const Item10 = () => {
   const {
-    preliminaryInfo: { p_application_headers, p_result },
+    pairLoanDataInfo: { p_application_headers, p_result },
     setPreliminarySnap,
   } = usePreliminaryContext();
   const isEditable = false;
@@ -27,17 +27,17 @@ export const Item10 = () => {
     validateOnMount: true,
   });
 
-  useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_application_headers: {
-          ...pre.p_application_headers,
-          ...formik.values.p_application_headers,
-        },
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_application_headers: {
+  //         ...pre.p_application_headers,
+  //         ...formik.values.p_application_headers,
+  //       },
+  //     };
+  //   });
+  // }, [formik.values]);
 
   return (
     <FormikProvider value={formik}>

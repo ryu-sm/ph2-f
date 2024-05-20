@@ -41,7 +41,7 @@ import { dayjs } from '@/libs';
 
 export const Item03 = () => {
   const {
-    preliminaryInfo: { p_applicant_persons__0, p_borrowing_details__1 },
+    pairLoanDataInfo: { p_applicant_persons__0, p_borrowing_details__1 },
     preliminarySnap: { isMCJ },
     setPreliminarySnap,
     handleSave,
@@ -130,17 +130,17 @@ export const Item03 = () => {
     },
   });
 
-  useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_applicant_persons__0: {
-          ...pre.p_applicant_persons__0,
-          ...formik.values.p_applicant_persons__0,
-        },
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_applicant_persons__0: {
+  //         ...pre.p_applicant_persons__0,
+  //         ...formik.values.p_applicant_persons__0,
+  //       },
+  //     };
+  //   });
+  // }, [formik.values]);
 
   const basicYear = useMemo(() => {
     return p_borrowing_details__1?.desired_borrowing_date
@@ -1168,11 +1168,26 @@ export const Item03 = () => {
                 name="p_applicant_persons__0.maternity_paternity_leave"
                 options={maternityPaternityLeaveOptions}
                 cancelable
-                onChange={() => {
-                  formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_start_date', '');
-                  formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_end_date', '');
-                  formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', true);
-                  formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', true);
+                onChange={(value) => {
+                  if (value === '') {
+                    formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_start_date', '');
+                    formik.setFieldValue('p_applicant_persons__0.maternity_paternity_leave_end_date', '');
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', false);
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', false);
+                  } else {
+                    formik.setFieldValue(
+                      'p_applicant_persons__0.maternity_paternity_leave_start_date',
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave_start_date ||
+                        p_applicant_persons__0.maternity_paternity_leave_start_date
+                    );
+                    formik.setFieldValue(
+                      'p_applicant_persons__0.maternity_paternity_leave_end_date',
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave_end_date ||
+                        p_applicant_persons__0.maternity_paternity_leave_end_date
+                    );
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', true);
+                    formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', true);
+                  }
                 }}
               />
             ) : (

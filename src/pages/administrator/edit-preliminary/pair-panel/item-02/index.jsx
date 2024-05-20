@@ -19,7 +19,7 @@ import dayjs from 'dayjs';
 
 export const Item02 = () => {
   const {
-    preliminaryInfo: { p_applicant_persons__0 },
+    pairLoanDataInfo: { p_applicant_persons__0 },
     setPreliminarySnap,
     handleSave,
   } = usePreliminaryContext();
@@ -69,17 +69,17 @@ export const Item02 = () => {
     },
   });
 
-  useEffect(() => {
-    setPreliminarySnap((pre) => {
-      return {
-        ...pre,
-        p_applicant_persons__0: {
-          ...pre.p_applicant_persons__0,
-          ...formik.values.p_applicant_persons__0,
-        },
-      };
-    });
-  }, [formik.values]);
+  // useEffect(() => {
+  //   setPreliminarySnap((pre) => {
+  //     return {
+  //       ...pre,
+  //       p_applicant_persons__0: {
+  //         ...pre.p_applicant_persons__0,
+  //         ...formik.values.p_applicant_persons__0,
+  //       },
+  //     };
+  //   });
+  // }, [formik.values]);
 
   return (
     <FormikProvider value={formik}>
