@@ -1,4 +1,4 @@
-import { editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
+import { editMainTabStatusAtom, incomeTotalizerInfoGroupTabAtom, infoGroupTabAtom } from '@/store';
 import { Box, Button, Grid, Modal, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -14,6 +14,7 @@ import { useBoolean } from '@/hooks';
 
 export const IncomeTotalizerDetail = () => {
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
+  const [incomeTotalizerInfoGroupTab, setIncomeTotalizerInfoGroupTab] = useRecoilState(incomeTotalizerInfoGroupTabAtom);
   const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);
   const {
     preliminaryInfo,
@@ -46,7 +47,7 @@ export const IncomeTotalizerDetail = () => {
       setTempTab(id);
       changeTab.onTrue();
     } else {
-      setInfoGroupTab(id);
+      setIncomeTotalizerInfoGroupTab(id);
     }
   };
 
@@ -55,7 +56,7 @@ export const IncomeTotalizerDetail = () => {
 
     changeTab.onFalse();
 
-    setInfoGroupTab(tempTab);
+    setIncomeTotalizerInfoGroupTab(tempTab);
   };
 
   return (
@@ -73,12 +74,12 @@ export const IncomeTotalizerDetail = () => {
               <AdSecondaryButton
                 sx={{
                   height: 38,
-                  color: item.id === infoGroupTab ? 'white' : 'primary.main',
-                  bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
-                  fontWeight: item.id === infoGroupTab ? 600 : 300,
+                  color: item.id === incomeTotalizerInfoGroupTab ? 'white' : 'primary.main',
+                  bgcolor: item.id === incomeTotalizerInfoGroupTab ? 'primary.main' : 'white',
+                  fontWeight: item.id === incomeTotalizerInfoGroupTab ? 600 : 300,
                   borderRadius: '2px',
                   '&:hover': {
-                    bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
+                    bgcolor: item.id === incomeTotalizerInfoGroupTab ? 'primary.main' : 'white',
                     boxShadow: 'none',
                   },
                 }}
@@ -90,9 +91,9 @@ export const IncomeTotalizerDetail = () => {
           ))}
         </Grid>
       </Stack>
-      {infoGroupTab === 2 && <Item02 />}
-      {infoGroupTab === 3 && <Item03 />}
-      {infoGroupTab === 9 && <Item09 />}
+      {incomeTotalizerInfoGroupTab === 2 && <Item02 />}
+      {incomeTotalizerInfoGroupTab === 3 && <Item03 />}
+      {incomeTotalizerInfoGroupTab === 9 && <Item09 />}
 
       <Modal
         open={changeTab.value}

@@ -30,7 +30,12 @@ import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab01Schema } from '../../fullSchema';
-import { editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
+import {
+  editMainTabStatusAtom,
+  incomeTotalizerInfoGroupTabAtom,
+  infoGroupTabAtom,
+  pairLoanInfoGroupTabAtom,
+} from '@/store';
 import { useSetRecoilState } from 'recoil';
 import { useBoolean } from '@/hooks';
 import { AdPrimaryButton } from '@/components/administrator/button';
@@ -52,15 +57,17 @@ export const Item01 = () => {
 
   const isEditable = false;
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setPairLoanInfoGroupTab = useSetRecoilState(pairLoanInfoGroupTabAtom);
+  const setIncomeTotalizerInfoGroupTab = useSetRecoilState(incomeTotalizerInfoGroupTabAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const changeAfterAction = useBoolean(false);
   const handleConfirm = () => {
     if (changeJoinGuarantor) {
-      return setInfoGroupTab(4);
+      return setPairLoanInfoGroupTab(4);
     }
     if (changeToIncomeTotalizer) {
       setMainTabStatus(2);
-      setInfoGroupTab(2);
+      setIncomeTotalizerInfoGroupTab(2);
     }
   };
 

@@ -189,7 +189,7 @@ export const AdFilesViewPage = () => {
                   textAlign: 'center',
                 }}
               >
-                {image?.file_name}
+                {image?.subTitle}
               </Typography>
             </Stack>
           </Element>

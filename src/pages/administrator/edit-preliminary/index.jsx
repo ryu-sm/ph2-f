@@ -1,7 +1,13 @@
 import { AdMainWrapper } from '@/containers';
 import { useBoolean, useCurrSearchParams, useIsManager } from '@/hooks';
 
-import { infoGroupTabAtom, preliminaryIdAtom } from '@/store';
+import {
+  editMainTabStatusAtom,
+  incomeTotalizerInfoGroupTabAtom,
+  infoGroupTabAtom,
+  pairLoanInfoGroupTabAtom,
+  preliminaryIdAtom,
+} from '@/store';
 import { LinearProgress, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -27,7 +33,10 @@ const Content = () => {
   useEffect(() => {
     setPreliminaryId(p_application_header_id);
   }, []);
+  const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
   const infoGroupTab = useRecoilValue(infoGroupTabAtom);
+  const incomeTotalizerInfoGroupTab = useRecoilValue(incomeTotalizerInfoGroupTabAtom);
+
   const { status, preliminaryInfo } = usePreliminaryContext();
 
   const fullNmae = useMemo(() => {
@@ -102,8 +111,30 @@ const Content = () => {
           <Stack>
             {isManager && <AdReviewProgress />}
             {!isManager &&
+              mainTabStatus === 1 &&
               Number(preliminaryInfo.p_result.pre_examination_status) >= 3 &&
               ![8, 10].includes(infoGroupTab) && (
+                <Stack
+                  direction={'row'}
+                  alignItems={'center'}
+                  justifyContent={'start'}
+                  borderBottom={'1px solid'}
+                  borderColor={'gray.80'}
+                  spacing={1}
+                  pt={'10px'}
+                  pb={'5px'}
+                  px={10}
+                >
+                  <Icons.AdCircleNotice />
+                  <Typography variant="dailog_content" color="secondary.main" lineHeight={'32px'}>
+                    住信SBIネット銀行での審査フェーズ（「仮審査中」以降）に入りますと申込内容の修正はできません。
+                  </Typography>
+                </Stack>
+              )}
+            {!isManager &&
+              mainTabStatus === 2 &&
+              Number(preliminaryInfo.p_result.pre_examination_status) >= 3 &&
+              ![8, 10].includes(incomeTotalizerInfoGroupTab) && (
                 <Stack
                   direction={'row'}
                   alignItems={'center'}

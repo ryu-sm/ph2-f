@@ -31,6 +31,16 @@ export const infoGroupTabAtom = atom({
   default: 1,
 });
 
+export const incomeTotalizerInfoGroupTabAtom = atom({
+  key: 'incomeTotalizerInfoGroupTabAtom',
+  default: 1,
+});
+
+export const pairLoanInfoGroupTabAtom = atom({
+  key: 'pairLoanInfoGroupTabAtom',
+  default: 1,
+});
+
 export const preliminaryIdAtom = atom({
   key: 'preliminaryIdAtom',
   default: null,

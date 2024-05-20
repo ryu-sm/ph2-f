@@ -20,13 +20,19 @@ import { AdPrimaryButton } from '@/components/administrator/button';
 import { Icons } from '@/assets';
 import { Stack } from '@mui/material';
 import { tab04Schema } from '../../fullSchema';
-import { editMainTabStatusAtom, infoGroupTabAtom, joinGuarantorInitialValues } from '@/store';
+import {
+  editMainTabStatusAtom,
+  incomeTotalizerInfoGroupTabAtom,
+  infoGroupTabAtom,
+  joinGuarantorInitialValues,
+} from '@/store';
 import { useSetRecoilState } from 'recoil';
 import { formatJapanDate } from '@/utils';
 import { ContentEditGroupSub } from '../../common/content-edit-group-sub';
 
 export const Item04 = () => {
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setIncomeTotalizerInfoGroupTab = useSetRecoilState(incomeTotalizerInfoGroupTabAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const {
     preliminaryInfo: { p_join_guarantors },
@@ -88,10 +94,11 @@ export const Item04 = () => {
     initialValues,
     validationSchema: tab04Schema,
     enableReinitialize: true,
+
     onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
         setMainTabStatus(2);
-        setInfoGroupTab(2);
+        setIncomeTotalizerInfoGroupTab(2);
       } else {
         await handleSave(setUpdateData(values));
       }
@@ -115,6 +122,17 @@ export const Item04 = () => {
   useEffect(() => {
     if (changeJoinGuarantor) {
       formik.setFieldValue('p_join_guarantors', [joinGuarantorInitialValues]);
+      formik.setFieldTouched('p_join_guarantors[0].last_name_kanji', true);
+      formik.setFieldTouched('p_join_guarantors[0].first_name_kanji', true);
+      formik.setFieldTouched('p_join_guarantors[0].last_name_kana', true);
+      formik.setFieldTouched('p_join_guarantors[0].first_name_kana', true);
+      formik.setFieldTouched('p_join_guarantors[0].birthday', true);
+      formik.setFieldTouched('p_join_guarantors[0].mobile_phone', true);
+      formik.setFieldTouched('p_join_guarantors[0].home_phone', true);
+      formik.setFieldTouched('p_join_guarantors[0].prefecture_kanji', true);
+      formik.setFieldTouched('p_join_guarantors[0].city_kanji', true);
+      formik.setFieldTouched('p_join_guarantors[0].district_kanji', true);
+      formik.setFieldTouched('p_join_guarantors[0].other_address_kanji', true);
     }
   }, [changeJoinGuarantor]);
 

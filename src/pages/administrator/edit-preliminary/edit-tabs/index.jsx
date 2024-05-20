@@ -2,7 +2,13 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { IconButton, Modal, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { editMainTabStatusAtom, infoGroupTabAtom, preliminaryIdAtom } from '@/store';
+import {
+  editMainTabStatusAtom,
+  incomeTotalizerInfoGroupTabAtom,
+  infoGroupTabAtom,
+  pairLoanInfoGroupTabAtom,
+  preliminaryIdAtom,
+} from '@/store';
 import { MainDetail } from '../main-panel';
 import { Icons } from '@/assets';
 import { AdPrimaryButton } from '@/components/administrator/button';
@@ -21,6 +27,9 @@ export const EditTabs = ({}) => {
   } = usePreliminaryContext();
   const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
+  const [incomeTotalizerInfoGroupTab, setIncomeTotalizerInfoGroupTab] = useRecoilState(incomeTotalizerInfoGroupTabAtom);
+  const [pairLoanInfoGroupTab, setPairLoanInfoGroupTab] = useRecoilState(pairLoanInfoGroupTabAtom);
+
   const setPreliminaryId = useSetRecoilState(preliminaryIdAtom);
 
   const byPairLoan = useMemo(
@@ -62,17 +71,17 @@ export const EditTabs = ({}) => {
       changeTab.onTrue();
       return;
     } else {
-      if ((id === 3 || id === 1) && byPairLoan) {
-        // setPreliminaryId(p_application_headers.pair_loan_id);
-      }
+      // if ((id === 3 || id === 1) && byPairLoan) {
+      //   // setPreliminaryId(p_application_headers.pair_loan_id);
+      // }
 
       setMainTabStatus(id);
     }
-    if (id === 2) {
-      setInfoGroupTab(2);
-    } else {
-      setInfoGroupTab(1);
-    }
+    // if (id === 2) {
+    //   setInfoGroupTab(2);
+    // } else {
+    //   setInfoGroupTab(1);
+    // }
   };
 
   const handleOk = () => {
@@ -82,18 +91,19 @@ export const EditTabs = ({}) => {
 
     setMainTabStatus(tempTab);
 
-    if (tempTab === 2) {
-      setInfoGroupTab(2);
-    } else {
-      setInfoGroupTab(1);
-    }
+    // if (tempTab === 2) {
+    //   setInfoGroupTab(2);
+    // } else {
+    //   setInfoGroupTab(1);
+    // }
   };
 
   const handleSwap = () => {
     setPreliminaryId(p_application_headers.pair_loan_id);
     refreshPreliminary();
     setMainTabStatus(1);
-    setInfoGroupTab(1);
+    setInfoGroupTab(pairLoanInfoGroupTab);
+    setPairLoanInfoGroupTab(infoGroupTab);
   };
 
   return (

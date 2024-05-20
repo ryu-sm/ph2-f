@@ -17,12 +17,13 @@ import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab02SchemaI } from '../../fullSchema';
 import dayjs from 'dayjs';
-import { infoGroupTabAtom } from '@/store';
+import { incomeTotalizerInfoGroupTabAtom, infoGroupTabAtom } from '@/store';
 import { useSetRecoilState } from 'recoil';
 import { Stack } from '@mui/material';
 
 export const Item02 = () => {
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setIncomeTotalizerInfoGroupTab = useSetRecoilState(incomeTotalizerInfoGroupTabAtom);
   const {
     preliminaryInfo: { p_application_headers, p_applicant_persons__1 },
     preliminarySnap: { changeToIncomeTotalizer },
@@ -79,7 +80,7 @@ export const Item02 = () => {
     enableReinitialize: true,
     onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
-        setInfoGroupTab(3);
+        setIncomeTotalizerInfoGroupTab(3);
       } else {
         handleSave(setUpdateData(values));
       }
@@ -97,6 +98,22 @@ export const Item02 = () => {
       };
     });
   }, [formik.values]);
+
+  useEffect(() => {
+    if (changeToIncomeTotalizer) {
+      formik.setFieldTouched('p_applicant_persons__1.last_name_kanji', true);
+      formik.setFieldTouched('p_applicant_persons__1.first_name_kanji', true);
+      formik.setFieldTouched('p_applicant_persons__1.last_name_kana', true);
+      formik.setFieldTouched('p_applicant_persons__1.first_name_kana', true);
+      formik.setFieldTouched('p_applicant_persons__1.birthday', true);
+      formik.setFieldTouched('p_applicant_persons__1.mobile_phone', true);
+      formik.setFieldTouched('p_applicant_persons__1.home_phone', true);
+      formik.setFieldTouched('p_applicant_persons__1.prefecture_kanji', true);
+      formik.setFieldTouched('p_applicant_persons__1.city_kanji', true);
+      formik.setFieldTouched('p_applicant_persons__1.district_kanji', true);
+      formik.setFieldTouched('p_applicant_persons__1.other_address_kanji', true);
+    }
+  }, [changeToIncomeTotalizer]);
 
   useEffect(() => {
     formik.validateForm();

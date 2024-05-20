@@ -19,6 +19,8 @@ import {
   infoGroupTabAtom,
   preliminaryInitialValues,
   residentsInitialValues,
+  incomeTotalizerInfoGroupTabAtom,
+  pairLoanInfoGroupTabAtom,
 } from '@/store';
 import { AdThemeProvider } from '@/styles/ad-theme';
 import { Modal, Stack, Typography } from '@mui/material';
@@ -39,7 +41,9 @@ export const PreliminaryProvider = ({ children }) => {
   const modal = useBoolean(false);
   const [pairLoanData, setPairLoanData] = useState({});
 
-  const infoGroup = useRecoilValue(infoGroupTabAtom);
+  const infoGroupTab = useRecoilValue(infoGroupTabAtom);
+  const incomeTotalizerInfoGroupTab = useRecoilValue(incomeTotalizerInfoGroupTabAtom);
+  const pairLoanInfoGroupTab = useRecoilValue(pairLoanInfoGroupTabAtom);
   const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
   useEffect(() => {
     if (result.state === 'hasError') {
@@ -234,7 +238,8 @@ export const PreliminaryProvider = ({ children }) => {
       }
       await adUpdatePreliminary(result.contents?.p_application_headers?.id, {
         mainTab: mainTabStatus,
-        subTab: infoGroup,
+        subTab:
+          mainTabStatus === 1 ? infoGroupTab : mainTabStatus === 2 ? incomeTotalizerInfoGroupTab : pairLoanInfoGroupTab,
         ...data,
       });
       toast.success('申込内容を更新しました。');

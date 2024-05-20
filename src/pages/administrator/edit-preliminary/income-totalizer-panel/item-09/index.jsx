@@ -108,6 +108,15 @@ export const Item09 = () => {
     });
   }, [formik.values]);
 
+  useEffect(() => {
+    if (changeToIncomeTotalizer) {
+      formik.setFieldValue(
+        'p_applicant_persons__1.identity_verification_type',
+        formik.values.p_applicant_persons__1.identity_verification_type || '1'
+      );
+    }
+  }, [changeToIncomeTotalizer]);
+
   console.log(p_applicant_persons__1);
 
   return (

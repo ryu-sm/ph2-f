@@ -38,11 +38,12 @@ import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab03SchemaI } from '../../fullSchema';
 import { useSetRecoilState } from 'recoil';
-import { infoGroupTabAtom } from '@/store';
+import { incomeTotalizerInfoGroupTabAtom, infoGroupTabAtom } from '@/store';
 import { dayjs } from '@/libs';
 
 export const Item03 = () => {
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setIncomeTotalizerInfoGroupTab = useSetRecoilState(incomeTotalizerInfoGroupTabAtom);
   const {
     preliminaryInfo: { p_applicant_persons__1, p_borrowing_details__1 },
     preliminarySnap: { isMCJ, changeToIncomeTotalizer },
@@ -132,7 +133,7 @@ export const Item03 = () => {
     enableReinitialize: true,
     onSubmit: async (values) => {
       if (changeToIncomeTotalizer) {
-        setInfoGroupTab(9);
+        setIncomeTotalizerInfoGroupTab(9);
       } else {
         handleSave(setUpdateData(values));
       }

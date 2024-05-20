@@ -30,7 +30,7 @@ import { diffObj } from '@/utils';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab01Schema } from '../../fullSchema';
-import { editMainTabStatusAtom, infoGroupTabAtom } from '@/store';
+import { editMainTabStatusAtom, incomeTotalizerInfoGroupTabAtom, infoGroupTabAtom } from '@/store';
 import { useSetRecoilState } from 'recoil';
 import { useBoolean } from '@/hooks';
 import { AdPrimaryButton } from '@/components/administrator/button';
@@ -53,6 +53,7 @@ export const Item01 = () => {
   } = usePreliminaryContext();
 
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setIncomeTotalizerInfoGroupTab = useSetRecoilState(incomeTotalizerInfoGroupTabAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const changeAfterAction = useBoolean(false);
   const handleConfirm = () => {
@@ -61,7 +62,7 @@ export const Item01 = () => {
     }
     if (changeToIncomeTotalizer) {
       setMainTabStatus(2);
-      setInfoGroupTab(2);
+      setIncomeTotalizerInfoGroupTab(2);
     }
   };
 
@@ -670,12 +671,20 @@ export const Item01 = () => {
                 name={'p_application_headers.join_guarantor_umu'}
                 options={hasJoinGuarantorOptions}
                 onChange={(value) => {
-                  if (value === '1' && p_application_headers.join_guarantor_umu === '') {
+                  if (value === '1' && p_application_headers.join_guarantor_umu !== '1') {
                     setPreliminarySnap((pre) => {
                       return {
                         ...pre,
                         hasJoinGuarantor: true,
                         changeJoinGuarantor: true,
+                      };
+                    });
+                  } else {
+                    setPreliminarySnap((pre) => {
+                      return {
+                        ...pre,
+                        hasJoinGuarantor: false,
+                        changeJoinGuarantor: false,
                       };
                     });
                   }

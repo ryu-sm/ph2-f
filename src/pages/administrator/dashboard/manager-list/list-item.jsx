@@ -22,7 +22,14 @@ import { widthConfig } from '../common/width-config';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { UpAfterResultModal } from './after-result-modal';
-import { dashboardTabStatusAtom, editMainTabStatusAtom, infoGroupTabAtom, preliminarySelect } from '@/store';
+import {
+  dashboardTabStatusAtom,
+  editMainTabStatusAtom,
+  incomeTotalizerInfoGroupTabAtom,
+  infoGroupTabAtom,
+  pairLoanInfoGroupTabAtom,
+  preliminarySelect,
+} from '@/store';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue, useSetRecoilState } from 'recoil';
 import { API_500_ERROR } from '@/constant';
 import { UnAccessModal } from '../common/un-access-modal';
@@ -60,6 +67,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
+  const setIncomeTotalizerInfoGroupTab = useSetRecoilState(incomeTotalizerInfoGroupTabAtom);
+  const setPairLoanInfoGroupTab = useSetRecoilState(pairLoanInfoGroupTabAtom);
   const refreshPreliminary = useRecoilRefresher_UNSTABLE(preliminarySelect);
   const { refreshPreliminarieList } = useDashboardContext();
   const navigator = useNavigate();
@@ -96,6 +105,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       onClick: async () => {
         setMainTabStatus(1);
         setInfoGroupTab(1);
+        setIncomeTotalizerInfoGroupTab(2);
+        setPairLoanInfoGroupTab(1);
         refreshPreliminary();
         navigator(`${routeNames.adManagerEditPreliminaryPage.path}?id=${item.id}`);
       },

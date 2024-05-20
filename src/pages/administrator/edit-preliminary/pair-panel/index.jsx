@@ -1,4 +1,4 @@
-import { editMainTabStatusAtom, infoGroupTabAtom, preliminaryIdAtom } from '@/store';
+import { editMainTabStatusAtom, infoGroupTabAtom, pairLoanInfoGroupTabAtom, preliminaryIdAtom } from '@/store';
 import { Grid, Modal, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -21,6 +21,7 @@ import { Item10 } from './item-10';
 export const PairDetail = () => {
   const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);
   const [infoGroupTab, setInfoGroupTab] = useRecoilState(infoGroupTabAtom);
+  const [pairLoanInfoGroupTab, setPairLoanInfoGroupTab] = useRecoilState(pairLoanInfoGroupTabAtom);
   const {
     preliminarySnap: { hasJoinGuarantor },
     checkUpdate,
@@ -106,7 +107,7 @@ export const PairDetail = () => {
       setTempTab(id);
       changeTab.onTrue();
     } else {
-      setInfoGroupTab(id);
+      setPairLoanInfoGroupTab(id);
     }
   };
 
@@ -115,7 +116,7 @@ export const PairDetail = () => {
 
     changeTab.onFalse();
 
-    setInfoGroupTab(tempTab);
+    setPairLoanInfoGroupTab(tempTab);
   };
 
   return (
@@ -127,12 +128,12 @@ export const PairDetail = () => {
               <AdSecondaryButton
                 sx={{
                   height: 38,
-                  color: item.id === infoGroupTab ? 'white' : 'primary.main',
-                  bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
-                  fontWeight: item.id === infoGroupTab ? 600 : 300,
+                  color: item.id === pairLoanInfoGroupTab ? 'white' : 'primary.main',
+                  bgcolor: item.id === pairLoanInfoGroupTab ? 'primary.main' : 'white',
+                  fontWeight: item.id === pairLoanInfoGroupTab ? 600 : 300,
                   borderRadius: '2px',
                   '&:hover': {
-                    bgcolor: item.id === infoGroupTab ? 'primary.main' : 'white',
+                    bgcolor: item.id === pairLoanInfoGroupTab ? 'primary.main' : 'white',
                     boxShadow: 'none',
                   },
                 }}
@@ -145,16 +146,16 @@ export const PairDetail = () => {
         </Grid>
       </Stack>
 
-      {infoGroupTab === 1 && <Item01 />}
-      {infoGroupTab === 2 && <Item02 />}
-      {infoGroupTab === 3 && <Item03 />}
-      {infoGroupTab === 4 && <Item04 />}
-      {infoGroupTab === 5 && <Item05 />}
-      {infoGroupTab === 6 && <Item06 />}
-      {infoGroupTab === 7 && <Item07 />}
-      {infoGroupTab === 8 && <Item08 />}
-      {infoGroupTab === 9 && <Item09 />}
-      {infoGroupTab === 10 && <Item10 />}
+      {pairLoanInfoGroupTab === 1 && <Item01 />}
+      {pairLoanInfoGroupTab === 2 && <Item02 />}
+      {pairLoanInfoGroupTab === 3 && <Item03 />}
+      {pairLoanInfoGroupTab === 4 && <Item04 />}
+      {pairLoanInfoGroupTab === 5 && <Item05 />}
+      {pairLoanInfoGroupTab === 6 && <Item06 />}
+      {pairLoanInfoGroupTab === 7 && <Item07 />}
+      {pairLoanInfoGroupTab === 8 && <Item08 />}
+      {pairLoanInfoGroupTab === 9 && <Item09 />}
+      {pairLoanInfoGroupTab === 10 && <Item10 />}
 
       <Modal
         open={changeTab.value}
