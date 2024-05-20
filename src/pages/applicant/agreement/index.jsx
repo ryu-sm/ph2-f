@@ -51,7 +51,7 @@ export const ApAgreementPage = () => {
 
   const fetchSalesCompanyId = async () => {
     try {
-      const res = await adGetSalesCompanyId();
+      const res = await adGetSalesCompanyId(salesPerson?.id);
       console.log(res.data);
       let orgsCId = '';
       let orgsBId = '';

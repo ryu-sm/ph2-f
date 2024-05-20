@@ -386,8 +386,8 @@ export const adGetUploadFile = async (p_application_header_id) => {
   return await service.get(`/s_sales_company_orgs/upload_file/${p_application_header_id}`);
 };
 
-export const adGetSalesCompanyId = async () => {
-  return await service.get(`/s_sales_company_org_id`);
+export const adGetSalesCompanyId = async (sales_person_id) => {
+  return await service.get(`/s_sales_company_org_id?sales_person_id=${sales_person_id}`);
 };
 
 export const adGetSalesPersonBelowOrgs = async () => {

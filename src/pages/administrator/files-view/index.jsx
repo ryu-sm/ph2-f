@@ -19,13 +19,12 @@ import { pageNavigationPlugin } from '@react-pdf-viewer/page-navigation';
 import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Element, scroller } from 'react-scroll';
 import { toast } from 'react-toastify';
 
 export const AdFilesViewPage = () => {
-  const [filesOrign, setFilesOrigin] = useState(null);
   const [searchParams] = useSearchParams();
   const p_application_header_id = searchParams.get('p_application_header_id');
   const category = searchParams.get('category');
@@ -178,6 +177,20 @@ export const AdFilesViewPage = () => {
               ) : (
                 <img src={image.src} height="100%" width="vw" alt={image.name} style={{ objectFit: 'cover' }} />
               )}
+            </Stack>
+            <Stack width={100} px={1} pt={1} alignItems={'center'}>
+              <Typography
+                sx={{
+                  fontFamily: 'Hiragino Sans',
+                  fontSize: 10,
+                  wordBreak: 'break-all',
+                  whiteSpace: 'normal',
+                  overflowWrap: 'break-word',
+                  textAlign: 'center',
+                }}
+              >
+                {image?.file_name}
+              </Typography>
             </Stack>
           </Element>
         ))}
