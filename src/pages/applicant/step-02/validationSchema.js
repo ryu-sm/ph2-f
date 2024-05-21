@@ -59,7 +59,12 @@ export const validationSchema = yup.object({
       .required(YUP_MESSAGES.REQUIRED)
       .max(99)
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.ADDRESS_KANJI),
-    email: yup.string().max(128).matches(REGEX.EMAIL, YUP_MESSAGES.EMAIL_AP).label('メールアドレス'),
+    email: yup
+      .string()
+      .max(128)
+      .required(YUP_MESSAGES.REQUIRED)
+      .matches(REGEX.EMAIL, YUP_MESSAGES.EMAIL_AP)
+      .label('メールアドレス'),
     H__a: yup.array().test('option-required', YUP_MESSAGES.REQUIRED, (field_value, { parent }) => {
       if (parent.nationality === '2') {
         return field_value.length === 1;

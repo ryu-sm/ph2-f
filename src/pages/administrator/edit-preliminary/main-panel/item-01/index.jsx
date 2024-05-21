@@ -32,9 +32,12 @@ import { ContentEditGroup } from '../../common/content-edit-group';
 import { tab01Schema } from '../../fullSchema';
 import { editMainTabStatusAtom, incomeTotalizerInfoGroupTabAtom, infoGroupTabAtom } from '@/store';
 import { useSetRecoilState } from 'recoil';
-import { useBoolean } from '@/hooks';
+import { useBoolean, useDashboardContext } from '@/hooks';
 import { AdPrimaryButton } from '@/components/administrator/button';
 import { Icons } from '@/assets';
+import { toast } from 'react-toastify';
+import { API_500_ERROR } from '@/constant';
+import { adUnPairLoan } from '@/services';
 
 export const Item01 = () => {
   const {
@@ -50,12 +53,14 @@ export const Item01 = () => {
     setPreliminarySnap,
     handleSave,
     isEditable,
+    refreshPreliminary,
   } = usePreliminaryContext();
 
   const setInfoGroupTab = useSetRecoilState(infoGroupTabAtom);
   const setIncomeTotalizerInfoGroupTab = useSetRecoilState(incomeTotalizerInfoGroupTabAtom);
   const setMainTabStatus = useSetRecoilState(editMainTabStatusAtom);
   const changeAfterAction = useBoolean(false);
+  const changePairLoanModal = useBoolean(false);
   const handleConfirm = () => {
     if (changeJoinGuarantor) {
       return setInfoGroupTab(4);
@@ -380,6 +385,18 @@ export const Item01 = () => {
               <AdSelectRadios
                 name={'p_application_headers.loan_type'}
                 options={loanTypeOptions}
+                onChangePre={(value) => {
+                  if (
+                    value !== '2' &&
+                    p_application_headers.loan_type === '2' &&
+                    !!p_application_headers.pair_loan_id
+                  ) {
+                    changePairLoanModal.onTrue();
+                    return false;
+                  } else {
+                    return true;
+                  }
+                }}
                 onChange={(value) => {
                   if (
                     (value === '3' || value === '4') &&
@@ -428,6 +445,56 @@ export const Item01 = () => {
             )
           }
         />
+        <Modal
+          open={changePairLoanModal.value}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          disableAutoFocus
+        >
+          <Stack
+            sx={{
+              width: 540,
+              bgcolor: 'white',
+              minWidth: 'auto',
+              maxHeight: '75vh',
+              borderRadius: 1,
+              p: 3,
+            }}
+          >
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
+              <Icons.AdCloseIcon
+                sx={{ width: 13, height: 12, cursor: 'pointer' }}
+                onClick={changePairLoanModal.onFalse}
+              />
+            </Stack>
+            <Stack sx={{ py: 3 }}>
+              <Typography variant="dailog_warring">{`ペアローン処理中のため、お借入形態を変更出来ません。\nペアローンを解除します。よろしいですか？`}</Typography>
+            </Stack>
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} spacing={8} sx={{ p: 3, pb: 6 }}>
+              <AdPrimaryButton
+                height={38}
+                width={150}
+                onClick={async () => {
+                  try {
+                    await adUnPairLoan({
+                      id: p_application_headers.id,
+                      pair_loan_id: p_application_headers.pair_loan_id,
+                    });
+                    toast.success('ペアローンの紐付きを解除しました。');
+                    await refreshPreliminary();
+                  } catch (error) {
+                    console.log(error);
+                    toast.error(API_500_ERROR);
+                  }
+                }}
+              >
+                OK
+              </AdPrimaryButton>
+              <AdPrimaryButton height={38} width={150} onClick={changePairLoanModal.onFalse}>
+                キャンセル
+              </AdPrimaryButton>
+            </Stack>
+          </Stack>
+        </Modal>
         {formik.values.p_application_headers.loan_type === '2' && (
           <Stack>
             <EditRow

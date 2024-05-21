@@ -60,6 +60,7 @@ export const ApStep01Page = () => {
   const navigate = useNavigate();
   const pairLoanModal = useBoolean(false);
   const delPairLoanModal = useBoolean(false);
+  const changePairLoanModal = useBoolean(false);
   const updateModal = useBoolean(false);
 
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
@@ -266,6 +267,8 @@ export const ApStep01Page = () => {
     }
   }, [localApplicationInfo]);
 
+  console.log(p_application_headers.pair_loan_id);
+
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />
@@ -436,7 +439,11 @@ export const ApStep01Page = () => {
                 formik.values.p_application_headers.loan_type === '2' &&
                 !!p_application_headers.apply_no
               ) {
-                delPairLoanModal.onTrue();
+                if (!!p_application_headers.pair_loan_id) {
+                  changePairLoanModal.onTrue();
+                } else {
+                  delPairLoanModal.onTrue();
+                }
               }
               if (
                 (e.target.value === '3' || e.target.value === '4') &&
@@ -501,6 +508,27 @@ export const ApStep01Page = () => {
                 <ApPrimaryButton height={40} width={160} onClick={delPairLoanModal.onFalse}>
                   OK
                 </ApPrimaryButton>
+              </Stack>
+            </Stack>
+          </ApModalWrapper>
+          <ApModalWrapper open={changePairLoanModal.value} icon={<Icons.ApSmileIcon />} label={'確認'}>
+            <Stack spacing={8} sx={{ px: 8 }}>
+              <Stack alignItems={'center'}>
+                <Typography variant="notify" color={'text.main'} textAlign={'center'}>
+                  {`ペアローン処理中のため、お借入形態を変更出来ません。\n担当者に確認してください`}
+                </Typography>
+              </Stack>
+              <Stack spacing={4} direction={'row'} alignItems={'center'} justifyContent={'center'}>
+                <ApLighterButton
+                  height={40}
+                  width={160}
+                  onClick={() => {
+                    formik.setFieldValue('p_application_headers.loan_type', '2');
+                    changePairLoanModal.onFalse();
+                  }}
+                >
+                  とじる
+                </ApLighterButton>
               </Stack>
             </Stack>
           </ApModalWrapper>

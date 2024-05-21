@@ -261,7 +261,6 @@ export const PreliminaryProvider = ({ children }) => {
     const p_application_headers = result.contents.p_application_headers;
     if (
       ['', '0', '1', '2'].includes(p_application_headers?.pre_examination_status) &&
-      p_application_headers?.unsubcribed !== '1' &&
       p_application_headers?.provisional_after_result === ''
     ) {
       return true;

@@ -7,7 +7,7 @@ import { useField } from 'formik';
 import SearchIcon from '@mui/icons-material/Search';
 import { useCallback, useMemo, useState } from 'react';
 
-export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, handleChangeInit, ...props }) => {
+export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, handleChangeInit, onChangePre, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
@@ -178,7 +178,14 @@ export const AdSelectRadios = ({ options, unit, cancelable, hasFilter, handleCha
                     cursor: 'pointer',
                   }}
                   onClick={() => {
-                    handleChange(item.value);
+                    if (onChangePre) {
+                      if (onChangePre(item.value)) {
+                        handleChange(item.value);
+                      }
+                    } else {
+                      handleChange(item.value);
+                    }
+
                     handlePopoverClose();
                   }}
                 >

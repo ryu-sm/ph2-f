@@ -365,6 +365,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       />
       <UpAfterResultModal
         provisional_after_result={afterResult?.provisional_after_result}
+        pair_loan_id={item.pair_loan_id}
         isOpen={afterResultModal.value}
         onConfirm={handleUpdateProvisionalAfterResult}
         onClose={() => {

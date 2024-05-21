@@ -9,7 +9,7 @@ import { FormikProvider, useField, useFormik } from 'formik';
 import { useMemo } from 'react';
 import { useState } from 'react';
 
-export const MonthPicker = ({ yearOptions, ...props }) => {
+export const MonthPicker = ({ yearOptions, onChange, ...props }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [field, meta, helpers] = useField(props);
@@ -30,8 +30,10 @@ export const MonthPicker = ({ yearOptions, ...props }) => {
     enableReinitialize: true,
     onSubmit: async (values, actions) => {
       if (!values.month && !values.year) {
+        onChange && onChange('');
         return await setValue('');
       }
+      onChange && onChange(`${values.year}/${values.month}`);
       await setValue(`${values.year}/${values.month}`);
       actions.setSubmitting(false);
     },

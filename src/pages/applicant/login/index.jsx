@@ -17,7 +17,7 @@ import { Icons } from '@/assets';
 
 import { routeNames } from '@/router/settings';
 import { apGetDraft, apGetSendedApplication, apLogin } from '@/services';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applicationInitialValues, authAtom, localApplication } from '@/store';
 import { useBoolean } from '@/hooks';
 import { setToken } from '@/libs';
@@ -28,6 +28,7 @@ import { TOKEN_INVALID } from '@/constant';
 export const ApLoginPage = () => {
   const navigate = useNavigate();
   const setAuthInfo = useSetRecoilState(authAtom);
+  const authInfo = useRecoilValue(authAtom);
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
   const { apCurrStepId } = localApplicationInfo;
   const modal = useBoolean(false);
@@ -41,6 +42,15 @@ export const ApLoginPage = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        const token = localStorage.getItem('accessToken') || null;
+        if (token) {
+          const { exp } = jwtDecode(token);
+          if (exp * 1000 - Date.now() > 0) {
+            window.location.reload();
+            return;
+          }
+        }
+
         const res = await apLogin({ email: values.email, password: values.password });
 
         const { access_token } = res.data;

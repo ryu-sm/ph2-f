@@ -26,8 +26,6 @@ export const AdYmdInput = ({ width, ml, ...props }) => {
   const { setValue, setTouched } = helpers;
   const handelBlue = useCallback(
     async (e) => {
-      field.onBlur(e);
-      props.onBlur && props.onBlur(e);
       await setTouched(true);
     },
     [field, props]
@@ -35,10 +33,9 @@ export const AdYmdInput = ({ width, ml, ...props }) => {
 
   const handleChange = useCallback(
     async (e) => {
-      console.log(e);
       e.target.value = e.target.value.replace('年', '/').replace('月', '/').replace('日', '');
-      props.onChange && props.onChange(e);
-      setValue(e.target.value);
+      console.log(e);
+      await setValue(e.target.value === '____/__/__' ? '' : e.target.value);
     },
     [field, props, setValue]
   );
@@ -54,7 +51,7 @@ export const AdYmdInput = ({ width, ml, ...props }) => {
     >
       <Stack direction={'row'} alignItems={'center'} sx={{ width: 1, py: 1, pl: '36px' }}>
         <PatternFormatStyled
-          {...field}
+          name={field.name}
           alwaysShowMask
           mask="9999年99月99日"
           maskChar="_"

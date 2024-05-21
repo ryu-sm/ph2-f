@@ -33,9 +33,9 @@ export const GroupNavigations = ({ group }) => {
   }
   if (isLogined && !!user?.id) {
     if (
-      !applicantRoutes.find((item) => item?.path === pathname) &&
-      pathname !== routeNames.apLoginPage.path &&
-      pathname !== routeNames.apRegisterPage.path
+      !applicantRoutes.find((item) => item?.path === pathname)
+      // pathname !== routeNames.apLoginPage.path &&
+      // pathname !== routeNames.apRegisterPage.path
     ) {
       return <Navigate to={routeNames.apTopPage.path} replace />;
     }

@@ -7,7 +7,7 @@ import { Avatar, Box, Button, Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { validationSchema } from './validationSchema';
 import { Icons, adBackground, adLogoCompany } from '@/assets';
 import { AdEmailInput, AdPwdInput } from '@/components/administrator';
@@ -32,6 +32,7 @@ export const AdOrSpLoginPage = () => {
   const [warningText, setWarningText] = useState('');
   const [azureErrText, setAzureErrText] = useState('');
   const setAuthInfo = useSetRecoilState(authAtom);
+  const authInfo = useRecoilValue(authAtom);
   const code = useCurrSearchParams().get('code');
   const [orgs, setOrgs] = useState([]);
   const [uploadOrg, setUploadOrg] = useState(false);
@@ -92,6 +93,14 @@ export const AdOrSpLoginPage = () => {
 
   useEffect(() => {
     const azureID = async () => {
+      const token = localStorage.getItem('accessToken') || null;
+      if (token) {
+        const { exp } = jwtDecode(token);
+        if (exp * 1000 - Date.now() > 0) {
+          window.location.reload();
+          return;
+        }
+      }
       if (code && !isManager) {
         try {
           const res = await adSalesPersonAzureLogin(code);
@@ -154,7 +163,7 @@ export const AdOrSpLoginPage = () => {
     };
 
     azureID();
-  }, [code, isManager]);
+  }, [code, isManager, authInfo]);
 
   const formik = useFormik({
     initialValues: {
@@ -165,6 +174,14 @@ export const AdOrSpLoginPage = () => {
 
     onSubmit: async (values) => {
       try {
+        const token = localStorage.getItem('accessToken') || null;
+        if (token) {
+          const { exp } = jwtDecode(token);
+          if (exp * 1000 - Date.now() > 0) {
+            window.location.reload();
+            return;
+          }
+        }
         if (isManager) {
           const res = await adManagerLogin(values);
           const { access_token } = res.data;

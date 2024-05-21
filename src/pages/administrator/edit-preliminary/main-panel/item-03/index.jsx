@@ -3,7 +3,7 @@ import { EditRow } from '../../common/content-edit-row';
 import { FormikProvider, useFormik } from 'formik';
 
 import { formatJapanDate, formatNumber } from '@/utils';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AdEditFullWidthInput,
   AdNumericInput,
@@ -41,7 +41,7 @@ import { dayjs } from '@/libs';
 
 export const Item03 = () => {
   const {
-    preliminaryInfo: { p_applicant_persons__0, p_borrowing_details__1 },
+    preliminaryInfo: { p_applicant_persons__0, p_borrowing_details__1, p_application_headers },
     preliminarySnap: { isMCJ },
     setPreliminarySnap,
     handleSave,
@@ -110,6 +110,9 @@ export const Item03 = () => {
     p_borrowing_details__1: {
       desired_borrowing_date: p_borrowing_details__1?.desired_borrowing_date,
     },
+    p_application_headers: {
+      created_at: p_application_headers.created_at,
+    },
   };
 
   const setUpdateData = (values) => {
@@ -163,6 +166,11 @@ export const Item03 = () => {
       label: `${year}`,
     };
   });
+
+  const [leaveStartDateTemp, setLeaveStartDateTemp] = useState(
+    p_applicant_persons__0?.maternity_paternity_leave_start_date
+  );
+  const [leaveEndDateTemp, setLeaveEndDateTemp] = useState(p_applicant_persons__0?.maternity_paternity_leave_end_date);
 
   useEffect(() => {
     console.log(formik.errors);
@@ -1177,13 +1185,11 @@ export const Item03 = () => {
                   } else {
                     formik.setFieldValue(
                       'p_applicant_persons__0.maternity_paternity_leave_start_date',
-                      formik.values.p_applicant_persons__0.maternity_paternity_leave_start_date ||
-                        p_applicant_persons__0.maternity_paternity_leave_start_date
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave_start_date || leaveStartDateTemp
                     );
                     formik.setFieldValue(
                       'p_applicant_persons__0.maternity_paternity_leave_end_date',
-                      formik.values.p_applicant_persons__0.maternity_paternity_leave_end_date ||
-                        p_applicant_persons__0.maternity_paternity_leave_end_date
+                      formik.values.p_applicant_persons__0.maternity_paternity_leave_end_date || leaveEndDateTemp
                     );
                     formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_start_date', true);
                     formik.setFieldTouched('p_applicant_persons__0.maternity_paternity_leave_end_date', true);
@@ -1216,6 +1222,7 @@ export const Item03 = () => {
                         ? leaveStatusUpYearOptions
                         : leaveStatusDownYearOptions
                     }
+                    onChange={(v) => setLeaveStartDateTemp(v)}
                   />
                 ) : (
                   formatJapanDate(formik.values.p_applicant_persons__0.maternity_paternity_leave_start_date, true)
@@ -1240,6 +1247,7 @@ export const Item03 = () => {
                         ? leaveStatusUpYearOptions
                         : leaveStatusDownYearOptions
                     }
+                    onChange={(v) => setLeaveEndDateTemp(v)}
                   />
                 ) : (
                   formatJapanDate(formik.values.p_applicant_persons__0.maternity_paternity_leave_end_date, true)

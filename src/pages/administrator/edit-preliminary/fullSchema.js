@@ -356,7 +356,42 @@ export const tab03Schema = yup.object({
     office_head_location: yup
       .string()
       .matches(REGEX.KANJI_FULL_WIDTH_HAVE_NUMBER, YUP_MESSAGES.KANJI_FULL_WIDTH_HAVE_NUMBER),
-    office_establishment_date: yup.string().matches(REGEX.YMD, YUP_MESSAGES.DATE_INVALID),
+    office_establishment_date: yup
+      .string()
+      .matches(REGEX.YMD, YUP_MESSAGES.DATE_INVALID)
+      .test('date check', YUP_MESSAGES.DATE_INVALID, (field_value) => {
+        console.log(field_value);
+        if (!!field_value) {
+          return dayjs(field_value, 'YYYY/MM/DD', true).isValid();
+        } else {
+          return true;
+        }
+      })
+      .test(
+        'before created_at',
+        YUP_MESSAGES.PLEASE_SELECT_ESTABLISHMENT_DATE_BEFORE_TODAY,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_application_headers },
+            },
+          }
+        ) => {
+          if (!!field_value) {
+            if (!dayjs(field_value, 'YYYY/MM/DD', true).isValid()) {
+              return false;
+            }
+            const [year, month, day] = field_value.split('/');
+            const officeEstablishmentDate = dayjs(`${year}/${month}/${day}`);
+            return officeEstablishmentDate.isBefore(
+              dayjs(p_application_headers.created_at).format('YYYY/MM/DD'),
+              'day'
+            );
+          }
+          return true;
+        }
+      ),
     office_postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
 
     office_prefecture_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
@@ -1190,7 +1225,41 @@ export const tab03SchemaI = yup.object({
     office_phone: yup.string(),
 
     office_postal_code: yup.string().matches(REGEX.ZIP_CODE, YUP_MESSAGES.ZIP_CODE),
-
+    office_establishment_date: yup
+      .string()
+      .matches(REGEX.YMD, YUP_MESSAGES.DATE_INVALID)
+      .test('date check', YUP_MESSAGES.DATE_INVALID, (field_value) => {
+        if (!!field_value) {
+          return dayjs(field_value, 'YYYY/MM/DD', true).isValid();
+        } else {
+          return true;
+        }
+      })
+      .test(
+        'before created_at',
+        YUP_MESSAGES.PLEASE_SELECT_ESTABLISHMENT_DATE_BEFORE_TODAY,
+        (
+          field_value,
+          {
+            options: {
+              context: { p_application_headers },
+            },
+          }
+        ) => {
+          if (!!field_value) {
+            if (!dayjs(field_value, 'YYYY/MM/DD', true).isValid()) {
+              return false;
+            }
+            const [year, month, day] = field_value.split('/');
+            const officeEstablishmentDate = dayjs(`${year}/${month}/${day}`);
+            return officeEstablishmentDate.isBefore(
+              dayjs(p_application_headers.created_at).format('YYYY/MM/DD'),
+              'day'
+            );
+          }
+          return true;
+        }
+      ),
     office_prefecture_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
     office_city_kanji: yup.string().max(20).matches(REGEX.KANJI_FULL_WIDTH, YUP_MESSAGES.KANJI_FULL_WIDTH),
     office_district_kanji: yup
