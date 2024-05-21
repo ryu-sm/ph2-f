@@ -81,7 +81,7 @@ export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
     async (e) => {
       if (e.target.value.length === 4) handleNextInput();
 
-      if (e.target.value.length === 0) handleBackInput();
+      // if (e.target.value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value || refThree.current?.value) {
         return await setValue(`${refOne.current?.value}-${refTwo.current?.value}-${refThree.current?.value}`);
@@ -143,6 +143,7 @@ export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
                   <TextField
                     autoComplete="off"
                     type="tel"
+                    inputMode="tel"
                     placeholder={'0'.repeat(input.maxLength).toString()}
                     inputRef={input.ref}
                     name={input.name}
@@ -179,7 +180,9 @@ export const AdPhoneInputField = ({ label, showError, onBlur, ...props }) => {
                       return e;
                     }}
                     onCompositionUpdate={async (e) => {
-                      e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+                      e.target.value =
+                        convertToHalfWidth(e.target.value) +
+                        convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
                       return e;
                     }}
                     onChange={handleKeyPress}

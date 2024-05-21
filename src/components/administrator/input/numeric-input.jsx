@@ -1,7 +1,7 @@
 import { convertToFullWidth, convertToHalfWidth } from '@/utils';
 import { Stack, TextField, Typography } from '@mui/material';
 import { useField } from 'formik';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
 import AutosizeInput from 'react-input-autosize';
 import './autosize-style.css';
@@ -9,7 +9,7 @@ import { useRef } from 'react';
 
 export const AdNumericInput = ({ unit, maxLength, width, defaultZero, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const { setValue, setError } = helpers;
+  const { setValue, setError, setTouched } = helpers;
 
   const inputRef = useRef(null);
 
@@ -21,25 +21,24 @@ export const AdNumericInput = ({ unit, maxLength, width, defaultZero, ...props }
 
   const handelBlue = useCallback(
     async (e) => {
-      field.onBlur(e);
       props.onBlur && props.onBlur(e);
       if (defaultZero) {
         if (e.target.value === '') {
           await setValue('0');
         }
       }
+      await setTouched(true);
     },
     [field, props, setValue]
   );
 
   const handleChange = useCallback(
-    async (value) => {
-      props.onChange && props.onChange(value);
-      await setValue(value);
+    async (e) => {
+      props.onChange && props.onChange(e.target.value.replaceAll(',', ''));
+      setValue(e.target.value.replaceAll(',', ''));
     },
     [field, props, setValue]
   );
-
   return (
     <Stack
       direction={'row'}
@@ -54,21 +53,29 @@ export const AdNumericInput = ({ unit, maxLength, width, defaultZero, ...props }
           customInput={AutosizeInput}
           thousandSeparator
           getInputRef={inputRef}
+          autoComplete="off"
+          type="tel"
+          inputMode="tel"
           inputClassName="custom-input-style"
           name={field.name}
           value={meta.value}
           onInput={(e) => {
+            e.target.value = e.target.value.replaceAll(',', '');
             e.target.value = e.target.value.replace(/[^\d]+/g, '');
             e.target.value = e.target.value.substring(0, maxLength);
             return e;
           }}
-          onCompositionUpdate={(e) => {
-            e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+          onCompositionUpdate={async (e) => {
+            e.target.value =
+              convertToHalfWidth(e.target.value).replaceAll(',', '') +
+              convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
             return e;
           }}
           onBlur={handelBlue}
-          onFocus={() => setError('')}
-          onValueChange={async (values) => handleChange(values.value)}
+          onFocus={() => {
+            setError('');
+          }}
+          onChange={handleChange}
         />
         {unit && meta.value && (
           <Typography variant="edit_content" whiteSpace={'nowrap'} color={'gray.100'}>

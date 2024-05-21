@@ -77,7 +77,7 @@ export const ApAreaInputField = ({ label, ...props }) => {
     async (e) => {
       if ((e.target.value.length === 9 && e.target.name === 'firstCode') || e.target.value.length === 9)
         handleNextInput();
-      if (e.target.value.length === 0) handleBackInput();
+      // if (e.target.value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value) {
         return await setValue(`${refOne.current?.value}.${refTwo.current?.value}`);
@@ -154,7 +154,9 @@ export const ApAreaInputField = ({ label, ...props }) => {
                       return e;
                     }}
                     onCompositionUpdate={async (e) => {
-                      e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+                      e.target.value =
+                        convertToHalfWidth(e.target.value) +
+                        convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
                       return e;
                     }}
                     onChange={handleKeyPress}
@@ -171,7 +173,7 @@ export const ApAreaInputField = ({ label, ...props }) => {
                     // customInput={TextField}
                     // thousandSeparator
                     autoComplete="off"
-                    // type="tel"
+                    type="tel"
                     placeholder={index ? '--' : '---'}
                     inputRef={input.ref}
                     name={input.name}
@@ -196,7 +198,9 @@ export const ApAreaInputField = ({ label, ...props }) => {
                       return e;
                     }}
                     onCompositionUpdate={async (e) => {
-                      e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+                      e.target.value =
+                        convertToHalfWidth(e.target.value) +
+                        convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
                       return e;
                     }}
                     onChange={handleKeyPress}

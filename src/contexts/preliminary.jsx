@@ -52,7 +52,10 @@ export const PreliminaryProvider = ({ children }) => {
     if (result.state === 'hasValue') {
       console.log(result.contents.p_application_banks);
       setPreliminarySnap(result.contents);
-      if (result.contents.p_application_headers.loan_type === '2') {
+      if (
+        result.contents.p_application_headers.loan_type === '2' &&
+        result.contents.p_application_headers.pair_loan_id
+      ) {
         fetchPairLoanData(result.contents.p_application_headers.pair_loan_id);
       }
       console.log(result.contents.p_application_headers.loan_type);

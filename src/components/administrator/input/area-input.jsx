@@ -53,6 +53,7 @@ export const AdAreaInput = ({ unit, maxLength, width, ml, ...props }) => {
           decimalScale={2}
           getInputRef={inputRef}
           inputClassName="custom-input-style"
+          type="tel"
           name={field.name}
           value={meta.value}
           onInput={(e) => {

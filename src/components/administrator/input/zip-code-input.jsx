@@ -89,7 +89,7 @@ export const AdZipCodeInput = ({
       onChange && onChange();
       if ((e.target.value.length === 3 && e.target.name === 'firstCode') || e.target.value.length === 4)
         handleNextInput();
-      if (e.target.value.length === 0) handleBackInput();
+      // if (e.target.value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value) {
         await setValue(`${refOne.current?.value}-${refTwo.current?.value}`);
@@ -197,6 +197,7 @@ export const AdZipCodeInput = ({
                 <TextField
                   autoComplete="off"
                   type="tel"
+                  inputMode="tel"
                   placeholder={'0'.repeat(input.maxLength).toString()}
                   inputRef={input.ref}
                   name={input.name}
@@ -233,7 +234,9 @@ export const AdZipCodeInput = ({
                     return e;
                   }}
                   onCompositionUpdate={async (e) => {
-                    e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+                    e.target.value =
+                      convertToHalfWidth(e.target.value) +
+                      convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
                     return e;
                   }}
                   onChange={handleKeyPress}

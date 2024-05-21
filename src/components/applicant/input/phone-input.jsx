@@ -80,7 +80,7 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
     async (e) => {
       if (e.target.value.length === 4) handleNextInput();
 
-      if (e.target.value.length === 0) handleBackInput();
+      // if (e.target.value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value || refThree.current?.value) {
         return await setValue(`${refOne.current?.value}-${refTwo.current?.value}-${refThree.current?.value}`);
@@ -158,7 +158,9 @@ export const ApPhoneInputField = ({ label, showError, ...props }) => {
                       return e;
                     }}
                     onCompositionUpdate={async (e) => {
-                      e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+                      e.target.value =
+                        convertToHalfWidth(e.target.value) +
+                        convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
                       return e;
                     }}
                     onChange={handleKeyPress}

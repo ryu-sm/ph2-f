@@ -42,6 +42,7 @@ export const ApNumberInputField = ({
     async (e) => {
       e.target.value = e.target.value.replaceAll(',', '');
       props.onChange && props.onChange(e);
+      setValue(e.target.value.replaceAll(',', ''));
     },
     [field, props, setValue]
   );
@@ -94,13 +95,13 @@ export const ApNumberInputField = ({
             }),
           }}
           onInput={(e) => {
-            // e.target.value = convertToHalfWidth(e.target.value);
             e.target.value = e.target.value.replace(/^(0+)|[^\d]+/g, '');
             e.target.value = e.target.value.substring(0, maxLength);
             return e;
           }}
           onCompositionUpdate={(e) => {
-            e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+            e.target.value =
+              convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
             return e;
           }}
           onBlur={handelBlue}

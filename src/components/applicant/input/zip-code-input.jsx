@@ -89,7 +89,7 @@ export const ApZipCodeInputField = ({
       onChange && onChange();
       if ((e.target.value.length === 3 && e.target.name === 'firstCode') || e.target.value.length === 4)
         handleNextInput();
-      if (e.target.value.length === 0) handleBackInput();
+      // if (e.target.value.length === 0) handleBackInput();
 
       if (refOne.current?.value || refTwo.current?.value) {
         await setValue(`${refOne.current?.value}-${refTwo.current?.value}`);
@@ -218,7 +218,9 @@ export const ApZipCodeInputField = ({
                     return e;
                   }}
                   onCompositionUpdate={(e) => {
-                    e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
+                    e.target.value =
+                      convertToHalfWidth(e.target.value) +
+                      convertToHalfWidth(e.nativeEvent.data).replace(/[^\d]+/g, '');
                     return e;
                   }}
                   onChange={handleKeyPress}
