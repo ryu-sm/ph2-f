@@ -168,10 +168,8 @@ export const AdDocumentsPage = () => {
       let res;
       if (isManager) {
         res = await adGetManagerDocs();
-        console.log(res.data);
       } else {
         res = await adGetSalesPersonDocs();
-        console.log(res.data);
       }
 
       setData(res.data);

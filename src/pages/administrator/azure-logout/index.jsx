@@ -13,7 +13,7 @@ export const AdAzureLogout = () => {
       localStorage.clear();
     }
   }, []);
-  console.log(77878);
+
   return (
     <AdAuthWrapper>
       <Box display={'flex'} justifyContent={'center'} alignItems={'center'} minHeight={'100vh'}>

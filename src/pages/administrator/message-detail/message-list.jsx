@@ -33,7 +33,7 @@ export const MessageList = ({ messages = [], applicant, fetchData }) => {
   const updateMessagesStatus = async () => {
     try {
       const index = firstUnViewedIndex();
-      console.log(index);
+
       if (index === -1) return;
       const messages_ids = messages.slice(index).map((item) => item['id']);
       if (messages_ids.length > 0) {

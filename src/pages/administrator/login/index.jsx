@@ -36,8 +36,6 @@ export const AdOrSpLoginPage = () => {
   const code = useCurrSearchParams().get('code');
   const [orgs, setOrgs] = useState([]);
   const [uploadOrg, setUploadOrg] = useState(false);
-  console.log(code);
-  console.log(isManager);
 
   const azureFormik = useFormik({
     initialValues: { s_sales_company_org_id: '', email: '', name: '' },
@@ -83,10 +81,9 @@ export const AdOrSpLoginPage = () => {
   const fetchData = async (s_sales_company_org_id) => {
     try {
       const res = await getRegisterOrgsWithCategory(s_sales_company_org_id, 'C');
-      console.log(res.data);
+
       setOrgs(res.data);
     } catch (error) {
-      console.log(error);
       toast.error(API_500_ERROR);
     }
   };
@@ -136,8 +133,6 @@ export const AdOrSpLoginPage = () => {
               };
             });
 
-            console.log(999);
-
             navigate(routeNames.adSalesPersonDashboardPage.path);
           }
           if (res.status == 202) {
@@ -147,7 +142,6 @@ export const AdOrSpLoginPage = () => {
             setUploadOrg(true);
           }
         } catch (error) {
-          console.log(error?.status);
           switch (error?.status) {
             case 408:
               setAzureErrText(`エラーが発生しました。\nAzureADに登録されているメールアドレスを取得できません。`);

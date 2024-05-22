@@ -109,8 +109,6 @@ export const ExaminationResultButtons = () => {
     });
   }, [p_result]);
 
-  console.log(preExaminationStatusItems);
-
   const preExaminationStatusSalesPersonItems = useMemo(() => {
     const basic = [
       {

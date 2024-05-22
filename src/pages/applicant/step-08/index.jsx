@@ -158,7 +158,6 @@ export const ApStep08Page = () => {
         }
       });
       formik.setFieldValue('p_borrowings', temp);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -356,7 +355,6 @@ export const ApStep08Page = () => {
                                 justifyContent={'start'}
                                 width={1}
                                 onChange={(e) => {
-                                  console.log(e.target.value);
                                   if (formik.values.p_borrowings[index].type !== '')
                                     arrayHelpers.replace(index, {
                                       id: p_borrowing.id,

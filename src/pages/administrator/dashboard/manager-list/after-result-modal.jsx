@@ -1,5 +1,5 @@
 import { Icons } from '@/assets';
-import { Box, Button, Divider, MenuItem, Modal, Select, Stack, Typography } from '@mui/material';
+import { Button, Modal, Stack, Typography } from '@mui/material';
 
 export const UpAfterResultModal = ({ isOpen, onClose, onConfirm, provisional_after_result, pair_loan_id }) => {
   return (

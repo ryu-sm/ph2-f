@@ -26,8 +26,6 @@ export const AdOrSpLoginPage = () => {
   const [azureErrText, setAzureErrText] = useState('');
   const setAuthInfo = useSetRecoilState(authAtom);
   const code = useCurrSearchParams().get('code');
-  console.log(code);
-  console.log(isManager);
 
   useEffect(() => {
     const azureID = async () => {
@@ -63,8 +61,6 @@ export const AdOrSpLoginPage = () => {
               agentSended: false,
             };
           });
-
-          console.log(999);
 
           navigate(routeNames.adSalesPersonDashboardPage.path);
         }

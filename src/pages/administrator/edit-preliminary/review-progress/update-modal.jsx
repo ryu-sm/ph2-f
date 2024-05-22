@@ -26,7 +26,7 @@ export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => 
 
   const handleConfirm = async () => {
     const res = await handleChangePreExaminationStatus(value === 3 && activeValue === 3 ? value - 1 : value, onClose);
-    console.log(res);
+
     if (res.status === 400) {
       setErrors(res.data);
       return;
@@ -36,14 +36,12 @@ export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => 
       return;
     }
     if (res.status === 406) {
-      console.log(11);
       setSbiErrors(res.data?.erorrs);
       return;
     }
 
     onClose();
   };
-  console.log(sbiErrors);
 
   const handleErrorClose = () => {
     setErrors(null);

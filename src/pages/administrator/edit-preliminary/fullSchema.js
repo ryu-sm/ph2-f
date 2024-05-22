@@ -360,9 +360,16 @@ export const tab03Schema = yup.object({
       .string()
       .matches(REGEX.YMD, YUP_MESSAGES.DATE_INVALID)
       .test('date check', YUP_MESSAGES.DATE_INVALID, (field_value) => {
-        console.log(field_value);
         if (!!field_value) {
-          return dayjs(field_value, 'YYYY/MM/DD', true).isValid();
+          if (!dayjs(field_value, 'YYYY/MM/DD', true).isValid()) {
+            return false;
+          }
+          const [year, month, day] = field_value.split('/');
+          if (Number(year) < 1000) {
+            return false;
+          } else {
+            return true;
+          }
         } else {
           return true;
         }
@@ -383,6 +390,7 @@ export const tab03Schema = yup.object({
               return false;
             }
             const [year, month, day] = field_value.split('/');
+
             const officeEstablishmentDate = dayjs(`${year}/${month}/${day}`);
             return officeEstablishmentDate.isBefore(
               dayjs(p_application_headers.created_at).format('YYYY/MM/DD'),
@@ -1230,7 +1238,15 @@ export const tab03SchemaI = yup.object({
       .matches(REGEX.YMD, YUP_MESSAGES.DATE_INVALID)
       .test('date check', YUP_MESSAGES.DATE_INVALID, (field_value) => {
         if (!!field_value) {
-          return dayjs(field_value, 'YYYY/MM/DD', true).isValid();
+          if (!dayjs(field_value, 'YYYY/MM/DD', true).isValid()) {
+            return false;
+          }
+          const [year, month, day] = field_value.split('/');
+          if (Number(year) < 1000) {
+            return false;
+          } else {
+            return true;
+          }
         } else {
           return true;
         }
@@ -1251,6 +1267,7 @@ export const tab03SchemaI = yup.object({
               return false;
             }
             const [year, month, day] = field_value.split('/');
+
             const officeEstablishmentDate = dayjs(`${year}/${month}/${day}`);
             return officeEstablishmentDate.isBefore(
               dayjs(p_application_headers.created_at).format('YYYY/MM/DD'),

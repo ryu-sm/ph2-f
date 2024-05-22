@@ -33,7 +33,7 @@ export const infoGroupTabAtom = atom({
 
 export const incomeTotalizerInfoGroupTabAtom = atom({
   key: 'incomeTotalizerInfoGroupTabAtom',
-  default: 1,
+  default: 2,
 });
 
 export const pairLoanInfoGroupTabAtom = atom({
@@ -483,7 +483,7 @@ export const preliminarySelect = selector({
     if (res.error) {
       throw res.error;
     }
-    console.log(99999, res.data?.apply_type);
+
     const temp = res.data?.p_application_headers?.new_house_planned_resident_overview;
 
     const p_residents = res.data?.p_residents || [];

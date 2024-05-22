@@ -91,8 +91,6 @@ export const ApStep12Page = () => {
       },
     };
 
-    console.log(diffData);
-
     return diffData;
   };
 
@@ -225,7 +223,6 @@ export const ApStep12Page = () => {
     try {
       const res = await apGetPapplicationHeadersFiles(id);
       formik.setFieldValue('p_application_headers.J', res.data?.J);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }

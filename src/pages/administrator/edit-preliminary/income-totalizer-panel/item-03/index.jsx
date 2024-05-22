@@ -184,7 +184,6 @@ export const Item03 = () => {
 
   useEffect(() => {
     formik.validateForm();
-    console.log(formik.values);
   }, [formik.values]);
 
   return (

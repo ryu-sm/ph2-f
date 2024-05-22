@@ -47,10 +47,9 @@ export const AdFilesViewPage = () => {
         });
         setFileItems(temp);
         setCurrentImage(temp[0]);
-        console.log(res.data);
       } else {
         const res = await adGetFilesView(p_application_header_id, type, category);
-        console.log(res.data);
+
         const fileList = Object.keys(res.data).map((key) => ({
           key: key,
           value: res.data[key],
@@ -197,7 +196,7 @@ export const AdFilesViewPage = () => {
       </Stack>
     );
   };
-  console.log(currentImage);
+
   return (
     <AdThemeProvider>
       {fileItems.length > 0 && (

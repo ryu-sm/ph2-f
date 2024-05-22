@@ -23,7 +23,6 @@ export const PopoverSelect = ({ options = [], onChange, checkAccess, ...props })
   const handleChange = async (value) => {
     if (checkAccess) {
       const res = await checkAccess();
-      console.log(res);
       if (!res) {
         return;
       }

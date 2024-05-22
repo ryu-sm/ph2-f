@@ -147,7 +147,6 @@ export const ApStep02Page = () => {
       const res = await apGetPapplicantPersonsFiles(id, 0);
       formik.setFieldValue('p_applicant_persons__0.H__a', res.data?.H__a);
       formik.setFieldValue('p_applicant_persons__0.H__b', res.data?.H__b);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }

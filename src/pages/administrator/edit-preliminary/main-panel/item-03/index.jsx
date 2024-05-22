@@ -173,12 +173,7 @@ export const Item03 = () => {
   const [leaveEndDateTemp, setLeaveEndDateTemp] = useState(p_applicant_persons__0?.maternity_paternity_leave_end_date);
 
   useEffect(() => {
-    console.log(formik.errors);
-  }, [formik.errors]);
-
-  useEffect(() => {
     formik.validateForm();
-    console.log(formik.values);
   }, [formik.values]);
 
   return (

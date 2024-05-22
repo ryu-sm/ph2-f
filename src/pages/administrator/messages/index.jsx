@@ -60,7 +60,7 @@ export const AdMessagesPages = () => {
       setSortOrder('asc');
     }
   };
-  console.log(messages);
+
   return (
     <AdMainWrapper
       leftContent={

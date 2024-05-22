@@ -117,8 +117,6 @@ export const Item09 = () => {
     }
   }, [changeToIncomeTotalizer]);
 
-  console.log(p_applicant_persons__1);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup

@@ -146,8 +146,6 @@ export const ApStep04Page = () => {
     },
   });
 
-  console.log(changeToIncomeTotalizer);
-
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
     delete dataCopy.confirmation;
@@ -192,7 +190,6 @@ export const ApStep04Page = () => {
       const res = await apGetPapplicantPersonsFiles(user.id, 1);
       formik.setFieldValue('p_applicant_persons__1.H__a', res.data?.H__a);
       formik.setFieldValue('p_applicant_persons__1.H__b', res.data?.H__b);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }
@@ -234,7 +231,6 @@ export const ApStep04Page = () => {
     isReadedConfirmation,
   ]);
 
-  console.log(formik.values);
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

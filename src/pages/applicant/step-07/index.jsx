@@ -280,7 +280,6 @@ export const ApStep07Page = () => {
     try {
       const res = await apGetPapplicationHeadersFiles(user.id);
       formik.setFieldValue('p_application_headers.G', res.data?.G);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }

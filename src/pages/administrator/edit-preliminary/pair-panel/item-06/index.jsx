@@ -85,19 +85,6 @@ export const Item06 = () => {
     },
   });
 
-  // useEffect(() => {
-  //   setPreliminarySnap((pre) => {
-  //     return {
-  //       ...pre,
-  //       p_application_headers: {
-  //         ...pre.p_application_headers,
-  //         ...formik.values.p_application_headers,
-  //       },
-  //       p_borrowings: formik.values.p_borrowings,
-  //     };
-  //   });
-  // }, [formik.values]);
-
   useEffect(() => {
     if (formik.values.p_borrowings.length === 0) {
       formik.setFieldValue('p_application_headers.curr_borrowing_status', '0');
@@ -105,8 +92,6 @@ export const Item06 = () => {
       formik.setFieldValue('p_application_headers.curr_borrowing_status', '1');
     }
   }, [formik.values.p_borrowings.length]);
-
-  console.log(formik.values);
 
   return (
     <FormikProvider value={formik}>

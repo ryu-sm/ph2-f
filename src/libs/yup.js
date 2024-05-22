@@ -17,4 +17,5 @@ yup.setLocale({
     integer: '正しくご入力ください。',
   },
 });
+
 export { yup };

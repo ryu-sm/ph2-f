@@ -33,7 +33,6 @@ export const AdRegisterPage = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       try {
         const { email } = jwtDecode(token);
         const data = {
@@ -116,10 +115,9 @@ export const AdRegisterPage = () => {
   const fetchData = async (s_sales_company_org_id) => {
     try {
       const res = await getRegisterOrgsWithCategory(s_sales_company_org_id, 'C');
-      console.log(res.data);
+
       setOrgs(res.data);
     } catch (error) {
-      console.log(error);
       toast.error(API_500_ERROR);
     }
   };

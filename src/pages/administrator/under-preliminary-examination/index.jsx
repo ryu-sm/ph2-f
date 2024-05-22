@@ -14,7 +14,7 @@ export const AdUnderPreliminaryExamination = () => {
   const fetchData = async () => {
     try {
       const res = await adGetProvisionalStatus(p_application_header_id);
-      console.log(res.data);
+
       setProvisionalStatusInfo(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);

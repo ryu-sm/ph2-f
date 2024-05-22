@@ -165,12 +165,7 @@ export const Item03 = () => {
   });
 
   useEffect(() => {
-    console.log(p_applicant_persons__0);
-  }, [formik.errors]);
-
-  useEffect(() => {
     formik.validateForm();
-    console.log(formik.values);
   }, [formik.values]);
 
   return (

@@ -61,7 +61,6 @@ export const AdAreaInput = ({ unit, maxLength, width, ml, ...props }) => {
             return e;
           }}
           onCompositionUpdate={async (e) => {
-            console.log(e);
             e.target.value = convertToHalfWidth(e.target.value) + convertToHalfWidth(e.nativeEvent.data);
             return e;
           }}

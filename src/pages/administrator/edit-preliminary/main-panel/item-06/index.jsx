@@ -106,8 +106,6 @@ export const Item06 = () => {
     }
   }, [formik.values.p_borrowings.length]);
 
-  console.log(formik.values);
-
   return (
     <FormikProvider value={formik}>
       <ContentEditGroup isEditable={isEditable} handleSave={formik.handleSubmit}>

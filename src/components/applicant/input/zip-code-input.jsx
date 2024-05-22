@@ -120,7 +120,6 @@ export const ApZipCodeInputField = ({
       const newValue = `${refOne.current.value}-${refTwo.current.value}`;
 
       if (/^\d{3}[-]\d{4}$/.test(newValue)) {
-        console.log(newValue);
         if (newValue === oldValue) {
           return;
         }

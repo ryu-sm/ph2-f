@@ -127,7 +127,6 @@ export const ApplicationProvider = ({ children }) => {
         return upList.length > 0;
       }
     } catch (error) {
-      console.log(error);
       toast.error(API_500_ERROR);
     }
   };
@@ -135,7 +134,6 @@ export const ApplicationProvider = ({ children }) => {
   const updateSendedInfo = async (data) => {
     try {
       const res = await apGetPreExaminationStatus(apply_no);
-      console.log(res);
       if (Number(res.data?.pre_examination_status) >= 3) {
         modal.onTrue();
         navigate(routeNames.apTopPage.path);
@@ -146,7 +144,6 @@ export const ApplicationProvider = ({ children }) => {
         await refreshsendedApllication();
       }
     } catch (error) {
-      console.log(error);
       toast.error(API_500_ERROR);
     }
   };
@@ -155,7 +152,7 @@ export const ApplicationProvider = ({ children }) => {
     if (apply_no) {
       try {
         const res = await apGetPreExaminationStatus(apply_no);
-        console.log(res.data);
+
         if (
           Number(res.data?.pre_examination_status) >= 3 &&
           [
@@ -185,9 +182,7 @@ export const ApplicationProvider = ({ children }) => {
             },
           };
         });
-        // refreshsendedApllication();
       } catch (error) {
-        console.log(error);
         toast.error(API_500_ERROR);
       }
     }

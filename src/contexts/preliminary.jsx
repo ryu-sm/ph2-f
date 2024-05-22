@@ -50,7 +50,6 @@ export const PreliminaryProvider = ({ children }) => {
       toast.error(API_500_ERROR);
     }
     if (result.state === 'hasValue') {
-      console.log(result.contents.p_application_banks);
       setPreliminarySnap(result.contents);
       if (
         result.contents.p_application_headers.loan_type === '2' &&
@@ -58,8 +57,6 @@ export const PreliminaryProvider = ({ children }) => {
       ) {
         fetchPairLoanData(result.contents.p_application_headers.pair_loan_id);
       }
-      console.log(result.contents.p_application_headers.loan_type);
-      console.log(result.contents.p_application_headers.pair_loan_id);
     }
   }, [result.state, preliminaryId]);
 

@@ -104,7 +104,7 @@ export const ApStep09Page = () => {
           updateModal.onTrue();
         } else {
           setLocalData(values);
-          console.log('debug', values);
+
           navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {

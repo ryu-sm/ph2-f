@@ -5,7 +5,7 @@ import { clearStorage } from './storage-store';
 import { jwtDecode } from 'jwt-decode';
 
 const BASE_URL = APP_SERVER_URL;
-const service = axios.create({ baseURL: BASE_URL, timeout: 1000 * 20 });
+const service = axios.create({ baseURL: BASE_URL, timeout: 1000 * 100 });
 
 service.interceptors.request.use(
   (config) => {
@@ -39,7 +39,6 @@ service.interceptors.response.use(
       if (payload?.role_type === 2) {
         localStorage.setItem('TOKEN_INVALID', true);
         if (payload?.salesPerson?.type === 2) {
-          console.log(8888, payload?.salesPerson?.type);
           window.location.href = routeNames.adSalesPersonAzureLogout.path;
         } else {
           window.location.href = routeNames.adSalesPersonLoginPage.path;

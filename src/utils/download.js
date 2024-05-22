@@ -2,15 +2,8 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 export const downloadFileAsync = async (url, filename) => {
-  // const a = document.createElement('a');
-  // a.href = url;
-  // a.download = filename;
-  // a.setAttribute('download', filename);
-  // document.body.appendChild(a);
-  // a.click();
   const response = await fetch(url);
   const blob = await response.blob();
-  console.log('999', response);
 
   const blobUrl = URL.createObjectURL(blob);
 

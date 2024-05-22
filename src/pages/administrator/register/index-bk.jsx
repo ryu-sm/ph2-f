@@ -21,7 +21,7 @@ export const AdRegisterPage = () => {
   const [isValidToken, setIsValidToken] = useState(true);
   const setAuthInfo = useSetRecoilState(authAtom);
   const [warningText, setWarningText] = useState('');
-  console.log(jwtDecode(token));
+
   const formik = useFormik({
     initialValues: {
       password: '',
@@ -40,7 +40,6 @@ export const AdRegisterPage = () => {
         }
         return;
       } catch (error) {
-        console.log(error);
         switch (error?.status) {
           case 400:
             setWarningText('このメールアドレスは既に存在しています。別のメールアドレスで登録してください。');

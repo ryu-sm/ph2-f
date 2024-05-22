@@ -101,7 +101,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       onClick: async () => {
         try {
           const res = await adGetSalesPersonPreliminariyAccess(item.id);
-          console.log(res.data?.access);
           if (!res.data?.access) {
             unAccessModal.onTrue();
             return;
@@ -122,7 +121,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       onClick: async () => {
         try {
           const res = await adGetSalesPersonPreliminariyAccess(item.id);
-          console.log(res.data?.access);
           if (!res.data?.access) {
             unAccessModal.onTrue();
             return;
@@ -206,7 +204,6 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         });
       }
       setAccessOrgs(tempAccessOrgs);
-      console.log(tempAccessOrgs);
     } catch (error) {
       toast.error(API_500_ERROR);
     }

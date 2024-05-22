@@ -60,9 +60,8 @@ export const LogoutModal = ({ isOpen, onClose }) => {
                 await adSalesPersonLogout();
 
                 if (salesPerson?.type === 2) {
-                  // resetAuth();
                   clearStorage();
-                  console.log('azure logout');
+
                   navigate(routeNames.adSalesPersonAzureLogout.path);
                 } else {
                   resetAuth();

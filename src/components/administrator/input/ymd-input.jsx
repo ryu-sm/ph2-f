@@ -25,17 +25,16 @@ export const AdYmdInput = ({ width, ml, ...props }) => {
   const [field, meta, helpers] = useField(props);
   const { setValue, setTouched } = helpers;
   const handelBlue = useCallback(
-    async (e) => {
-      await setTouched(true);
+    (e) => {
+      setTouched(true);
     },
     [field, props]
   );
 
   const handleChange = useCallback(
-    async (e) => {
-      e.target.value = e.target.value.replace('年', '/').replace('月', '/').replace('日', '');
-      console.log(e);
-      await setValue(e.target.value === '____/__/__' ? '' : e.target.value);
+    (e) => {
+      const newValue = e.target.value.replace('年', '/').replace('月', '/').replace('日', '');
+      setValue(newValue === '____/__/__' ? '' : newValue);
     },
     [field, props, setValue]
   );

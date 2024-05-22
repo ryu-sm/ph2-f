@@ -174,7 +174,6 @@ export const ApStep10Page = () => {
       formik.setFieldValue('p_applicant_persons__0.F__02', res.data?.F__02);
       formik.setFieldValue('p_applicant_persons__0.F__03', res.data?.F__03);
       formik.setFieldValue('p_applicant_persons__0.K', res.data?.K);
-      console.log(res.data);
     } catch (error) {
       toast.error(API_500_ERROR);
     }

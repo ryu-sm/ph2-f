@@ -106,20 +106,6 @@ export const Item04 = () => {
     },
   });
 
-  // useEffect(() => {
-  //   console.log('debug', formik.values.p_join_guarantors);
-  //   setPreliminarySnap((pre) => {
-  //     return {
-  //       ...pre,
-  //       p_join_guarantors: formik.values.p_join_guarantors,
-  //     };
-  //   });
-  // }, [formik.values]);
-
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
-
   useEffect(() => {
     if (changeJoinGuarantor) {
       formik.setFieldValue('p_join_guarantors', [joinGuarantorInitialValues]);

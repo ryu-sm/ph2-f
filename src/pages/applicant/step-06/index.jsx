@@ -138,8 +138,6 @@ export const ApStep06Page = () => {
     }
   }, [localApplicationInfo]);
 
-  console.log(formik.values);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

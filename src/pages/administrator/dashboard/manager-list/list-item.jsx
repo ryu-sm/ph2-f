@@ -377,14 +377,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           afterResultModal.onFalse();
         }}
       />
-      <SetPairLoanModal
-        isOpen={pairLoanModal.value}
-        onClose={pairLoanModal.onFalse}
-        isPairLoan={isPairLoan}
-        id={item.id}
-        pair_loan_id={item?.pair_loan_id}
-        apply_no={item.pair_loan_data?.apply_no}
-      />
+      {pairLoanModal.value && (
+        <SetPairLoanModal
+          isOpen={pairLoanModal.value}
+          onClose={pairLoanModal.onFalse}
+          isPairLoan={isPairLoan}
+          id={item.id}
+          pair_loan_id={item?.pair_loan_id}
+          apply_no={item.pair_loan_data?.apply_no}
+        />
+      )}
       <Stack
         p={2}
         sx={{

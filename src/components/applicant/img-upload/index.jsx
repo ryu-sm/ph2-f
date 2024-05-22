@@ -25,9 +25,7 @@ export const ApImgUpload = ({ disable, singleFile, ...props }) => {
     const unShowValue = meta.value.filter((f) => f?.owner_type === 2 || f?.owner_type === 3);
     setValue([...newValue, ...unShowValue]);
   };
-  if (field.name == 'p_applicant_persons__0.B__a') {
-    console.log(meta.value);
-  }
+
   return (
     <Stack name={field.name} direction={'row'} spacing={3} sx={{ width: 1 }}>
       {meta.value.filter((f) => f?.owner_type !== 2 && f?.owner_type !== 3).length === 0 && (

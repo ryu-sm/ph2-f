@@ -267,8 +267,6 @@ export const ApStep01Page = () => {
     }
   }, [localApplicationInfo]);
 
-  console.log(p_application_headers.pair_loan_id);
-
   return (
     <FormikProvider value={formik}>
       <ApErrorScroll />

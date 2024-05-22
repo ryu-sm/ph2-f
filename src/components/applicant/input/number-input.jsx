@@ -50,7 +50,6 @@ export const ApNumberInputField = ({
   useEffect(() => {
     if (inputRef.current) {
       const length = `${Number(meta.value).toLocaleString()}`.length;
-      console.log(length);
       inputRef.current.setSelectionRange(length, length);
     }
   }, [meta.value]);
