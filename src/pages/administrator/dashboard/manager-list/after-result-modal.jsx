@@ -29,7 +29,7 @@ export const UpAfterResultModal = ({ isOpen, onClose, onConfirm, provisional_aft
                 sx={{
                   bgcolor: 'white',
                   boxShadow: 'none',
-                  width: 100,
+                  width: 140,
                   height: '36px',
                   marginBottom: 5,
                   borderRadius: '2px',
@@ -46,7 +46,7 @@ export const UpAfterResultModal = ({ isOpen, onClose, onConfirm, provisional_aft
                 onClick={onConfirm}
               >
                 <Typography variant="login_button" color="primary.main">
-                  OK
+                  セットで更新する
                 </Typography>
               </Button>
               <Button
@@ -109,7 +109,7 @@ export const UpAfterResultModal = ({ isOpen, onClose, onConfirm, provisional_aft
                 onClick={onConfirm}
               >
                 <Typography variant="login_button" color="primary.main">
-                  セットで更新する
+                  OK
                 </Typography>
               </Button>
               <Button

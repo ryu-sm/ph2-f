@@ -175,7 +175,7 @@ export const Item01 = () => {
       funding_other_loan_amount,
       funding_other_refinance_amount,
       funding_other_amount,
-      funding_self_amount: funding_self_amount ? `${funding_self_amount}` : '',
+      funding_self_amount: `${funding_self_amount}`,
     };
   };
 

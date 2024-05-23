@@ -142,7 +142,11 @@ export const AdOrSpLoginPage = () => {
             setUploadOrg(true);
           }
         } catch (error) {
+          console.log(error);
           switch (error?.status) {
+            case 409:
+              setAzureErrText(`AzureID認証のアクセス許可がありません。`);
+              break;
             case 408:
               setAzureErrText(`エラーが発生しました。\nAzureADに登録されているメールアドレスを取得できません。`);
               break;
@@ -419,22 +423,24 @@ export const AdOrSpLoginPage = () => {
               <Typography variant="login_error" textAlign={'center'} lineHeight={'120%'} fontSize={30} fontWeight={500}>
                 {azureErrText}
               </Typography>
-              <Stack sx={{ mt: 12 }} direction={'row'} alignItems={'center'}>
-                <Typography
-                  component={Link}
-                  variant="login_footer_link"
-                  color="primary.main"
-                  fontWeight={600}
-                  fontSize={18}
-                  href={
-                    'https://login.microsoftonline.com/1ddbf0d7-ff8d-4f3e-9f06-f00b74abd713/oauth2/v2.0/authorize?client_id=0f912bc0-78b0-4ef3-b6aa-8b8f268417c7&response_type=code&redirect_uri=https://mortgageloan-dev-ph2.milibank.co.jp/sales-person/login&scope=openid%20profile%20email%20User.read&response_mode=query'
-                  }
-                  sx={{ textDecorationLine: 'none' }}
-                >
-                  再度AzureAD認証の手続きをお願いいたします。
-                </Typography>
-                <Icons.AdArrowRight sx={{ width: 22 }} />
-              </Stack>
+              {azureErrText !== 'AzureID認証のアクセス許可がありません。' && (
+                <Stack sx={{ mt: 12 }} direction={'row'} alignItems={'center'}>
+                  <Typography
+                    component={Link}
+                    variant="login_footer_link"
+                    color="primary.main"
+                    fontWeight={600}
+                    fontSize={18}
+                    href={
+                      'https://login.microsoftonline.com/1ddbf0d7-ff8d-4f3e-9f06-f00b74abd713/oauth2/v2.0/authorize?client_id=0f912bc0-78b0-4ef3-b6aa-8b8f268417c7&response_type=code&redirect_uri=https://mortgageloan-dev-ph2.milibank.co.jp/sales-person/login&scope=openid%20profile%20email%20User.read&response_mode=query'
+                    }
+                    sx={{ textDecorationLine: 'none' }}
+                  >
+                    再度AzureAD認証の手続きをお願いいたします。
+                  </Typography>
+                  <Icons.AdArrowRight sx={{ width: 22 }} />
+                </Stack>
+              )}
             </Stack>
           )}
         </Fragment>

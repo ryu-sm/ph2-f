@@ -363,20 +363,22 @@ const CaseItem = ({ item, isPairLoan, index }) => {
           await refreshPreliminarieList();
         }}
       />
-      <UpAfterResultModal
-        provisional_after_result={afterResult?.provisional_after_result}
-        pair_loan_id={item.pair_loan_id}
-        isOpen={afterResultModal.value}
-        onConfirm={handleUpdateProvisionalAfterResult}
-        onClose={() => {
-          setAfterResult({
-            p_application_header_id: '',
-            s_bank_id: '',
-            provisional_after_result: '',
-          });
-          afterResultModal.onFalse();
-        }}
-      />
+      {afterResultModal.value && (
+        <UpAfterResultModal
+          provisional_after_result={afterResult?.provisional_after_result}
+          pair_loan_id={item.pair_loan_id}
+          isOpen={afterResultModal.value}
+          onConfirm={handleUpdateProvisionalAfterResult}
+          onClose={() => {
+            setAfterResult({
+              p_application_header_id: '',
+              s_bank_id: '',
+              provisional_after_result: '',
+            });
+            afterResultModal.onFalse();
+          }}
+        />
+      )}
       {pairLoanModal.value && (
         <SetPairLoanModal
           isOpen={pairLoanModal.value}
