@@ -25,7 +25,9 @@ export const ApUnsubcribedPage = () => {
       resetAuth();
       resetLocalApplicationInfo();
       clearStorage();
-      localStorage.setItem('s_sales_company_org_id', res.data?.s_sales_company_org_id);
+      if (res.data?.s_sales_company_org_id) {
+        localStorage.setItem('s_sales_company_org_id', res.data?.s_sales_company_org_id);
+      }
       modal.onTrue();
     } catch (error) {
       switch (error?.status) {

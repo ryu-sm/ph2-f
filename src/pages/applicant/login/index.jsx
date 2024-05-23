@@ -42,14 +42,14 @@ export const ApLoginPage = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        const token = localStorage.getItem('accessToken') || null;
-        if (token) {
-          const { exp } = jwtDecode(token);
-          if (exp * 1000 - Date.now() > 0) {
-            window.location.reload();
-            return;
-          }
-        }
+        // const token = localStorage.getItem('accessToken') || null;
+        // if (token) {
+        //   const { exp } = jwtDecode(token);
+        //   if (exp * 1000 - Date.now() > 0) {
+        //     window.location.reload();
+        //     return;
+        //   }
+        // }
 
         const res = await apLogin({ email: values.email, password: values.password });
 
@@ -59,7 +59,7 @@ export const ApLoginPage = () => {
 
         setAuthInfo((pre) => {
           return {
-            ...pre,
+            // ...pre,
             isLogined: true,
             roleType: payload?.role_type,
             user: {

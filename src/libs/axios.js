@@ -38,7 +38,7 @@ service.interceptors.response.use(
       }
       if (payload?.role_type === 2) {
         localStorage.setItem('TOKEN_INVALID', true);
-        if (payload?.salesPerson?.type === 2) {
+        if (payload?.type === 2) {
           window.location.href = routeNames.adSalesPersonAzureLogout.path;
         } else {
           window.location.href = routeNames.adSalesPersonLoginPage.path;

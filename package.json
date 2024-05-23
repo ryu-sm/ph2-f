@@ -35,6 +35,7 @@
     "react": "^18.2.0",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.6",
     "react-dropzone": "^14.2.3",
     "react-html5-camera-photo": "^1.5.11",
     "react-input-autosize": "^3.0.0",

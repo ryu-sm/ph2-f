@@ -70,10 +70,6 @@ export const salesPersonAdRoutes = [
     ...routeNames.adSalesPersonRegister,
     Element: AdRegisterPage,
   },
-  {
-    ...routeNames.adSalesPersonAzureLogout,
-    Element: AdAzureLogout,
-  },
 ];
 
 export const salesPersonApRoutes = [
@@ -137,3 +133,79 @@ export const salesPersonApRoutes = [
 ];
 
 export const salesPersonRoutes = [...salesPersonAdRoutes, ...salesPersonApRoutes];
+
+export const salesPersonPaths = [
+  {
+    ...routeNames.adSalesPersonDashboardPage,
+  },
+  {
+    ...routeNames.adSalesPersonEditPreliminaryPage,
+  },
+  {
+    ...routeNames.adSalesPersonFilesViewPage,
+  },
+  {
+    ...routeNames.adSalesPersonDocumentsPage,
+  },
+  {
+    ...routeNames.adSalesPersonDocumentsDetailPage,
+  },
+  {
+    ...routeNames.adSalesPersonNewDocumentsPage,
+  },
+  {
+    ...routeNames.adSalesPersonMessagesPage,
+  },
+  {
+    ...routeNames.adSalesPersonMessagesDetailPage,
+  },
+  {
+    ...routeNames.adSalesPersonRegisterVerifyEmail,
+  },
+  {
+    ...routeNames.adSalesPersonRegister,
+  },
+  {
+    ...routeNames.adSalesPersonAgreementPage,
+  },
+  {
+    ...routeNames.adSalesPersonStep01Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep02Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep03Page,
+  },
+
+  {
+    ...routeNames.adSalesPersonStep04Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep05Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep06Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep07Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep08Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep09Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep10Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep11Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep12Page,
+  },
+  {
+    ...routeNames.adSalesPersonStep13Page,
+  },
+];

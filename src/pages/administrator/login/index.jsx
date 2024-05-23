@@ -47,7 +47,7 @@ export const AdOrSpLoginPage = () => {
         const payload = jwtDecode(access_token);
         setAuthInfo((pre) => {
           return {
-            ...pre,
+            // ...pre,
             isLogined: true,
             roleType: payload?.role_type,
             user: {
@@ -90,14 +90,6 @@ export const AdOrSpLoginPage = () => {
 
   useEffect(() => {
     const azureID = async () => {
-      const token = localStorage.getItem('accessToken') || null;
-      if (token) {
-        const { exp } = jwtDecode(token);
-        if (exp * 1000 - Date.now() > 0) {
-          window.location.reload();
-          return;
-        }
-      }
       if (code && !isManager) {
         try {
           const res = await adSalesPersonAzureLogin(code);
@@ -107,7 +99,7 @@ export const AdOrSpLoginPage = () => {
             const payload = jwtDecode(access_token);
             setAuthInfo((pre) => {
               return {
-                ...pre,
+                // ...pre,
                 isLogined: true,
                 roleType: payload?.role_type,
                 user: {
@@ -172,14 +164,14 @@ export const AdOrSpLoginPage = () => {
 
     onSubmit: async (values) => {
       try {
-        const token = localStorage.getItem('accessToken') || null;
-        if (token) {
-          const { exp } = jwtDecode(token);
-          if (exp * 1000 - Date.now() > 0) {
-            window.location.reload();
-            return;
-          }
-        }
+        // const token = localStorage.getItem('accessToken') || null;
+        // if (token) {
+        //   const { exp } = jwtDecode(token);
+        //   if (exp * 1000 - Date.now() > 0) {
+        //     window.location.reload();
+        //     return;
+        //   }
+        // }
         if (isManager) {
           const res = await adManagerLogin(values);
           const { access_token } = res.data;
@@ -187,7 +179,7 @@ export const AdOrSpLoginPage = () => {
           const payload = jwtDecode(access_token);
           setAuthInfo((pre) => {
             return {
-              ...pre,
+              // ...pre,
               isLogined: true,
               roleType: payload?.role_type,
               user: {
@@ -218,7 +210,7 @@ export const AdOrSpLoginPage = () => {
           const payload = jwtDecode(access_token);
           setAuthInfo((pre) => {
             return {
-              ...pre,
+              // ...pre,
               isLogined: true,
               roleType: payload?.role_type,
               user: {
@@ -285,7 +277,7 @@ export const AdOrSpLoginPage = () => {
           >
             <Avatar src={adLogoCompany} variant="square" sx={{ height: '64px', width: '272px' }} />
             <Typography variant="login_title" my={5}>
-              連携会社登録
+              提携会社登録
             </Typography>
 
             <FormikProvider value={azureFormik}>

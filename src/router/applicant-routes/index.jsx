@@ -121,3 +121,77 @@ export const applicantRoutes = [
     Element: ApConfirmPage,
   },
 ];
+
+export const applicantPaths = [
+  {
+    ...routeNames.apConsentConfirmationPage,
+  },
+  {
+    ...routeNames.apAccountInformationPage,
+  },
+  {
+    ...routeNames.apUnsubcribedPage,
+  },
+  {
+    ...routeNames.apUpdatePasswordPage,
+  },
+  {
+    ...routeNames.apChangeEmailVerifyEmailPage,
+  },
+  {
+    ...routeNames.apChangeEmailPage,
+  },
+  //
+  {
+    ...routeNames.apAgreementPage,
+  },
+  {
+    ...routeNames.apTopPage,
+  },
+  {
+    ...routeNames.apStep01Page,
+  },
+  {
+    ...routeNames.apStep02Page,
+  },
+  {
+    ...routeNames.apStep03Page,
+  },
+
+  {
+    ...routeNames.apStep04Page,
+  },
+  {
+    ...routeNames.apStep05Page,
+  },
+  {
+    ...routeNames.apStep06Page,
+  },
+  {
+    ...routeNames.apStep07Page,
+  },
+  {
+    ...routeNames.apStep08Page,
+  },
+  {
+    ...routeNames.apStep09Page,
+  },
+  {
+    ...routeNames.apStep10Page,
+  },
+  {
+    ...routeNames.apStep11Page,
+  },
+  {
+    ...routeNames.apStep12Page,
+  },
+  {
+    ...routeNames.apStep13Page,
+  },
+  {
+    ...routeNames.apStep14Page,
+  },
+  {
+    ...routeNames.apConfirmPage,
+  },
+];

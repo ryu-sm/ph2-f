@@ -10,6 +10,7 @@ import {
 } from '@/pages/applicant';
 
 import {
+  AdAzureLogout,
   AdOrSpLoginPage,
   AdOrSpResetPasswordFinishedPage,
   AdOrSpResetPasswordPage,
@@ -82,5 +83,9 @@ export const publicRoutes = [
   {
     ...routeNames.adManagerResetPasswordFinishedPage,
     Element: AdOrSpResetPasswordFinishedPage,
+  },
+  {
+    ...routeNames.adSalesPersonAzureLogout,
+    Element: AdAzureLogout,
   },
 ];

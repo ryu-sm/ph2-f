@@ -82,7 +82,7 @@ export const AdRegisterPage = () => {
             setWarningText('このメールアドレスは既に存在しています。別のメールアドレスで登録してください。');
             break;
           case 408:
-            setWarningText('QRコードの連携会社情報が正しくありません。');
+            setWarningText('QRコードの提携会社情報が正しくありません。');
             break;
           case 407:
             setIsValidToken(false);
@@ -149,7 +149,7 @@ export const AdRegisterPage = () => {
           >
             <Avatar src={adLogoCompany} variant="square" sx={{ height: '64px', width: '272px' }} />
             <Typography variant="login_title" my={5}>
-              連携会社登録
+              提携会社登録
             </Typography>
 
             <FormikProvider value={formik}>

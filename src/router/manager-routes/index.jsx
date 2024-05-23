@@ -49,3 +49,33 @@ export const managerRoutes = [
     Element: AdUnderPreliminaryExamination,
   },
 ];
+
+export const managerPaths = [
+  {
+    ...routeNames.adManagerDashboardPage,
+  },
+  {
+    ...routeNames.adManagerEditPreliminaryPage,
+  },
+  {
+    ...routeNames.adManagerMemoPage,
+  },
+  {
+    ...routeNames.adManagerFilesViewPage,
+  },
+  {
+    ...routeNames.adManagerDocumentsPage,
+  },
+  {
+    ...routeNames.adManagerDocumentsDetailPage,
+  },
+  {
+    ...routeNames.adManagerMessagesPage,
+  },
+  {
+    ...routeNames.adManagerMessagesDetailPage,
+  },
+  {
+    ...routeNames.adManagerUnderPreliminaryExaminationPage,
+  },
+];

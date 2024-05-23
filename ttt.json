@@ -1,1 +1,11 @@
-https: //stg-housingloan-be-s3.s3.ap-northeast-1.amazonaws.com/ev3qwzwe7sm1mu6giwouau8197gj?response-content-disposition=inline%3B%20filename%3D%22%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F%253F.pdf%22%3B%20filename%2A%3DUTF-8%27%27%25E5%2580%258B%25E4%25BA%25BA%25E6%2583%2585%25E5%25A0%25B1%25E3%2581%25AE%25E5%258F%2596%25E6%2589%25B1%25E3%2581%2584%25E3%2581%25AB%25E9%2596%25A2%25E3%2581%2599%25E3%2582%258B%25E5%2590%258C%25E6%2584%258F%25E6%259B%25B8%25E5%2585%25BC%25E8%25A1%25A8%25E6%2598%258E%25E3%2581%258A%25E3%2582%2588%25E3%2581%25B2%25E3%2582%2599%25E7%25A2%25BA%25E7%25B4%2584%25E6%259B%25B8.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAYQ5QP7HNCXQTAMZT%2F20240515%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240515T045209Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=3da161573f498a82e2e5245462c5d46370bdaf061011b691bf54ecd50fbc997d
+[
+  "/manager/preliminaries",
+  "/manager/edit-preliminary",
+  "/manager/memo",
+  "/manager/files-view",
+  "/manager/documents",
+  "/manager/documents-detail",
+  "/manager/messages",
+  "/manager/messages-detail",
+  "/manager/under-preliminary-examination"
+]
