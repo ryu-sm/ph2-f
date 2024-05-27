@@ -162,17 +162,11 @@ export const ApLoginPage = () => {
                   : false,
             };
           });
-          const timer = setTimeout(() => {
-            navigate(routeNames.apTopPage.path, { replace: true });
-          }, 500);
-          return () => clearTimeout(timer);
+          navigate(routeNames.apTopPage.path);
         }
 
         if (!payload.has_draft && !payload?.agent_sended) {
-          const timer = setTimeout(() => {
-            navigate(routeNames.apAgreementPage.path, { replace: true });
-          }, 500);
-          return () => clearTimeout(timer);
+          navigate(routeNames.apAgreementPage.path);
         }
       } catch (error) {
         console.log(error);
@@ -199,6 +193,7 @@ export const ApLoginPage = () => {
       localStorage.clear();
     }
   }, []);
+
   useEffect(() => {
     const TOKEN_CHANGE = localStorage.getItem('TOKEN_CHANGE');
     if (TOKEN_CHANGE) {
@@ -257,7 +252,7 @@ export const ApLoginPage = () => {
               width={260}
               height={40}
               endIcon={<Icons.ApForwardRightWhiteIcon />}
-              onClick={() => navigate(`/step-id-${apCurrStepId}`, { replace: true })}
+              onClick={() => navigate(`/step-id-${apCurrStepId}`)}
             >
               前回の続きから入力する
             </ApPrimaryButton>
@@ -265,7 +260,7 @@ export const ApLoginPage = () => {
               width={260}
               height={40}
               endIcon={<Icons.ApForwardRightMainIcon />}
-              onClick={() => navigate(routeNames.apTopPage.path, { replace: true })}
+              onClick={() => navigate(routeNames.apTopPage.path)}
             >
               TOPへ
             </ApSecondaryButton>

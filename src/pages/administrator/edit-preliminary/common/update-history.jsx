@@ -4,6 +4,7 @@ import { formatJapanDate, formatNumber } from '@/utils';
 import { useTheme } from '@emotion/react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
+  Box,
   IconButton,
   Modal,
   Paper,
@@ -18,6 +19,8 @@ import {
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+
+import Draggable from 'react-draggable';
 
 export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
   const theme = useTheme();
@@ -121,95 +124,101 @@ export const UpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
       }}
       disableAutoFocus
     >
-      <Stack
-        sx={{
-          width: 640,
-          height: 460,
-          bgcolor: 'white',
-          boxShadow:
-            'rgba(0, 0, 0, 0.2) 0px 11px 15px -7px, rgba(0, 0, 0, 0.14) 0px 24px 38px 3px, rgba(0, 0, 0, 0.12) 0px 9px 46px 8px',
-        }}
-      >
-        <Stack
-          direction={'row'}
-          alignItems={'center'}
-          justifyContent={'center'}
-          position={'relative'}
-          width={'100%'}
-          height={50}
-          borderBottom={'1px solid'}
-          borderColor={'gray.70'}
-        >
-          <Typography variant="ad_modal_title">{`${title}の修正履歴`}</Typography>
-          <IconButton onClick={onClose} sx={{ position: 'absolute', right: 1, top: 3 }}>
-            <CloseIcon />
-          </IconButton>
-        </Stack>
+      <Box>
+        <Draggable>
+          <Stack
+            sx={{
+              cursor: 'move',
+              width: 640,
+              height: 460,
+              bgcolor: 'white',
+              boxShadow:
+                'rgba(0, 0, 0, 0.2) 0px 11px 15px -7px, rgba(0, 0, 0, 0.14) 0px 24px 38px 3px, rgba(0, 0, 0, 0.12) 0px 9px 46px 8px',
+            }}
+          >
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              justifyContent={'center'}
+              position={'relative'}
+              width={'100%'}
+              height={50}
+              borderBottom={'1px solid'}
+              borderColor={'gray.70'}
+              // sx={{ cursor: 'move' }}
+            >
+              <Typography variant="ad_modal_title">{`${title}の修正履歴`}</Typography>
+              <IconButton onClick={onClose} sx={{ position: 'absolute', right: 1, top: 3 }}>
+                <CloseIcon />
+              </IconButton>
+            </Stack>
 
-        <Stack padding={2}>
-          <Paper sx={{ width: '100%', boxShadow: 'none' }}>
-            <TableContainer sx={{ maxHeight: 390, overflowY: 'auto', overflowX: 'hidden' }}>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    {headers.map((header) => (
-                      <TableCell
-                        key={header.id}
-                        sx={{
-                          ...tableCellStyles,
-                          fontWeight: 600,
-                          minWidth: header.width,
-                          borderBottom: '1px solid',
-                          borderBottomColor: 'gray.100',
-                          backgroundColor: theme.palette.gray[20],
-                        }}
-                      >
-                        {header.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell
-                        sx={{
-                          ...tableCellStyles,
-                        }}
-                      >
-                        {row?.created_at}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          ...tableCellStyles,
-                        }}
-                      >
-                        {parseType(row?.operator_type)}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          ...tableCellStyles,
-                        }}
-                      >
-                        {parseOperator(row)}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          ...tableCellStyles,
-                          textAlign: 'start',
-                          pl: 1,
-                        }}
-                      >
-                        {parseContent(row?.content)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Stack>
-      </Stack>
+            <Stack padding={2}>
+              <Paper sx={{ width: '100%', boxShadow: 'none' }}>
+                <TableContainer sx={{ maxHeight: 390, overflowY: 'auto', overflowX: 'hidden' }}>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headers.map((header) => (
+                          <TableCell
+                            key={header.id}
+                            sx={{
+                              ...tableCellStyles,
+                              fontWeight: 600,
+                              minWidth: header.width,
+                              borderBottom: '1px solid',
+                              borderBottomColor: 'gray.100',
+                              backgroundColor: theme.palette.gray[20],
+                            }}
+                          >
+                            {header.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell
+                            sx={{
+                              ...tableCellStyles,
+                            }}
+                          >
+                            {row?.created_at}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...tableCellStyles,
+                            }}
+                          >
+                            {parseType(row?.operator_type)}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...tableCellStyles,
+                            }}
+                          >
+                            {parseOperator(row)}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              ...tableCellStyles,
+                              textAlign: 'start',
+                              pl: 1,
+                            }}
+                          >
+                            {parseContent(row?.content)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            </Stack>
+          </Stack>
+        </Draggable>
+      </Box>
     </Modal>
   );
 };

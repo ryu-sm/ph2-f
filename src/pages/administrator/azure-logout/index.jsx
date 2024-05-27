@@ -14,6 +14,14 @@ export const AdAzureLogout = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const TOKEN_CHANGE = localStorage.getItem('TOKEN_CHANGE');
+    if (TOKEN_CHANGE) {
+      toast.error(TOKEN_INVALID);
+      localStorage.removeItem('TOKEN_CHANGE');
+    }
+  }, []);
+
   return (
     <AdAuthWrapper>
       <Box display={'flex'} justifyContent={'center'} alignItems={'center'} minHeight={'100vh'}>

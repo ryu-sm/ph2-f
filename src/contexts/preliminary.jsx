@@ -2,6 +2,7 @@ import { Icons } from '@/assets';
 import { AdPrimaryButton } from '@/components/administrator/button';
 import { API_500_ERROR } from '@/constant';
 import { useBoolean } from '@/hooks';
+import { ComModalWapper } from '@/pages/administrator/com-modal-wapper';
 import {
   adDeleteProvisionalResult,
   adGetManagerRole,
@@ -364,7 +365,20 @@ export const PreliminaryProvider = ({ children }) => {
     >
       {children}
       <AdThemeProvider>
-        <Modal
+        <ComModalWapper open={checkDbModal.value} onClose={handleCloseModal}>
+          <Stack sx={{ py: 2 }}>
+            <Typography
+              variant="dailog_warring"
+              fontWeight={500}
+            >{`データ更新がありました。\n最新データを確認した上で修正してください。`}</Typography>
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }}>
+            <AdPrimaryButton height={38} width={150} onClick={handleCloseModal}>
+              とじる
+            </AdPrimaryButton>
+          </Stack>
+        </ComModalWapper>
+        {/* <Modal
           open={checkDbModal.value}
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           disableAutoFocus
@@ -394,8 +408,27 @@ export const PreliminaryProvider = ({ children }) => {
               </AdPrimaryButton>
             </Stack>
           </Stack>
-        </Modal>
-        <Modal
+        </Modal> */}
+        <ComModalWapper open={modal.value} onClose={modal.onFalse}>
+          <Stack sx={{ py: 2 }}>
+            <Typography variant="dailog_warring" fontWeight={500}>
+              銀行へデータを連携しました。
+            </Typography>
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }} spacing={3}>
+            <AdPrimaryButton
+              height={38}
+              width={100}
+              onClick={() => {
+                modal.onFalse();
+                refreshPreliminary();
+              }}
+            >
+              OK
+            </AdPrimaryButton>
+          </Stack>
+        </ComModalWapper>
+        {/* <Modal
           open={modal.value}
           onClose={modal.onFalse}
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -432,7 +465,7 @@ export const PreliminaryProvider = ({ children }) => {
               </AdPrimaryButton>
             </Stack>
           </Stack>
-        </Modal>
+        </Modal> */}
       </AdThemeProvider>
     </PreliminaryContext.Provider>
   );

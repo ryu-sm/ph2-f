@@ -55,18 +55,17 @@ export const LogoutModal = ({ isOpen, onClose }) => {
                 await adManagerLogout();
                 resetAuth();
                 clearStorage();
-                navigate(routeNames.adManagerLoginPage.path);
+                navigate(routeNames.adManagerLoginPage.path, { replace: true });
               } else {
                 await adSalesPersonLogout();
 
                 if (salesPerson?.type === 2) {
                   clearStorage();
-
-                  navigate(routeNames.adSalesPersonAzureLogout.path);
+                  window.history.replaceState(null, '', routeNames.adSalesPersonAzureLogout.path);
                 } else {
                   resetAuth();
                   clearStorage();
-                  navigate(routeNames.adSalesPersonLoginPage.path);
+                  window.history.replaceState(null, '', routeNames.adSalesPersonLoginPage.path);
                 }
               }
             }}

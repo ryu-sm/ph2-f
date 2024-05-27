@@ -73,7 +73,10 @@ export const AdRegisterPage = () => {
             };
           });
 
-          navigate(routeNames.adSalesPersonDashboardPage.path);
+          const timer = setTimeout(() => {
+            navigate(routeNames.adSalesPersonDashboardPage.path, { replace: true });
+          }, 500);
+          return () => clearTimeout(timer);
         }
       } catch (error) {
         console.log(error);

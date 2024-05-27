@@ -6,6 +6,7 @@ import { useCurrSearchParams } from '@/hooks';
 import { applicantRoutes } from './applicant-routes';
 import { salesPersonRoutes } from './sales-person-routes';
 import { managerRoutes } from './manager-routes';
+import { publicRoutes } from './public-routes';
 
 export const GroupNavigations = ({ group }) => {
   const { roleType, isLogined, user, manager, salesPerson } = useRecoilValue(authAtom);
@@ -31,12 +32,12 @@ export const GroupNavigations = ({ group }) => {
       return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
     }
   }
-  if (isLogined && roleType === 1) {
+  if (isLogined && roleType === 1 && !publicRoutes.find((item) => item?.path === pathname)) {
     if (!applicantRoutes.find((item) => item?.path === pathname)) {
       return <Navigate to={routeNames.apTopPage.path} replace />;
     }
   }
-  if (isLogined && roleType === 3) {
+  if (isLogined && roleType === 3 && !publicRoutes.find((item) => item?.path === pathname)) {
     const preliminaryId = localStorage.getItem('preliminary_id');
     if (preliminaryId) {
       localStorage.removeItem('preliminary_id');
@@ -46,7 +47,7 @@ export const GroupNavigations = ({ group }) => {
       return <Navigate to={routeNames.adManagerDashboardPage.path} replace />;
     }
   }
-  if (isLogined && roleType === 2) {
+  if (isLogined && roleType === 2 && !publicRoutes.find((item) => item?.path === pathname)) {
     if (!salesPersonRoutes.find((item) => item?.path === pathname)) {
       return <Navigate to={routeNames.adSalesPersonDashboardPage.path} replace />;
     }

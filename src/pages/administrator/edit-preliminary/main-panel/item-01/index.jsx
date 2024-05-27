@@ -38,6 +38,7 @@ import { Icons } from '@/assets';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
 import { adUnPairLoan } from '@/services';
+import { ComModalWapper } from '@/pages/administrator/com-modal-wapper';
 
 export const Item01 = () => {
   const {
@@ -445,7 +446,39 @@ export const Item01 = () => {
             )
           }
         />
-        <Modal
+        <ComModalWapper open={changePairLoanModal.value} onClose={changePairLoanModal.onFalse}>
+          <Stack sx={{ py: 3 }}>
+            <Typography
+              variant="dailog_warring"
+              fontWeight={500}
+            >{`ペアローン処理中のため、お借入形態を変更出来ません。\nペアローンを解除します。よろしいですか？`}</Typography>
+          </Stack>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} spacing={3} sx={{ p: 3, pb: 6 }}>
+            <AdPrimaryButton
+              height={38}
+              width={150}
+              onClick={async () => {
+                try {
+                  await adUnPairLoan({
+                    id: p_application_headers.id,
+                    pair_loan_id: p_application_headers.pair_loan_id,
+                  });
+                  toast.success('ペアローンの紐付きを解除しました。');
+                  await refreshPreliminary();
+                } catch (error) {
+                  console.log(error);
+                  toast.error(API_500_ERROR);
+                }
+              }}
+            >
+              OK
+            </AdPrimaryButton>
+            <AdPrimaryButton height={38} width={150} onClick={changePairLoanModal.onFalse}>
+              キャンセル
+            </AdPrimaryButton>
+          </Stack>
+        </ComModalWapper>
+        {/* <Modal
           open={changePairLoanModal.value}
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           disableAutoFocus
@@ -469,7 +502,7 @@ export const Item01 = () => {
             <Stack sx={{ py: 3 }}>
               <Typography variant="dailog_warring">{`ペアローン処理中のため、お借入形態を変更出来ません。\nペアローンを解除します。よろしいですか？`}</Typography>
             </Stack>
-            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} spacing={8} sx={{ p: 3, pb: 6 }}>
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} spacing={3} sx={{ p: 3, pb: 6 }}>
               <AdPrimaryButton
                 height={38}
                 width={150}
@@ -494,7 +527,8 @@ export const Item01 = () => {
               </AdPrimaryButton>
             </Stack>
           </Stack>
-        </Modal>
+        </Modal> */}
+
         {formik.values.p_application_headers.loan_type === '2' && (
           <Stack>
             <EditRow
@@ -780,49 +814,30 @@ export const Item01 = () => {
           }
         />
       </ContentEditGroup>
-      <Modal
-        open={changeAfterAction.value}
-        onClose={changeAfterAction.onFalse}
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        disableAutoFocus
-      >
-        <Stack
-          sx={{
-            width: 520,
-            bgcolor: 'white',
-            minWidth: 'auto',
-            maxHeight: '75vh',
-            borderRadius: 1,
-            p: 3,
-          }}
-        >
-          <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} sx={{ p: 3 }}>
-            <Icons.AdCloseIcon sx={{ width: 13, height: 12, cursor: 'pointer' }} onClick={changeAfterAction.onFalse} />
-          </Stack>
-          <Stack sx={{ py: 3 }}>
-            {changeJoinGuarantor && !changeToIncomeTotalizer && (
-              <Typography variant="dailog_warring" fontSize={16} fontWeight={300}>
-                {`このタブのすべての項目入力は「担保提供者」タブの「保存」ボタンを押下した後に反映します。\n「担保提供者」の入力を完了してください。`}
-              </Typography>
-            )}
-            {!changeJoinGuarantor && changeToIncomeTotalizer && (
-              <Typography variant="dailog_warring" fontSize={16} fontWeight={300}>
-                {`このタブのすべての項目入力は「収入合算者」タブの「保存」ボタンを押下した後に反映します。\n「収入合算者」の入力を完了してください。`}
-              </Typography>
-            )}
-            {changeJoinGuarantor && changeToIncomeTotalizer && (
-              <Typography variant="dailog_warring" fontSize={16} fontWeight={300}>
-                {`このタブのすべての項目入力は「収入合算者」タブの「保存」ボタンを押下した後に反映します。\n「担保提供者」の入力と「収入合算者」の入力を両方完了してください。`}
-              </Typography>
-            )}
-          </Stack>
-          <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }}>
-            <AdPrimaryButton height={38} width={150} onClick={handleConfirm}>
-              閉じる
-            </AdPrimaryButton>
-          </Stack>
+      <ComModalWapper open={changeAfterAction.value} onClose={changeAfterAction.onFalse}>
+        <Stack sx={{ py: 3 }}>
+          {changeJoinGuarantor && !changeToIncomeTotalizer && (
+            <Typography variant="dailog_warring" fontWeight={500}>
+              {`このタブのすべての項目入力は「担保提供者」タブの「保存」ボタンを押下した後に反映します。\n「担保提供者」の入力を完了してください。`}
+            </Typography>
+          )}
+          {!changeJoinGuarantor && changeToIncomeTotalizer && (
+            <Typography variant="dailog_warring" fontWeight={500}>
+              {`このタブのすべての項目入力は「収入合算者」タブの「保存」ボタンを押下した後に反映します。\n「収入合算者」の入力を完了してください。`}
+            </Typography>
+          )}
+          {changeJoinGuarantor && changeToIncomeTotalizer && (
+            <Typography variant="dailog_warring" fontWeight={500}>
+              {`このタブのすべての項目入力は「収入合算者」タブの「保存」ボタンを押下した後に反映します。\n「担保提供者」の入力と「収入合算者」の入力を両方完了してください。`}
+            </Typography>
+          )}
         </Stack>
-      </Modal>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }}>
+          <AdPrimaryButton height={38} width={150} onClick={handleConfirm}>
+            閉じる
+          </AdPrimaryButton>
+        </Stack>
+      </ComModalWapper>
     </FormikProvider>
   );
 };

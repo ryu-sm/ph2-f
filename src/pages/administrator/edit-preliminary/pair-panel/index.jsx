@@ -156,8 +156,23 @@ export const PairDetail = () => {
       {pairLoanInfoGroupTab === 8 && <Item08 />}
       {pairLoanInfoGroupTab === 9 && <Item09 />}
       {pairLoanInfoGroupTab === 10 && <Item10 />}
-
-      <Modal
+      <ComModalWapper open={changeTab.value} onClose={changeTab.onFalse}>
+        <Stack sx={{ py: 3 }}>
+          <Typography
+            variant="dailog_warring"
+            fontWeight={500}
+          >{`このタブを離れてもよろしいですか?\n行った変更が保存されない可能性があります。`}</Typography>
+        </Stack>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }} spacing={3}>
+          <AdPrimaryButton height={38} width={150} onClick={handleOk}>
+            OK
+          </AdPrimaryButton>
+          <AdPrimaryButton height={38} width={150} onClick={changeTab.onFalse}>
+            キャンセル
+          </AdPrimaryButton>
+        </Stack>
+      </ComModalWapper>
+      {/* <Modal
         open={changeTab.value}
         onClose={changeTab.onFalse}
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -188,7 +203,7 @@ export const PairDetail = () => {
             </AdPrimaryButton>
           </Stack>
         </Stack>
-      </Modal>
+      </Modal> */}
     </Stack>
   );
 };

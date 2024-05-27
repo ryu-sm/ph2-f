@@ -17,6 +17,7 @@ import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
 import { PairDetail } from '../pair-panel';
 import { IncomeTotalizerDetail } from '../income-totalizer-panel';
 import { ExaminationResultButtons } from '../common/examination-result-buttons';
+import { ComModalWapper } from '../../com-modal-wapper';
 
 export const EditTabs = ({}) => {
   const {
@@ -156,8 +157,23 @@ export const EditTabs = ({}) => {
       {mainTabStatus === 3 && <PairDetail />}
 
       {(mainTabStatus === 1 || mainTabStatus === 3) && infoGroupTab === 10 && <ExaminationResultButtons />}
-
-      <Modal
+      <ComModalWapper open={changeTab.value} onClose={changeTab.onFalse}>
+        <Stack sx={{ py: 3 }}>
+          <Typography
+            variant="dailog_warring"
+            fontWeight={500}
+          >{`このタブを離れてもよろしいですか?\n行った変更が保存されない可能性があります。`}</Typography>
+        </Stack>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6 }} spacing={3}>
+          <AdPrimaryButton height={38} width={150} onClick={handleOk}>
+            OK
+          </AdPrimaryButton>
+          <AdPrimaryButton height={38} width={150} onClick={changeTab.onFalse}>
+            キャンセル
+          </AdPrimaryButton>
+        </Stack>
+      </ComModalWapper>
+      {/* <Modal
         open={changeTab.value}
         onClose={changeTab.onFalse}
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -188,7 +204,7 @@ export const EditTabs = ({}) => {
             </AdPrimaryButton>
           </Stack>
         </Stack>
-      </Modal>
+      </Modal> */}
     </Stack>
   );
 };

@@ -6,7 +6,7 @@ import { authAtom } from '@/store';
 import { Avatar, Box, Button, Link, Stack, Typography } from '@mui/material';
 import { FormikProvider, useFormik } from 'formik';
 import { Fragment, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { validationSchema } from './validationSchema';
 import { Icons, adBackground, adLogoCompany } from '@/assets';
@@ -72,8 +72,10 @@ export const AdOrSpLoginPage = () => {
             agentSended: false,
           };
         });
-
-        navigate(routeNames.adSalesPersonDashboardPage.path);
+        const timer = setTimeout(() => {
+          navigate(routeNames.adSalesPersonDashboardPage.path, { replace: true });
+        }, 500);
+        return () => clearTimeout(timer);
       }
     },
   });
@@ -124,8 +126,10 @@ export const AdOrSpLoginPage = () => {
                 agentSended: false,
               };
             });
-
-            navigate(routeNames.adSalesPersonDashboardPage.path);
+            const timer = setTimeout(() => {
+              navigate(routeNames.adSalesPersonDashboardPage.path, { replace: true });
+            }, 500);
+            return () => clearTimeout(timer);
           }
           if (res.status == 202) {
             azureFormik.setFieldValue('email', res.data.email);
@@ -164,14 +168,6 @@ export const AdOrSpLoginPage = () => {
 
     onSubmit: async (values) => {
       try {
-        // const token = localStorage.getItem('accessToken') || null;
-        // if (token) {
-        //   const { exp } = jwtDecode(token);
-        //   if (exp * 1000 - Date.now() > 0) {
-        //     window.location.reload();
-        //     return;
-        //   }
-        // }
         if (isManager) {
           const res = await adManagerLogin(values);
           const { access_token } = res.data;
@@ -203,6 +199,10 @@ export const AdOrSpLoginPage = () => {
               agentSended: false,
             };
           });
+          const timer = setTimeout(() => {
+            navigate(routeNames.adManagerDashboardPage.path, { replace: true });
+          }, 500);
+          return () => clearTimeout(timer);
         } else {
           const res = await adSalesPersonLogin(values);
           const { access_token } = res.data;
@@ -235,7 +235,10 @@ export const AdOrSpLoginPage = () => {
               agentSended: false,
             };
           });
-          navigate(routeNames.adSalesPersonDashboardPage.path);
+          const timer = setTimeout(() => {
+            navigate(routeNames.adSalesPersonDashboardPage.path, { replace: true });
+          }, 500);
+          return () => clearTimeout(timer);
         }
       } catch (error) {
         switch (error?.status) {
@@ -259,6 +262,14 @@ export const AdOrSpLoginPage = () => {
     if (TOKEN_INVALID_LOCAL) {
       toast.error(TOKEN_INVALID);
       localStorage.clear();
+    }
+  }, []);
+
+  useEffect(() => {
+    const TOKEN_CHANGE = localStorage.getItem('TOKEN_CHANGE');
+    if (TOKEN_CHANGE) {
+      toast.error(TOKEN_INVALID);
+      localStorage.removeItem('TOKEN_CHANGE');
     }
   }, []);
 

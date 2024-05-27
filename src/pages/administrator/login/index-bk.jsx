@@ -174,6 +174,14 @@ export const AdOrSpLoginPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const TOKEN_CHANGE = localStorage.getItem('TOKEN_CHANGE');
+    if (TOKEN_CHANGE) {
+      toast.error(TOKEN_INVALID);
+      localStorage.removeItem('TOKEN_CHANGE');
+    }
+  }, []);
+
   return (
     <AdAuthWrapper bgImage={`url(${adBackground})`}>
       {!azureErrText ? (

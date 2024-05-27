@@ -13,21 +13,21 @@ export const AdMainWrapper = ({ leftContent, rightAddItems, children, style }) =
   const { isLogined } = useRecoilValue(authAtom);
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    if (isLogined) {
-      const token = localStorage.getItem('accessToken') || null;
-      const payload = jwtDecode(token);
-      if (payload?.role_type === 1 && !pathGroup01.includes(pathname)) {
-        window.location.reload();
-      }
-      if (payload?.role_type === 2 && !pathGroup02.includes(pathname)) {
-        window.location.reload();
-      }
-      if (payload?.role_type === 3 && !pathGroup03.includes(pathname)) {
-        window.location.reload();
-      }
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (isLogined) {
+  //     const token = localStorage.getItem('accessToken') || null;
+  //     const payload = jwtDecode(token);
+  //     if (payload?.role_type === 1 && !pathGroup01.includes(pathname)) {
+  //       window.location.reload();
+  //     }
+  //     if (payload?.role_type === 2 && !pathGroup02.includes(pathname)) {
+  //       window.location.reload();
+  //     }
+  //     if (payload?.role_type === 3 && !pathGroup03.includes(pathname)) {
+  //       window.location.reload();
+  //     }
+  //   }
+  // }, [pathname]);
   return (
     <AdThemeProvider>
       <Stack

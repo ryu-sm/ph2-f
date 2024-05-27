@@ -1,4 +1,4 @@
-import { Button, IconButton, Modal, Stack, Typography } from '@mui/material';
+import { Box, Button, IconButton, Modal, Stack, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIsManager } from '@/hooks';
 import { CheckboxDropdown, FilterItem } from '@/components/administrator';
@@ -13,6 +13,7 @@ import { useBankMaster } from '@/hooks/use-bank-master';
 import { FilterSelect } from '@/components/administrator/select/filter-select';
 import { dayjs } from '@/libs';
 import { format } from 'kanjidate';
+import Draggable from 'react-draggable';
 
 export const AdListFilterModal = ({ open, onClose, onCleare, handleSearch, errors }) => {
   const isManager = useIsManager();
@@ -47,128 +48,147 @@ export const AdListFilterModal = ({ open, onClose, onCleare, handleSearch, error
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       disableAutoFocus
     >
-      <Stack
-        sx={{
-          width: 485,
-          height: 480,
-          backgroundColor: 'gray.20',
-          boxShadow:
-            'rgba(0, 0, 0, 0.2) 0px 11px 15px -7px, rgba(0, 0, 0, 0.14) 0px 24px 38px 3px, rgba(0, 0, 0, 0.12) 0px 9px 46px 8px',
-          '&:focus': {
-            outline: 'none',
-          },
-        }}
-      >
-        <Stack
-          direction={'row'}
-          alignItems={'center'}
-          justifyContent={'space-between'}
-          width={'100%'}
-          height={50}
-          bgcolor={'white'}
-          borderBottom={'1px solid'}
-          borderColor={'gray.70'}
-          px={2}
-        >
-          <Typography variant="filter_clear_button" sx={{ cursor: 'pointer' }} onClick={onCleare}>
-            すべてクリア
-          </Typography>
-          <Typography variant="ad_modal_title">
-            {dashboardTabStatus === 1 ? '仮審査中の案件の絞り込み' : '過去の案件の絞り込み'}
-          </Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        </Stack>
-
-        <Stack px={'20px'} pt={'20px'} flexGrow={1} overflow={'auto'} spacing={'2px'}>
-          <FilterItem label="申込銀行" dropDownItem={<CheckboxDropdown options={bankMaster} name="s_bank_id" />} />
-          <FilterItem
-            label="申込日時"
-            dropDownItem={
-              <Stack>
-                <DateSelect name="created_at_from" yearOptions={yearCurrentOptionsFromApplicant} endPrefix={'から'} />
-                <DateSelect name="created_at_to" yearOptions={yearCurrentOptionsToApplicant} endPrefix={'まで'} />
-              </Stack>
-            }
-          />
-          <FilterItem
-            label="実行予定日"
-            dropDownItem={
-              <Stack>
-                <DateSelect name="desired_borrowing_date_from" yearOptions={yearCurrentOptions} endPrefix={'から'} />
-                <DateSelect name="desired_borrowing_date_to" yearOptions={yearPastOptions} endPrefix={'まで'} />
-              </Stack>
-            }
-          />
-          {!isManager && (
-            <FilterItem
-              label="仮審査結果"
-              dropDownItem={<CheckboxDropdown options={provisionalResultOptions} name="provisional_result" />}
-            />
-          )}
-          {isManager && (
-            <FilterItem
-              label="申込金額"
-              dropDownItem={
-                <Stack
-                  direction={'row'}
-                  alignItems={'center'}
-                  justifyContent={'space-between'}
-                  sx={{ py: 3, px: 16 }}
-                  spacing={1}
-                >
-                  <FilterSelect
-                    name="desired_loan_amount_from"
-                    options={amountOptions}
-                    unit={'万円から'}
-                    isFormatMonet
-                  />
-                  <FilterSelect name="desired_loan_amount_to" options={amountOptions} unit={'万円まで'} isFormatMonet />
-                </Stack>
-              }
-            />
-          )}
-
-          <FilterItem
-            label="支店"
-            dropDownItem={<CheckboxDropdown options={salesCompanyOptionsB} name="sales_area_id" />}
-          />
-          <FilterItem
-            label="展示場"
-            dropDownItem={<CheckboxDropdown options={salesCompanyOptionsE} name="sales_exhibition_hall_id" />}
-          />
-          <FilterItem
-            label="営業担当者"
-            dropDownItem={<CheckboxDropdown options={salesPersonOptionsAll} name="s_sales_person_id" hasFilter />}
-          />
-        </Stack>
-
-        <Stack minHeight={isManager ? '100px' : '150px'} justifyContent={'center'} alignItems={'center'}>
-          <Button
+      <Box>
+        <Draggable>
+          <Stack
             sx={{
-              width: 200,
-              bgcolor: 'white',
-              color: 'primary.main',
-              border: '1px solid',
-              borderColor: 'primary.main',
-              borderRadius: '2px',
-              boxShadow: 'none',
-              '&:hover': {
-                bgcolor: 'white',
-                color: 'primary.main',
+              cursor: 'move',
+              width: 485,
+              height: 480,
+              backgroundColor: 'gray.20',
+              boxShadow:
+                'rgba(0, 0, 0, 0.2) 0px 11px 15px -7px, rgba(0, 0, 0, 0.14) 0px 24px 38px 3px, rgba(0, 0, 0, 0.12) 0px 9px 46px 8px',
+              '&:focus': {
+                outline: 'none',
               },
             }}
-            onClick={() => {
-              if (Object.keys(errors).length > 0) return;
-              handleSearch();
-              onClose();
-            }}
           >
-            <Typography variant="filter_search_button">検索</Typography>
-          </Button>
-        </Stack>
-      </Stack>
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              width={'100%'}
+              height={50}
+              bgcolor={'white'}
+              borderBottom={'1px solid'}
+              borderColor={'gray.70'}
+              px={2}
+              py={3}
+            >
+              <Typography variant="filter_clear_button" sx={{ cursor: 'pointer' }} onClick={onCleare}>
+                すべてクリア
+              </Typography>
+              <Typography variant="ad_modal_title">
+                {dashboardTabStatus === 1 ? '仮審査中の案件の絞り込み' : '過去の案件の絞り込み'}
+              </Typography>
+              <IconButton onClick={onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Stack>
+
+            <Stack px={'20px'} pt={'20px'} flexGrow={1} overflow={'auto'} spacing={'2px'}>
+              <FilterItem label="申込銀行" dropDownItem={<CheckboxDropdown options={bankMaster} name="s_bank_id" />} />
+              <FilterItem
+                label="申込日時"
+                dropDownItem={
+                  <Stack>
+                    <DateSelect
+                      name="created_at_from"
+                      yearOptions={yearCurrentOptionsFromApplicant}
+                      endPrefix={'から'}
+                    />
+                    <DateSelect name="created_at_to" yearOptions={yearCurrentOptionsToApplicant} endPrefix={'まで'} />
+                  </Stack>
+                }
+              />
+              <FilterItem
+                label="実行予定日"
+                dropDownItem={
+                  <Stack>
+                    <DateSelect
+                      name="desired_borrowing_date_from"
+                      yearOptions={yearCurrentOptions}
+                      endPrefix={'から'}
+                    />
+                    <DateSelect name="desired_borrowing_date_to" yearOptions={yearPastOptions} endPrefix={'まで'} />
+                  </Stack>
+                }
+              />
+              {!isManager && (
+                <FilterItem
+                  label="仮審査結果"
+                  dropDownItem={<CheckboxDropdown options={provisionalResultOptions} name="provisional_result" />}
+                />
+              )}
+              {isManager && (
+                <FilterItem
+                  label="申込金額"
+                  dropDownItem={
+                    <Stack
+                      direction={'row'}
+                      alignItems={'center'}
+                      justifyContent={'space-between'}
+                      sx={{ py: 3, px: 16 }}
+                      spacing={1}
+                    >
+                      <FilterSelect
+                        name="desired_loan_amount_from"
+                        options={amountOptions}
+                        unit={'万円から'}
+                        isFormatMonet
+                      />
+                      <FilterSelect
+                        name="desired_loan_amount_to"
+                        options={amountOptions}
+                        unit={'万円まで'}
+                        isFormatMonet
+                      />
+                    </Stack>
+                  }
+                />
+              )}
+
+              <FilterItem
+                label="支店"
+                dropDownItem={<CheckboxDropdown options={salesCompanyOptionsB} name="sales_area_id" />}
+              />
+              <FilterItem
+                label="展示場"
+                dropDownItem={<CheckboxDropdown options={salesCompanyOptionsE} name="sales_exhibition_hall_id" />}
+              />
+              <FilterItem
+                label="営業担当者"
+                dropDownItem={<CheckboxDropdown options={salesPersonOptionsAll} name="s_sales_person_id" hasFilter />}
+              />
+            </Stack>
+
+            <Stack minHeight={isManager ? '100px' : '150px'} justifyContent={'center'} alignItems={'center'}>
+              <Button
+                sx={{
+                  width: 200,
+                  bgcolor: 'white',
+                  color: 'primary.main',
+                  border: '1px solid',
+                  borderColor: 'primary.main',
+                  borderRadius: '2px',
+                  boxShadow: 'none',
+                  '&:hover': {
+                    bgcolor: 'white',
+                    color: 'primary.main',
+                  },
+                }}
+                onClick={() => {
+                  if (Object.keys(errors).length > 0) return;
+                  handleSearch();
+                  onClose();
+                }}
+              >
+                <Typography variant="filter_search_button">検索</Typography>
+              </Button>
+            </Stack>
+          </Stack>
+        </Draggable>
+      </Box>
     </Modal>
   );
 };

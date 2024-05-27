@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { APP_MODE, APP_SERVER_URL } from '../configs';
-import { routeNames } from '@/router/settings';
+import { pathGroup01, pathGroup02, pathGroup03, routeNames } from '@/router/settings';
 import { clearStorage } from './storage-store';
 import { jwtDecode } from 'jwt-decode';
 
@@ -9,8 +9,24 @@ const service = axios.create({ baseURL: BASE_URL, timeout: 1000 * 100 });
 
 service.interceptors.request.use(
   (config) => {
+    const auth = localStorage.getItem('auth') || null;
+    const authInfo = auth ? JSON.parse(auth) : {};
+    if (pathGroup01.includes(window.location.pathname) && authInfo?.roleType !== 1) {
+      localStorage.setItem('TOKEN_CHANGE', true);
+      window.location.replace(routeNames.apLoginPage.path);
+      return;
+    }
+    if (pathGroup02.includes(window.location.pathname) && authInfo?.roleType !== 2) {
+      localStorage.setItem('TOKEN_CHANGE', true);
+      window.location.replace(routeNames.adSalesPersonLoginPage.path);
+      return;
+    }
+    if (pathGroup03.includes(window.location.pathname) && authInfo?.roleType !== 3) {
+      localStorage.setItem('TOKEN_CHANGE', true);
+      window.location.replace(routeNames.adManagerLoginPage.path);
+      return;
+    }
     const token = localStorage.getItem('accessToken') || null;
-
     if (token) {
       config.headers['Authorization'] = token;
     }
@@ -28,26 +44,28 @@ service.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(window.location.pathname);
     if (error.response.status === 401) {
       const token = localStorage.getItem('accessToken') || null;
       const payload = jwtDecode(token);
       clearStorage();
-      if (payload?.role_type === 1) {
+      const pathname = window.location.pathname;
+      const pathSegments = pathname?.split('/').filter(Boolean);
+      if (pathSegments.includes('manager')) {
         localStorage.setItem('TOKEN_INVALID', true);
-        window.location.href = routeNames.apLoginPage.path;
+        window.location.replace(routeNames.adManagerLoginPage.path);
       }
-      if (payload?.role_type === 2) {
+      if (pathSegments.includes('sales-person')) {
         localStorage.setItem('TOKEN_INVALID', true);
         if (payload?.type === 2) {
-          window.location.href = routeNames.adSalesPersonAzureLogout.path;
+          window.location.replace(routeNames.adSalesPersonAzureLogout.path);
         } else {
-          window.location.href = routeNames.adSalesPersonLoginPage.path;
+          window.location.replace(routeNames.adSalesPersonLoginPage.path);
         }
       }
-
-      if (payload?.role_type === 3) {
+      if (!pathSegments.includes('manager') && !pathSegments.includes('sales-person')) {
         localStorage.setItem('TOKEN_INVALID', true);
-        window.location.href = routeNames.adManagerLoginPage.path;
+        window.location.replace(routeNames.apLoginPage.path);
       }
     }
     if (APP_MODE === 'dev') console.log(error);
