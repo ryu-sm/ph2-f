@@ -127,7 +127,7 @@ export const ApplicationProvider = ({ children }) => {
         return upList.length > 0;
       }
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -144,7 +144,7 @@ export const ApplicationProvider = ({ children }) => {
         await refreshsendedApllication();
       }
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -183,7 +183,7 @@ export const ApplicationProvider = ({ children }) => {
           };
         });
       } catch (error) {
-        toast.error(API_500_ERROR);
+        console.debug(error);
       }
     }
   };

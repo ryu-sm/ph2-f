@@ -38,7 +38,7 @@ export const AdDocumentsDetailPage = () => {
       if (!res.data?.length) return navigate(routeNames.adSalesPersonDocumentsPage.path);
       setImages(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -52,7 +52,7 @@ export const AdDocumentsDetailPage = () => {
       handleCloseModal();
       await fecthData();
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

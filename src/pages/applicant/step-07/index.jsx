@@ -196,7 +196,7 @@ export const ApStep07Page = () => {
           navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
-        toast.error(API_500_ERROR);
+        console.debug(error);
       }
     },
   });
@@ -281,7 +281,7 @@ export const ApStep07Page = () => {
       const res = await apGetPapplicationHeadersFiles(user.id);
       formik.setFieldValue('p_application_headers.G', res.data?.G);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

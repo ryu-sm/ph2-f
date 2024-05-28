@@ -83,7 +83,7 @@ export const AdNewDocumentsPage = () => {
       toast.success('ファイルをアップロードしました。');
       navigate(routeNames.adSalesPersonDocumentsPage.path);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

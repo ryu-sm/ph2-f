@@ -38,7 +38,7 @@ export const AdRegisterVerifyEmailPage = () => {
             setWarningText('このメールアドレスは既に存在しています。別のメールアドレスで登録してください。');
             break;
           default:
-            toast.error(API_500_ERROR);
+            console.debug(error);
         }
       }
     },

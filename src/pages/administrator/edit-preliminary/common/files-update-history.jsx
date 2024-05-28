@@ -52,7 +52,7 @@ export const FilesUpdateHistoryModal = ({ open, onClose, title, upConfig }) => {
       const res = await adGetUpdateHistory(upConfig.p_application_header_id, upConfig.key);
       setData(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   }, [upConfig]);
 

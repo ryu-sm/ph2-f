@@ -70,7 +70,7 @@ export const ApRegisterPage = () => {
             setIsValidToken(false);
             break;
           default:
-            toast.error(API_500_ERROR);
+            console.debug(error);
         }
       }
     },

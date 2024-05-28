@@ -22,7 +22,7 @@ export const ApChatModal = ({ open, onClose }) => {
       const res = await apGetMessages();
       setMessages(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
   useEffect(() => {
@@ -58,13 +58,12 @@ export const ApChatModal = ({ open, onClose }) => {
         await fetchData();
         formik.resetForm();
       } catch (error) {
-        toast.error(API_500_ERROR);
+        console.debug(error);
       }
     },
   });
 
   const bottomRef = useRef(null);
-
   useEffect(() => {
     const timer = setTimeout(() => {
       if (open || messages.length) {

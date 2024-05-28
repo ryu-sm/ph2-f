@@ -16,7 +16,7 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
       const res = await adGetPairLoanOptions(id, isPairLoan ? 1 : 0);
       setPairLoanOptions(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   }, [id]);
 
@@ -43,7 +43,7 @@ export const SetPairLoanModal = ({ isOpen, onClose, id, pair_loan_id, apply_no, 
           onClose();
         }
       } catch (error) {
-        toast.error(API_500_ERROR);
+        console.debug(error);
       }
     },
   });

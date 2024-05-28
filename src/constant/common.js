@@ -1,5 +1,5 @@
 export const API_500_ERROR = 'サーバーとの通信に失敗しました。再度お試しください。';
-export const TOKEN_INVALID = 'ログイン用のトークンが不正です。再度ログインする必要があります。';
+export const TOKEN_INVALID = 'アカウントは自動的にログアウトされました。再度ログインしてください。';
 
 export const PREFECTURES = [
   { value: '北海道', label: '北海道' },

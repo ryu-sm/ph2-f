@@ -72,6 +72,8 @@ export const AdOrSpLoginPage = () => {
             agentSended: false,
           };
         });
+        localStorage.setItem('salesPersonType', payload?.type);
+        localStorage.removeItem('salesPersonUnaccess');
         const timer = setTimeout(() => {
           navigate(routeNames.adSalesPersonDashboardPage.path, { replace: true });
         }, 500);
@@ -86,7 +88,7 @@ export const AdOrSpLoginPage = () => {
 
       setOrgs(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -126,6 +128,8 @@ export const AdOrSpLoginPage = () => {
                 agentSended: false,
               };
             });
+            localStorage.setItem('salesPersonType', payload?.type);
+            localStorage.removeItem('salesPersonUnaccess');
             const timer = setTimeout(() => {
               navigate(routeNames.adSalesPersonDashboardPage.path, { replace: true });
             }, 500);
@@ -157,7 +161,7 @@ export const AdOrSpLoginPage = () => {
     };
 
     azureID();
-  }, [code, isManager, authInfo]);
+  }, [code, isManager]);
 
   const formik = useFormik({
     initialValues: {
@@ -235,6 +239,8 @@ export const AdOrSpLoginPage = () => {
               agentSended: false,
             };
           });
+          localStorage.setItem('salesPersonType', payload?.type);
+          localStorage.removeItem('salesPersonUnaccess');
           const timer = setTimeout(() => {
             navigate(routeNames.adSalesPersonDashboardPage.path, { replace: true });
           }, 500);
@@ -426,7 +432,7 @@ export const AdOrSpLoginPage = () => {
               <Typography variant="login_error" textAlign={'center'} lineHeight={'120%'} fontSize={30} fontWeight={500}>
                 {azureErrText}
               </Typography>
-              {azureErrText !== 'AzureID認証のアクセス許可がありません。' && (
+              {azureErrText && azureErrText !== 'AzureID認証のアクセス許可がありません。' && (
                 <Stack sx={{ mt: 12 }} direction={'row'} alignItems={'center'}>
                   <Typography
                     component={Link}

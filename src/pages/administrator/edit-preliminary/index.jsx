@@ -64,11 +64,11 @@ const Content = () => {
             return;
           }
         } catch (error) {
-          toast.error(API_500_ERROR);
+          console.debug(error);
         }
       }
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
   useEffect(() => {

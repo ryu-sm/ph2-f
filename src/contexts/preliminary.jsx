@@ -48,7 +48,7 @@ export const PreliminaryProvider = ({ children }) => {
   const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
   useEffect(() => {
     if (result.state === 'hasError') {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
     if (result.state === 'hasValue') {
       setPreliminarySnap(result.contents);
@@ -143,7 +143,7 @@ export const PreliminaryProvider = ({ children }) => {
 
       setPairLoanData(tempPairLoanData);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -226,7 +226,7 @@ export const PreliminaryProvider = ({ children }) => {
         return upList.length > 0;
       }
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -246,7 +246,7 @@ export const PreliminaryProvider = ({ children }) => {
       toast.success('申込内容を更新しました。');
       refreshPreliminary();
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -277,7 +277,7 @@ export const PreliminaryProvider = ({ children }) => {
       });
       refreshPreliminary();
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -289,7 +289,7 @@ export const PreliminaryProvider = ({ children }) => {
       });
       refreshPreliminary();
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -310,7 +310,7 @@ export const PreliminaryProvider = ({ children }) => {
       if (error.status === 400 || error.status === 403 || error.status === 406) {
         return error;
       }
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -324,7 +324,7 @@ export const PreliminaryProvider = ({ children }) => {
 
       refreshPreliminary();
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
   const [managerRole, setManagerRole] = useState(null);
@@ -336,7 +336,7 @@ export const PreliminaryProvider = ({ children }) => {
         setManagerRole(res.data?.role);
       } catch (error) {
         setManagerRole(null);
-        toast.error(API_500_ERROR);
+        console.debug(error);
       }
     };
     fetchData();

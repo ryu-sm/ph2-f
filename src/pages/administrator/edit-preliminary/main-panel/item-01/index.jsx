@@ -467,7 +467,7 @@ export const Item01 = () => {
                   await refreshPreliminary();
                 } catch (error) {
                   console.log(error);
-                  toast.error(API_500_ERROR);
+                  console.debug(error);
                 }
               }}
             >
@@ -516,7 +516,7 @@ export const Item01 = () => {
                     await refreshPreliminary();
                   } catch (error) {
                     console.log(error);
-                    toast.error(API_500_ERROR);
+                    console.debug(error);
                   }
                 }}
               >

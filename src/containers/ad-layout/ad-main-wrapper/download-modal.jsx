@@ -25,7 +25,7 @@ export const AdLogModal = ({ open, onClose }) => {
         }
         onClose();
       } catch (error) {
-        toast.error(API_500_ERROR);
+        console.debug(error);
       }
     },
   });

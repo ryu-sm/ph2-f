@@ -29,7 +29,7 @@ export const AdReviewProgress = () => {
         `${apply_no}_${last_name_kanji}${first_name_kanji}様__申込内容のローデータ.xlsx`
       );
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

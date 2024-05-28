@@ -40,7 +40,7 @@ export const MessageList = ({ messages = [], applicant, fetchData }) => {
         await updateMessages({ messages_ids });
       }
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

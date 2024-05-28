@@ -16,7 +16,7 @@ export const ApChat = () => {
       const res = await apGetMessages();
       setMessages(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -36,7 +36,7 @@ export const ApChat = () => {
       await fetchData();
       modal.onFalse();
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

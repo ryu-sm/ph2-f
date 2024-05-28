@@ -121,7 +121,7 @@ export const AdRegisterPage = () => {
 
       setOrgs(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

@@ -4,8 +4,13 @@ import { Box, Typography } from '@mui/material';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { TOKEN_INVALID } from '@/constant';
+import { useCurrSearchParams } from '@/hooks';
+import { authAtom } from '@/store';
+import { useResetRecoilState } from 'recoil';
 
 export const AdAzureLogout = () => {
+  const resetAuth = useResetRecoilState(authAtom);
+  const unaccess = useCurrSearchParams().get('unaccess');
   useEffect(() => {
     const TOKEN_INVALID_LOCAL = localStorage.getItem('TOKEN_INVALID');
     if (TOKEN_INVALID_LOCAL) {
@@ -22,6 +27,16 @@ export const AdAzureLogout = () => {
     }
   }, []);
 
+  useEffect(() => {
+    resetAuth();
+    if (unaccess) {
+      localStorage.setItem('salesPersonUnaccess', 1);
+    } else {
+      localStorage.removeItem('salesPersonUnaccess');
+    }
+    localStorage.setItem('salesPersonType', 2);
+  }, []);
+
   return (
     <AdAuthWrapper>
       <Box display={'flex'} justifyContent={'center'} alignItems={'center'} minHeight={'100vh'}>
@@ -35,7 +50,7 @@ export const AdAzureLogout = () => {
             letterSpacing: 1,
           }}
         >
-          ログアウトしました。
+          {unaccess ? 'AzureID認証のアクセス許可がありません。' : 'ログアウトしました。'}
         </Typography>
       </Box>
     </AdAuthWrapper>

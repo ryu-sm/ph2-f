@@ -26,7 +26,7 @@ export const AdMessagesDetailPage = () => {
       setApplicant(res.data.applicant);
       setMessages(res.data.messages);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

@@ -23,15 +23,34 @@ export const GroupNavigations = ({ group }) => {
     }
     return <Navigate to={routeNames.adManagerLoginPage.path} replace />;
   }
+  // if (!isLogined && pathname === routeNames.adSalesPersonLoginPage.path) {
+  //   const salesPersonType = localStorage.getItem('salesPersonType');
+  //   if (salesPersonType !== 2) {
+  //     return <Navigate to={routeNames.adSalesPersonAzureLogout.path} replace />;
+  //   } else {
+  //     return <Navigate to={`${routeNames.adSalesPersonAzureLogout.path}?unaccess=1`} replace />;
+  //   }
+  // }
+
   if (!isLogined && group === 'sales-person') {
-    if (
-      pathname !== routeNames.adSalesPersonRegisterVerifyEmail.path &&
-      pathname !== routeNames.adSalesPersonRegister.path &&
-      pathname !== routeNames.adSalesPersonAzureLogout.path
-    ) {
+    console.log(pathname);
+    const salesPersonType = localStorage.getItem('salesPersonType');
+    const salesPersonUnaccess = localStorage.getItem('salesPersonUnaccess');
+    // console.log(salesPersonType);
+    // console.log(typeof salesPersonType);
+    // console.log(salesPersonUnaccess);
+    // console.log(typeof salesPersonUnaccess);
+    if (salesPersonType === '2') {
+      if (salesPersonUnaccess === '1') {
+        return <Navigate to={`${routeNames.adSalesPersonAzureLogout.path}?unaccess=1`} replace />;
+      } else {
+        return <Navigate to={routeNames.adSalesPersonAzureLogout.path} replace />;
+      }
+    } else {
       return <Navigate to={routeNames.adSalesPersonLoginPage.path} replace />;
     }
   }
+
   if (isLogined && roleType === 1 && !publicRoutes.find((item) => item?.path === pathname)) {
     if (!applicantRoutes.find((item) => item?.path === pathname)) {
       return <Navigate to={routeNames.apTopPage.path} replace />;

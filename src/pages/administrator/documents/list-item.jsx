@@ -109,7 +109,7 @@ export const ListItem = ({ doc, refecth }) => {
       const res = await adGetArchiveFile(id);
       await downloadFileZipAsync(res.data, id);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 
@@ -120,7 +120,7 @@ export const ListItem = ({ doc, refecth }) => {
       await refecth();
       handleCloseModal();
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

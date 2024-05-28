@@ -32,7 +32,7 @@ export const AdListFilterModal = ({ open, onClose, onCleare, handleSearch, error
       const res03 = await adGetSalesCompanyOptionsCategory('E');
       setSalesCompanyOptionsE(res03.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   };
 

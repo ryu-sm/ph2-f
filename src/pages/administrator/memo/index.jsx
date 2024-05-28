@@ -37,7 +37,7 @@ export const AdMemo = () => {
       const res = await adGetMemo(p_application_header_id);
       setMemos(res.data);
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   }, []);
 
@@ -85,7 +85,7 @@ export const AdMemo = () => {
           toast.success('メモを更新しました。');
         }
       } catch (error) {
-        toast.error(API_500_ERROR);
+        console.debug(error);
       }
     },
   });

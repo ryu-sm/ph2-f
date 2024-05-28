@@ -18,6 +18,7 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import { pageNavigationPlugin } from '@react-pdf-viewer/page-navigation';
 import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
+// import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -68,7 +69,7 @@ export const AdFilesViewPage = () => {
         setCurrentImage(temp[0]);
       }
     } catch (error) {
-      toast.error(API_500_ERROR);
+      console.debug(error);
     }
   }, [p_application_header_id, category, type]);
 

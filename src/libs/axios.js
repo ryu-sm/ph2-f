@@ -14,17 +14,23 @@ service.interceptors.request.use(
     if (pathGroup01.includes(window.location.pathname) && authInfo?.roleType !== 1) {
       localStorage.setItem('TOKEN_CHANGE', true);
       window.location.replace(routeNames.apLoginPage.path);
-      return;
+      const source = axios.CancelToken.source();
+      config.cancelToken = source.token;
+      source.cancel('Request canceled: conditions not met.');
     }
     if (pathGroup02.includes(window.location.pathname) && authInfo?.roleType !== 2) {
       localStorage.setItem('TOKEN_CHANGE', true);
       window.location.replace(routeNames.adSalesPersonLoginPage.path);
-      return;
+      const source = axios.CancelToken.source();
+      config.cancelToken = source.token;
+      source.cancel('Request canceled: conditions not met.');
     }
     if (pathGroup03.includes(window.location.pathname) && authInfo?.roleType !== 3) {
       localStorage.setItem('TOKEN_CHANGE', true);
       window.location.replace(routeNames.adManagerLoginPage.path);
-      return;
+      const source = axios.CancelToken.source();
+      config.cancelToken = source.token;
+      source.cancel('Request canceled: conditions not met.');
     }
     const token = localStorage.getItem('accessToken') || null;
     if (token) {
@@ -44,28 +50,29 @@ service.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(window.location.pathname);
     if (error.response.status === 401) {
-      const token = localStorage.getItem('accessToken') || null;
-      const payload = jwtDecode(token);
-      clearStorage();
-      const pathname = window.location.pathname;
-      const pathSegments = pathname?.split('/').filter(Boolean);
-      if (pathSegments.includes('manager')) {
-        localStorage.setItem('TOKEN_INVALID', true);
-        window.location.replace(routeNames.adManagerLoginPage.path);
-      }
-      if (pathSegments.includes('sales-person')) {
-        localStorage.setItem('TOKEN_INVALID', true);
-        if (payload?.type === 2) {
-          window.location.replace(routeNames.adSalesPersonAzureLogout.path);
-        } else {
+      if (!error.response.data?.url || error.response.data?.url === 'none') {
+        clearStorage();
+        const pathname = window.location.pathname;
+        const pathSegments = pathname?.split('/').filter(Boolean);
+        if (pathSegments.includes('manager')) {
+          localStorage.setItem('TOKEN_INVALID', true);
+          window.location.replace(routeNames.adManagerLoginPage.path);
+        }
+        if (pathSegments.includes('sales-person')) {
+          localStorage.setItem('TOKEN_INVALID', true);
           window.location.replace(routeNames.adSalesPersonLoginPage.path);
         }
-      }
-      if (!pathSegments.includes('manager') && !pathSegments.includes('sales-person')) {
+        if (!pathSegments.includes('manager') && !pathSegments.includes('sales-person')) {
+          localStorage.setItem('TOKEN_INVALID', true);
+          window.location.replace(routeNames.apLoginPage.path);
+        }
+        window.location.replace(routeNames.apStartPage.path);
+      } else {
+        clearStorage();
         localStorage.setItem('TOKEN_INVALID', true);
-        window.location.replace(routeNames.apLoginPage.path);
+
+        window.location.replace(error.response.data?.url);
       }
     }
     if (APP_MODE === 'dev') console.log(error);
