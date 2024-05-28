@@ -38,7 +38,8 @@ export const MessageSend = ({ fetchData, applicant }) => {
       handleCloseSendModal();
       formik.resetForm();
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
   const handleInsertLink = (linkValue) => {

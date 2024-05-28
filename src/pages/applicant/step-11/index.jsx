@@ -128,7 +128,8 @@ export const ApStep11Page = () => {
           navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
-        console.debug(error);
+        console.log(error);
+        // toast.error(API_500_ERROR);
       }
     },
   });
@@ -193,7 +194,8 @@ export const ApStep11Page = () => {
       formik.setFieldValue('p_applicant_persons__1.F__03', res.data?.F__03);
       formik.setFieldValue('p_applicant_persons__1.K', res.data?.K);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 

@@ -125,7 +125,8 @@ export const ApStep08Page = () => {
           navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
-        console.debug(error);
+        console.log(error);
+        // toast.error(API_500_ERROR);
       }
     },
   });
@@ -159,7 +160,8 @@ export const ApStep08Page = () => {
       });
       formik.setFieldValue('p_borrowings', temp);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 

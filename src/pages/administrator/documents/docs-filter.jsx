@@ -22,7 +22,8 @@ export const DocsFilter = ({ open, onClose, onCleare, handleSearch, errors }) =>
       const res02 = await adGetSalesPersonOptionsAll();
       setSalesPersonOptionsAll(res02.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 

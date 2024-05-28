@@ -82,7 +82,8 @@ export const Item08 = () => {
       }
       setAccessOrgs(tempAccessOrgs);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -97,7 +98,8 @@ export const Item08 = () => {
       const res = await getOrgsWithCategories('C');
       setSalesCompanyOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -106,7 +108,8 @@ export const Item08 = () => {
       const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
       setSalesAreaOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -115,7 +118,8 @@ export const Item08 = () => {
       const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
       setSalesExhibitionHallOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -124,7 +128,8 @@ export const Item08 = () => {
       const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
       setSalesPersonOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -255,7 +260,8 @@ export const Item08 = () => {
           setSalesPersonInfo({});
         }
       } catch (error) {
-        console.debug(error);
+        console.log(error);
+        // toast.error(API_500_ERROR);
       }
     };
     fetchData();

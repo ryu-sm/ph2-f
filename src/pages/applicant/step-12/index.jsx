@@ -106,7 +106,8 @@ export const ApStep12Page = () => {
           navigate(`${isSalesPerson ? '/sales-person' : ''}/step-id-${apNextStepId}`);
         }
       } catch (error) {
-        console.debug(error);
+        console.log(error);
+        // toast.error(API_500_ERROR);
       }
     },
   });
@@ -122,7 +123,8 @@ export const ApStep12Page = () => {
       const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
       setOrgsB([{ value: '', label: '' }, ...res.data]);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -131,7 +133,8 @@ export const ApStep12Page = () => {
       const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
       setOrgsE([{ value: '', label: '' }, ...res.data]);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -158,7 +161,8 @@ export const ApStep12Page = () => {
             formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', res.data?.sales_exhibition_hall_id);
           }
         } catch (error) {
-          console.debug(error);
+          console.log(error);
+          // toast.error(API_500_ERROR);
         }
       } else {
         try {
@@ -168,7 +172,8 @@ export const ApStep12Page = () => {
           setOrgsB([{ value: '', label: '' }]);
           setOrgsE([{ value: '', label: '' }]);
         } catch (error) {
-          console.debug(error);
+          console.log(error);
+          // toast.error(API_500_ERROR);
         }
       }
     };
@@ -224,7 +229,8 @@ export const ApStep12Page = () => {
       const res = await apGetPapplicationHeadersFiles(id);
       formik.setFieldValue('p_application_headers.J', res.data?.J);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 

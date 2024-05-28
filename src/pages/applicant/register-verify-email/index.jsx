@@ -45,7 +45,8 @@ export const ApRegisterVerifyEmailPage = () => {
             setWarningText('このメールアドレスは既に存在しています。別のメールアドレスで登録してください。');
             break;
           default:
-            console.debug(error);
+            console.log(error);
+          // toast.error(API_500_ERROR);
         }
       }
     },

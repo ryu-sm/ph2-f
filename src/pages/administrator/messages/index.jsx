@@ -30,7 +30,8 @@ export const AdMessagesPages = () => {
         // setFilterData(res.data);
       }
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 

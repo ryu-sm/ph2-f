@@ -94,7 +94,7 @@ export const ApAgreementPage = () => {
       });
     } catch (error) {
       console.log(error);
-      console.debug(error);
+      // toast.error(API_500_ERROR);
     }
   };
   useEffect(() => {

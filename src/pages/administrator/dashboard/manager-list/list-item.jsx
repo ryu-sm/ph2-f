@@ -244,7 +244,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
       setSalesAreaOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -253,7 +254,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
       setSalesExhibitionHallOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -262,7 +264,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
       setSalesPersonOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -283,7 +286,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       afterResultModal.onFalse();
       toast.success('更新をしました。');
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   }, [afterResult]);
 

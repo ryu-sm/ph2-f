@@ -19,7 +19,8 @@ export const DashboardProvider = ({ children }) => {
 
   useEffect(() => {
     if (result.state === 'hasError') {
-      console.debug(error);
+      console.log('error:999');
+      // toast.error(API_500_ERROR);
     }
   }, [result.state, dashboardTabStatus]);
 

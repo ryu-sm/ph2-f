@@ -13,6 +13,7 @@ service.interceptors.request.use(
     const authInfo = auth ? JSON.parse(auth) : {};
     if (pathGroup01.includes(window.location.pathname) && authInfo?.roleType !== 1) {
       localStorage.setItem('TOKEN_CHANGE', true);
+
       window.location.replace(routeNames.apLoginPage.path);
       const source = axios.CancelToken.source();
       config.cancelToken = source.token;
@@ -50,11 +51,13 @@ service.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(error.response.data?.url);
     if (error.response.status === 401) {
       if (!error.response.data?.url || error.response.data?.url === 'none') {
         clearStorage();
         const pathname = window.location.pathname;
         const pathSegments = pathname?.split('/').filter(Boolean);
+
         if (pathSegments.includes('manager')) {
           localStorage.setItem('TOKEN_INVALID', true);
           window.location.replace(routeNames.adManagerLoginPage.path);
@@ -69,6 +72,7 @@ service.interceptors.response.use(
         }
         window.location.replace(routeNames.apStartPage.path);
       } else {
+        console.log(10101);
         clearStorage();
         localStorage.setItem('TOKEN_INVALID', true);
 

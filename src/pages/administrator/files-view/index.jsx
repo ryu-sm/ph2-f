@@ -69,7 +69,8 @@ export const AdFilesViewPage = () => {
         setCurrentImage(temp[0]);
       }
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   }, [p_application_header_id, category, type]);
 

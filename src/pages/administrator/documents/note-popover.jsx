@@ -14,7 +14,8 @@ export const NotePopover = ({ open, onClose, anchorEl, value, id, refecth }) => 
       await adUpdateArchiveFileNote(id, { note: noteValue });
       await refecth();
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
     onClose();
   };

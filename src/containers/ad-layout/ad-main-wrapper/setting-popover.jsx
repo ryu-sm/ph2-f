@@ -56,8 +56,9 @@ export const AdSettingPopover = ({ open, onClose, openChangePassword, anchorEl }
                   const res = await adSalesPersonPreliminariesFile(dashboardTabStatus);
                   await downloadExcelAsync(res.data.src, res.data.name);
                 }
-              } catch (erorrs) {
-                console.debug(error);
+              } catch (error) {
+                console.log(error);
+                // toast.error(API_500_ERROR);
               }
             },
           },

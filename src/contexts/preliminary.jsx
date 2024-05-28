@@ -48,7 +48,8 @@ export const PreliminaryProvider = ({ children }) => {
   const mainTabStatus = useRecoilValue(editMainTabStatusAtom);
   useEffect(() => {
     if (result.state === 'hasError') {
-      console.debug(error);
+      console.log('error:999');
+      // toast.error(API_500_ERROR);
     }
     if (result.state === 'hasValue') {
       setPreliminarySnap(result.contents);
@@ -143,7 +144,8 @@ export const PreliminaryProvider = ({ children }) => {
 
       setPairLoanData(tempPairLoanData);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -226,7 +228,8 @@ export const PreliminaryProvider = ({ children }) => {
         return upList.length > 0;
       }
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -246,7 +249,8 @@ export const PreliminaryProvider = ({ children }) => {
       toast.success('申込内容を更新しました。');
       refreshPreliminary();
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -277,7 +281,8 @@ export const PreliminaryProvider = ({ children }) => {
       });
       refreshPreliminary();
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -289,7 +294,8 @@ export const PreliminaryProvider = ({ children }) => {
       });
       refreshPreliminary();
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -310,7 +316,8 @@ export const PreliminaryProvider = ({ children }) => {
       if (error.status === 400 || error.status === 403 || error.status === 406) {
         return error;
       }
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -324,7 +331,8 @@ export const PreliminaryProvider = ({ children }) => {
 
       refreshPreliminary();
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
   const [managerRole, setManagerRole] = useState(null);
@@ -336,7 +344,8 @@ export const PreliminaryProvider = ({ children }) => {
         setManagerRole(res.data?.role);
       } catch (error) {
         setManagerRole(null);
-        console.debug(error);
+        console.log(error);
+        // toast.error(API_500_ERROR);
       }
     };
     fetchData();

@@ -106,7 +106,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             return;
           }
         } catch (error) {
-          console.debug(error);
+          console.log(error);
+          // toast.error(API_500_ERROR);
         }
         setMainTabStatus(1);
         setInfoGroupTab(1);
@@ -126,7 +127,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             return;
           }
         } catch (error) {
-          console.debug(error);
+          console.log(error);
+          // toast.error(API_500_ERROR);
         }
         navigator(`/sales-person/messages-detail?id=${item.id}&type=1`);
       },
@@ -205,7 +207,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       }
       setAccessOrgs(tempAccessOrgs);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -218,7 +221,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
       setSalesAreaOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -227,7 +231,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
       setSalesExhibitionHallOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -236,7 +241,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
       setSalesPersonOptions(res.data);
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
@@ -455,7 +461,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                       }
                       return res.data?.access;
                     } catch (error) {
-                      console.debug(error);
+                      console.log(error);
+                      // toast.error(API_500_ERROR);
                     }
                   }}
                 />
@@ -483,7 +490,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                       }
                       return res.data?.access;
                     } catch (error) {
-                      console.debug(error);
+                      console.log(error);
+                      // toast.error(API_500_ERROR);
                     }
                   }}
                 />
@@ -510,7 +518,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
                       }
                       return res.data?.access;
                     } catch (error) {
-                      console.debug(error);
+                      console.log(error);
+                      // toast.error(API_500_ERROR);
                     }
                   }}
                 />

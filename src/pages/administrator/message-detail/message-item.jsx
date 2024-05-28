@@ -25,7 +25,8 @@ export const MessageItem = ({ messageInfo, unViewed, applicant, fetchData }) => 
       await fetchData();
       handleCloseModal();
     } catch (error) {
-      console.debug(error);
+      console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 

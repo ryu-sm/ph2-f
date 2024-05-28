@@ -169,7 +169,8 @@ export const ApStep13Page = () => {
           bottomRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
           return;
         }
-        console.debug(error);
+        console.log(error);
+        // toast.error(API_500_ERROR);
       }
     },
   });
