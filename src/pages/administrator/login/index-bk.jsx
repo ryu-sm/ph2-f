@@ -170,7 +170,8 @@ export const AdOrSpLoginPage = () => {
     const TOKEN_INVALID_LOCAL = localStorage.getItem('TOKEN_INVALID');
     if (TOKEN_INVALID_LOCAL) {
       toast.error(TOKEN_INVALID);
-      localStorage.clear();
+      localStorage.removeItem('TOKEN_INVALID');
+      localStorage.removeItem('auth');
     }
   }, []);
 

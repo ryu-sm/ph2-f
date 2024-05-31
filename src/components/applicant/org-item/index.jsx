@@ -143,7 +143,7 @@ export const ApOrgItem = ({ inputName, inputValue, selectName, selectValue, opti
             <Box sx={{ display: 'inline-block', position: 'relative', width: 1 }}>
               <TextField
                 ref={inputRef}
-                placeholder={'選択肢が存在しない場合は、入力してください。'}
+                placeholder={'選択対象が存在しない場合は、入力してください。'}
                 fullWidth
                 value={inputValue}
                 onChange={(e) => {

@@ -9,9 +9,9 @@ const service = axios.create({ baseURL: BASE_URL, timeout: 1000 * 100 });
 
 service.interceptors.request.use(
   (config) => {
-    const auth = localStorage.getItem('auth') || null;
-    const authInfo = auth ? JSON.parse(auth) : {};
-    if (pathGroup01.includes(window.location.pathname) && authInfo?.roleType !== 1) {
+    const token = localStorage.getItem('accessToken') || null;
+    const payload = token ? jwtDecode(token) : {};
+    if (pathGroup01.includes(window.location.pathname) && payload?.role_type !== 1) {
       localStorage.setItem('TOKEN_CHANGE', true);
 
       window.location.replace(routeNames.apLoginPage.path);
@@ -19,22 +19,26 @@ service.interceptors.request.use(
       config.cancelToken = source.token;
       source.cancel('Request canceled: conditions not met.');
     }
-    if (pathGroup02.includes(window.location.pathname) && authInfo?.roleType !== 2) {
+    if (pathGroup02.includes(window.location.pathname) && payload?.role_type !== 2) {
       localStorage.setItem('TOKEN_CHANGE', true);
-      localStorage.setItem('TOKEN_CHANGE', true);
-      window.location.replace(routeNames.adSalesPersonLoginPage.path);
+      const type = localStorage.getItem('salesPersonType') || null;
+      if (type == 2) {
+        window.location.replace(routeNames.adSalesPersonAzureLogout.path);
+      } else {
+        window.location.replace(routeNames.adSalesPersonLoginPage.path);
+      }
+
       const source = axios.CancelToken.source();
       config.cancelToken = source.token;
       source.cancel('Request canceled: conditions not met.');
     }
-    if (pathGroup03.includes(window.location.pathname) && authInfo?.roleType !== 3) {
+    if (pathGroup03.includes(window.location.pathname) && payload?.role_type !== 3) {
       localStorage.setItem('TOKEN_CHANGE', true);
       window.location.replace(routeNames.adManagerLoginPage.path);
       const source = axios.CancelToken.source();
       config.cancelToken = source.token;
       source.cancel('Request canceled: conditions not met.');
     }
-    const token = localStorage.getItem('accessToken') || null;
     if (token) {
       config.headers['Authorization'] = token;
     }
@@ -55,7 +59,7 @@ service.interceptors.response.use(
     console.log(error.response.data?.url);
     if (error.response.status === 401) {
       if (!error.response.data?.url || error.response.data?.url === 'none') {
-        clearStorage();
+        localStorage.removeItem('auth');
         const pathname = window.location.pathname;
         const pathSegments = pathname?.split('/').filter(Boolean);
 
@@ -73,11 +77,11 @@ service.interceptors.response.use(
         }
         window.location.replace(routeNames.apStartPage.path);
       } else {
-        console.log(10101);
-        clearStorage();
+        localStorage.removeItem('auth');
         localStorage.setItem('TOKEN_INVALID', true);
-        localStorage.setItem('TOKEN_INVALID', true);
-
+        if (error.response.data?.url?.includes('unaccess')) {
+          localStorage.setItem('salesPersonUnaccess', 1);
+        }
         window.location.replace(error.response.data?.url);
       }
     }

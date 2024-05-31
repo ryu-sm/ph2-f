@@ -422,7 +422,7 @@ export const Item08 = () => {
         <EditRow label={'携帯電話番号'} field={salesPersonInfo?.mobile_phone} />
         <EditRow label={'メールアドレス'} field={salesPersonInfo?.email} />
 
-        <ContentEditGroupSub label={'申込人の入力データ'}>
+        <ContentEditGroupSub label={'申込人入力データ'}>
           {isManager && (
             <Stack>
               <EditRow

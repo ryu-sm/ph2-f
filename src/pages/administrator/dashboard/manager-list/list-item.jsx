@@ -111,7 +111,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         setInfoGroupTab(1);
         setIncomeTotalizerInfoGroupTab(2);
         setPairLoanInfoGroupTab(1);
-        refreshPreliminary();
+        // refreshPreliminary();
         navigator(`${routeNames.adManagerEditPreliminaryPage.path}?id=${item.id}`);
       },
     },

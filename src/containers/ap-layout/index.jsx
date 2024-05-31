@@ -3,34 +3,11 @@ import { ApWrapper } from './ap-wrapper';
 import { ApMenu } from './ap-header/ap-menu';
 import { ApHeader } from './ap-header';
 import { ApFooter } from './ap-footer';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Stack } from '@mui/material';
 import { ApStepBar } from './ap-step-bar';
-import { authAtom } from '@/store';
-import { jwtDecode } from 'jwt-decode';
-import { pathGroup01, pathGroup02, pathGroup03 } from '@/router/settings';
-import { useRecoilValue } from 'recoil';
-import { useLocation } from 'react-router-dom';
 
 export const ApLayout = ({ children, hasMenu, hasFooter, hasStepBar, bottomContent }) => {
-  const { isLogined } = useRecoilValue(authAtom);
-  const { pathname } = useLocation();
-
-  // useEffect(() => {
-  //   if (isLogined) {
-  //     const token = localStorage.getItem('accessToken') || null;
-  //     const payload = jwtDecode(token);
-  //     if (payload?.role_type === 1 && !pathGroup01.includes(pathname)) {
-  //       window.location.reload();
-  //     }
-  //     if (payload?.role_type === 2 && !pathGroup02.includes(pathname)) {
-  //       window.location.reload();
-  //     }
-  //     if (payload?.role_type === 3 && !pathGroup03.includes(pathname)) {
-  //       window.location.reload();
-  //     }
-  //   }
-  // }, [pathname]);
   const menu = useBoolean();
   const pt = useMemo(() => {
     if (hasStepBar) return 26;

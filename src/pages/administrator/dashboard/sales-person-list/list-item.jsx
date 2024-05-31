@@ -109,16 +109,16 @@ const CaseItem = ({ item, isPairLoan, index }) => {
             unAccessModal.onTrue();
             return;
           }
+          setMainTabStatus(1);
+          setInfoGroupTab(1);
+          setIncomeTotalizerInfoGroupTab(2);
+          setPairLoanInfoGroupTab(1);
+          // refreshPreliminary();
+          navigator(`${routeNames.adSalesPersonEditPreliminaryPage.path}?id=${item.id}`);
         } catch (error) {
           console.log(error);
           // toast.error(API_500_ERROR);
         }
-        setMainTabStatus(1);
-        setInfoGroupTab(1);
-        setIncomeTotalizerInfoGroupTab(2);
-        setPairLoanInfoGroupTab(1);
-        refreshPreliminary();
-        navigator(`${routeNames.adSalesPersonEditPreliminaryPage.path}?id=${item.id}`);
       },
     },
     {
