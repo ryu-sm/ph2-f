@@ -18,3 +18,4 @@ export * from './applicant/img-upload';
 export * from './applicant/img-item';
 export * from './applicant/signature-board';
 export * from './applicant/update-apply';
+export * from './applicant/org-item';

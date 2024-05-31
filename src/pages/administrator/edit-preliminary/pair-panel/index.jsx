@@ -17,6 +17,7 @@ import { useBoolean, useIsManager } from '@/hooks';
 import { Item09 } from './item-09';
 import { adGetUploadFile } from '@/services';
 import { Item10 } from './item-10';
+import { ComModalWapper } from '../../com-modal-wapper';
 
 export const PairDetail = () => {
   const [mainTabStatus, setMainTabStatus] = useRecoilState(editMainTabStatusAtom);

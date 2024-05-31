@@ -11,7 +11,6 @@ import {
   adGetAccessSalesPersonOptions,
   adGetSalesPersonBelowOrgs,
   adGetSalesPersonInfo,
-  adGetSalesPersonOrgs,
   getChildrenOrgsWithCategory,
   getOrgsWithCategories,
 } from '@/services';
@@ -20,17 +19,16 @@ import { authAtom } from '@/store';
 import { useIsManager } from '@/hooks';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
-import { Box, Stack, Typography } from '@mui/material';
-import { ContentEditGroupSub } from '../../common/content-edit-group-sub';
 
 export const Item08 = () => {
   const isManager = useIsManager();
   const [salesPersonInfo, setSalesPersonInfo] = useState({});
   const {
-    preliminaryInfo: { p_application_headers },
+    pairLoanDataInfo: { p_application_headers },
     setPreliminarySnap,
     handleSave,
   } = usePreliminaryContext();
+  const isEditable = false;
   const { salesPerson } = useRecoilValue(authAtom);
   const initialValues = {
     p_application_headers: {
@@ -40,13 +38,8 @@ export const Item08 = () => {
       s_sales_person_id: p_application_headers?.s_sales_person_id,
       vendor_name: p_application_headers?.vendor_name,
       vendor_phone: p_application_headers?.vendor_phone,
-      sales_host_company_id: p_application_headers.sales_host_company_id,
-      sales_company: p_application_headers.sales_company,
-      sales_area: p_application_headers.sales_area,
-      sales_exhibition_hall: p_application_headers.sales_exhibition_hall,
     },
   };
-  const isEditable = false;
 
   const setUpdateData = (values) => {
     const diffData = {
@@ -100,9 +93,9 @@ export const Item08 = () => {
     }
   }, [salesPerson.id]);
 
-  const fetchSalesCompanyOptions = async (id) => {
+  const fetchSalesCompanyOptions = async () => {
     try {
-      const res = await getChildrenOrgsWithCategory(id, 'C');
+      const res = await getOrgsWithCategories('C');
       setSalesCompanyOptions(res.data);
     } catch (error) {
       console.log(error);
@@ -110,47 +103,30 @@ export const Item08 = () => {
     }
   };
 
-  const fetchSalesAreaOptions = async (id) => {
+  const fetchSalesAreaOptions = async (sales_company_id) => {
     try {
-      const res = await getChildrenOrgsWithCategory(id, 'B');
+      const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
       setSalesAreaOptions(res.data);
-      if (formik.values.p_application_headers.sales_area_id) {
-        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_area_id)) {
-          formik.setFieldValue('p_application_headers.sales_area_id', '');
-        }
-      }
     } catch (error) {
       console.log(error);
       // toast.error(API_500_ERROR);
     }
   };
 
-  const fetchSalesExhibitionHallOptions = async (id) => {
+  const fetchSalesExhibitionHallOptions = async (sales_area_id, sales_company_id) => {
     try {
-      const res = await getChildrenOrgsWithCategory(id, 'E');
+      const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
       setSalesExhibitionHallOptions(res.data);
-      if (formik.values.p_application_headers.sales_exhibition_hall_id) {
-        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_exhibition_hall_id)) {
-          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-        }
-      }
     } catch (error) {
       console.log(error);
       // toast.error(API_500_ERROR);
     }
   };
 
-  const fetchSalesPersonOptions = async (id) => {
+  const fetchSalesPersonOptions = async (sales_exhibition_hall_id, sales_area_id, sales_company_id) => {
     try {
-      const res = await adGetAccessSalesPersonOptions(id);
-      console.log(8888, `${id}`);
-      console.log(8888, res.data);
+      const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
       setSalesPersonOptions(res.data);
-      if (formik.values.p_application_headers.s_sales_person_id) {
-        if (!res.data.find((sp) => sp.value === formik.values.p_application_headers.s_sales_person_id)) {
-          formik.setFieldValue('p_application_headers.s_sales_person_id', '');
-        }
-      }
     } catch (error) {
       console.log(error);
       // toast.error(API_500_ERROR);
@@ -158,30 +134,22 @@ export const Item08 = () => {
   };
 
   useEffect(() => {
-    fetchSalesCompanyOptions(formik.values.p_application_headers.sales_host_company_id);
-    fetchSalesAreaOptions(
-      formik.values.p_application_headers.sales_company_id || formik.values.p_application_headers.sales_host_company_id
-    );
-
+    fetchSalesCompanyOptions();
+    fetchSalesAreaOptions(formik.values.p_application_headers.sales_company_id);
     fetchSalesExhibitionHallOptions(
-      formik.values.p_application_headers.sales_area_id ||
-        formik.values.p_application_headers.sales_company_id ||
-        formik.values.p_application_headers.sales_host_company_id
+      formik.values.p_application_headers.sales_area_id,
+      formik.values.p_application_headers.sales_company_id
     );
     fetchSalesPersonOptions(
-      formik.values.p_application_headers.sales_exhibition_hall_id ||
-        formik.values.p_application_headers.sales_area_id ||
-        formik.values.p_application_headers.sales_company_id ||
-        formik.values.p_application_headers.sales_host_company_id
+      formik.values.p_application_headers.sales_exhibition_hall_id,
+      formik.values.p_application_headers.sales_area_id,
+      formik.values.p_application_headers.sales_company_id
     );
   }, [
     formik.values.p_application_headers.sales_exhibition_hall_id,
     formik.values.p_application_headers.sales_area_id,
     formik.values.p_application_headers.sales_company_id,
-    formik.values.p_application_headers.sales_host_company_id,
   ]);
-
-  console.log(accessOrgs);
 
   const checkEnableSalesArea = useMemo(() => {
     if (isManager) return true;
@@ -220,78 +188,53 @@ export const Item08 = () => {
     );
   }, [accessOrgs, formik.values.p_application_headers.sales_exhibition_hall_id]);
 
-  // const handleChangeSalesCompany = useCallback(async (sales_company_id) => {
-  //   formik.setFieldValue('p_application_headers.sales_area_id', '');
-  //   formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-  //   formik.setFieldValue('p_application_headers.s_sales_person_id', '');
-  //   await fetchSalesAreaOptions(sales_company_id);
-  //   await fetchSalesExhibitionHallOptions(sales_company_id);
-  //   await fetchSalesPersonOptions(sales_company_id);
-  // }, []);
+  const handleChangeSalesCompany = useCallback(async (sales_company_id) => {
+    formik.setFieldValue('p_application_headers.sales_area_id', '');
+    formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+    formik.setFieldValue('p_application_headers.s_sales_person_id', '');
+    await fetchSalesAreaOptions(sales_company_id);
+    await fetchSalesExhibitionHallOptions(sales_company_id);
+    await fetchSalesPersonOptions(sales_company_id);
+  }, []);
 
-  // const handleChangeSalesArea = useCallback(async (sales_area_id) => {
-  //   try {
-  //     const res = await getChildrenOrgsWithCategory(
-  //       sales_area_id || formik.values.p_application_headers.sales_company_id,
-  //       'E'
-  //     );
-  //     setSalesExhibitionHallOptions(res.data);
-  //     if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.sales_exhibition_hall_id)) {
-  //       formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-  //     } else {
-  //       const res = await adGetAccessSalesPersonOptions(
-  //         formik.values.p_application_headers.sales_exhibition_hall_id ||
-  //           sales_area_id ||
-  //           formik.values.p_application_headers.sales_company_id
-  //       );
-  //       setSalesPersonOptions(res.data);
-  //       if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.s_sales_person_id)) {
-  //         formik.setFieldValue('p_application_headers.s_sales_person_id', '');
-  //       }
-  //     }
-  //   } catch (error) {
-  //     toast.error('サーバーとの通信に失敗しました。再度お試しください。');
-  //   }
-  // }, []);
-
-  // const handleChangeSalesExhibitionHall = useCallback(async (sales_exhibition_hall_id) => {
-  //   try {
-  //     const res = await adGetAccessSalesPersonOptions(
-  //       sales_exhibition_hall_id ||
-  //         formik.values.p_application_headers.sales_area_id ||
-  //         formik.values.p_application_headers.sales_company_id
-  //     );
-  //     setSalesPersonOptions(res.data);
-  //     if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.s_sales_person_id)) {
-  //       formik.setFieldValue('p_application_headers.s_sales_person_id', '');
-  //     }
-  //   } catch (error) {
-  //     toast.error('サーバーとの通信に失敗しました。再度お試しください。');
-  //   }
-  // }, []);
-
-  const handleChangSalesPerson = useCallback(async (s_sales_person_id) => {
+  const handleChangeSalesArea = useCallback(async (sales_area_id) => {
     try {
-      if (!s_sales_person_id) return;
-      const res = await adGetSalesPersonOrgs(s_sales_person_id);
-      console.log(res.data);
-      const orgC = res.data.find((org) => org.category === 'C');
-      const orgB = res.data.find((org) => org.category === 'B');
-      const orgE = res.data.find((org) => org.category === 'E');
-      if (!!orgC && orgC?.id !== formik.values.p_application_headers.sales_company_id) {
-        console.log(111);
-        formik.setFieldValue('p_application_headers.sales_company_id', orgC?.id);
-      }
-      if (!!orgB && orgB?.id !== formik.values.p_application_headers.sales_area_id) {
-        console.log(222);
-        formik.setFieldValue('p_application_headers.sales_area_id', orgB?.id);
-      }
-      if (!!orgE && orgE?.id !== formik.values.p_application_headers.sales_exhibition_hall_id) {
-        console.log(333);
-        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', orgE?.id);
+      const res = await getChildrenOrgsWithCategory(
+        sales_area_id || formik.values.p_application_headers.sales_company_id,
+        'E'
+      );
+      setSalesExhibitionHallOptions(res.data);
+      if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.sales_exhibition_hall_id)) {
+        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+      } else {
+        const res = await adGetAccessSalesPersonOptions(
+          formik.values.p_application_headers.sales_exhibition_hall_id ||
+            sales_area_id ||
+            formik.values.p_application_headers.sales_company_id
+        );
+        setSalesPersonOptions(res.data);
+        if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.s_sales_person_id)) {
+          formik.setFieldValue('p_application_headers.s_sales_person_id', '');
+        }
       }
     } catch (error) {
-      console.log(error);
+      toast.error('サーバーとの通信に失敗しました。再度お試しください。');
+    }
+  }, []);
+
+  const handleChangeSalesExhibitionHall = useCallback(async (sales_exhibition_hall_id) => {
+    try {
+      const res = await adGetAccessSalesPersonOptions(
+        sales_exhibition_hall_id ||
+          formik.values.p_application_headers.sales_area_id ||
+          formik.values.p_application_headers.sales_company_id
+      );
+      setSalesPersonOptions(res.data);
+      if (!res.data?.find((item) => item?.value === formik.values.p_application_headers.s_sales_person_id)) {
+        formik.setFieldValue('p_application_headers.s_sales_person_id', '');
+      }
+    } catch (error) {
+      toast.error('サーバーとの通信に失敗しました。再度お試しください。');
     }
   }, []);
 
@@ -318,6 +261,7 @@ export const Item08 = () => {
         }
       } catch (error) {
         console.log(error);
+        // toast.error(API_500_ERROR);
       }
     };
     fetchData();
@@ -335,7 +279,12 @@ export const Item08 = () => {
           hasPleft={isEditable && isManager}
           field={
             isEditable && isManager ? (
-              <AdSelectRadios name="p_application_headers.sales_company_id" options={salesCompanyOptions} hasFilter />
+              <AdSelectRadios
+                name="p_application_headers.sales_company_id"
+                options={salesCompanyOptions}
+                hasFilter
+                onChange={handleChangeSalesCompany}
+              />
             ) : (
               salesCompanyOptions.find((item) => item.value === formik.values.p_application_headers.sales_company_id)
                 ?.label
@@ -356,6 +305,7 @@ export const Item08 = () => {
                 options={salesAreaOptions}
                 cancelable
                 hasFilter
+                onChange={handleChangeSalesArea}
               />
             ) : (
               salesAreaOptions.find((item) => item.value === formik.values.p_application_headers.sales_area_id)?.label
@@ -376,6 +326,7 @@ export const Item08 = () => {
                 options={salesExhibitionHallOptions}
                 cancelable
                 hasFilter
+                onChange={handleChangeSalesExhibitionHall}
               />
             ) : (
               salesExhibitionHallOptions.find(
@@ -385,7 +336,7 @@ export const Item08 = () => {
           }
         />
         <EditRow
-          label={'担当者名'}
+          label={'担当者名 (情報共有者)'}
           upConfig={{
             key: `p_application_headers.s_sales_person_id.${p_application_headers?.id}`,
             options: salesPersonOptions,
@@ -398,7 +349,6 @@ export const Item08 = () => {
                 options={salesPersonOptions}
                 cancelable
                 hasFilter
-                onChange={handleChangSalesPerson}
               />
             ) : (
               salesPersonOptions.find((item) => item.value === formik.values.p_application_headers.s_sales_person_id)
@@ -406,80 +356,34 @@ export const Item08 = () => {
             )
           }
         />
-        <EditRow label={'携帯電話番号'} field={salesPersonInfo?.mobile_phone} />
+        <EditRow
+          label={'担当者名'}
+          upConfig={{
+            key: `p_application_headers.vendor_name.${p_application_headers?.id}`,
+          }}
+          field={
+            isEditable ? (
+              <AdEditFullWidthInput name="p_application_headers.vendor_name" convertFullWidth />
+            ) : (
+              formik.values.p_application_headers.vendor_name
+            )
+          }
+        />
+        <EditRow
+          label={'携帯電話番号'}
+          upConfig={{
+            key: `p_application_headers.vendor_phone.${p_application_headers?.id}`,
+          }}
+          field={
+            isEditable ? (
+              <AdPhoneInputField name="p_application_headers.vendor_phone" convertHalfWidth />
+            ) : (
+              formik.values.p_application_headers.vendor_phone
+            )
+          }
+        />
+        <EditRow label={'携帯電話番号（マスターデータ）'} field={salesPersonInfo?.mobile_phone} />
         <EditRow label={'メールアドレス'} field={salesPersonInfo?.email} />
-
-        <ContentEditGroupSub label={'申込人の入力データ'}>
-          {isManager && (
-            <Stack>
-              <EditRow
-                label={'提携会社（入力）'}
-                upConfig={{
-                  key: `p_application_headers.sales_company.${p_application_headers?.id}`,
-                }}
-                field={
-                  isEditable ? (
-                    <AdEditFullWidthInput name="p_application_headers.sales_company" convertFullWidth />
-                  ) : (
-                    formik.values.p_application_headers.sales_company
-                  )
-                }
-              />
-              <EditRow
-                label={'エリア（入力）'}
-                upConfig={{
-                  key: `p_application_headers.sales_area.${p_application_headers?.id}`,
-                }}
-                field={
-                  isEditable ? (
-                    <AdEditFullWidthInput name="p_application_headers.sales_area" convertFullWidth />
-                  ) : (
-                    formik.values.p_application_headers.sales_area
-                  )
-                }
-              />
-              <EditRow
-                label={'営業所・展示場（入力）'}
-                upConfig={{
-                  key: `p_application_headers.sales_exhibition_hall.${p_application_headers?.id}`,
-                }}
-                field={
-                  isEditable ? (
-                    <AdEditFullWidthInput name="p_application_headers.sales_exhibition_hall" convertFullWidth />
-                  ) : (
-                    formik.values.p_application_headers.sales_exhibition_hall
-                  )
-                }
-              />
-            </Stack>
-          )}
-          <EditRow
-            label={'担当者名（入力）'}
-            upConfig={{
-              key: `p_application_headers.vendor_name.${p_application_headers?.id}`,
-            }}
-            field={
-              isEditable ? (
-                <AdEditFullWidthInput name="p_application_headers.vendor_name" convertFullWidth />
-              ) : (
-                formik.values.p_application_headers.vendor_name
-              )
-            }
-          />
-          <EditRow
-            label={'携帯電話番号（入力）'}
-            upConfig={{
-              key: `p_application_headers.vendor_phone.${p_application_headers?.id}`,
-            }}
-            field={
-              isEditable ? (
-                <AdPhoneInputField name="p_application_headers.vendor_phone" convertHalfWidth />
-              ) : (
-                formik.values.p_application_headers.vendor_phone
-              )
-            }
-          />
-        </ContentEditGroupSub>
       </ContentEditGroup>
     </FormikProvider>
   );

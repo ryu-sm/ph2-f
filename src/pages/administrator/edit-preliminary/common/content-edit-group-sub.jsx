@@ -19,18 +19,20 @@ export const ContentEditGroupSub = ({ children, label, subLabel, handleDeleteIte
             {subLabel}
           </Typography>
         </Stack>
-        <IconButton
-          sx={{
-            height: 24,
-            width: 24,
-            bgcolor: 'secondary.main',
-            color: (theme) => theme.palette.white,
-            '&:hover': { bgcolor: 'secondary.main', color: (theme) => theme.palette.white },
-          }}
-          onClick={handleDeleteItem}
-        >
-          <Clear sx={{ width: 16, height: 16 }} />
-        </IconButton>
+        {handleDeleteItem && (
+          <IconButton
+            sx={{
+              height: 24,
+              width: 24,
+              bgcolor: 'secondary.main',
+              color: (theme) => theme.palette.white,
+              '&:hover': { bgcolor: 'secondary.main', color: (theme) => theme.palette.white },
+            }}
+            onClick={handleDeleteItem}
+          >
+            <Clear sx={{ width: 16, height: 16 }} />
+          </IconButton>
+        )}
       </Stack>
 
       <Stack sx={{ width: 1, overflow: 'auto', pb: '10px', borderTop: '1px solid', borderColor: 'gray.70' }}>

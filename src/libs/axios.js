@@ -21,6 +21,7 @@ service.interceptors.request.use(
     }
     if (pathGroup02.includes(window.location.pathname) && authInfo?.roleType !== 2) {
       localStorage.setItem('TOKEN_CHANGE', true);
+      localStorage.setItem('TOKEN_CHANGE', true);
       window.location.replace(routeNames.adSalesPersonLoginPage.path);
       const source = axios.CancelToken.source();
       config.cancelToken = source.token;
@@ -74,6 +75,7 @@ service.interceptors.response.use(
       } else {
         console.log(10101);
         clearStorage();
+        localStorage.setItem('TOKEN_INVALID', true);
         localStorage.setItem('TOKEN_INVALID', true);
 
         window.location.replace(error.response.data?.url);

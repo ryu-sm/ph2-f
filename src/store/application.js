@@ -119,6 +119,10 @@ export const applicationInitialValues = {
     funding_other_amount_detail: '',
     // funding_total_amount: '',
     // STEP12
+    sales_company: '',
+    sales_area: '',
+    sales_exhibition_hall: '',
+    sales_host_company_id: '',
     sales_company_id: '',
     sales_area_id: '',
     sales_exhibition_hall_id: '',

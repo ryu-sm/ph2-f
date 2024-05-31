@@ -1,6 +1,6 @@
 export const API_500_ERROR = 'サーバーとの通信に失敗しました。再度お試しください。';
 export const TOKEN_INVALID = 'アカウントは自動的にログアウトされました。再度ログインしてください。';
-
+export const ORG_OTHER_ID = '999999999999999999';
 export const PREFECTURES = [
   { value: '北海道', label: '北海道' },
   { value: '青森県', label: '青森県' },

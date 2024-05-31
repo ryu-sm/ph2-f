@@ -45,9 +45,10 @@ export const AdAzureLogout = () => {
             fontFamily: 'Hiragino Sans',
             fontStyle: 'normal',
             fontWeight: 500,
-            fontSize: 36,
+            fontSize: 30,
             lineHeight: '24px',
             letterSpacing: 1,
+            color: unaccess ? '#E54E75' : null,
           }}
         >
           {unaccess ? 'AzureID認証のアクセス許可がありません。' : 'ログアウトしました。'}

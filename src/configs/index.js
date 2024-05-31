@@ -1,5 +1,5 @@
 export const APP_MODE = 'dev'; // dev || stg || prd
-export const APP_SERVER_URL = 'https://mortgageloan-dev-if-api.milibank.co.jp/v1';
+export const APP_SERVER_URL = 'https://mortgageloan-dev-if-api.milibank.co.jp/v2';
 
 // スタティック資源
 export const TERM_OF_SERVICE = '/pdfs/利用規約.pdf';

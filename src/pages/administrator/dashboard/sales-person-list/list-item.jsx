@@ -8,6 +8,7 @@ import { FormikProvider, useFormik } from 'formik';
 import {
   adGetAccessSalesPersonOptions,
   adGetSalesPersonBelowOrgs,
+  adGetSalesPersonOrgs,
   adGetSalesPersonPreliminariyAccess,
   adUpdatePreliminarySalesAreaId,
   adUpdatePreliminarySalesExhibitionHallId,
@@ -73,6 +74,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   const navigator = useNavigate();
   const formik = useFormik({
     initialValues: {
+      sales_host_company_id: item?.sales_host_company_id,
       sales_company_id: item?.sales_company_id,
       sales_area_id: item?.sales_area_id,
       sales_exhibition_hall_id: item?.sales_exhibition_hall_id,
@@ -82,12 +84,14 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   });
 
   useEffect(() => {
+    formik.setFieldValue('sales_host_company_id', item?.sales_host_company_id);
     formik.setFieldValue('sales_company_id', item?.sales_company_id);
     formik.setFieldValue('sales_area_id', item?.sales_area_id);
     formik.setFieldValue('sales_exhibition_hall_id', item?.sales_exhibition_hall_id);
     formik.setFieldValue('s_sales_person_id', item?.s_sales_person_id);
     formik.setFieldValue('s_manager_id', item?.s_manager_id);
   }, [
+    item?.sales_host_company_id,
     item?.sales_company_id,
     item?.sales_area_id,
     item?.sales_exhibition_hall_id,
@@ -216,9 +220,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     fetchAccessOrgs();
   }, [salesPerson.id]);
 
-  const fetchSalesAreaOptions = async (sales_company_id) => {
+  const fetchSalesAreaOptions = async (id) => {
     try {
-      const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
+      const res = await getChildrenOrgsWithCategory(id, 'B');
       setSalesAreaOptions(res.data);
     } catch (error) {
       console.log(error);
@@ -226,9 +230,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     }
   };
 
-  const fetchSalesExhibitionHallOptions = async (sales_area_id, sales_company_id) => {
+  const fetchSalesExhibitionHallOptions = async (id) => {
     try {
-      const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
+      const res = await getChildrenOrgsWithCategory(id, 'E');
       setSalesExhibitionHallOptions(res.data);
     } catch (error) {
       console.log(error);
@@ -236,9 +240,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     }
   };
 
-  const fetchSalesPersonOptions = async (sales_exhibition_hall_id, sales_area_id, sales_company_id) => {
+  const fetchSalesPersonOptions = async (id) => {
     try {
-      const res = await adGetAccessSalesPersonOptions(sales_exhibition_hall_id || sales_area_id || sales_company_id);
+      const res = await adGetAccessSalesPersonOptions(id);
       setSalesPersonOptions(res.data);
     } catch (error) {
       console.log(error);
@@ -247,12 +251,15 @@ const CaseItem = ({ item, isPairLoan, index }) => {
   };
 
   useEffect(() => {
-    fetchSalesAreaOptions(formik.values.sales_company_id);
-    fetchSalesExhibitionHallOptions(formik.values.sales_area_id, formik.values.sales_company_id);
+    fetchSalesAreaOptions(formik.values.sales_company_id || formik.values.sales_host_company_id);
+    fetchSalesExhibitionHallOptions(
+      formik.values.sales_area_id || formik.values.sales_company_id || formik.values.sales_host_company_id
+    );
     fetchSalesPersonOptions(
-      formik.values.sales_exhibition_hall_id,
-      formik.values.sales_area_id,
-      formik.values.sales_company_id
+      formik.values.sales_exhibition_hall_id ||
+        formik.values.sales_area_id ||
+        formik.values.sales_company_id ||
+        formik.values.sales_host_company_id
     );
   }, []);
 
@@ -269,7 +276,9 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     });
     return accessOrgs.find(
       (accessOrg) =>
-        accessOrg?.category === 'B' && accessOrg?.role === 9 && accessOrgsID.includes(formik.values.sales_area_id)
+        accessOrg?.category === 'B' &&
+        accessOrg?.role === 9 &&
+        (accessOrgsID.includes(formik.values.sales_area_id) || accessOrgsID.includes(formik.values.sales_company_id))
     );
   }, [accessOrgs, formik.values.sales_area_id]);
 
@@ -284,9 +293,11 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       (accessOrg) =>
         accessOrg?.category === 'E' &&
         accessOrg?.role === 9 &&
-        accessOrgsID.includes(formik.values.sales_exhibition_hall_id)
+        (accessOrgsID.includes(formik.values.sales_exhibition_hall_id) ||
+          accessOrgsID.includes(formik.values.sales_area_id) ||
+          accessOrgsID.includes(formik.values.sales_company_id))
     );
-  }, [accessOrgs, formik.values.sales_exhibition_hall_id]);
+  }, [accessOrgs, formik.values.sales_exhibition_hall_id, formik.values.sales_area_id, formik.values.sales_company_id]);
 
   const handleSalesPerson = useCallback(async (s_sales_person_id) => {
     try {
@@ -294,6 +305,32 @@ const CaseItem = ({ item, isPairLoan, index }) => {
         p_application_header_id: item?.id,
         s_sales_person_id: s_sales_person_id,
       });
+      if (!s_sales_person_id) return;
+      const response = await adGetSalesPersonOrgs(s_sales_person_id);
+      console.log(response.data);
+
+      const orgB = response.data.find((org) => org.category === 'B');
+      const orgE = response.data.find((org) => org.category === 'E');
+
+      if (!!orgB && orgB?.id !== formik.values.sales_area_id) {
+        const res = await adUpdatePreliminarySalesAreaId({
+          p_application_header_id: item?.id,
+          sales_company_id: item?.sales_company_id,
+          sales_area_id: orgB?.id,
+          sales_exhibition_hall_id: formik.values.sales_exhibition_hall_id,
+          s_sales_person_id: s_sales_person_id,
+        });
+
+        formik.setFieldValue('sales_area_id', orgB?.id);
+      }
+      if (!!orgE && orgE?.id !== formik.values.sales_exhibition_hall_id) {
+        const res = await adUpdatePreliminarySalesExhibitionHallId({
+          p_application_header_id: item?.id,
+          sales_exhibition_hall_id: orgE?.id,
+          s_sales_person_id: s_sales_person_id,
+        });
+        formik.setFieldValue('sales_exhibition_hall_id', orgE?.id);
+      }
       toast.success('担当担当を変更しました。');
     } catch (error) {
       toast.error('サーバーとの通信に失敗しました。再度お試しください。');

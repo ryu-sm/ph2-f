@@ -2,7 +2,6 @@ import { Icons } from '@/assets';
 import {
   ApImgUpload,
   ApItemGroup,
-  ApOrgItem,
   ApPageTitle,
   ApPhoneInputField,
   ApRadioRowGroup,
@@ -17,7 +16,6 @@ import { ApLayout, ApStepFooter } from '@/containers';
 import {
   apGetPapplicationHeadersFiles,
   getChildrenOrgsWithCategory,
-  getOrgsCategoryCWithID,
   getOrgsInfos,
   getOrgsWithCategories,
 } from '@/services';
@@ -48,7 +46,6 @@ export const ApStep12Page = () => {
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
   const { apNextStepId, apPreStepId, p_application_headers } = localApplicationInfo;
 
-  const [orgsBasic, setOrgsBasic] = useState([]);
   const [orgsC, setOrgsC] = useState([]);
   const [orgsB, setOrgsB] = useState([]);
   const [orgsE, setOrgsE] = useState([]);
@@ -67,10 +64,6 @@ export const ApStep12Page = () => {
           vendor_name: values.p_application_headers.vendor_name,
           vendor_phone: values.p_application_headers.vendor_phone,
           vendor_business_card: values.p_application_headers.vendor_business_card,
-          sales_host_company_id: values.p_application_headers.sales_host_company_id,
-          sales_company: values.p_application_headers.sales_company,
-          sales_area: values.p_application_headers.sales_area,
-          sales_exhibition_hall: values.p_application_headers.sales_exhibition_hall,
           J: values.p_application_headers.J,
         },
       };
@@ -84,10 +77,6 @@ export const ApStep12Page = () => {
       vendor_name: p_application_headers.vendor_name,
       vendor_phone: p_application_headers.vendor_phone,
       vendor_business_card: p_application_headers.vendor_business_card,
-      sales_host_company_id: p_application_headers.sales_host_company_id,
-      sales_company: p_application_headers.sales_company,
-      sales_area: p_application_headers.sales_area,
-      sales_exhibition_hall: p_application_headers.sales_exhibition_hall,
       J: p_application_headers.J,
     },
   };
@@ -118,77 +107,77 @@ export const ApStep12Page = () => {
         }
       } catch (error) {
         console.log(error);
+        // toast.error(API_500_ERROR);
       }
     },
   });
 
-  const fetchOrgsC = async (id) => {
-    try {
-      const res = await getChildrenOrgsWithCategory(id, 'C');
-      setOrgsC([...res.data]);
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    if (salesCompanyOrgId && !formik.values.p_application_headers.vendor_business_card) {
+      formik.setFieldValue('p_application_headers.vendor_business_card', '0');
     }
-  };
+  }, [salesCompanyOrgId]);
 
-  const fetchOrgsB = async (id) => {
+  const fetchOrgsB = async (sales_company_id) => {
     try {
-      const res = await getChildrenOrgsWithCategory(id, 'B');
+      const res = await getChildrenOrgsWithCategory(sales_company_id, 'B');
       setOrgsB([{ value: '', label: '' }, ...res.data]);
-      if (formik.values.p_application_headers.sales_area_id) {
-        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_area_id)) {
-          formik.setFieldValue('p_application_headers.sales_area_id', '');
-        }
-      }
     } catch (error) {
       console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
-  const fetchOrgsE = async (id) => {
+  const fetchOrgsE = async (sales_company_id, sales_area_id) => {
     try {
-      const res = await getChildrenOrgsWithCategory(id, 'E');
+      const res = await getChildrenOrgsWithCategory(sales_area_id || sales_company_id, 'E');
       setOrgsE([{ value: '', label: '' }, ...res.data]);
-      if (formik.values.p_application_headers.sales_exhibition_hall_id) {
-        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_exhibition_hall_id)) {
-          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-        }
-      }
     } catch (error) {
       console.log(error);
+      // toast.error(API_500_ERROR);
     }
   };
 
   useEffect(() => {
-    fetchOrgsC(formik.values.p_application_headers.sales_host_company_id);
-    fetchOrgsB(
-      formik.values.p_application_headers.sales_company_id || formik.values.p_application_headers.sales_host_company_id
-    );
-    fetchOrgsE(
-      formik.values.p_application_headers.sales_area_id ||
-        formik.values.p_application_headers.sales_company_id ||
-        formik.values.p_application_headers.sales_host_company_id
-    );
-  }, [
-    formik.values.p_application_headers.sales_area_id,
-    formik.values.p_application_headers.sales_company_id,
-    formik.values.p_application_headers.sales_host_company_id,
-  ]);
+    const fetchData = async () => {
+      if (salesCompanyOrgId || p_application_headers.sales_company_id) {
+        try {
+          const res = await getOrgsCategoryCWithID(salesCompanyOrgId || p_application_headers.sales_company_id);
 
-  useEffect(() => {
-    if (formik.values.p_application_headers.sales_company) {
-      formik.setFieldValue('p_application_headers.sales_company_id', '');
-      formik.setFieldValue('p_application_headers.sales_area_id', '');
-      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-    }
-    if (formik.values.p_application_headers.sales_area) {
-      formik.setFieldValue('p_application_headers.sales_area_id', '');
-      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-    }
-    if (formik.values.p_application_headers.sales_exhibition_hall) {
-      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
-    }
-  }, [formik.values]);
+          setOrgsC([{ value: res.data?.sales_company_id, label: res.data?.sales_company_name }]);
+          if (res.data?.sales_company_id) {
+            await fetchOrgsB(res.data?.sales_company_id);
+          }
+          if (res.data?.sales_company_id) {
+            await fetchOrgsE(res.data?.sales_company_id, res.data?.sales_area_id);
+          }
+          if (
+            !p_application_headers.sales_company_id &&
+            !p_application_headers.sales_area_id &&
+            !p_application_headers.sales_exhibition_hall_id
+          ) {
+            formik.setFieldValue('p_application_headers.sales_company_id', res.data?.sales_company_id);
+            formik.setFieldValue('p_application_headers.sales_area_id', res.data?.sales_area_id);
+            formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', res.data?.sales_exhibition_hall_id);
+          }
+        } catch (error) {
+          console.log(error);
+          // toast.error(API_500_ERROR);
+        }
+      } else {
+        try {
+          const res = await getOrgsWithCategories('C');
+
+          setOrgsC(res.data);
+          setOrgsB([{ value: '', label: '' }]);
+          setOrgsE([{ value: '', label: '' }]);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    fetchData();
+  }, []);
 
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
@@ -355,44 +344,32 @@ export const ApStep12Page = () => {
                       pb={3}
                       px={2}
                     >
-                      <ApOrgItem
-                        inputName="p_application_headers.sales_company"
-                        inputValue={formik.values.p_application_headers.sales_company}
-                        selectName="p_application_headers.sales_company_id"
-                        selectValue={formik.values.p_application_headers.sales_company_id}
+                      <ApSelectField
+                        name="p_application_headers.sales_company_id"
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
                         options={orgsC}
+                        // onChange={handleChangCompany}
                       />
                     </ApItemGroup>
                     <ApItemGroup label={'エリア'} pb={3} px={2}>
-                      <ApOrgItem
-                        inputName="p_application_headers.sales_area"
-                        inputValue={formik.values.p_application_headers.sales_area}
-                        selectName="p_application_headers.sales_area_id"
-                        selectValue={formik.values.p_application_headers.sales_area_id}
+                      <ApSelectField
+                        name="p_application_headers.sales_area_id"
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
-                        options={formik.values.p_application_headers.sales_company ? [] : orgsB}
+                        options={orgsB}
+                        // onChange={handleChangArea}
                       />
                     </ApItemGroup>
                     <ApItemGroup label={'展示場'} pb={3} px={2}>
-                      <ApOrgItem
-                        inputName="p_application_headers.sales_exhibition_hall"
-                        inputValue={formik.values.p_application_headers.sales_exhibition_hall}
-                        selectName="p_application_headers.sales_exhibition_hall_id"
-                        selectValue={formik.values.p_application_headers.sales_exhibition_hall_id}
+                      <ApSelectField
+                        name="p_application_headers.sales_exhibition_hall_id"
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
-                        options={
-                          formik.values.p_application_headers.sales_company ||
-                          formik.values.p_application_headers.sales_area
-                            ? []
-                            : orgsE
-                        }
+                        options={orgsE}
                       />
                     </ApItemGroup>
                     <ApItemGroup label={'担当者名'} pb={3} px={2}>

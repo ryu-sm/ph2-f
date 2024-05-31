@@ -13,9 +13,9 @@ import { authAtom, localApplication } from '@/store';
 import { dayjs } from '@/libs';
 import { agreeOptions } from './options';
 import { useIsSalesPerson } from '@/hooks';
-import { adGetSalesCompanyId, adGetSalesPersonInfo } from '@/services';
+import { adGetSalesCompanyId, adGetSalesPersonHostOrg, adGetSalesPersonInfo } from '@/services';
 import { toast } from 'react-toastify';
-import { API_500_ERROR, YUP_MESSAGES } from '@/constant';
+import { API_500_ERROR, ORG_OTHER_ID, YUP_MESSAGES } from '@/constant';
 
 export const ApAgreementPage = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export const ApAgreementPage = () => {
   const [isReadedConfirmation, setIsReadedConfirmation] = useState(false);
   const isSalesPerson = useIsSalesPerson();
   const setLocalApplicationInfo = useSetRecoilState(localApplication);
-  const { salesPerson } = useRecoilValue(authAtom);
+  const { salesPerson, user } = useRecoilValue(authAtom);
   const formik = useFormik({
     initialValues: {
       consent: '',
@@ -42,6 +42,8 @@ export const ApAgreementPage = () => {
           p_application_headers: {
             ...pre.p_application_headers,
             apply_date: dayjs().format('YYYY/MM/DD'),
+            sales_host_company_id:
+              pre.p_application_headers.sales_host_company_id || user.salesCompanyOrgId || ORG_OTHER_ID,
           },
         };
       });
@@ -52,6 +54,7 @@ export const ApAgreementPage = () => {
   const fetchSalesCompanyId = async () => {
     try {
       const res = await adGetSalesCompanyId(salesPerson?.id);
+      console.log(res);
 
       let orgsCId = '';
       let orgsBId = '';
@@ -69,13 +72,15 @@ export const ApAgreementPage = () => {
         orgsBId = orgsB[0].id;
       }
       // E
-      const orgsE = res.data.filter((item) => item?.category === 'B');
+      const orgsE = res.data.filter((item) => item?.category === 'E');
       const uniqueOrgsE = [...new Set(orgsE.map((item) => item?.id))];
       if (uniqueOrgsE.length === 1) {
         orgsEId = orgsE[0].id;
       }
 
       const resonse = await adGetSalesPersonInfo(salesPerson.id);
+
+      const hostOrgRes = await adGetSalesPersonHostOrg();
 
       setLocalApplicationInfo((pre) => {
         return {
@@ -89,6 +94,7 @@ export const ApAgreementPage = () => {
             vendor_name: resonse.data?.name_kanji,
             vendor_phone: resonse.data?.mobile_phone,
             vendor_business_card: '0',
+            sales_host_company_id: hostOrgRes.data?.id,
           },
         };
       });

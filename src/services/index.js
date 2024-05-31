@@ -280,6 +280,10 @@ export const adGetSalesPersonInfo = async (s_sales_person_id) => {
   return await service.get(`/sales-person/${s_sales_person_id}`);
 };
 
+export const adGetSalesPersonHostOrg = async () => {
+  return await service.get(`/sales-person/host-org`);
+};
+
 // ap org
 export const getOrgsInfos = async (s_sales_company_org_id) => {
   if (s_sales_company_org_id) {
@@ -288,6 +292,15 @@ export const getOrgsInfos = async (s_sales_company_org_id) => {
     return await service.get(`/orgs-info`);
   }
 };
+
+export const getOrgsCategoryCWithID = async (s_sales_company_org_id) => {
+  if (s_sales_company_org_id) {
+    return await service.get(`/orgs/category-c?s_sales_company_org_id=${s_sales_company_org_id}`);
+  } else {
+    return await service.get(`/orgs/category-c`);
+  }
+};
+
 export const getOrgsWithCategories = async (categories) => {
   return await service.get(`/orgs/category?categories=${categories}`);
 };
@@ -404,4 +417,10 @@ export const adGetManagerRole = async () => {
 
 export const adGetUserSalesCompanyOrgId = async () => {
   return await service.get(`/user/s_sales_company_org_id`);
+};
+
+// /sales-person/orgs
+
+export const adGetSalesPersonOrgs = async (s_sales_person_id) => {
+  return await service.get(`/sales-person/orgs?s_sales_person_id=${s_sales_person_id}`);
 };

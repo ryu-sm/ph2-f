@@ -21,7 +21,7 @@ export const ApStep12Info = ({ stepIndex }) => {
   const [orgs, setOrgs] = useState([]);
   const getOrgs = useCallback(async () => {
     try {
-      const res = await apGetSalesCompanyOrgs(salesCompanyOrgId);
+      const res = await apGetSalesCompanyOrgs();
 
       const tempOrgs = res.data.map((item) => ({
         value: item.id,
@@ -33,7 +33,7 @@ export const ApStep12Info = ({ stepIndex }) => {
     } catch (error) {
       console.error(error);
     }
-  }, [salesCompanyOrgId]);
+  }, [p_application_headers.sales_host_company_id]);
 
   useEffect(() => {
     getOrgs();
@@ -57,21 +57,21 @@ export const ApStep12Info = ({ stepIndex }) => {
             <Typography variant="modal_label" color={'text.main'}>
               {p_application_headers.sales_company_id
                 ? orgs.find((item) => item.value === p_application_headers.sales_company_id)?.label
-                : 'ー'}
+                : p_application_headers.sales_company || 'ー'}
             </Typography>
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={`エリア`}>
             <Typography variant="modal_label" color={'text.main'}>
               {p_application_headers.sales_area_id
                 ? orgs.find((item) => item.value === p_application_headers.sales_area_id)?.label
-                : 'ー'}
+                : p_application_headers.sales_area || 'ー'}
             </Typography>
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={`展示場`}>
             <Typography variant="modal_label" color={'text.main'}>
               {p_application_headers.sales_exhibition_hall_id
                 ? orgs.find((item) => item.value === p_application_headers.sales_exhibition_hall_id)?.label
-                : 'ー'}
+                : p_application_headers.sales_exhibition_hall || 'ー'}
             </Typography>
           </ApConfirmItemGroup>
           <ApConfirmItemGroup label={`担当者名`}>

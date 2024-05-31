@@ -45,14 +45,24 @@ export const ApRegisterPage = () => {
         const payload = jwtDecode(access_token);
         setAuthInfo((pre) => {
           return {
-            ...pre,
             isLogined: true,
+            roleType: payload?.role_type,
             user: {
               ...pre.user,
               id: payload?.id,
               email: payload?.email,
               salesCompanyOrgId: payload?.s_sales_company_org_id,
               displayPdf: Boolean(payload?.display_pdf),
+            },
+            salesPerson: {
+              id: null,
+              email: null,
+              name: null,
+            },
+            manager: {
+              id: null,
+              email: null,
+              name: null,
             },
             agentSended: Boolean(payload?.agent_sended),
           };
