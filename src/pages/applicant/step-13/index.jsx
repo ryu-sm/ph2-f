@@ -149,6 +149,18 @@ export const ApStep13Page = () => {
             ...localApplicationInfo.p_applicant_persons__1,
             S: values.p_applicant_persons__1.S,
           },
+          p_application_headers: {
+            ...localApplicationInfo.p_application_headers,
+            ...(isSalesPerson
+              ? {
+                  vendor_name: '',
+                  vendor_phone: '',
+                  sales_company: '',
+                  sales_area: '',
+                  sales_exhibition_hall: '',
+                }
+              : {}),
+          },
         });
         if (isSalesPerson) {
           return navigate(routeNames.adSalesPersonDashboardPage.path);

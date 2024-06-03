@@ -18,8 +18,8 @@ import { useBoolean, useCurrSearchParams } from '@/hooks';
 import { apRegister } from '@/services';
 import { setToken } from '@/libs';
 import { jwtDecode } from 'jwt-decode';
-import { authAtom } from '@/store';
-import { useSetRecoilState } from 'recoil';
+import { authAtom, localApplication } from '@/store';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { toast } from 'react-toastify';
 import { API_500_ERROR } from '@/constant';
 
@@ -27,7 +27,7 @@ export const ApRegisterPage = () => {
   const navigate = useNavigate();
   const setAuthInfo = useSetRecoilState(authAtom);
   const token = useCurrSearchParams().get('token');
-
+  const resetLocalApplicationInfo = useResetRecoilState(localApplication);
   const modal = useBoolean(false);
   const [isValidToken, setIsValidToken] = useState(true);
   const [warningText, setWarningText] = useState('');
@@ -43,6 +43,7 @@ export const ApRegisterPage = () => {
         const { access_token } = res.data;
         setToken(access_token);
         const payload = jwtDecode(access_token);
+        resetLocalApplicationInfo();
         setAuthInfo((pre) => {
           return {
             isLogined: true,

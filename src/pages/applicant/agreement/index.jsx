@@ -78,7 +78,7 @@ export const ApAgreementPage = () => {
         orgsEId = orgsE[0].id;
       }
 
-      const resonse = await adGetSalesPersonInfo(salesPerson.id);
+      // const resonse = await adGetSalesPersonInfo(salesPerson.id);
 
       const hostOrgRes = await adGetSalesPersonHostOrg();
 
@@ -91,8 +91,8 @@ export const ApAgreementPage = () => {
             sales_area_id: orgsBId,
             sales_exhibition_hall_id: orgsEId,
             s_sales_person_id: salesPerson.id,
-            vendor_name: resonse.data?.name_kanji,
-            vendor_phone: resonse.data?.mobile_phone,
+            // vendor_name: resonse.data?.name_kanji,
+            // vendor_phone: resonse.data?.mobile_phone,
             vendor_business_card: '0',
             sales_host_company_id: hostOrgRes.data?.id,
           },

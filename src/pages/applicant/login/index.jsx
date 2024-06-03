@@ -17,7 +17,7 @@ import { Icons } from '@/assets';
 
 import { routeNames } from '@/router/settings';
 import { apGetDraft, apGetSendedApplication, apLogin } from '@/services';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { applicationInitialValues, authAtom, localApplication } from '@/store';
 import { useBoolean } from '@/hooks';
 import { setToken } from '@/libs';
@@ -30,6 +30,7 @@ export const ApLoginPage = () => {
   const setAuthInfo = useSetRecoilState(authAtom);
   const authInfo = useRecoilValue(authAtom);
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
+  const resetLocalApplicationInfo = useResetRecoilState(localApplication);
   const { apCurrStepId } = localApplicationInfo;
   const modal = useBoolean(false);
   const [warningText, setWarningText] = useState('');
@@ -47,7 +48,7 @@ export const ApLoginPage = () => {
         const { access_token } = res.data;
         setToken(access_token);
         const payload = jwtDecode(access_token);
-
+        resetLocalApplicationInfo();
         setAuthInfo((pre) => {
           return {
             // ...pre,

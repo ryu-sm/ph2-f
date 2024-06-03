@@ -422,77 +422,75 @@ export const Item08 = () => {
         <EditRow label={'携帯電話番号'} field={salesPersonInfo?.mobile_phone} />
         <EditRow label={'メールアドレス'} field={salesPersonInfo?.email} />
 
-        <ContentEditGroupSub label={'申込人入力データ'}>
-          {isManager && (
-            <Stack>
-              <EditRow
-                label={'提携会社（入力）'}
-                upConfig={{
-                  key: `p_application_headers.sales_company.${p_application_headers?.id}`,
-                }}
-                field={
-                  isEditable ? (
-                    <AdEditFullWidthInput name="p_application_headers.sales_company" convertFullWidth />
-                  ) : (
-                    formik.values.p_application_headers.sales_company
-                  )
-                }
-              />
-              <EditRow
-                label={'エリア（入力）'}
-                upConfig={{
-                  key: `p_application_headers.sales_area.${p_application_headers?.id}`,
-                }}
-                field={
-                  isEditable ? (
-                    <AdEditFullWidthInput name="p_application_headers.sales_area" convertFullWidth />
-                  ) : (
-                    formik.values.p_application_headers.sales_area
-                  )
-                }
-              />
-              <EditRow
-                label={'営業所・展示場（入力）'}
-                upConfig={{
-                  key: `p_application_headers.sales_exhibition_hall.${p_application_headers?.id}`,
-                }}
-                field={
-                  isEditable ? (
-                    <AdEditFullWidthInput name="p_application_headers.sales_exhibition_hall" convertFullWidth />
-                  ) : (
-                    formik.values.p_application_headers.sales_exhibition_hall
-                  )
-                }
-              />
-            </Stack>
-          )}
-          <EditRow
-            label={'担当者名（入力）'}
-            upConfig={{
-              key: `p_application_headers.vendor_name.${p_application_headers?.id}`,
-            }}
-            field={
-              isEditable ? (
-                <AdEditFullWidthInput name="p_application_headers.vendor_name" convertFullWidth />
-              ) : (
-                formik.values.p_application_headers.vendor_name
-              )
-            }
-          />
-          <EditRow
-            label={'携帯電話番号（入力）'}
-            upConfig={{
-              key: `p_application_headers.vendor_phone.${p_application_headers?.id}`,
-            }}
-            field={
-              isEditable ? (
-                <AdPhoneInputField name="p_application_headers.vendor_phone" convertHalfWidth />
-              ) : (
-                formik.values.p_application_headers.vendor_phone
-              )
-            }
-          />
-        </ContentEditGroupSub>
+        {isManager && (
+          <ContentEditGroupSub label={'申込人入力データ'}>
+            <EditRow
+              label={'提携会社（入力）'}
+              upConfig={{
+                key: `p_application_headers.sales_company.${p_application_headers?.id}`,
+              }}
+              field={
+                isEditable ? (
+                  <AdEditFullWidthInput name="p_application_headers.sales_company" convertFullWidth />
+                ) : (
+                  formik.values.p_application_headers.sales_company
+                )
+              }
+            />
+            <EditRow
+              label={'エリア（入力）'}
+              upConfig={{
+                key: `p_application_headers.sales_area.${p_application_headers?.id}`,
+              }}
+              field={
+                isEditable ? (
+                  <AdEditFullWidthInput name="p_application_headers.sales_area" convertFullWidth />
+                ) : (
+                  formik.values.p_application_headers.sales_area
+                )
+              }
+            />
+            <EditRow
+              label={'営業所・展示場（入力）'}
+              upConfig={{
+                key: `p_application_headers.sales_exhibition_hall.${p_application_headers?.id}`,
+              }}
+              field={
+                isEditable ? (
+                  <AdEditFullWidthInput name="p_application_headers.sales_exhibition_hall" convertFullWidth />
+                ) : (
+                  formik.values.p_application_headers.sales_exhibition_hall
+                )
+              }
+            />
+            <EditRow
+              label={'担当者名（入力）'}
+              upConfig={{
+                key: `p_application_headers.vendor_name.${p_application_headers?.id}`,
+              }}
+              field={
+                isEditable ? (
+                  <AdEditFullWidthInput name="p_application_headers.vendor_name" convertFullWidth />
+                ) : (
+                  formik.values.p_application_headers.vendor_name
+                )
+              }
+            />
+            <EditRow
+              label={'携帯電話番号（入力）'}
+              upConfig={{
+                key: `p_application_headers.vendor_phone.${p_application_headers?.id}`,
+              }}
+              field={
+                isEditable ? (
+                  <AdPhoneInputField name="p_application_headers.vendor_phone" convertHalfWidth />
+                ) : (
+                  formik.values.p_application_headers.vendor_phone
+                )
+              }
+            />
+          </ContentEditGroupSub>
+        )}
       </ContentEditGroup>
     </FormikProvider>
   );

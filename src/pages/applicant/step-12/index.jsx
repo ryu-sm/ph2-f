@@ -15,6 +15,7 @@ import {
 import { CONSENT_URL } from '@/configs';
 import { ApLayout, ApStepFooter } from '@/containers';
 import {
+  adGetSalesCompanyId,
   apGetPapplicationHeadersFiles,
   getChildrenOrgsWithCategory,
   getOrgsCategoryCWithID,
@@ -42,13 +43,14 @@ export const ApStep12Page = () => {
   const isSalesPerson = useIsSalesPerson();
   const {
     agentSended,
+    salesPerson,
     user: { salesCompanyOrgId, id },
   } = useRecoilValue(authAtom);
 
   const [localApplicationInfo, setLocalApplicationInfo] = useRecoilState(localApplication);
   const { apNextStepId, apPreStepId, p_application_headers } = localApplicationInfo;
 
-  const [orgsBasic, setOrgsBasic] = useState([]);
+  const [accessOrgsID, setAccessOrgsID] = useState([]);
   const [orgsC, setOrgsC] = useState([]);
   const [orgsB, setOrgsB] = useState([]);
   const [orgsE, setOrgsE] = useState([]);
@@ -57,20 +59,40 @@ export const ApStep12Page = () => {
 
   const setLocalData = (values) => {
     setLocalApplicationInfo((pre) => {
+      let orgCName = '';
+      let orgBName = '';
+      let orgEName = '';
+      if (values.p_application_headers.sales_company_id_) {
+        const temp = orgsC.find((org) => org.value === values.p_application_headers.sales_company_id_);
+        if (temp) {
+          orgCName = temp.label;
+        }
+      }
+
+      if (values.p_application_headers.sales_area_id_) {
+        const temp = orgsB.find((org) => org.value === values.p_application_headers.sales_area_id_);
+        if (temp) {
+          orgBName = temp.label;
+        }
+      }
+
+      if (values.p_application_headers.sales_exhibition_hall_id_) {
+        const temp = orgsE.find((org) => org.value === values.p_application_headers.sales_exhibition_hall_id_);
+        if (temp) {
+          orgEName = temp.label;
+        }
+      }
       return {
         ...pre,
         p_application_headers: {
           ...pre.p_application_headers,
-          sales_company_id: values.p_application_headers.sales_company_id,
-          sales_area_id: values.p_application_headers.sales_area_id,
-          sales_exhibition_hall_id: values.p_application_headers.sales_exhibition_hall_id,
           vendor_name: values.p_application_headers.vendor_name,
           vendor_phone: values.p_application_headers.vendor_phone,
           vendor_business_card: values.p_application_headers.vendor_business_card,
           sales_host_company_id: values.p_application_headers.sales_host_company_id,
-          sales_company: values.p_application_headers.sales_company,
-          sales_area: values.p_application_headers.sales_area,
-          sales_exhibition_hall: values.p_application_headers.sales_exhibition_hall,
+          sales_company: values.p_application_headers.sales_company || orgCName,
+          sales_area: values.p_application_headers.sales_area || orgBName,
+          sales_exhibition_hall: values.p_application_headers.sales_exhibition_hall || orgEName,
           J: values.p_application_headers.J,
         },
       };
@@ -78,9 +100,9 @@ export const ApStep12Page = () => {
   };
   const initialValues = {
     p_application_headers: {
-      sales_company_id: p_application_headers.sales_company_id,
-      sales_area_id: p_application_headers.sales_area_id,
-      sales_exhibition_hall_id: p_application_headers.sales_exhibition_hall_id,
+      sales_company_id_: isSalesPerson ? p_application_headers.sales_company_id : '',
+      sales_area_id_: isSalesPerson ? p_application_headers.sales_area_id : '',
+      sales_exhibition_hall_id_: isSalesPerson ? p_application_headers.sales_exhibition_hall_id : '',
       vendor_name: p_application_headers.vendor_name,
       vendor_phone: p_application_headers.vendor_phone,
       vendor_business_card: p_application_headers.vendor_business_card,
@@ -93,14 +115,63 @@ export const ApStep12Page = () => {
   };
 
   const setUpdateData = (values) => {
-    const diffData = {
-      p_application_headers: {
-        ...diffObj(initialValues.p_application_headers, values.p_application_headers),
-        join_guarantor_umu: p_application_headers.join_guarantor_umu,
-        land_advance_plan: p_application_headers.land_advance_plan,
-        loan_type: p_application_headers.loan_type,
-      },
-    };
+    let orgCName = '';
+    let orgBName = '';
+    let orgEName = '';
+    if (values.p_application_headers.sales_company_id_) {
+      const temp = orgsC.find((org) => org.value === values.p_application_headers.sales_company_id_);
+      if (temp) {
+        orgCName = temp.label;
+      }
+    }
+
+    if (values.p_application_headers.sales_area_id_) {
+      const temp = orgsB.find((org) => org.value === values.p_application_headers.sales_area_id_);
+      if (temp) {
+        orgBName = temp.label;
+      }
+    }
+
+    if (values.p_application_headers.sales_exhibition_hall_id_) {
+      const temp = orgsE.find((org) => org.value === values.p_application_headers.sales_exhibition_hall_id_);
+      if (temp) {
+        orgEName = temp.label;
+      }
+    }
+
+    const diffData = isSalesPerson
+      ? {
+          p_application_headers: {
+            sales_company_id: values.p_application_headers.sales_company_id,
+            sales_area_id: values.p_application_headers.sales_area_id,
+            sales_exhibition_hall_id: values.p_application_headers.sales_exhibition_hall_id,
+            vendor_name: values.p_application_headers.vendor_name,
+            vendor_phone: values.p_application_headers.vendor_phone,
+            vendor_business_card: values.p_application_headers.vendor_business_card,
+            sales_host_company_id: values.p_application_headers.sales_host_company_id,
+            J: values.p_application_headers.J,
+            //
+            join_guarantor_umu: p_application_headers.join_guarantor_umu,
+            land_advance_plan: p_application_headers.land_advance_plan,
+            loan_type: p_application_headers.loan_type,
+          },
+        }
+      : {
+          p_application_headers: {
+            vendor_name: values.p_application_headers.vendor_name,
+            vendor_phone: values.p_application_headers.vendor_phone,
+            vendor_business_card: values.p_application_headers.vendor_business_card,
+            sales_host_company_id: values.p_application_headers.sales_host_company_id,
+            sales_company: values.p_application_headers.sales_company || orgCName,
+            sales_area: values.p_application_headers.sales_area || orgBName,
+            sales_exhibition_hall: values.p_application_headers.sales_exhibition_hall || orgEName,
+            J: values.p_application_headers.J,
+            //
+            join_guarantor_umu: p_application_headers.join_guarantor_umu,
+            land_advance_plan: p_application_headers.land_advance_plan,
+            loan_type: p_application_headers.loan_type,
+          },
+        };
 
     return diffData;
   };
@@ -122,10 +193,44 @@ export const ApStep12Page = () => {
     },
   });
 
+  // useEffect(() => {
+  //   if (!isSalesPerson) {
+  //     if (p_application_headers.sales_company) {
+  //       const temp = orgsC.find((org) => org.label === p_application_headers.sales_company);
+  //       if (temp) {
+  //         formik.setFieldValue('p_application_headers.sales_company_id_', temp.value);
+  //         formik.setFieldValue('p_application_headers.sales_company', '');
+  //       }
+  //     }
+
+  //     if (p_application_headers.sales_area) {
+  //       const temp = orgsB.find((org) => org.label === p_application_headers.sales_area);
+  //       if (temp) {
+  //         formik.setFieldValue('p_application_headers.sales_area_id_', temp.value);
+  //         formik.setFieldValue('p_application_headers.sales_area', '');
+  //       }
+  //     }
+
+  //     if (p_application_headers.sales_exhibition_hall) {
+  //       const temp = orgsE.find((org) => org.label === p_application_headers.sales_exhibition_hall);
+  //       if (temp) {
+  //         formik.setFieldValue('p_application_headers.sales_exhibition_hall_id_', temp.value);
+  //         formik.setFieldValue('p_application_headers.sales_exhibition_hall', '');
+  //       }
+  //     }
+  //   }
+  // }, [p_application_headers, isSalesPerson, orgsC.length, orgsB.length, orgsE.length]);
+
   const fetchOrgsC = async (id) => {
     try {
       const res = await getChildrenOrgsWithCategory(id, 'C');
-      setOrgsC([...res.data]);
+
+      if (isSalesPerson) {
+        const temp = res.data.filter((org) => accessOrgsID.includes(org.value));
+        setOrgsC(temp);
+      } else {
+        setOrgsC([...res.data]);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -134,10 +239,16 @@ export const ApStep12Page = () => {
   const fetchOrgsB = async (id) => {
     try {
       const res = await getChildrenOrgsWithCategory(id, 'B');
-      setOrgsB([{ value: '', label: '' }, ...res.data]);
-      if (formik.values.p_application_headers.sales_area_id) {
-        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_area_id)) {
-          formik.setFieldValue('p_application_headers.sales_area_id', '');
+      if (isSalesPerson) {
+        const temp = res.data.filter((org) => accessOrgsID.includes(org.value));
+        setOrgsB([{ value: '', label: '' }, ...temp]);
+      } else {
+        setOrgsB([{ value: '', label: '' }, ...res.data]);
+      }
+
+      if (formik.values.p_application_headers.sales_area_id_) {
+        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_area_id_)) {
+          formik.setFieldValue('p_application_headers.sales_area_id_', '');
         }
       }
     } catch (error) {
@@ -148,10 +259,16 @@ export const ApStep12Page = () => {
   const fetchOrgsE = async (id) => {
     try {
       const res = await getChildrenOrgsWithCategory(id, 'E');
-      setOrgsE([{ value: '', label: '' }, ...res.data]);
-      if (formik.values.p_application_headers.sales_exhibition_hall_id) {
-        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_exhibition_hall_id)) {
-          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+      if (isSalesPerson) {
+        const temp = res.data.filter((org) => accessOrgsID.includes(org.value));
+        setOrgsE([{ value: '', label: '' }, ...temp]);
+      } else {
+        setOrgsE([{ value: '', label: '' }, ...res.data]);
+      }
+
+      if (formik.values.p_application_headers.sales_exhibition_hall_id_) {
+        if (!res.data.find((org) => org.value === formik.values.p_application_headers.sales_exhibition_hall_id_)) {
+          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id_', '');
         }
       }
     } catch (error) {
@@ -162,31 +279,33 @@ export const ApStep12Page = () => {
   useEffect(() => {
     fetchOrgsC(formik.values.p_application_headers.sales_host_company_id);
     fetchOrgsB(
-      formik.values.p_application_headers.sales_company_id || formik.values.p_application_headers.sales_host_company_id
+      formik.values.p_application_headers.sales_company_id_ || formik.values.p_application_headers.sales_host_company_id
     );
     fetchOrgsE(
-      formik.values.p_application_headers.sales_area_id ||
-        formik.values.p_application_headers.sales_company_id ||
+      formik.values.p_application_headers.sales_area_id_ ||
+        formik.values.p_application_headers.sales_company_id_ ||
         formik.values.p_application_headers.sales_host_company_id
     );
   }, [
-    formik.values.p_application_headers.sales_area_id,
-    formik.values.p_application_headers.sales_company_id,
+    formik.values.p_application_headers.sales_area_id_,
+    formik.values.p_application_headers.sales_company_id_,
     formik.values.p_application_headers.sales_host_company_id,
+    accessOrgsID.length,
+    isSalesPerson,
   ]);
 
   useEffect(() => {
     if (formik.values.p_application_headers.sales_company) {
-      formik.setFieldValue('p_application_headers.sales_company_id', '');
-      formik.setFieldValue('p_application_headers.sales_area_id', '');
-      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+      formik.setFieldValue('p_application_headers.sales_company_id_', '');
+      formik.setFieldValue('p_application_headers.sales_area_id_', '');
+      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id_', '');
     }
     if (formik.values.p_application_headers.sales_area) {
-      formik.setFieldValue('p_application_headers.sales_area_id', '');
-      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+      formik.setFieldValue('p_application_headers.sales_area_id_', '');
+      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id_', '');
     }
     if (formik.values.p_application_headers.sales_exhibition_hall) {
-      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id', '');
+      formik.setFieldValue('p_application_headers.sales_exhibition_hall_id_', '');
     }
   }, [formik.values]);
 
@@ -219,6 +338,21 @@ export const ApStep12Page = () => {
       fetchPapplicationHeadersFiles();
     }
   }, []);
+
+  useEffect(() => {
+    if (isSalesPerson) {
+      const fetchAccessOrgs = async () => {
+        try {
+          const res = await adGetSalesCompanyId(salesPerson?.id);
+          console.log(res.data);
+          setAccessOrgsID(res.data.map((org) => org.id));
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchAccessOrgs();
+    }
+  }, [isSalesPerson]);
 
   const { refreshsendedApllication } = useApplicationContext();
 
@@ -356,10 +490,11 @@ export const ApStep12Page = () => {
                       px={2}
                     >
                       <ApOrgItem
+                        showInput={!isSalesPerson}
                         inputName="p_application_headers.sales_company"
                         inputValue={formik.values.p_application_headers.sales_company}
-                        selectName="p_application_headers.sales_company_id"
-                        selectValue={formik.values.p_application_headers.sales_company_id}
+                        selectName="p_application_headers.sales_company_id_"
+                        selectValue={formik.values.p_application_headers.sales_company_id_}
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
@@ -368,10 +503,11 @@ export const ApStep12Page = () => {
                     </ApItemGroup>
                     <ApItemGroup label={'エリア'} pb={3} px={2}>
                       <ApOrgItem
+                        showInput={!isSalesPerson}
                         inputName="p_application_headers.sales_area"
                         inputValue={formik.values.p_application_headers.sales_area}
-                        selectName="p_application_headers.sales_area_id"
-                        selectValue={formik.values.p_application_headers.sales_area_id}
+                        selectName="p_application_headers.sales_area_id_"
+                        selectValue={formik.values.p_application_headers.sales_area_id_}
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
@@ -380,10 +516,11 @@ export const ApStep12Page = () => {
                     </ApItemGroup>
                     <ApItemGroup label={'展示場'} pb={3} px={2}>
                       <ApOrgItem
+                        showInput={!isSalesPerson}
                         inputName="p_application_headers.sales_exhibition_hall"
                         inputValue={formik.values.p_application_headers.sales_exhibition_hall}
-                        selectName="p_application_headers.sales_exhibition_hall_id"
-                        selectValue={formik.values.p_application_headers.sales_exhibition_hall_id}
+                        selectName="p_application_headers.sales_exhibition_hall_id_"
+                        selectValue={formik.values.p_application_headers.sales_exhibition_hall_id_}
                         placeholder={'選択してください'}
                         width={1}
                         justifyContent={'start'}
@@ -395,19 +532,23 @@ export const ApStep12Page = () => {
                         }
                       />
                     </ApItemGroup>
-                    <ApItemGroup label={'担当者名'} pb={3} px={2}>
-                      <ApTextInputField
-                        name="p_application_headers.vendor_name"
-                        placeholder={'例：○○さん'}
-                        convertFullWidth
-                      />
-                    </ApItemGroup>
-                    <ApItemGroup label={'携帯電話番号'} pb={3} px={2}>
-                      <Stack spacing={'6px'}>
-                        <ApPhoneInputField name="p_application_headers.vendor_phone" />
-                        <ApStarHelp label={'半角数字でご入力ください。'} />
-                      </Stack>
-                    </ApItemGroup>
+                    {!isSalesPerson && (
+                      <ApItemGroup label={'担当者名'} pb={3} px={2}>
+                        <ApTextInputField
+                          name="p_application_headers.vendor_name"
+                          placeholder={'例：○○さん'}
+                          convertFullWidth
+                        />
+                      </ApItemGroup>
+                    )}
+                    {!isSalesPerson && (
+                      <ApItemGroup label={'携帯電話番号'} pb={3} px={2}>
+                        <Stack spacing={'6px'}>
+                          <ApPhoneInputField name="p_application_headers.vendor_phone" />
+                          <ApStarHelp label={'半角数字でご入力ください。'} />
+                        </Stack>
+                      </ApItemGroup>
+                    )}
                   </Stack>
                 </Stack>
               )}

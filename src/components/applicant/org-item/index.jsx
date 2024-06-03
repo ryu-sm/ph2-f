@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Done, CheckCircleOutline } from '@mui/icons-material';
 import { convertToFullWidth } from '@/utils';
 
-export const ApOrgItem = ({ inputName, inputValue, selectName, selectValue, options = [], ...props }) => {
+export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, selectValue, options = [], ...props }) => {
   const formik = useFormikContext();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -30,9 +30,19 @@ export const ApOrgItem = ({ inputName, inputValue, selectName, selectValue, opti
   }, []);
 
   const handleOpenPopover = async (e) => {
+    const tempOrg = options.find((org) => org.label === inputValue && inputValue !== '');
+    if (tempOrg) {
+      formik.setFieldValue(selectName, tempOrg.value);
+      formik.setFieldValue(inputName, '');
+    }
     setAnchorEl(e.currentTarget);
   };
   const handleClosePopover = () => {
+    const tempOrg = options.find((org) => org.label === inputValue && inputValue !== '');
+    if (tempOrg) {
+      formik.setFieldValue(selectName, tempOrg.value);
+      formik.setFieldValue(inputName, '');
+    }
     setAnchorEl(null);
   };
 
@@ -139,53 +149,55 @@ export const ApOrgItem = ({ inputName, inputValue, selectName, selectValue, opti
         }}
       >
         <Stack spacing={1} sx={{ textAlign: 'left', overflow: 'auto', bgcolor: 'white', width: itemWdith, py: 1 }}>
-          <Stack py={'2px'} px={2} direction={'row'} alignItems={'center'} spacing={1}>
-            <Box sx={{ display: 'inline-block', position: 'relative', width: 1 }}>
-              <TextField
-                ref={inputRef}
-                placeholder={'選択対象が存在しない場合は、入力してください。'}
-                fullWidth
-                value={inputValue}
-                onChange={(e) => {
-                  formik.setFieldValue(inputName, e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key !== 'Escape') {
-                    e.stopPropagation();
-                  }
-                }}
-                onBlur={(e) => {
-                  console.log(e);
+          {showInput && (
+            <Stack py={'2px'} px={2} direction={'row'} alignItems={'center'} spacing={1}>
+              <Box sx={{ display: 'inline-block', position: 'relative', width: 1 }}>
+                <TextField
+                  ref={inputRef}
+                  placeholder={'選択対象が存在しない場合は、入力してください。'}
+                  fullWidth
+                  value={inputValue}
+                  onChange={(e) => {
+                    formik.setFieldValue(inputName, e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Escape') {
+                      e.stopPropagation();
+                    }
+                  }}
+                  onBlur={(e) => {
+                    console.log(e);
 
-                  if (e.target.value) {
-                    let value = e.target.value?.toString().trim();
-                    value = convertToFullWidth(value);
-                    formik.setFieldValue(inputName, value);
-                    formik.setFieldValue(selectName, '');
-                  }
+                    if (e.target.value) {
+                      let value = e.target.value?.toString().trim();
+                      value = convertToFullWidth(value);
+                      formik.setFieldValue(inputName, value);
+                      formik.setFieldValue(selectName, '');
+                    }
 
-                  setShowDone(false);
-                  handleClosePopover();
-                }}
-                onFocus={() => {
-                  setShowDone(true);
-                }}
-              />
-              {showDone && (
-                <Done
-                  sx={{
-                    cursor: 'pointer',
-                    top: 12,
-                    right: 8,
-                    width: 24,
-                    height: 24,
-                    position: 'absolute',
-                    color: (theme) => theme.palette.primary.main,
+                    setShowDone(false);
+                    handleClosePopover();
+                  }}
+                  onFocus={() => {
+                    setShowDone(true);
                   }}
                 />
-              )}
-            </Box>
-          </Stack>
+                {showDone && (
+                  <Done
+                    sx={{
+                      cursor: 'pointer',
+                      top: 12,
+                      right: 8,
+                      width: 24,
+                      height: 24,
+                      position: 'absolute',
+                      color: (theme) => theme.palette.primary.main,
+                    }}
+                  />
+                )}
+              </Box>
+            </Stack>
+          )}
 
           {options.map((item) => (
             <Stack
