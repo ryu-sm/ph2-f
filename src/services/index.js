@@ -424,3 +424,7 @@ export const adGetUserSalesCompanyOrgId = async () => {
 export const adGetSalesPersonOrgs = async (s_sales_person_id) => {
   return await service.get(`/sales-person/orgs?s_sales_person_id=${s_sales_person_id}`);
 };
+
+export const apTranslteOrgId = async (code) => {
+  return await service.get(`/translate-host-org/${code}`);
+};

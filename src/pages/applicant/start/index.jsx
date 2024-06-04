@@ -8,16 +8,12 @@ import { useCurrSearchParams } from '@/hooks';
 import { useEffect } from 'react';
 import { setSalesCompanyOrgId } from '@/libs';
 import { jwtDecode } from 'jwt-decode';
+import { apTranslteOrgId } from '@/services';
 
 export const ApStartPage = () => {
   const navigate = useNavigate();
   const token = useCurrSearchParams().get('token');
-  useEffect(() => {
-    if (token) {
-      const payload = jwtDecode(token);
-      setSalesCompanyOrgId(payload?.s_sales_company_org_id);
-    }
-  }, [token]);
+
   return (
     <ApWrapper bgImage={`url(${apBackground})`}>
       <Stack height={'calc(100dvh - 158px)'} justifyContent={'center'} alignItems={'center'}>
@@ -35,7 +31,23 @@ export const ApStartPage = () => {
       >
         <ApPrimaryButton
           endIcon={<Icons.ApForwardRightWhiteIcon />}
-          onClick={() => navigate(routeNames.apRegisterVerifyEmailPage.path)}
+          onClick={async () => {
+            try {
+              if (token) {
+                const payload = jwtDecode(token);
+                if (payload?.sale_agent_id) {
+                  const res = await apTranslteOrgId(payload?.sale_agent_id);
+                  setSalesCompanyOrgId(res.data?.s_sales_company_org_id);
+                }
+                if (payload?.s_sales_company_org_id) {
+                  setSalesCompanyOrgId(payload?.s_sales_company_org_id);
+                }
+              }
+              navigate(routeNames.apRegisterVerifyEmailPage.path);
+            } catch (error) {
+              navigate(routeNames.apRegisterVerifyEmailPage.path);
+            }
+          }}
         >
           新規登録
         </ApPrimaryButton>

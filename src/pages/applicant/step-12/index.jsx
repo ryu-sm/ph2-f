@@ -219,7 +219,35 @@ export const ApStep12Page = () => {
   //       }
   //     }
   //   }
-  // }, [p_application_headers, isSalesPerson, orgsC.length, orgsB.length, orgsE.length]);
+  // }, [p_application_headers, isSalesPerson]);
+
+  useEffect(() => {
+    if (!isSalesPerson) {
+      const tempC = orgsC.find(
+        (org) => org.label === formik.values.p_application_headers.sales_company && org.label !== ''
+      );
+      if (tempC) {
+        formik.setFieldValue('p_application_headers.sales_company_id_', tempC.value);
+        formik.setFieldValue('p_application_headers.sales_company', '');
+      }
+
+      const tempB = orgsB.find(
+        (org) => org.label === formik.values.p_application_headers.sales_area && org.label !== ''
+      );
+      if (tempB) {
+        formik.setFieldValue('p_application_headers.sales_area_id_', tempB.value);
+        formik.setFieldValue('p_application_headers.sales_area', '');
+      }
+
+      const tempE = orgsE.find(
+        (org) => org.label === formik.values.p_application_headers.sales_exhibition_hall && org.label !== ''
+      );
+      if (tempE) {
+        formik.setFieldValue('p_application_headers.sales_exhibition_hall_id_', tempE.value);
+        formik.setFieldValue('p_application_headers.sales_exhibition_hall', '');
+      }
+    }
+  }, [formik.values, isSalesPerson, orgsC, orgsB, orgsE]);
 
   const fetchOrgsC = async (id) => {
     try {
@@ -227,8 +255,14 @@ export const ApStep12Page = () => {
 
       if (isSalesPerson) {
         const temp = res.data.filter((org) => accessOrgsID.includes(org.value));
+
         setOrgsC(temp);
       } else {
+        const tempC = res.data.find((org) => org.label === formik.values.p_application_headers.sales_company);
+        if (tempC) {
+          formik.setFieldValue('p_application_headers.sales_company_id_', tempC.value);
+          formik.setFieldValue('p_application_headers.sales_company', '');
+        }
         setOrgsC([...res.data]);
       }
     } catch (error) {
@@ -243,6 +277,11 @@ export const ApStep12Page = () => {
         const temp = res.data.filter((org) => accessOrgsID.includes(org.value));
         setOrgsB([{ value: '', label: '' }, ...temp]);
       } else {
+        const tempB = res.data.find((org) => org.label === formik.values.p_application_headers.sales_area);
+        if (tempB) {
+          formik.setFieldValue('p_application_headers.sales_area_id_', tempB.value);
+          formik.setFieldValue('p_application_headers.sales_area', '');
+        }
         setOrgsB([{ value: '', label: '' }, ...res.data]);
       }
 
@@ -263,6 +302,11 @@ export const ApStep12Page = () => {
         const temp = res.data.filter((org) => accessOrgsID.includes(org.value));
         setOrgsE([{ value: '', label: '' }, ...temp]);
       } else {
+        const tempE = res.data.find((org) => org.label === formik.values.p_application_headers.sales_exhibition_hall);
+        if (tempE) {
+          formik.setFieldValue('p_application_headers.sales_exhibition_hall_id_', tempE.value);
+          formik.setFieldValue('p_application_headers.sales_exhibition_hall', '');
+        }
         setOrgsE([{ value: '', label: '' }, ...res.data]);
       }
 
@@ -290,6 +334,7 @@ export const ApStep12Page = () => {
     formik.values.p_application_headers.sales_area_id_,
     formik.values.p_application_headers.sales_company_id_,
     formik.values.p_application_headers.sales_host_company_id,
+    formik.values,
     accessOrgsID.length,
     isSalesPerson,
   ]);

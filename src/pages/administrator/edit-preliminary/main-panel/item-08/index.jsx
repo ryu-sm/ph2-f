@@ -102,6 +102,35 @@ export const Item08 = () => {
     }
   }, [salesPerson.id]);
 
+  const [allOrgs, setAllOrgs] = useState([]);
+  const [allSalesPersons, setAllSalesPersons] = useState([]);
+
+  const fetchAllOrgsOptions = async () => {
+    try {
+      const res = await getOrgsWithCategories('C,B,E');
+      console.log(res.data);
+      setAllOrgs(res.data);
+    } catch (error) {
+      console.log(error);
+      // toast.error(API_500_ERROR);
+    }
+  };
+
+  const fetchAllSalesPersonOptions = async () => {
+    try {
+      const res = await adGetAccessSalesPersonOptions(formik.values.p_application_headers.sales_host_company_id);
+      setAllSalesPersons(res.data);
+    } catch (error) {
+      console.log(error);
+      // toast.error(API_500_ERROR);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllOrgsOptions();
+    fetchAllSalesPersonOptions();
+  }, [formik.values.p_application_headers.sales_host_company_id]);
+
   const fetchSalesCompanyOptions = async (id) => {
     try {
       const res = await getChildrenOrgsWithCategory(id, 'C');
@@ -343,7 +372,7 @@ export const Item08 = () => {
           label={'提携会社'}
           upConfig={{
             key: `p_application_headers.sales_company_id.${p_application_headers?.id}`,
-            options: salesCompanyOptions,
+            options: allOrgs,
           }}
           hasPleft={isEditable && isManager}
           field={
@@ -359,7 +388,7 @@ export const Item08 = () => {
           label={'エリア'}
           upConfig={{
             key: `p_application_headers.sales_area_id.${p_application_headers?.id}`,
-            options: salesAreaOptions,
+            options: allOrgs,
           }}
           hasPleft={isEditable && checkEnableSalesArea}
           field={
@@ -379,7 +408,7 @@ export const Item08 = () => {
           label={'営業所・展示場'}
           upConfig={{
             key: `p_application_headers.sales_exhibition_hall_id.${p_application_headers?.id}`,
-            options: salesExhibitionHallOptions,
+            options: allOrgs,
           }}
           hasPleft={isEditable && checkEnableSalesExhibitionHall}
           field={
@@ -401,7 +430,7 @@ export const Item08 = () => {
           label={'担当者名'}
           upConfig={{
             key: `p_application_headers.s_sales_person_id.${p_application_headers?.id}`,
-            options: salesPersonOptions,
+            options: allSalesPersons,
           }}
           hasPleft={isEditable && checkEnableSalesPerson}
           field={

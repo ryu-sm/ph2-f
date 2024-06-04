@@ -6,7 +6,7 @@ import { Icons } from '@/assets';
 import { useNavigate } from 'react-router-dom';
 import { routeNames } from '@/router/settings';
 import { useCallback, useEffect, useState } from 'react';
-import { apGetSalesCompanyOrgs } from '@/services';
+import { adGetSalesPersonInfo, apGetSalesCompanyOrgs } from '@/services';
 import { useIsSalesPerson } from '@/hooks';
 
 export const ApStep12Info = ({ stepIndex }) => {
@@ -15,10 +15,12 @@ export const ApStep12Info = ({ stepIndex }) => {
   const { p_application_headers } = useRecoilValue(localApplication);
   const {
     agentSended,
+    salesPerson,
     user: { salesCompanyOrgId },
   } = useRecoilValue(authAtom);
 
   const [orgs, setOrgs] = useState([]);
+  const [salesPersonInfo, setSalesPersonInfo] = useState(null);
   const getOrgs = useCallback(async () => {
     try {
       const res = await apGetSalesCompanyOrgs();
@@ -35,7 +37,18 @@ export const ApStep12Info = ({ stepIndex }) => {
     }
   }, [p_application_headers.sales_host_company_id]);
 
+  const fetchSalesPersonInfo = async () => {
+    try {
+      const res = await adGetSalesPersonInfo(salesPerson.id);
+      setSalesPersonInfo(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
+    if (isSalesPerson) {
+      fetchSalesPersonInfo();
+    }
     getOrgs();
   }, []);
 
@@ -74,16 +87,33 @@ export const ApStep12Info = ({ stepIndex }) => {
                 : p_application_headers.sales_exhibition_hall || 'ー'}
             </Typography>
           </ApConfirmItemGroup>
-          <ApConfirmItemGroup label={`担当者名`}>
-            <Typography variant="modal_label" color={'text.main'}>
-              {p_application_headers.vendor_name ? p_application_headers.vendor_name : 'ー'}
-            </Typography>
-          </ApConfirmItemGroup>
-          <ApConfirmItemGroup label={`電話番号`}>
-            <Typography variant="modal_label" color={'text.main'}>
-              {p_application_headers.vendor_phone ? p_application_headers.vendor_phone : 'ー'}
-            </Typography>
-          </ApConfirmItemGroup>
+          {isSalesPerson ? (
+            <Stack>
+              <ApConfirmItemGroup label={`担当者名`}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  {salesPersonInfo?.name_kanji ? salesPersonInfo.name_kanji : 'ー'}
+                </Typography>
+              </ApConfirmItemGroup>
+              <ApConfirmItemGroup label={`電話番号`}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  {salesPersonInfo?.mobile_phone ? salesPersonInfo.mobile_phone : 'ー'}
+                </Typography>
+              </ApConfirmItemGroup>
+            </Stack>
+          ) : (
+            <Stack>
+              <ApConfirmItemGroup label={`担当者名`}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  {p_application_headers.vendor_name ? p_application_headers.vendor_name : 'ー'}
+                </Typography>
+              </ApConfirmItemGroup>
+              <ApConfirmItemGroup label={`電話番号`}>
+                <Typography variant="modal_label" color={'text.main'}>
+                  {p_application_headers.vendor_phone ? p_application_headers.vendor_phone : 'ー'}
+                </Typography>
+              </ApConfirmItemGroup>
+            </Stack>
+          )}
         </Stack>
       )}
       {!agentSended && (

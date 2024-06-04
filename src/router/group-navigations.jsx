@@ -14,6 +14,13 @@ export const GroupNavigations = ({ group }) => {
   const { pathname } = useLocation();
   const searchParams = useCurrSearchParams();
 
+  if (pathname === routeNames.apTopPage.path) {
+    const token = searchParams.get('token');
+    if (token) {
+      return <Navigate to={`${routeNames.apStartPage.path}?token=${token}`} replace />;
+    }
+  }
+
   if (!isLogined && group === 'applicant' && pathname !== routeNames.apUnsubcribedPage.path) {
     return <Navigate to={routeNames.apStartPage.path} replace />;
   }

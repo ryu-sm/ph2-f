@@ -1,9 +1,6 @@
 import { Icons } from '@/assets';
-import { Sledding } from '@mui/icons-material';
-import SearchIcon from '@mui/icons-material/Search';
 import { Box, Popover, Stack, TextField, Typography } from '@mui/material';
 import { useField, useFormikContext } from 'formik';
-import PropTypes from 'prop-types';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Done, CheckCircleOutline } from '@mui/icons-material';
 import { convertToFullWidth } from '@/utils';
@@ -52,6 +49,10 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
 
     handleClosePopover();
   };
+
+  // const filtedOptions = useMemo(() => {
+  //   return inputValue && showDone ? options.filter((option) => option.label.includes(inputValue)) : options;
+  // }, [options, inputValue, showDone]);
 
   return (
     <Stack>
