@@ -210,11 +210,11 @@ export const ApStep04Page = () => {
       refreshsendedApllication();
     }
   }, []);
-  useEffect(() => {
-    if (agentSended) {
-      formik.setValues(initialValues);
-    }
-  }, [localApplicationInfo]);
+  // useEffect(() => {
+  //   if (agentSended) {
+  //     formik.setValues(initialValues);
+  //   }
+  // }, [localApplicationInfo]);
 
   useEffect(() => {
     if (isReadedConsent && isReadedConfirmation && !formik.errors.consent && !formik.errors.confirmation) {

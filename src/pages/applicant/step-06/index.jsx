@@ -133,11 +133,11 @@ export const ApStep06Page = () => {
       refreshsendedApllication();
     }
   }, []);
-  useEffect(() => {
-    if (agentSended) {
-      formik.setValues(initialValues);
-    }
-  }, [localApplicationInfo]);
+  // useEffect(() => {
+  //   if (agentSended) {
+  //     formik.setValues(initialValues);
+  //   }
+  // }, [localApplicationInfo]);
 
   return (
     <FormikProvider value={formik}>

@@ -212,11 +212,11 @@ export const ApStep11Page = () => {
       refreshsendedApllication();
     }
   }, []);
-  useEffect(() => {
-    if (agentSended) {
-      formik.setValues(initialValues);
-    }
-  }, [localApplicationInfo]);
+  // useEffect(() => {
+  //   if (agentSended) {
+  //     formik.setValues(initialValues);
+  //   }
+  // }, [localApplicationInfo]);
 
   const identityVerificationOption = [
     {

@@ -262,11 +262,11 @@ export const ApStep01Page = () => {
       refreshsendedApllication();
     }
   }, []);
-  useEffect(() => {
-    if (agentSended) {
-      formik.setValues(initialValues);
-    }
-  }, [localApplicationInfo]);
+  // useEffect(() => {
+  //   if (agentSended) {
+  //     formik.setValues(initialValues);
+  //   }
+  // }, []);
 
   return (
     <FormikProvider value={formik}>

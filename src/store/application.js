@@ -129,6 +129,7 @@ export const applicationInitialValues = {
     vendor_name: '',
     vendor_phone: '',
     vendor_business_card: '',
+    s_sales_person_id: '',
     J: [],
     R: [],
   },
