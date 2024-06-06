@@ -66,12 +66,12 @@ export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => 
             </Typography>
           </Stack>
         </Stack>
-        <Stack sx={{ py: 3, px: 3 }} overflow={'auto'}>
+        <Stack sx={{ py: 3, px: 3, maxHeight: '45dvh' }} overflow={'auto'}>
           {Object.keys(errors).map((key) => (
             <Stack key={key}>
               <Stack>
                 <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
-                  {key}
+                  {key}:
                 </Typography>
               </Stack>
               <Stack>
@@ -90,6 +90,17 @@ export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => 
               </Stack>
             </Stack>
           ))}
+        </Stack>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 3, pt: 6 }}>
+          <AdPrimaryButton
+            height={38}
+            width={270}
+            onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify(errors, null, 2));
+            }}
+          >
+            エラー内容をコピーする
+          </AdPrimaryButton>
         </Stack>
         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6, pt: 3 }}>
           <AdPrimaryButton height={38} width={270} onClick={handleErrorClose}>
@@ -115,6 +126,17 @@ export const UpdateModal = ({ value, activeValue, open, onClose, ...props }) => 
           <Typography variant="dailog_content" color={'secondary.main'} lineHeight={'29px'} textAlign={'start'}>
             {JSON.stringify(sbiErrors, null, 2)}
           </Typography>
+        </Stack>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 3, pt: 6 }}>
+          <AdPrimaryButton
+            height={38}
+            width={270}
+            onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify(sbiErrors, null, 2));
+            }}
+          >
+            エラー内容をコピーする
+          </AdPrimaryButton>
         </Stack>
         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} sx={{ p: 3, pb: 6, pt: 3 }}>
           <AdPrimaryButton height={38} width={270} onClick={handleErrorClose}>

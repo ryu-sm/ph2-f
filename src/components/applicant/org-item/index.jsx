@@ -1,8 +1,8 @@
 import { Icons } from '@/assets';
 import { Box, Popover, Stack, TextField, Typography } from '@mui/material';
-import { useField, useFormikContext } from 'formik';
+import { useFormikContext } from 'formik';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Done, CheckCircleOutline } from '@mui/icons-material';
+import { Done } from '@mui/icons-material';
 import { convertToFullWidth } from '@/utils';
 
 export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, selectValue, options = [], ...props }) => {
@@ -12,7 +12,6 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
   const inputRef = useRef(null);
   const itemRef = useRef(null);
   const [itemWdith, setItemWdith] = useState(0);
-  const [showDone, setShowDone] = useState(false);
   useEffect(() => {
     const updateWidth = () => {
       if (itemRef.current) {
@@ -25,13 +24,14 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
       window.removeEventListener('resize', updateWidth);
     };
   }, []);
-
+  const [inputChange, setInputChange] = useState(false);
   const handleOpenPopover = async (e) => {
     const tempOrg = options.find((org) => org.label === inputValue && inputValue !== '');
     if (tempOrg) {
       formik.setFieldValue(selectName, tempOrg.value);
       formik.setFieldValue(inputName, '');
     }
+
     setAnchorEl(e.currentTarget);
   };
   const handleClosePopover = () => {
@@ -41,6 +41,7 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
       formik.setFieldValue(inputName, '');
     }
     setAnchorEl(null);
+    setInputChange(false);
   };
 
   const handleChange = async (value) => {
@@ -50,9 +51,9 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
     handleClosePopover();
   };
 
-  // const filtedOptions = useMemo(() => {
-  //   return inputValue && showDone ? options.filter((option) => option.label.includes(inputValue)) : options;
-  // }, [options, inputValue, showDone]);
+  const filtedOptions = useMemo(() => {
+    return inputValue && inputChange ? options.filter((option) => option.label.includes(inputValue)) : options;
+  }, [options, inputValue, inputChange]);
 
   return (
     <Stack>
@@ -151,14 +152,30 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
       >
         <Stack spacing={1} sx={{ textAlign: 'left', overflow: 'auto', bgcolor: 'white', width: itemWdith, py: 1 }}>
           {showInput && (
-            <Stack py={'2px'} px={2} direction={'row'} alignItems={'center'} spacing={1}>
+            <Stack
+              py={'2px'}
+              px={2}
+              direction={'row'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              spacing={2}
+            >
               <Box sx={{ display: 'inline-block', position: 'relative', width: 1 }}>
                 <TextField
                   ref={inputRef}
                   placeholder={'選択対象が存在しない場合は、入力してください。'}
                   fullWidth
                   value={inputValue}
+                  sx={{
+                    '.MuiInputBase-input': {
+                      '&::placeholder': {
+                        fontSize: 14,
+                        color: (theme) => theme.palette.text.normal,
+                      },
+                    },
+                  }}
                   onChange={(e) => {
+                    setInputChange(true);
                     formik.setFieldValue(inputName, e.target.value);
                   }}
                   onKeyDown={(e) => {
@@ -167,23 +184,15 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
                     }
                   }}
                   onBlur={(e) => {
-                    console.log(e);
-
                     if (e.target.value) {
                       let value = e.target.value?.toString().trim();
                       value = convertToFullWidth(value);
                       formik.setFieldValue(inputName, value);
                       formik.setFieldValue(selectName, '');
                     }
-
-                    setShowDone(false);
-                    handleClosePopover();
-                  }}
-                  onFocus={() => {
-                    setShowDone(true);
                   }}
                 />
-                {showDone && (
+                {inputValue && (
                   <Done
                     sx={{
                       cursor: 'pointer',
@@ -194,47 +203,49 @@ export const ApOrgItem = ({ showInput, inputName, inputValue, selectName, select
                       position: 'absolute',
                       color: (theme) => theme.palette.primary.main,
                     }}
+                    onClick={handleClosePopover}
                   />
                 )}
               </Box>
             </Stack>
           )}
 
-          {options.map((item) => (
-            <Stack
-              key={item.value}
-              onClick={() => {
-                handleChange(item.value);
-              }}
-              sx={{
-                minHeight: 48,
-                px: 3,
-                justifyContent: 'center',
-                bgcolor: item.value === selectValue ? 'primary.40' : 'white',
-                '&:hover': {
-                  bgcolor: 'gray.100',
-                },
-              }}
-            >
-              <Typography
+          {open &&
+            filtedOptions.map((item) => (
+              <Stack
+                key={item.value}
+                onClick={() => {
+                  handleChange(item.value);
+                }}
                 sx={{
-                  fontFamily: 'Hiragino Sans',
-                  fontStyle: 'normal',
-                  fontWeight: 600,
-                  fontSize: 24,
-                  lineHeight: '130%',
-                  letterSpacing: 0.4,
-                  '@media (max-width:480px)': {
-                    fontSize: 16,
-                    lineHeight: '24px',
+                  minHeight: 48,
+                  px: 3,
+                  justifyContent: 'center',
+                  bgcolor: item.value === selectValue ? 'primary.40' : 'white',
+                  '&:hover': {
+                    bgcolor: 'gray.100',
                   },
-                  color: 'text.normal',
                 }}
               >
-                {item.label}
-              </Typography>
-            </Stack>
-          ))}
+                <Typography
+                  sx={{
+                    fontFamily: 'Hiragino Sans',
+                    fontStyle: 'normal',
+                    fontWeight: 600,
+                    fontSize: 24,
+                    lineHeight: '130%',
+                    letterSpacing: 0.4,
+                    '@media (max-width:480px)': {
+                      fontSize: 16,
+                      lineHeight: '24px',
+                    },
+                    color: 'text.normal',
+                  }}
+                >
+                  {item.label}
+                </Typography>
+              </Stack>
+            ))}
         </Stack>
       </Popover>
     </Stack>

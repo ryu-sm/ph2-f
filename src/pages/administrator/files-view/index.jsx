@@ -38,6 +38,7 @@ export const AdFilesViewPage = () => {
     try {
       if (category === 'I') {
         const res = await adGetPborrowingsFilesView(p_application_header_id);
+
         const temp = [];
         res.data.forEach((f) => {
           temp.push({
@@ -77,7 +78,7 @@ export const AdFilesViewPage = () => {
   useEffect(() => {
     fetch();
   }, []);
-
+  console.log(fileItems);
   const parseOwner = (item) => {
     if (item?.owner_type === 1) return item?.p_applicant_person_name;
     if (item?.owner_type === 2) return item?.s_sales_person_name;
@@ -85,7 +86,7 @@ export const AdFilesViewPage = () => {
   };
 
   const handleNextImage = () => {
-    const index = fileItems.findIndex((e) => e.src === currentImage.src);
+    const index = fileItems.findIndex((e) => e.id === currentImage.id);
     const nextIndex = index < fileItems.length - 1 ? index + 1 : 0;
     scroller.scrollTo(`image-${nextIndex}`, {
       duration: 300,
@@ -99,7 +100,7 @@ export const AdFilesViewPage = () => {
   };
 
   const handlePrevImage = () => {
-    const index = fileItems.findIndex((e) => e.src === currentImage.src);
+    const index = fileItems.findIndex((e) => e.id === currentImage.id);
     const prevIndex = index > 0 ? index - 1 : fileItems.length - 1;
     scroller.scrollTo(`image-${prevIndex}`, {
       duration: 300,
@@ -130,26 +131,25 @@ export const AdFilesViewPage = () => {
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
 
-  const AllFiles = ({ fileItems }) => {
+  const imageList = useCallback(() => {
     return (
       <Stack
         id="scroll-images"
         direction="row"
-        justifyContent={'center'}
+        justifyContent={'start'}
         sx={{
-          width: 1,
           overflowX: 'auto',
           whiteSpace: 'nowrap',
         }}
       >
         {fileItems.map((image, index) => (
-          <Element key={index} name={`image-${index}`}>
+          <Element key={image.id} name={`image-${index}`}>
             <Stack
               sx={{
                 width: 100,
                 height: 90,
-                border: currentImage?.src === image.src ? (theme) => `4px solid ${theme.palette.primary.main}` : '',
-                padding: currentImage?.src === image.src ? 0 : 1,
+                border: currentImage?.id === image.id ? (theme) => `4px solid ${theme.palette.primary.main}` : '',
+                padding: currentImage?.id === image.id ? 0 : 1,
               }}
               onClick={() => {
                 setRotate(0);
@@ -192,12 +192,24 @@ export const AdFilesViewPage = () => {
               >
                 {image?.subTitle || image?.title}
               </Typography>
+              <Typography
+                sx={{
+                  fontFamily: 'Hiragino Sans',
+                  fontSize: 10,
+                  wordBreak: 'break-all',
+                  whiteSpace: 'normal',
+                  overflowWrap: 'break-word',
+                  textAlign: 'center',
+                }}
+              >
+                {image?.file_name}
+              </Typography>
             </Stack>
           </Element>
         ))}
       </Stack>
     );
-  };
+  }, [currentImage?.id]);
 
   return (
     <AdThemeProvider>
@@ -208,11 +220,11 @@ export const AdFilesViewPage = () => {
             background: (theme) => theme.palette.gray[20],
           }}
         >
-          <Stack direction={'row'} sx={{ height: 50, px: 3 }} justifyContent="space-between" alignItems="center">
+          <Stack direction={'row'} sx={{ height: 70, px: 3 }} justifyContent="space-between" alignItems="center">
             <Stack width={'30%'}>
               <Typography>アップロード：{parseOwner(currentImage)}</Typography>
             </Stack>
-            <Stack alignItems={'center'}>
+            <Stack alignItems={'center'} spacing={1}>
               <Stack direction={'row'} spacing={1} alignItems={'center'}>
                 <Typography
                   variant="doc_preview_title"
@@ -251,7 +263,7 @@ export const AdFilesViewPage = () => {
 
           <Stack
             sx={{
-              height: 'calc(85vh - 50px)',
+              height: 'calc(83vh - 70px)',
               alignItems: 'center',
               borderBottom: `4px solid #EAEAEA`,
             }}
@@ -283,7 +295,7 @@ export const AdFilesViewPage = () => {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                sx={{ width: '50%', height: '100%', ml: 8, overflowX: 'hidden' }}
+                sx={{ width: '50%', height: '100%', ml: 8 }}
               >
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                   <Viewer
@@ -310,8 +322,8 @@ export const AdFilesViewPage = () => {
                 sx={{
                   alignSelf: 'center',
                   position: 'relative',
-                  height: 'calc(85vh - 50px)',
-                  width: 'calc(85vh - 50px)',
+                  height: 'calc(83vh - 70px)',
+                  width: 'calc(83vh - 70px)',
                 }}
               >
                 <Avatar
@@ -385,12 +397,13 @@ export const AdFilesViewPage = () => {
             direction="row"
             justifyContent="center"
             sx={{
-              height: 'calc(15vh)',
+              height: '17vh',
+              minHeight: '17vh',
               width: '100%',
-              overflowX: 'scroll',
+              pt: 2,
             }}
           >
-            <AllFiles fileItems={fileItems} />
+            {imageList()}
           </Stack>
         </Stack>
       )}

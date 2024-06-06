@@ -40,7 +40,7 @@
     "react-html5-camera-photo": "^1.5.11",
     "react-input-autosize": "^3.0.0",
     "react-input-mask": "^2.0.4",
-    "react-number-format": "^5.3.1",
+    "react-number-format": "^5.4.0",
     "react-pdf": "^7.7.0",
     "react-router-dom": "^6.23.0",
     "react-scroll": "^1.9.0",

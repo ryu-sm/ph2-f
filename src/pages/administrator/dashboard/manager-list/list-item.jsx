@@ -162,7 +162,10 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       {
         label: '本審査',
         value: '1',
-        enable: ['0', '1'].includes(item.provisional_result) && item.provisional_after_result === '',
+        enable:
+          ['0', '1'].includes(item.provisional_result) &&
+          item.provisional_after_result === '' &&
+          dashboardTabStatus === 1,
         active: item.provisional_after_result === '1',
         onClick: async () => {
           setAfterResult({
@@ -176,7 +179,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       {
         label: '本審査否決等',
         value: '2',
-        enable: item.provisional_after_result === '1',
+        enable: item.provisional_after_result === '1' && dashboardTabStatus === 2,
         active: item.provisional_after_result === '2',
         onClick: async () => {
           setAfterResult({
@@ -190,7 +193,7 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       {
         label: '融資実行済み',
         value: '3',
-        enable: item.provisional_after_result === '1' && !['4', '5'].includes(item.provisional_after_result),
+        enable: item.provisional_after_result === '1' && dashboardTabStatus === 2,
         active: item.provisional_after_result === '3',
         onClick: async () => {
           setAfterResult({
@@ -204,7 +207,10 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       {
         label: '他行借入',
         value: '4',
-        enable: item.provisional_after_result === '1' && !['3', '5'].includes(item.provisional_after_result),
+        enable:
+          ['0', '1'].includes(item.provisional_result) &&
+          (item.provisional_after_result === '' || item.provisional_after_result === '1') &&
+          dashboardTabStatus !== 3,
         active: item.provisional_after_result === '4',
         onClick: async () => {
           setAfterResult({
@@ -218,7 +224,10 @@ const CaseItem = ({ item, isPairLoan, index }) => {
       {
         label: '自宅購入取止め',
         value: '5',
-        enable: item.provisional_after_result === '1' && !['3', '4'].includes(item.provisional_after_result),
+        enable:
+          ['0', '1'].includes(item.provisional_result) &&
+          (item.provisional_after_result === '' || item.provisional_after_result === '1') &&
+          dashboardTabStatus !== 3,
         active: item.provisional_after_result === '5',
         onClick: async () => {
           setAfterResult({
@@ -232,6 +241,8 @@ const CaseItem = ({ item, isPairLoan, index }) => {
     ];
     return basicList;
   }, []);
+
+  console.log(dashboardTabStatus);
 
   const provisionalresultOptions = [
     { value: '0', label: '承認' },

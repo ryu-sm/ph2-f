@@ -6,12 +6,21 @@ import { zoomPlugin } from '@react-pdf-viewer/zoom';
 import '@react-pdf-viewer/zoom/lib/styles/index.css';
 import { useIsManager } from '@/hooks';
 import { usePreliminaryContext } from '@/hooks/use-preliminary-context';
+import { downloadFileAsync } from '@/utils';
 
 export const ResultPreviewPDF = ({ file }) => {
   const { handleDeleteProvisionalResult } = usePreliminaryContext();
   const isManager = useIsManager();
   const zoomPluginInstance = zoomPlugin();
   const { ZoomIn, ZoomOut } = zoomPluginInstance;
+
+  const handleDownload = async () => {
+    try {
+      await downloadFileAsync(file[0]?.src, file[0]?.name);
+    } catch (e) {
+      console.error('error：', e);
+    }
+  };
 
   return (
     <Stack direction="row" width={1}>
@@ -101,6 +110,7 @@ export const ResultPreviewPDF = ({ file }) => {
                 color: 'gray.100',
               },
             }}
+            onClick={handleDownload}
           >
             <Icons.AdPDFDownload />
           </Button>

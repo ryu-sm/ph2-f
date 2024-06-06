@@ -34,7 +34,10 @@ export const ApMenu = ({ menu }) => {
         icon: <Icons.ApMenuItemResultIcon />,
         desc: '審査結果はこちらからご覧いただけます',
         show: displayPdf && pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS,
-        onClick: () => {},
+        onClick: () => {
+          if (window.location.pathname === routeNames.apExaminationResultPage.path) return menu.onFalse();
+          navigate(routeNames.apExaminationResultPage.path);
+        },
       },
       {
         label: '同意書・確認書等',

@@ -176,8 +176,8 @@ export const ApTopPage = () => {
               id: 15,
               stepTitle: '仮審査結果',
               stepIcon: <Icons.ApTopStepIdIcon15 />,
-              stepPath: '',
-              buttonLabel: pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS ? '申込内容確認' : '---',
+              stepPath: routeNames.apExaminationResultPage.path,
+              buttonLabel: pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS ? '審査結果' : '---',
               show: true,
             },
           ]
@@ -191,7 +191,7 @@ export const ApTopPage = () => {
               stepIcon: <Icons.ApTopStepIdIcon16 />,
               stepPath: '',
               buttonLabel: pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS ? 'ダウンロード' : '---',
-              show: true,
+              show: false,
             },
           ]
         : []),

@@ -356,6 +356,9 @@ export const ApStep12Page = () => {
 
   const parseVaildData = useMemo(() => {
     const dataCopy = cloneDeep(formik.values);
+    delete dataCopy.sales_company_id_;
+    delete dataCopy.sales_area_id_;
+    delete dataCopy.sales_exhibition_hall_id_;
     return dataCopy;
   }, [formik.values]);
 

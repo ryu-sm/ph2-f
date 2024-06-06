@@ -123,6 +123,10 @@ export const routeNames = {
     name: 'apConfirmPage',
     path: '/confirm',
   },
+  apExaminationResultPage: {
+    name: 'apExaminationResultPage',
+    path: '/examination-result',
+  },
 
   //
   adManagerLoginPage: {
