@@ -54,6 +54,7 @@ export const CheckboxDropdown = ({ options, hasFilter, ...props }) => {
         {filtedOptions.map((option) => (
           <Stack key={option.value} direction={'row'} alignItems={'center'} spacing={1} px={'68px'}>
             <Stack
+              sx={{ cursor: 'pointer' }}
               direction={'row'}
               justifyContent="center"
               alignItems="center"

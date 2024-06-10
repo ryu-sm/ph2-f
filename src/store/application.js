@@ -18,6 +18,7 @@ export const applicationInitialValues = {
   p_applicant_persons_b_agreement: false,
 
   p_application_headers: {
+    id: '',
     pre_examination_status: '',
     apply_no: '',
     // STEP00

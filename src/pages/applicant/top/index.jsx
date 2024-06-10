@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authAtom, localApplication } from '@/store';
 import { ApFooter, ApLayout } from '@/containers';
@@ -16,6 +16,7 @@ import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 
 import { useApplicationContext } from '@/hooks';
+import { adGetDisplayPdf, adGetUploadFile } from '@/services';
 
 export const ApTopPage = () => {
   const {
@@ -36,9 +37,25 @@ export const ApTopPage = () => {
     hasJoinGuarantor,
     hasIncomeTotalizer,
     p_application_banks,
-    p_application_headers: { pre_examination_status, apply_no },
+    p_application_headers: { pre_examination_status, apply_no, id },
   } = useRecoilValue(localApplication);
 
+  const [displayPdf, setDisplayPdf] = useState(0);
+  const fetchDisplayPdf = async () => {
+    try {
+      const res = await adGetDisplayPdf(id);
+
+      setDisplayPdf(res.data.display_pdf);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (agentSended && id) {
+      fetchDisplayPdf();
+    }
+  }, [agentSended, id]);
   const topItems = useMemo(
     () => [
       {
@@ -170,7 +187,7 @@ export const ApTopPage = () => {
         buttonLabel: apCurrStepId < 14 ? '---' : '申込内容確認',
         show: true,
       },
-      ...(pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS
+      ...(pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS && displayPdf === 1
         ? [
             {
               id: 15,
@@ -196,7 +213,7 @@ export const ApTopPage = () => {
           ]
         : []),
     ],
-    [p_application_banks, pre_examination_status, hasIncomeTotalizer, hasJoinGuarantor, apCurrStepId]
+    [p_application_banks, pre_examination_status, hasIncomeTotalizer, hasJoinGuarantor, apCurrStepId, displayPdf]
   );
 
   const topLabelText = useMemo(() => {

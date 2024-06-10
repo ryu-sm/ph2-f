@@ -5,7 +5,7 @@ import { ApFooter } from '../ap-footer';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { authAtom, displayPdfSelector, localApplication } from '@/store';
 import { useBoolean } from '@/hooks';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Icons } from '@/assets';
 import { DISCLOSURE_RESULTS_TO_APPLICANTS } from '@/constant/pre-examination-status';
 import { MCJ_CODE } from '@/configs';
@@ -13,7 +13,7 @@ import { routeNames } from '@/router/settings';
 import { useNavigate } from 'react-router-dom';
 import { ApModalWrapper, ApPrimaryButton, ApSecondaryButton } from '@/components';
 import { clearStorage } from '@/libs';
-import { apLogout } from '@/services';
+import { adGetDisplayPdf, apLogout } from '@/services';
 
 export const ApMenu = ({ menu }) => {
   const navigate = useNavigate();
@@ -21,9 +21,25 @@ export const ApMenu = ({ menu }) => {
   const resetLocalApplicationInfo = useResetRecoilState(localApplication);
   const {
     p_application_banks,
-    p_application_headers: { pre_examination_status, apply_no },
+    p_application_headers: { pre_examination_status, apply_no, id },
   } = useRecoilValue(localApplication);
-  const displayPdf = useRecoilValue(displayPdfSelector);
+  const [displayPdf, setDisplayPdf] = useState(1);
+  const fetchDisplayPdf = async () => {
+    try {
+      const res = await adGetDisplayPdf(id);
+
+      setDisplayPdf(res.data.display_pdf);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchDisplayPdf();
+    }
+  }, [id]);
+
   const { user } = useRecoilValue(authAtom);
   const modal = useBoolean();
 
@@ -33,7 +49,7 @@ export const ApMenu = ({ menu }) => {
         label: '審査結果',
         icon: <Icons.ApMenuItemResultIcon />,
         desc: '審査結果はこちらからご覧いただけます',
-        show: displayPdf && pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS,
+        show: displayPdf === 1 && pre_examination_status === DISCLOSURE_RESULTS_TO_APPLICANTS,
         onClick: () => {
           if (window.location.pathname === routeNames.apExaminationResultPage.path) return menu.onFalse();
           navigate(routeNames.apExaminationResultPage.path);
@@ -81,7 +97,7 @@ export const ApMenu = ({ menu }) => {
         onClick: () => modal.onTrue(),
       },
     ],
-    [apply_no, p_application_banks, pre_examination_status, MCJ_CODE]
+    [apply_no, p_application_banks, pre_examination_status, MCJ_CODE, displayPdf]
   );
 
   const handelLogout = async () => {

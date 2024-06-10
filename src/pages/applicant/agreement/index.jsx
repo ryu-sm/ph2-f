@@ -87,9 +87,9 @@ export const ApAgreementPage = () => {
           ...pre,
           p_application_headers: {
             ...pre.p_application_headers,
-            sales_company_id: orgsCId,
-            sales_area_id: orgsBId,
-            sales_exhibition_hall_id: orgsEId,
+            sales_company_id_: orgsCId,
+            sales_area_id_: orgsBId,
+            sales_exhibition_hall_id_: orgsEId,
             s_sales_person_id: salesPerson.id,
             // vendor_name: resonse.data?.name_kanji,
             // vendor_phone: resonse.data?.mobile_phone,

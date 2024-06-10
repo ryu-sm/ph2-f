@@ -12,18 +12,17 @@ import {
   RotateLeft,
   RotateRight,
 } from '@mui/icons-material';
-import { Avatar, Box, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Box, IconButton, LinearProgress, Stack, Typography } from '@mui/material';
 import { ScrollMode, Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { pageNavigationPlugin } from '@react-pdf-viewer/page-navigation';
 import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
-// import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Element, scroller } from 'react-scroll';
-import { toast } from 'react-toastify';
 
 export const AdFilesViewPage = () => {
   const [searchParams] = useSearchParams();
@@ -190,7 +189,7 @@ export const AdFilesViewPage = () => {
                   textAlign: 'center',
                 }}
               >
-                {image?.subTitle || image?.title}
+                {`${image?.subTitle || image?.title}${image?.file_no ? image?.file_no : ''}`}
               </Typography>
               <Typography
                 sx={{
@@ -213,6 +212,7 @@ export const AdFilesViewPage = () => {
 
   return (
     <AdThemeProvider>
+      {fileItems.length === 0 && <LinearProgress />}
       {fileItems.length > 0 && (
         <Stack
           sx={{

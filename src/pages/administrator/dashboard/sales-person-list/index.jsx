@@ -1,17 +1,19 @@
-import { LinearProgress, Stack, Typography } from '@mui/material';
+import { Box, LinearProgress, Stack, Typography } from '@mui/material';
 import { HeaderFilter } from '../common/header-filter';
 import { SpCaseItem } from './list-item';
 import { widthConfig } from '../common/width-config';
-import { useDashboardContext } from '@/hooks';
+import { useBoolean, useDashboardContext } from '@/hooks';
 import { Fragment, useEffect, useState } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import { REGEX } from '@/constant';
 import { yup } from '@/libs';
 import { InboxOutlined } from '@mui/icons-material';
+import { Icons } from '@/assets';
+import { AdListFilterModal } from '../common/filter-modal';
 
 export const SalesPersonList = () => {
   const { status, preliminarieList, refreshPreliminarieList } = useDashboardContext();
-
+  const filterModal = useBoolean(false);
   const [data, setData] = useState([]);
   useEffect(() => {
     refreshPreliminarieList();
@@ -31,6 +33,7 @@ export const SalesPersonList = () => {
     desired_borrowing_date_from: '',
     desired_borrowing_date_to: '',
     provisional_result: [],
+    sales_company_id: [],
     sales_area_id: [],
     sales_exhibition_hall_id: [],
     s_sales_person_id: [],
@@ -138,6 +141,40 @@ export const SalesPersonList = () => {
           </Fragment>
         )}
       </Stack>
+      <Box
+        sx={{
+          cursor: 'pointer',
+          height: 45,
+          width: 45,
+          border: '1px solid',
+          borderColor: (theme) => theme.palette.grey[100],
+          borderRadius: '50%',
+          bgcolor: (theme) => theme.palette.grey[100],
+          color: 'black',
+          position: 'fixed',
+          bottom: '80px',
+          right: '50px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: 'rgba(59, 118, 129, 0.15) 0px 2px 8px',
+        }}
+      >
+        <Icons.AdListFilterIcon
+          sx={{ width: 24, height: 24 }}
+          onClick={() => {
+            // formik.resetForm();
+            filterModal.onTrue();
+          }}
+        />
+        <AdListFilterModal
+          open={filterModal.value}
+          onClose={filterModal.onFalse}
+          onCleare={formik.resetForm}
+          handleSearch={formik.handleSubmit}
+          errors={formik.errors}
+        />
+      </Box>
     </FormikProvider>
   );
 };

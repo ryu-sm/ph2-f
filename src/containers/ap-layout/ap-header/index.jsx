@@ -25,6 +25,7 @@ export const ApHeader = ({ hasMenu, menu }) => {
     routeNames.apResetPasswordVerifyEmailPage,
     routeNames.apResetPasswordPage,
   ];
+
   return (
     <Box
       sx={{

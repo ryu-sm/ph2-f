@@ -399,6 +399,10 @@ export const adGetUploadFile = async (p_application_header_id) => {
   return await service.get(`/s_sales_company_orgs/upload_file/${p_application_header_id}`);
 };
 
+export const adGetDisplayPdf = async (p_application_header_id) => {
+  return await service.get(`/s_sales_company_orgs/display_pdf/${p_application_header_id}`);
+};
+
 export const adGetSalesCompanyId = async (sales_person_id) => {
   return await service.get(`/s_sales_company_org_id?sales_person_id=${sales_person_id}`);
 };

@@ -67,7 +67,7 @@ export const HeaderFilter = () => {
           </Stack>
         ))}
       </Stack>
-      <Box sx={{ width: 16, height: 16, position: 'relative', left: -8 }}>
+      {/* <Box sx={{ width: 16, height: 16, position: 'relative', left: -8 }}>
         {dashboardTabStatus !== 2 && (
           <Icons.AdListFilterIcon
             sx={{ cursor: 'pointer', width: 16, height: 16 }}
@@ -84,7 +84,7 @@ export const HeaderFilter = () => {
           handleSearch={formik.handleSubmit}
           errors={formik.errors}
         />
-      </Box>
+      </Box> */}
     </Stack>
   );
 };

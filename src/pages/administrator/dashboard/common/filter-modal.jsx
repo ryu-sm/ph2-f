@@ -19,12 +19,15 @@ export const AdListFilterModal = ({ open, onClose, onCleare, handleSearch, error
   const isManager = useIsManager();
   const dashboardTabStatus = useRecoilValue(dashboardTabStatusAtom);
 
+  const [salesCompanyOptionsC, setSalesCompanyOptionsC] = useState([]);
   const [salesCompanyOptionsB, setSalesCompanyOptionsB] = useState([]);
   const [salesCompanyOptionsE, setSalesCompanyOptionsE] = useState([]);
   const [salesPersonOptionsAll, setSalesPersonOptionsAll] = useState([]);
 
   const fetchData = async () => {
     try {
+      const res00 = await adGetSalesCompanyOptionsCategory('C');
+      setSalesCompanyOptionsC(res00.data);
       const res01 = await adGetSalesCompanyOptionsCategory('B');
       setSalesCompanyOptionsB(res01.data);
       const res02 = await adGetSalesPersonOptionsAll();
@@ -54,7 +57,7 @@ export const AdListFilterModal = ({ open, onClose, onCleare, handleSearch, error
           <Stack
             sx={{
               cursor: 'move',
-              width: 485,
+              width: 520,
               height: 480,
               backgroundColor: 'gray.20',
               boxShadow:
@@ -148,6 +151,11 @@ export const AdListFilterModal = ({ open, onClose, onCleare, handleSearch, error
                   }
                 />
               )}
+
+              <FilterItem
+                label="提携会社"
+                dropDownItem={<CheckboxDropdown options={salesCompanyOptionsC} name="sales_company_id" />}
+              />
 
               <FilterItem
                 label="支店"

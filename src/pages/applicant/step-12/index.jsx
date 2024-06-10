@@ -82,20 +82,35 @@ export const ApStep12Page = () => {
           orgEName = temp.label;
         }
       }
-      return {
-        ...pre,
-        p_application_headers: {
-          ...pre.p_application_headers,
-          vendor_name: values.p_application_headers.vendor_name,
-          vendor_phone: values.p_application_headers.vendor_phone,
-          vendor_business_card: values.p_application_headers.vendor_business_card,
-          sales_host_company_id: values.p_application_headers.sales_host_company_id,
-          sales_company: values.p_application_headers.sales_company || orgCName,
-          sales_area: values.p_application_headers.sales_area || orgBName,
-          sales_exhibition_hall: values.p_application_headers.sales_exhibition_hall || orgEName,
-          J: values.p_application_headers.J,
-        },
-      };
+      return isSalesPerson
+        ? {
+            ...pre,
+            p_application_headers: {
+              ...pre.p_application_headers,
+              vendor_name: values.p_application_headers.vendor_name,
+              vendor_phone: values.p_application_headers.vendor_phone,
+              vendor_business_card: values.p_application_headers.vendor_business_card,
+              sales_host_company_id: values.p_application_headers.sales_host_company_id,
+              sales_company_id: values.p_application_headers.sales_company_id_,
+              sales_area_id: values.p_application_headers.sales_area_id_,
+              sales_exhibition_hall_id: values.p_application_headers.sales_exhibition_hall_id_,
+              J: values.p_application_headers.J,
+            },
+          }
+        : {
+            ...pre,
+            p_application_headers: {
+              ...pre.p_application_headers,
+              vendor_name: values.p_application_headers.vendor_name,
+              vendor_phone: values.p_application_headers.vendor_phone,
+              vendor_business_card: values.p_application_headers.vendor_business_card,
+              sales_host_company_id: values.p_application_headers.sales_host_company_id,
+              sales_company: values.p_application_headers.sales_company || orgCName,
+              sales_area: values.p_application_headers.sales_area || orgBName,
+              sales_exhibition_hall: values.p_application_headers.sales_exhibition_hall || orgEName,
+              J: values.p_application_headers.J,
+            },
+          };
     });
   };
   const initialValues = {
@@ -142,9 +157,9 @@ export const ApStep12Page = () => {
     const diffData = isSalesPerson
       ? {
           p_application_headers: {
-            sales_company_id: values.p_application_headers.sales_company_id,
-            sales_area_id: values.p_application_headers.sales_area_id,
-            sales_exhibition_hall_id: values.p_application_headers.sales_exhibition_hall_id,
+            sales_company_id: values.p_application_headers.sales_company_id_,
+            sales_area_id: values.p_application_headers.sales_area_id_,
+            sales_exhibition_hall_id: values.p_application_headers.sales_exhibition_hall_id_,
             vendor_name: values.p_application_headers.vendor_name,
             vendor_phone: values.p_application_headers.vendor_phone,
             vendor_business_card: values.p_application_headers.vendor_business_card,
