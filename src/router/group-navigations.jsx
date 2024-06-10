@@ -7,13 +7,16 @@ import { applicantRoutes } from './applicant-routes';
 import { salesPersonRoutes } from './sales-person-routes';
 import { managerRoutes } from './manager-routes';
 import { publicRoutes } from './public-routes';
+import { isMaintenance } from '@/configs';
 
 export const GroupNavigations = ({ group }) => {
   const { roleType, isLogined, user, manager, salesPerson } = useRecoilValue(authAtom);
 
   const { pathname } = useLocation();
   const searchParams = useCurrSearchParams();
-
+  if (isMaintenance && pathname !== routeNames.apStartPage.path) {
+    return <Navigate to={routeNames.apStartPage.path} replace />;
+  }
   if (pathname === routeNames.apTopPage.path) {
     const token = searchParams.get('token');
     if (token) {

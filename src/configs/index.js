@@ -1,5 +1,6 @@
-export const APP_MODE = 'dev'; // dev || stg || prd
 export const APP_SERVER_URL = 'https://mortgageloan-dev-if-api.milibank.co.jp/v1';
+export const isMaintenance = true;
+export const maintenanceInfo = `2024-06-10 19:00 ～ 2024-06-10 20:00の間にメンテナンスを行われます。\nシステムにアクセスできません。`;
 
 // スタティック資源
 export const TERM_OF_SERVICE = '/pdfs/利用規約.pdf';
@@ -21,3 +22,5 @@ export const ALLOWED_IMAGE_TYPES = {
 
 export const MAX_SIZE_FILE = 35 * 1000 * 1000;
 export const MAX_FILES = 3;
+
+export const APP_MODE = 'dev'; // dev || stg || prd

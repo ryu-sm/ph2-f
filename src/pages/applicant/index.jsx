@@ -28,3 +28,4 @@ export { ApStep13Page } from './step-13';
 export { ApStep14Page } from './step-14';
 export { ApConfirmPage } from './confirm';
 export { ApExaminationResultPage } from './examination-result';
+export { MaintenancePage } from './maintenance';

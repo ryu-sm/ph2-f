@@ -16,11 +16,13 @@ import {
   AdOrSpResetPasswordPage,
   AdOrSpResetPasswordVerifyEmailPage,
 } from '@/pages/administrator';
+import { MaintenancePage } from '@/pages/applicant/maintenance';
+import { isMaintenance } from '@/configs';
 
 export const publicRoutes = [
   {
     ...routeNames.apStartPage,
-    Element: ApStartPage,
+    Element: isMaintenance ? MaintenancePage : ApStartPage,
   },
   {
     ...routeNames.apRegisterVerifyEmailPage,
